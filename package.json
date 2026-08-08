@@ -1,0 +1,28 @@
+{
+  "name": "ai-world",
+  "version": "0.0.0",
+  "private": true,
+  "description": "AI World platform monorepo",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "packageManager": "pnpm@10.17.1",
+  "engines": {
+    "node": "24.18.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.8.1",
+    "prettier": "3.9.6",
+    "turbo": "2.10.9",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.66.0"
+  }
+}
