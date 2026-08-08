@@ -1,8 +1,14 @@
 import { NestFactory } from '@nestjs/core';
+
 import { AppModule } from './app.module';
+import { loadApiEnvironment } from './config/environment';
 
 async function bootstrap() {
+  const environment = loadApiEnvironment();
+
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+
+  await app.listen(environment.port);
 }
-bootstrap();
+
+void bootstrap();
