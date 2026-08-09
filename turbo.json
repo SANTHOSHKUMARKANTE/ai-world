@@ -17,10 +17,12 @@
       "dependsOn": ["^build", "^typecheck"]
     },
     "test": {
-      "dependsOn": ["^test"],
-      "outputs": ["coverage/**"]
+      "dependsOn": ["^build", "^test"]
     },
     "format": {
+      "cache": false
+    },
+    "test:e2e": {
       "cache": false
     }
   }

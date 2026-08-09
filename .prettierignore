@@ -13,3 +13,6 @@ AGENTS.md
 **/next-env.d.ts
 
 **/src/generated/**
+
+# Playwright runtime artifacts
+**/.playwright/**
