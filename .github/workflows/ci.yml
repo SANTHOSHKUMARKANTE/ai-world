@@ -64,3 +64,6 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      - name: Check architecture
+        run: pnpm run architecture:check

@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node scripts/local-pnpm.mjs exec turbo run dev",
     "build": "turbo run build",
-    "lint": "eslint \"scripts/**/*.mjs\" && turbo run lint",
+    "lint": "eslint \"scripts/**/*.mjs\" .dependency-cruiser.mjs && turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "format": "prettier --write .",
@@ -18,7 +18,8 @@
     "infra:local:down": "docker compose -f infrastructure/local/compose.yml down",
     "infra:local:status": "docker compose -f infrastructure/local/compose.yml ps",
     "infra:local:logs": "docker compose -f infrastructure/local/compose.yml logs -f postgres",
-    "db:seed": "node scripts/local-pnpm.mjs --filter @ai-world/foundation-database run prisma:seed"
+    "db:seed": "node scripts/local-pnpm.mjs --filter @ai-world/foundation-database run prisma:seed",
+    "architecture:check": "pnpm run build && depcruise --config .dependency-cruiser.mjs --output-type err-long \"apps/*/src\" \"apps/*/test\" \"apps/*/e2e\" \"packages/*/*/src\" \"packages/*/*/test\" \"packages/*/*/prisma\""
   },
   "packageManager": "pnpm@10.17.1",
   "engines": {
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
+    "dependency-cruiser": "18.1.0",
     "eslint": "9.39.5",
     "prettier": "3.9.6",
     "turbo": "2.10.9",
