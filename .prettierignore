@@ -11,3 +11,5 @@ pnpm-lock.yaml
 docs/
 AGENTS.md
 **/next-env.d.ts
+
+**/src/generated/**
