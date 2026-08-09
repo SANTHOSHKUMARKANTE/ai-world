@@ -13,9 +13,14 @@
   },
   "scripts": {
     "prisma:generate": "prisma generate",
-    "build": "pnpm run prisma:generate && tsc -p tsconfig.json",
+    "prisma:validate": "prisma validate",
+    "prisma:migrate:create": "prisma migrate dev --config prisma.migrate.config.ts --create-only",
+    "prisma:migrate:dev": "prisma migrate dev --config prisma.migrate.config.ts && pnpm run prisma:generate",
+    "prisma:migrate:deploy": "prisma migrate deploy --config prisma.migrate.config.ts",
+    "prisma:migrate:status": "prisma migrate status --config prisma.migrate.config.ts",
+    "build": "tsc -p tsconfig.json",
     "lint": "eslint \"src/**/*.ts\" --ignore-pattern \"src/generated/**\"",
-    "typecheck": "pnpm run prisma:generate && tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.9.0",
