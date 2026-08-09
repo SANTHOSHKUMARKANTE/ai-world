@@ -5,14 +5,20 @@
   "description": "AI World platform monorepo",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "node scripts/local-pnpm.mjs exec turbo run dev",
     "build": "turbo run build",
-    "lint": "turbo run lint",
+    "lint": "eslint \"scripts/**/*.mjs\" && turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:e2e": "turbo run test:e2e"
+    "test:e2e": "turbo run test:e2e",
+    "infra:local:up": "docker compose -f infrastructure/local/compose.yml up -d",
+    "infra:local:stop": "docker compose -f infrastructure/local/compose.yml stop",
+    "infra:local:down": "docker compose -f infrastructure/local/compose.yml down",
+    "infra:local:status": "docker compose -f infrastructure/local/compose.yml ps",
+    "infra:local:logs": "docker compose -f infrastructure/local/compose.yml logs -f postgres",
+    "db:seed": "node scripts/local-pnpm.mjs --filter @ai-world/foundation-database run prisma:seed"
   },
   "packageManager": "pnpm@10.17.1",
   "engines": {

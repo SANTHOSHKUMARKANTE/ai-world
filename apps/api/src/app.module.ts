@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ObservabilityModule } from './observability/observability.module';
 import { ApiErrorModule } from './errors/api-error.module';
+import { HealthController } from './health/health.controller';
 
 export interface AppModuleOptions {
   readonly databaseUrl: string;
@@ -30,7 +31,7 @@ export class AppModule {
           connectionString: options.databaseUrl,
         }),
       ],
-      controllers: [AppController],
+      controllers: [AppController, HealthController],
       providers: [AppService],
     };
   }

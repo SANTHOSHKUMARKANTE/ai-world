@@ -1,22 +1,10 @@
-import { createDatabaseClient, type DatabaseClient } from '@ai-world/foundation-database';
-import { DynamicModule, Inject, Injectable, Module, OnApplicationShutdown } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 
-const DATABASE_CLIENT = Symbol('DATABASE_CLIENT');
+import { DatabaseService } from './database.service';
+import { DATABASE_CONNECTION_STRING } from './database.tokens';
 
 export interface DatabaseModuleOptions {
   readonly connectionString: string;
-}
-
-@Injectable()
-class DatabaseClientLifecycle implements OnApplicationShutdown {
-  constructor(
-    @Inject(DATABASE_CLIENT)
-    private readonly client: DatabaseClient,
-  ) {}
-
-  async onApplicationShutdown(): Promise<void> {
-    await this.client.$disconnect();
-  }
 }
 
 @Module({})
@@ -26,14 +14,12 @@ export class DatabaseModule {
       module: DatabaseModule,
       providers: [
         {
-          provide: DATABASE_CLIENT,
-          useFactory: () =>
-            createDatabaseClient({
-              connectionString: options.connectionString,
-            }),
+          provide: DATABASE_CONNECTION_STRING,
+          useValue: options.connectionString,
         },
-        DatabaseClientLifecycle,
+        DatabaseService,
       ],
+      exports: [DatabaseService],
     };
   }
 }

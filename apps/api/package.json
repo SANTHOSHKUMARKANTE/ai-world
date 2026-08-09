@@ -7,6 +7,7 @@
   "scripts": {
     "build": "nest build",
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "dev": "nest start --watch",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "test": "vitest run",

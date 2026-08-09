@@ -49,6 +49,9 @@ export function getHttpErrorCode(status: number): string {
     case HttpStatus.TOO_MANY_REQUESTS:
       return 'http.too_many_requests';
 
+    case HttpStatus.SERVICE_UNAVAILABLE:
+      return 'http.service_unavailable';
+
     default:
       return status >= 500 ? 'http.internal_server_error' : 'http.error';
   }
@@ -79,6 +82,9 @@ export function getSafeHttpMessage(status: number): string {
 
     case HttpStatus.TOO_MANY_REQUESTS:
       return 'Too many requests.';
+
+    case HttpStatus.SERVICE_UNAVAILABLE:
+      return 'Service unavailable.';
 
     default:
       return status >= 500 ? 'Internal server error.' : 'Request failed.';

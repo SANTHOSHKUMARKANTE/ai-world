@@ -1,0 +1,30 @@
+name: ai-world-local
+
+services:
+  postgres:
+    image: postgres:18.4-alpine
+
+    ports:
+      - '127.0.0.1:${AI_WORLD_POSTGRES_PORT:-55432}:5432'
+
+    environment:
+      POSTGRES_USER: ${AI_WORLD_POSTGRES_USER:-ai_world}
+      POSTGRES_PASSWORD: ${AI_WORLD_POSTGRES_PASSWORD:-ai_world}
+      POSTGRES_DB: ${AI_WORLD_POSTGRES_DB:-ai_world}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+    shm_size: 128mb
+
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

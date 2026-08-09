@@ -87,6 +87,31 @@ describe('API integration baseline', () => {
     });
   });
 
+  it('reports liveness without requiring database connectivity', async () => {
+    const response = await request(app.getHttpServer()).get('/health/live').expect(200);
+
+    expect(response.body).toEqual({
+      status: 'ok',
+    });
+  });
+
+  it('reports readiness unavailable when the database cannot be reached', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/health/ready')
+      .set('X-Request-Id', 'api-test-readiness-001')
+      .expect('X-Request-Id', 'api-test-readiness-001')
+      .expect(503);
+
+    expect(response.body).toEqual({
+      error: {
+        code: 'http.service_unavailable',
+        message: 'Service unavailable.',
+        status: 503,
+        requestId: 'api-test-readiness-001',
+      },
+    });
+  });
+
   it('exposes only the public ApplicationError message', async () => {
     const response = await request(app.getHttpServer())
       .get('/__test/application-error')
