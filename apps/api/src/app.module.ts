@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ObservabilityModule } from './observability/observability.module';
+import { ApiErrorModule } from './errors/api-error.module';
 
 export interface AppModuleOptions {
   readonly databaseUrl: string;
@@ -22,6 +23,8 @@ export class AppModule {
           environment: options.environment,
           logLevel: options.logLevel,
         }),
+
+        ApiErrorModule,
 
         DatabaseModule.register({
           connectionString: options.databaseUrl,

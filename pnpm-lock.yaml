@@ -35,6 +35,9 @@ importers:
       '@ai-world/foundation-database':
         specifier: workspace:*
         version: link:../../packages/foundations/database
+      '@ai-world/foundation-errors':
+        specifier: workspace:*
+        version: link:../../packages/foundations/errors
       '@ai-world/foundation-observability':
         specifier: workspace:*
         version: link:../../packages/foundations/observability
@@ -149,6 +152,8 @@ importers:
       tsx:
         specifier: 4.23.1
         version: 4.23.1
+
+  packages/foundations/errors: {}
 
   packages/foundations/observability:
     dependencies:
