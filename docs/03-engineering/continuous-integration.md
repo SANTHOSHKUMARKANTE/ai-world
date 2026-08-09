@@ -2,9 +2,13 @@
 
 ## 1. Purpose
 
-This document defines the canonical Continuous Integration baseline for AI World.
+This document defines the canonical Continuous Integration contract for AI World.
 
-Phase 1 CI exists to prove that the repository can be installed, validated, tested, and built reproducibly outside a developer workstation.
+Continuous Integration exists to prove that the repository can be installed, validated, tested, migrated, and built reproducibly outside a developer workstation.
+
+Phase 1 established the original repository-validation baseline.
+
+Phase 2 extends that baseline with real PostgreSQL-backed persistence validation where Platform behavior requires it.
 
 The canonical CI implementation is GitHub Actions.
 
@@ -14,42 +18,60 @@ The authoritative workflow is:
 .github/workflows/ci.yml
 ```
 
----
-
-## 2. Phase 1 CI Contract
-
-The Phase 1 roadmap requires CI validation for:
+CI must remain:
 
 ```text
-install
-format
-lint
-typecheck
-tests
-build
+reproducible
+architecture-aware
+migration-aware
+security-conscious
+infrastructure-minimal
+independent of developer-local state
 ```
 
-AI World additionally runs the existing browser E2E baseline through Playwright.
+---
 
-The complete Phase 1 validation pipeline is therefore:
+## 2. Current CI Contract
+
+The current AI World validation pipeline is:
 
 ```text
-install
+checkout
   ↓
-format
+setup pnpm
+  ↓
+setup Node.js
+  ↓
+start and health-check PostgreSQL
+  ↓
+install dependencies
+  ↓
+format validation
   ↓
 lint
   ↓
 typecheck
   ↓
-unit/integration tests
+default tests
+  ↓
+apply committed database migrations
+  ↓
+database integration tests
+  ↓
+install Playwright Chromium
   ↓
 browser E2E tests
   ↓
 build
+  ↓
+architecture validation
 ```
 
-A successful CI run means all of these stages completed successfully on the GitHub-hosted Linux runner.
+Phase 1 originally established CI without a live database.
+
+P2-M01 introduces PostgreSQL-backed validation because the Identity & Access and User Platforms now contain real persistence behavior that must be verified against PostgreSQL.
+
+A successful CI run means every configured validation stage completed successfully on the GitHub-hosted Linux runner.
 
 ---
 
@@ -67,7 +89,15 @@ and for pull requests targeting:
 main
 ```
 
-This provides validation both before changes are merged through pull requests and after changes reach the canonical branch.
+This provides validation:
+
+```text
+before merge through pull requests
+and
+after changes reach the canonical branch
+```
+
+The same validation job is used for both trigger types.
 
 ---
 
@@ -93,6 +123,8 @@ CI / Validate
 
 as successful for the relevant commit.
 
+A locally successful change is not considered fully CI-validated until the real GitHub-hosted workflow has executed successfully.
+
 ---
 
 ## 5. Runner Baseline
@@ -105,7 +137,7 @@ ubuntu-24.04
 
 as the GitHub-hosted runner.
 
-This intentionally provides a Linux validation environment even when development occurs on Windows.
+This intentionally validates AI World on Linux even when development occurs on Windows.
 
 CI therefore helps detect environment-specific problems such as:
 
@@ -113,13 +145,17 @@ CI therefore helps detect environment-specific problems such as:
 case-sensitive paths
 Linux command resolution
 line-ending issues
+shell assumptions
 Playwright Linux dependencies
 Next.js Linux builds
 Prisma generation on Linux
+PostgreSQL connectivity
+migration portability
 workspace dependency behavior
+filesystem assumptions
 ```
 
-A change is not considered CI-safe merely because it succeeds on one developer machine.
+A change is not considered portable merely because it succeeds on one developer workstation.
 
 ---
 
@@ -149,13 +185,15 @@ The current repository baseline is:
 pnpm 10.17.1
 ```
 
-CI must not independently drift from the repository-pinned runtime or package-manager versions.
+CI must not independently drift from these repository-pinned versions.
+
+Runtime and package-manager upgrades must be deliberate repository changes rather than workflow-only changes.
 
 ---
 
 ## 7. GitHub Actions Used
 
-The Phase 1 workflow uses:
+The current workflow uses:
 
 ```text
 actions/checkout@v6.0.2
@@ -163,9 +201,15 @@ pnpm/action-setup@v6.0.9
 actions/setup-node@v6.4.0
 ```
 
-The pnpm setup derives the package-manager version from the repository package metadata rather than duplicating the pnpm version inside the workflow.
+The pnpm setup derives the package-manager version from repository package metadata rather than duplicating it in the workflow.
 
-Node setup derives the Node.js version from `.nvmrc`.
+Node setup derives the Node.js version from:
+
+```text
+.nvmrc
+```
+
+Action-version changes should be reviewed as engineering changes rather than casually updated.
 
 ---
 
@@ -183,9 +227,9 @@ The committed:
 pnpm-lock.yaml
 ```
 
-is therefore part of the reproducible build contract.
+is part of the reproducible-build contract.
 
-CI must fail if package manifests and the lockfile are inconsistent.
+CI must fail when package manifests and the lockfile are inconsistent.
 
 Do not replace the frozen install with an unconstrained install merely to make CI pass.
 
@@ -203,7 +247,9 @@ pnpm-lock.yaml
 
 as the dependency cache input.
 
-Caching may improve CI execution time, but CI correctness must never depend on a warm cache.
+Caching may improve CI execution time.
+
+CI correctness must never depend on a warm cache.
 
 A clean runner must still be able to install and validate the repository successfully.
 
@@ -221,9 +267,9 @@ This checks repository files managed by the canonical Prettier configuration.
 
 Formatting validation is read-only.
 
-CI must not automatically rewrite files to make the workflow succeed.
+CI must not rewrite files automatically to make validation succeed.
 
-Formatting corrections belong in the committed change.
+Formatting corrections belong in committed source changes.
 
 ---
 
@@ -235,17 +281,20 @@ CI runs:
 pnpm run lint
 ```
 
-The root lint command validates repository-level JavaScript tooling and all participating workspace packages.
+The root lint command validates repository-level JavaScript tooling and participating workspace packages.
 
-Current root behavior includes:
+Current root behavior includes repository tooling such as:
 
 ```text
 scripts/**/*.mjs
+.dependency-cruiser.mjs
 ```
 
 and package lint tasks orchestrated through Turborepo.
 
-A lint failure must be fixed in source rather than hidden by loosening rules without an accepted engineering reason.
+Platform source and Platform tests participate in lint validation.
+
+A lint failure must be corrected in source rather than hidden by weakening validation without an accepted engineering reason.
 
 ---
 
@@ -257,23 +306,32 @@ CI runs:
 pnpm run typecheck
 ```
 
-Turborepo executes package typechecking according to the workspace dependency graph.
+Turborepo executes workspace typechecking according to the dependency graph.
 
-The database foundation performs Prisma generation when required before dependent TypeScript validation.
+The Database Foundation performs Prisma client generation when required before dependent TypeScript validation.
 
-TypeScript validation remains strict according to the repository's accepted compiler configuration.
+The Identity & Access and User Platforms separately typecheck:
+
+```text
+production source
+test source
+```
+
+through their package and test TypeScript configurations.
+
+TypeScript validation remains strict according to the repository's accepted compiler baseline.
 
 ---
 
-## 13. Unit and Integration Tests
+## 13. Default Test Lane
 
-CI runs:
+CI runs the normal repository test lane through:
 
 ```bash
 pnpm run test
 ```
 
-The current automated test baseline includes:
+The current default test baseline includes:
 
 ```text
 Foundation configuration tests
@@ -282,19 +340,312 @@ API integration tests
 Web component tests
 ```
 
-API integration tests do not require a live PostgreSQL service.
+The default lane intentionally does not require a live PostgreSQL database.
 
-The test application intentionally supports verification of behavior when the database is unavailable.
+This preserves a fast general-purpose test path for:
+
+```text
+local development
+ordinary package changes
+repository-wide validation
+failure isolation
+```
+
+Database-backed persistence tests are kept in a separate integration lane.
+
+Adding persistence requirements must not silently convert:
+
+```text
+pnpm run test
+```
+
+into an infrastructure-dependent command.
 
 ---
 
-## 14. Browser E2E Tests
+## 14. Database Integration-Test Lane
+
+Database-backed tests run through:
+
+```bash
+pnpm run test:integration
+```
+
+The root command delegates to Turborepo.
+
+The current participating Platform packages are:
+
+```text
+@ai-world/platform-identity-access
+@ai-world/platform-user
+```
+
+P2-M01 currently proves:
+
+```text
+Actor can be persisted
+Actor receives canonical identifiers and timestamps
+User can reference an existing Actor
+one Actor cannot receive multiple Users
+User cannot reference a nonexistent Actor
+Actor deletion is rejected while a User references it
+test-owned persistence is cleaned up
+```
+
+The current persistence proof contains:
+
+```text
+Identity & Access integration tests   1
+User integration tests                4
+                                      ─
+Total                                 5
+```
+
+The integration lane uses a real PostgreSQL database and the real generated Prisma client.
+
+It does not replace the normal test lane.
+
+Both exist for different purposes.
+
+---
+
+## 15. Integration-Test Isolation and Cleanup
+
+Database integration tests must not depend on manually pre-created business records.
+
+Tests create the persistence they own and remove it after execution.
+
+The current P2-M01 cleanup contract leaves:
+
+```text
+identity_actors = 0 test-owned rows
+users           = 0 test-owned rows
+```
+
+after the integration suites complete.
+
+Tests must clean up in referentially valid order.
+
+For the current Actor/User relationship:
+
+```text
+User
+  ↓ delete first
+
+Actor
+  ↓ delete second
+```
+
+because the canonical foreign key uses:
+
+```text
+ON DELETE RESTRICT
+```
+
+Integration tests should prove business invariants through observable persistence behavior rather than depend unnecessarily on unstable adapter-specific implementation details.
+
+---
+
+## 16. PostgreSQL CI Service
+
+Phase 1 intentionally did not start PostgreSQL in CI.
+
+P2-M01 introduces PostgreSQL because real Actor and User persistence tests now require it.
+
+The CI service baseline is:
+
+```text
+image: postgres:18.4-alpine
+
+database: ai_world
+user: ai_world
+password: ai_world
+
+host: 127.0.0.1
+port: 5432
+```
+
+The service is ephemeral and belongs only to the CI validation job.
+
+It is not production infrastructure.
+
+CI uses PostgreSQL only because an accepted validation requirement now depends on it.
+
+---
+
+## 17. PostgreSQL Health Check
+
+The GitHub Actions service uses:
+
+```text
+pg_isready
+```
+
+to verify PostgreSQL readiness.
+
+The current health-check intent is:
+
+```text
+database: ai_world
+user: ai_world
+```
+
+with bounded retries and timeouts.
+
+Database-dependent validation must not start against an unready database.
+
+Failure to establish a healthy PostgreSQL service is a CI failure rather than a reason to bypass database integration tests.
+
+---
+
+## 18. CI Database Configuration
+
+The validation job provides:
+
+```text
+DATABASE_URL=postgresql://ai_world:ai_world@127.0.0.1:5432/ai_world
+```
+
+This points to the ephemeral PostgreSQL service owned by the CI job.
+
+The value is CI-local configuration.
+
+It is not a production credential.
+
+The application and Platform code consume database connectivity through:
+
+```text
+DATABASE_URL
+```
+
+rather than depending on environment-specific port assumptions.
+
+---
+
+## 19. Local and CI Database Ports
+
+Local development PostgreSQL currently maps to:
+
+```text
+127.0.0.1:55432
+```
+
+GitHub Actions uses:
+
+```text
+127.0.0.1:5432
+```
+
+This difference is intentional.
+
+The application should not care which infrastructure port is selected.
+
+The environment-specific connection string owns that concern.
+
+Conceptually:
+
+```text
+local development
+DATABASE_URL
+  ↓
+127.0.0.1:55432
+
+GitHub Actions
+DATABASE_URL
+  ↓
+127.0.0.1:5432
+```
+
+No source-code branching is permitted merely to distinguish these environments.
+
+---
+
+## 20. Migration Deployment in CI
+
+The CI PostgreSQL service begins as a fresh database.
+
+Before database integration tests run, CI applies committed migrations using:
+
+```bash
+pnpm --filter @ai-world/foundation-database run prisma:migrate:deploy
+```
+
+The lifecycle is:
+
+```text
+fresh PostgreSQL
+  ↓
+committed Prisma migrations
+  ↓
+canonical schema
+  ↓
+database integration tests
+```
+
+This proves that AI World persistence can be reconstructed from committed migration history.
+
+The current canonical migration baseline begins with:
+
+```text
+20260809133830_actor_user_baseline
+```
+
+CI must not use manual schema mutations as a substitute for migrations.
+
+---
+
+## 21. Migration Contract
+
+Committed Prisma migrations are part of the repository contract.
+
+CI database setup must use:
+
+```text
+prisma migrate deploy
+```
+
+rather than development-oriented migration creation.
+
+Migration creation belongs to development workflows.
+
+Migration deployment belongs to reproducible environments such as CI.
+
+A successful integration test against a manually prepared database does not prove migration correctness.
+
+The schema must first be reconstructed through committed migrations.
+
+---
+
+## 22. No Application `.env` in CI
+
+The validation workflow does not create:
+
+```text
+.env
+```
+
+This remains intentional.
+
+Configuration required by CI-owned infrastructure is supplied explicitly through the workflow environment.
+
+P2-M01 currently requires:
+
+```text
+CI
+DATABASE_URL
+```
+
+Developer-local `.env` files are not part of the CI contract.
+
+The workflow must remain independent of uncommitted workstation configuration.
+
+---
+
+## 23. Browser E2E Tests
 
 The Web application owns Playwright.
 
-Before browser E2E execution, CI installs Chromium and the required Linux system dependencies through the Web workspace.
-
-The workflow command is:
+Before browser E2E execution, CI installs Chromium and required Linux system dependencies through:
 
 ```bash
 pnpm --filter @ai-world/web exec playwright install --with-deps chromium
@@ -306,15 +657,17 @@ Browser tests then run through:
 pnpm run test:e2e
 ```
 
-The Phase 1 browser baseline uses Chromium.
+The current browser baseline uses Chromium.
 
-Playwright starts its own Web development server for the E2E run.
+Playwright starts its required Web development server for the E2E run.
 
 The browser E2E baseline must not depend on a manually running local Web process.
 
+Database integration tests and browser E2E tests remain distinct validation responsibilities.
+
 ---
 
-## 15. Build Validation
+## 24. Build Validation
 
 CI runs:
 
@@ -322,119 +675,120 @@ CI runs:
 pnpm run build
 ```
 
-The build validates all participating buildable packages and applications through Turborepo.
+Build validation currently includes participating buildable applications and packages such as:
 
-This currently includes the NestJS API, Next.js Web application, and buildable Foundation packages.
+```text
+NestJS API
+Next.js Web
+Foundation packages
+Identity & Access Platform
+User Platform
+```
 
 A successful test suite does not replace build validation.
+
+A successful build does not replace tests.
 
 Both must succeed.
 
 ---
 
-## 16. CI Environment
+## 25. Architecture Validation
 
-The workflow sets:
+CI runs:
+
+```bash
+pnpm run architecture:check
+```
+
+Architecture validation builds the participating workspaces and executes dependency-cruiser against the accepted repository boundaries.
+
+The current architecture rules include protection against:
 
 ```text
-CI=true
+circular source dependencies
+app-to-app dependencies
+Foundations depending upward
+Kernel depending upward
+Platforms depending on Applications or Universes
+Universes depending on Applications
+undeclared external dependencies
+unresolvable imports
+production source depending on devDependencies
 ```
 
-for the validation job.
+P2-M01 Platform integration tests may use Database Foundation infrastructure as test-only dependencies.
 
-This ensures tools can use their CI-specific behavior where configured.
+Production Platform source must not accidentally depend on those devDependencies.
 
-For example, Playwright may adjust:
-
-```text
-forbidOnly
-retries
-workers
-```
-
-when running in CI.
-
-Local validation may simulate this environment with:
-
-```bat
-set "CI=true"
-```
-
-on Windows CMD.
-
-After local simulation:
-
-```bat
-set "CI="
-```
-
-clears the variable.
+Architecture validation is therefore part of the CI contract, not merely an optional local diagnostic.
 
 ---
 
-## 17. No Application `.env` in CI
+## 26. Integration Task Orchestration
 
-The Phase 1 validation workflow does not create:
+The root integration command is:
 
-```text
-.env
+```bash
+pnpm run test:integration
 ```
 
-and does not require local-development environment values.
+Turborepo owns workspace orchestration.
 
-This is intentional.
+The integration task is configured as non-cacheable because it interacts with mutable database state.
 
-The standard validation path must not depend on developer-local configuration.
+Conceptually:
 
-Secrets or runtime configuration should only be introduced into CI when a validated test or workflow requirement actually needs them.
+```text
+test:integration
+  cache: false
+  DATABASE_URL passed through
+  required dependency builds run first
+```
+
+Only workspaces defining:
+
+```text
+test:integration
+```
+
+participate in the actual database-test execution.
+
+Other workspace packages do not need placeholder integration tests.
 
 ---
 
-## 18. No PostgreSQL Service in Initial CI
+## 27. No Deferred Infrastructure in CI
 
-The Phase 1 CI workflow does not start PostgreSQL.
+The current CI baseline does not introduce infrastructure without an accepted test or runtime requirement.
 
-This is intentional because the current automated validation suite does not require a live database.
-
-The current validation responsibilities are:
-
-```text
-format             → no database
-lint               → no database
-typecheck          → no database
-Foundation tests   → no database
-API tests          → no live database
-Web tests          → no database
-browser E2E        → Web-only baseline
-build              → no runtime database
-```
-
-Do not add PostgreSQL to CI merely because PostgreSQL exists in local development.
-
-When real database integration tests require PostgreSQL, CI may introduce a PostgreSQL service as part of the milestone that owns those tests.
-
----
-
-## 19. No Deferred Infrastructure in CI
-
-The initial CI baseline does not introduce:
+CI currently does not add:
 
 ```text
 Redis
-Search engine
-Queue broker
-Vector database
+external search engine
+message broker
+vector database
 MinIO
 Mailpit
 ```
 
-Infrastructure belongs in CI only when an accepted validation requirement needs it.
+PostgreSQL is present because P2-M01 has concrete persistence integration tests requiring it.
 
-CI should validate the system that exists, not pre-build speculative infrastructure.
+This does not justify introducing unrelated infrastructure.
+
+The rule remains:
+
+```text
+requirement first
+infrastructure second
+```
+
+CI should validate the system that exists rather than pre-build speculative architecture.
 
 ---
 
-## 20. Workflow Permissions
+## 28. Workflow Permissions and Credentials
 
 The workflow explicitly configures:
 
@@ -445,87 +799,96 @@ permissions:
 
 The validation job does not require repository write access.
 
-CI permissions should follow least-privilege principles.
-
-Do not grant broader workflow-token permissions without a concrete requirement.
-
----
-
-## 21. Checkout Credentials
-
 Repository checkout uses:
 
 ```yaml
 persist-credentials: false
 ```
 
-The validation workflow does not need to push changes, create tags, modify repository state, or retain GitHub credentials after checkout.
+The workflow does not need to:
+
+```text
+push changes
+create tags
+modify repository state
+retain GitHub credentials after checkout
+```
+
+CI permissions must follow least-privilege principles.
+
+Broader workflow-token permissions require a concrete accepted need.
 
 ---
 
-## 22. Concurrency
+## 29. Concurrency and Timeout
 
-The workflow groups runs by workflow and Git reference.
+The workflow groups runs using the workflow identity and Git reference.
 
 Superseded in-progress runs for the same workflow/reference may be cancelled.
 
-This prevents obsolete validation runs from consuming unnecessary CI capacity after a newer commit has replaced them.
+This prevents obsolete validation runs from consuming unnecessary CI capacity.
 
-Concurrency cancellation must not be interpreted as a successful validation result.
+Cancellation must not be interpreted as success.
 
-The newest relevant run must still complete successfully.
+The newest relevant run must complete successfully.
 
----
-
-## 23. Workflow Timeout
-
-The validation job has an explicit timeout.
-
-The Phase 1 baseline uses:
+The validation job currently uses:
 
 ```text
-30 minutes
+timeout: 30 minutes
 ```
 
-A hung command should eventually terminate rather than consume an unlimited runner session.
+A hung command should terminate rather than consume an unlimited runner session.
 
-The timeout may be revisited when repository scale provides evidence that a different limit is justified.
+Timeout changes should be evidence-driven.
 
 ---
 
-## 24. Local CI Simulation
+## 30. Local CI Simulation
 
-Before pushing workflow changes, developers can run the primary CI sequence locally.
+Before pushing workflow changes, developers should run the closest practical equivalent locally.
 
 On Windows CMD:
 
 ```bat
 set "CI=true"
+set "DATABASE_URL=postgresql://ai_world:ai_world@127.0.0.1:55432/ai_world"
 
 pnpm install --frozen-lockfile
+pnpm run infra:local:up
+pnpm --filter @ai-world/foundation-database run prisma:migrate:deploy
 pnpm run format:check
 pnpm run lint
 pnpm run typecheck
 pnpm run test
+pnpm run test:integration
 pnpm run test:e2e
 pnpm run build
+pnpm run architecture:check
 
+set "DATABASE_URL="
 set "CI="
 ```
 
-This is useful for catching repository failures before using remote CI capacity.
+The local PostgreSQL container may intentionally remain running for development.
 
-Local execution does not replace the GitHub Actions run.
+Therefore the canonical simulation does not automatically execute:
 
-A real Linux-hosted workflow execution remains required to prove the CI configuration itself.
+```text
+infra:local:down
+```
+
+Local validation is useful for catching repository failures before consuming remote CI capacity.
+
+It does not replace the real GitHub-hosted Linux workflow.
 
 ---
 
-## 25. Clean-Clone Acceptance
+## 31. Clean-Clone Acceptance
 
-The Phase 1 CI acceptance rule is that a clean clone must be buildable and testable through documented commands and CI.
+A clean clone must be capable of reproducing the repository validation contract from committed source, package metadata, lockfile, migrations, and documented infrastructure.
 
-The expected clean validation sequence is:
+The standard clean validation sequence includes:
 
 ```bash
 pnpm install --frozen-lockfile
@@ -533,57 +896,74 @@ pnpm run format:check
 pnpm run lint
 pnpm run typecheck
 pnpm run test
-pnpm run test:e2e
 pnpm run build
+pnpm run architecture:check
 ```
 
-For browser E2E execution on a fresh environment, required Playwright browser binaries must also be installed.
+For database-backed persistence validation, PostgreSQL must be available and committed migrations applied before:
 
-On CI this is handled by the workflow.
+```bash
+pnpm run test:integration
+```
 
-A developer machine may use:
+For browser E2E execution on a fresh developer environment, Playwright Chromium may be installed through:
 
 ```bash
 pnpm --filter @ai-world/web exec playwright install chromium
 ```
 
-when Chromium is not already installed for Playwright.
+GitHub Actions installs Chromium and Linux system dependencies automatically through the workflow.
+
+A clean-clone proof must not rely on:
+
+```text
+uncommitted generated state
+manual database schema creation
+developer-local packages
+untracked configuration
+hidden workstation services
+```
 
 ---
 
-## 26. CI Failure Triage
+## 32. CI Failure Triage
 
-When CI fails, identify the exact failing step before changing configuration.
+When CI fails, identify the exact failing stage before changing repository configuration.
 
-Do not respond to CI failures by broadly:
+Do not respond to a CI failure by broadly:
 
 ```text
 disabling validation
 loosening compiler rules
 removing tests
-switching to non-frozen installs
+switching away from frozen installs
+bypassing migrations
 adding unrelated infrastructure
 changing package versions
 changing runner versions
+weakening architecture rules
 ```
 
-without first establishing the actual cause.
+without establishing the actual cause.
 
 Recommended triage sequence:
 
 ```text
 1. Identify the failing workflow step.
 2. Read the first meaningful error.
-3. Determine whether the failure reproduces locally.
-4. Check for Linux-specific behavior.
-5. Make the smallest justified correction.
-6. Re-run the relevant local validation.
-7. Push and verify the real workflow again.
+3. Determine whether it reproduces locally.
+4. Check Linux-specific behavior.
+5. Check environment and database assumptions.
+6. Check migration state when persistence is involved.
+7. Make the smallest justified correction.
+8. Re-run the relevant local validation.
+9. Re-run the complete local validation when appropriate.
+10. Push and verify the real GitHub Actions workflow.
 ```
 
 ---
 
-## 27. Linux-Specific Failure Checks
+## 33. Linux-Specific Failure Checks
 
 When something works on Windows but fails in CI, inspect:
 
@@ -597,15 +977,40 @@ executable availability
 environment-variable assumptions
 permissions
 native dependency installation
+PostgreSQL host and port assumptions
+migration path casing
+generated-client behavior
 ```
 
-Do not assume a GitHub Actions failure is inherently a GitHub Actions configuration problem.
+Do not assume a GitHub Actions failure is inherently a workflow-configuration problem.
 
-The workflow may be correctly exposing a portability defect in repository code.
+CI may be correctly exposing a portability defect in repository code or tooling.
 
 ---
 
-## 28. Workflow Changes
+## 34. Database Failure Triage
+
+When a database integration stage fails, inspect in this order:
+
+```text
+1. PostgreSQL service health.
+2. DATABASE_URL.
+3. Migration deployment result.
+4. Prisma client generation.
+5. Actual failing persistence test.
+6. Database constraints.
+7. Test cleanup.
+```
+
+Do not immediately reset or mutate the CI database manually.
+
+CI databases are disposable.
+
+The correct fix must remain reproducible from committed repository state.
+
+---
+
+## 35. Workflow Changes
 
 Changes to:
 
@@ -620,8 +1025,10 @@ Before committing a workflow change:
 ```text
 format the YAML
 inspect the diff
-run relevant validation locally
-check staged whitespace
+run relevant local validation
+run git diff --check
+inspect repository status
+commit intentionally
 push
 verify the real GitHub Actions run
 ```
@@ -630,43 +1037,85 @@ A workflow change is not fully validated until GitHub has successfully parsed an
 
 ---
 
-## 29. Pull Request Validation
+## 36. Pull Request Validation
 
-Pull requests targeting `main` execute the same validation job as pushes to `main`.
-
-This ensures the baseline checks are available before merge.
-
-Repository branch-protection or required-status-check policy is separate from the existence of CI itself and should be configured intentionally when repository governance requires it.
-
-The CI workflow does not assume that branch protection is already enabled.
-
----
-
-## 30. Future Database Integration Tests
-
-When real database integration tests are introduced, the owning milestone should define:
+Pull requests targeting:
 
 ```text
-database service lifecycle
-test database configuration
-migration application
-test isolation
-cleanup behavior
-CI health checks
-failure diagnostics
+main
 ```
 
-The PostgreSQL CI service should be introduced at that time rather than preemptively.
+execute the same validation job as pushes to:
 
-The same requirement-driven rule applies to all other infrastructure.
+```text
+main
+```
+
+This ensures repository validation is available before merge.
+
+Branch-protection and required-status-check policies are governance concerns separate from the existence of the workflow itself.
+
+CI does not assume branch protection is already enabled.
 
 ---
 
-## 31. CI Success Criteria
+## 37. Database Integration-Test Ownership
 
-A Phase 1 CI run is successful only when all configured validation steps complete successfully.
+The current database integration-test contract is:
 
-The expected status is:
+```text
+service lifecycle
+  → GitHub Actions PostgreSQL service
+
+configuration
+  → DATABASE_URL
+
+schema setup
+  → committed Prisma migrations
+
+migration execution
+  → prisma:migrate:deploy
+
+integration execution
+  → pnpm run test:integration
+
+test isolation
+  → test-owned records
+
+cleanup
+  → tests remove created records
+
+health
+  → pg_isready
+```
+
+Database infrastructure remains owned by:
+
+```text
+Database Foundation
+```
+
+Persistence behavior remains tested from the owning Platform boundaries.
+
+Current Platform ownership is:
+
+```text
+Actor
+  → Identity & Access Platform
+
+User
+  → User Platform
+```
+
+Future database-backed Platforms should extend the canonical integration lane rather than create unrelated database-test mechanisms.
+
+---
+
+## 38. CI Success Criteria
+
+A current AI World CI run is successful only when all configured validation steps complete successfully.
+
+The expected GitHub status is:
 
 ```text
 CI / Validate ✅
@@ -678,21 +1127,29 @@ The validated pipeline includes:
 Checkout repository
 Setup pnpm
 Setup Node.js
+Start and health-check PostgreSQL
 Install dependencies
 Check formatting
 Lint
 Typecheck
-Run tests
+Run default tests
+Apply committed database migrations
+Run database integration tests
 Install Playwright Chromium
 Run browser E2E tests
 Build
+Check architecture
 ```
+
+A successful database integration test without successful migration deployment is insufficient.
+
+A successful local run without successful GitHub Actions execution is insufficient for workflow validation.
 
 ---
 
-## 32. Phase 1 CI Contract
+## 39. Phase 1 Historical CI Baseline
 
-P1-M12 establishes the following CI baseline:
+P1-M12 originally established the following CI baseline:
 
 ```text
 Platform
@@ -715,7 +1172,7 @@ Validation
   format
   lint
   typecheck
-  unit/integration tests
+  unit/API/Web tests
   Chromium browser E2E
   build
 
@@ -729,7 +1186,7 @@ Execution
   superseded-run cancellation
 
 Infrastructure
-  no PostgreSQL service yet
+  no PostgreSQL service
   no Redis
   no search engine
   no queue broker
@@ -740,4 +1197,137 @@ Acceptance
   real GitHub Actions CI / Validate succeeds
 ```
 
-This is the canonical Phase 1 Continuous Integration baseline for AI World.
+This remains the historical Phase 1 CI baseline.
+
+It should not be rewritten retroactively as though PostgreSQL integration testing existed during Phase 1.
+
+---
+
+## 40. P2-M01 CI Extension
+
+P2-M01 extends the Phase 1 baseline with the first real Platform persistence validation.
+
+The extension adds:
+
+```text
+PostgreSQL 18.4-alpine CI service
+DATABASE_URL CI configuration
+PostgreSQL health checking
+committed Prisma migration deployment
+root test:integration command
+Turborepo test:integration task
+Identity & Access persistence tests
+User persistence tests
+database cleanup verification
+architecture validation in the complete CI contract
+```
+
+The resulting persistence lifecycle is:
+
+```text
+fresh database
+  ↓
+committed migration history
+  ↓
+canonical Actor/User schema
+  ↓
+Platform integration tests
+  ↓
+clean test-owned persistence
+```
+
+P2-M01 therefore proves that the shared Identity and User persistence baseline can be reconstructed and validated outside a developer workstation.
+
+---
+
+## 41. Current CI Infrastructure Boundary
+
+The current CI infrastructure is intentionally limited to what validated capabilities require:
+
+```text
+GitHub-hosted Ubuntu runner
+Node.js
+pnpm
+PostgreSQL
+Playwright Chromium
+```
+
+Not currently justified:
+
+```text
+Redis
+Kafka
+RabbitMQ
+Temporal
+external search
+graph database
+vector database
+MinIO
+Mailpit
+Kubernetes
+service mesh
+```
+
+Infrastructure must enter CI only when an accepted capability introduces a real automated validation requirement.
+
+---
+
+## 42. Canonical CI Contract
+
+The current AI World CI contract is:
+
+```text
+Repository
+  install reproducibly from committed lockfile
+
+Quality
+  formatting
+  lint
+  TypeScript validation
+
+Default testing
+  Foundation tests
+  API tests
+  Web tests
+
+Persistence
+  PostgreSQL service
+  committed migration deployment
+  Identity & Access integration tests
+  User integration tests
+  deterministic cleanup
+
+Browser
+  Chromium Playwright E2E
+
+Build
+  all participating applications and packages
+
+Architecture
+  dependency-boundary validation
+
+Security
+  read-only GitHub contents permission
+  checkout credentials not persisted
+
+Execution
+  Linux runner
+  CI=true
+  bounded timeout
+  superseded-run cancellation
+
+Configuration
+  no developer-local .env dependency
+  explicit CI-owned DATABASE_URL
+
+Infrastructure policy
+  requirement-driven only
+
+Acceptance
+  relevant local validation succeeds
+  clean migrations reproduce schema
+  integration tests succeed
+  real GitHub Actions CI / Validate succeeds
+```
+
+This is the canonical Continuous Integration contract for the current AI World repository.

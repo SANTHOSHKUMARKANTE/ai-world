@@ -1359,38 +1359,223 @@ packages/foundations/
 Potential Kernel support may be added only if required.
 
 ---
-
 # 69. Phase 2 Milestone P2-M01 — Actor and User Baseline
 
-Establish distinction between:
+Establish the foundational distinction between:
 
 ```text
-Actor security identity
+Actor
+  → security identity
 ```
 
 and:
 
 ```text
-User product profile.
+User
+  → product profile
 ```
+
+The distinction is architectural and persistent.
+
+An Actor represents the security identity that later participates in capabilities such as:
+
+```text
+credentials
+authentication
+Sessions
+verification
+recovery
+roles
+permissions
+security lifecycle
+```
+
+A User represents the product-facing profile that later owns capabilities such as:
+
+```text
+display name
+profile basics
+locale
+timezone
+product preferences
+```
+
+Actor and User are not the same Resource.
+
+P2-M01 establishes their ownership, public Contracts, canonical persistence relationship, first committed database migration, and persistence-validation baseline.
+
+Current P2-M01 implementation state:
+
+```text
+repository/package inspection           complete
+Actor vs User ownership                 complete
+persistence relationship                complete
+public Contract boundaries              complete
+Identity & Access package               complete
+User package                            complete
+first canonical Prisma migration        complete
+Platform persistence tests              complete
+root database integration-test lane     complete
+CI PostgreSQL/migration wiring          complete
+local architecture/full validation      complete
+```
+
+P2-M01 closure additionally requires:
+
+```text
+intentional Git checkpoint
+successful real GitHub Actions CI / Validate execution
+```
+
+P2-M02 Registration is the next implementation milestone after P2-M01 closure.
 
 ---
 
 # 70. P2-M01 Core Resources
 
-Likely:
+P2-M01 implements exactly two business Resources:
 
 ```text
-Identity/Actor
+Identity & Access Platform
+  Actor
 
-User
-
-Credential
-
-Session.
+User Platform
+  User
 ```
 
-Exact persistence model belongs to implementation design.
+The canonical Platform packages are:
+
+```text
+@ai-world/platform-identity-access
+@ai-world/platform-user
+```
+
+Credential and Session are intentionally not implemented in P2-M01.
+
+They belong to later Phase 2 authentication and Session milestones when concrete behavior requires them.
+
+The P2-M01 persistence relationship is:
+
+```text
+Actor 1 ───── 0..1 User
+```
+
+The invariants are:
+
+```text
+a User must reference exactly one Actor
+an Actor may exist without a User
+an Actor may have at most one User
+Actor and User use separate identifiers
+User.actorId is a unique foreign key
+Actor deletion is restricted while referenced by a User
+Actor identifier updates cascade to the User reference
+```
+
+Canonical persistence ownership is:
+
+```text
+identity_actors
+  → Identity & Access Platform
+
+users
+  → User Platform
+```
+
+Physical Prisma schema and migration mechanics remain owned by the Database Foundation.
+
+The Database Foundation does not become the business owner of Actor or User.
+
+The canonical persistence baseline uses:
+
+```text
+UUID identifiers
+Prisma-level uuid() generation
+PostgreSQL UUID columns
+TIMESTAMPTZ(3) timestamps
+```
+
+The first committed canonical business migration is:
+
+```text
+20260809133830_actor_user_baseline
+```
+
+The migration creates:
+
+```text
+identity_actors
+users
+users.actor_id unique constraint
+users.actor_id → identity_actors.id foreign key
+ON DELETE RESTRICT
+ON UPDATE CASCADE
+```
+
+P2-M01 public Contracts remain independent of Prisma-generated models.
+
+Production Platform source must not expose or depend on Prisma persistence types.
+
+Database Foundation access is permitted only as test infrastructure for the P2-M01 persistence integration tests.
+
+P2-M01 persistence validation proves:
+
+```text
+Actor creation                              passed
+canonical Actor UUID/timestamps             passed
+User linkage to existing Actor              passed
+duplicate User for one Actor rejected       passed
+nonexistent Actor reference rejected        passed
+referenced Actor deletion rejected          passed
+test-owned database cleanup                 passed
+```
+
+The automated database integration lane is:
+
+```text
+pnpm run test:integration
+```
+
+Current test-suite ownership is:
+
+```text
+Identity & Access Platform
+  1 integration test
+
+User Platform
+  4 integration tests
+
+Total
+  5 integration tests
+```
+
+The normal repository test lane remains independent of live PostgreSQL:
+
+```text
+pnpm run test
+```
+
+Database-backed persistence validation remains separate:
+
+```text
+pnpm run test:integration
+```
+
+CI reconstructs the persistence baseline through:
+
+```text
+fresh PostgreSQL
+  ↓
+committed Prisma migrations
+  ↓
+Actor/User canonical schema
+  ↓
+Platform integration tests
+```
+
+No generalized Kernel identifier capability is pulled into P2-M01.
+
+If later Phase 3 identifier work requires migration of these Resources, that migration must be intentional rather than supported through a premature compatibility layer.
 
 ---
 

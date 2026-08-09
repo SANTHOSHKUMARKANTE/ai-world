@@ -24,6 +24,22 @@ jobs:
 
     env:
       CI: 'true'
+      DATABASE_URL: postgresql://ai_world:ai_world@127.0.0.1:5432/ai_world
+
+    services:
+      postgres:
+        image: postgres:18.4-alpine
+        env:
+          POSTGRES_USER: ai_world
+          POSTGRES_PASSWORD: ai_world
+          POSTGRES_DB: ai_world
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ai_world -d ai_world"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
       - name: Checkout repository
@@ -55,6 +71,12 @@ jobs:
 
       - name: Run tests
         run: pnpm run test
+
+      - name: Apply database migrations
+        run: pnpm --filter @ai-world/foundation-database run prisma:migrate:deploy
+
+      - name: Run database integration tests
+        run: pnpm run test:integration
 
       - name: Install Playwright Chromium
         run: pnpm --filter @ai-world/web exec playwright install --with-deps chromium
