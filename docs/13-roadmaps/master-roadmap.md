@@ -1404,6 +1404,10 @@ Actor and User are not the same Resource.
 
 P2-M01 establishes their ownership, public Contracts, canonical persistence relationship, first committed database migration, and persistence-validation baseline.
 
+
+with:
+
+```markdown
 Current P2-M01 implementation state:
 
 ```text
@@ -1417,8 +1421,10 @@ first canonical Prisma migration        complete
 Platform persistence tests              complete
 root database integration-test lane     complete
 CI PostgreSQL/migration wiring          complete
+fresh-database reconstruction proof     complete
 local architecture/full validation      complete
-```
+Git checkpoint                          complete
+GitHub Actions CI / Validate             complete
 
 P2-M01 closure additionally requires:
 
