@@ -10,7 +10,8 @@
     "dev": "nest start --watch",
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "test": "vitest run",
+    "test": "vitest run --exclude \"test/**/*.integration.spec.ts\"",
+    "test:integration": "vitest run integration",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json"
   },
@@ -19,6 +20,8 @@
     "@ai-world/foundation-database": "workspace:*",
     "@ai-world/foundation-errors": "workspace:*",
     "@ai-world/foundation-observability": "workspace:*",
+    "@ai-world/platform-identity-access": "workspace:*",
+    "@ai-world/platform-user": "workspace:*",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",

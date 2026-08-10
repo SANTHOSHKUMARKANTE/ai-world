@@ -11,7 +11,8 @@
 | Status | ACCEPTED |
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-08 |
+| Last Reviewed | 2026-08-10 |
+| Current Delivery | Phase 2 ACTIVE — P2-M03 Password Authentication NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -545,6 +546,86 @@ Phase 1
 Phase 2–10
     NOT STARTED
 ```
+
+---
+
+
+# 23A. Current Delivery Status
+
+The status in Section 23 records the roadmap state at original acceptance.
+
+The current implementation position is:
+
+```text
+PROJECT
+AI World
+
+PHASE 0 — Architecture Foundation
+COMPLETE
+
+PHASE 1 — Engineering Foundation
+COMPLETE
+EXIT OUTCOME: ENGINEERING-READY
+
+PHASE 2 — Identity Platform
+ACTIVE
+
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+NEXT
+```
+
+Current Phase 2 milestone sequence:
+
+```text
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+NEXT
+
+P2-M04 — Session Management
+PLANNED
+
+P2-M05 — Email Verification
+PLANNED
+
+P2-M06 — Recovery
+PLANNED
+
+P2-M07 — User Profile
+PLANNED
+
+P2-M08 — Roles and Permissions
+PLANNED
+
+P2-M09 — Owner-Side Authorization
+PLANNED
+
+P2-M10 — Session Security UX
+PLANNED
+```
+
+Current non-blocking documentation debt:
+
+```text
+docs/13-roadmaps/README.md
+docs/00-governance/documentation-standard.md
+docs/00-governance/definition-of-done.md
+docs/templates/closure-review-template.md
+
+remain empty placeholders and are deferred to a dedicated governance/documentation task.
+```
+
+They do not redefine P2-M02 closure criteria.
 
 ---
 
@@ -1361,7 +1442,7 @@ Potential Kernel support may be added only if required.
 ---
 # 69. Phase 2 Milestone P2-M01 — Actor and User Baseline
 
-Establish the foundational distinction between:
+P2-M01 established the foundational distinction between:
 
 ```text
 Actor
@@ -1402,15 +1483,14 @@ product preferences
 
 Actor and User are not the same Resource.
 
-P2-M01 establishes their ownership, public Contracts, canonical persistence relationship, first committed database migration, and persistence-validation baseline.
+P2-M01 established their ownership, public Contracts, canonical persistence relationship, first committed database migration, and persistence-validation baseline.
 
-
-with:
-
-```markdown
-Current P2-M01 implementation state:
+Current P2-M01 status:
 
 ```text
+STATUS
+CLOSED
+
 repository/package inspection           complete
 Actor vs User ownership                 complete
 persistence relationship                complete
@@ -1425,15 +1505,15 @@ fresh-database reconstruction proof     complete
 local architecture/full validation      complete
 Git checkpoint                          complete
 GitHub Actions CI / Validate             complete
-
-P2-M01 closure additionally requires:
-
-```text
-intentional Git checkpoint
-successful real GitHub Actions CI / Validate execution
 ```
 
-P2-M02 Registration is the next implementation milestone after P2-M01 closure.
+Canonical migration:
+
+```text
+20260809133830_actor_user_baseline
+```
+
+P2-M01 is retained as the Phase 2 persistence baseline and is not reopened by later Credential, Session, or profile work unless a real architectural requirement requires change.
 
 ---
 
@@ -1542,7 +1622,7 @@ The automated database integration lane is:
 pnpm run test:integration
 ```
 
-Current test-suite ownership is:
+P2-M01 closure test-suite ownership was:
 
 ```text
 Identity & Access Platform
@@ -1587,27 +1667,43 @@ If later Phase 3 identifier work requires migration of these Resources, that mig
 
 # 71. Phase 2 Milestone P2-M02 — Registration
 
-Implement:
+P2-M02 implemented the first password-based registration vertical slice.
+
+Implemented scope:
 
 ```text
 User registration;
 
-identity creation;
+Identity-owned Actor creation;
 
-secure password setup;
+Identity-owned email identifier creation;
 
-User creation;
+secure password Credential setup;
 
-validation;
+User Platform creation through an owner-controlled Contract;
 
-transaction correctness.
+input validation;
+
+duplicate normalized-email handling;
+
+cross-owner transaction correctness;
+
+public API transport;
+
+real PostgreSQL integration proof.
+```
+
+P2-M02 is:
+
+```text
+CLOSED
 ```
 
 ---
 
-# 72. Registration Acceptance
+# 72. Registration Acceptance and Closure
 
-Must prove:
+P2-M02 acceptance required proof of:
 
 ```text
 duplicate identity handling;
@@ -1621,20 +1717,403 @@ canonical User linkage;
 transaction failure behavior.
 ```
 
+All accepted P2-M02 requirements are implemented and validated.
+
+## P2-M02 Ownership and Transaction Boundary
+
+Registration is coordinated by:
+
+```text
+Identity & Access Platform
+```
+
+because the use case establishes:
+
+```text
+Actor security identity
++
+ActorEmail
++
+PasswordCredential
+```
+
+while also creating the corresponding product-facing User.
+
+The atomic registration invariant is:
+
+```text
+Actor
++
+ActorEmail
++
+PasswordCredential
++
+User
+
+all commit together
+or
+none commit.
+```
+
+Canonical ownership remains:
+
+```text
+Actor
+ActorEmail
+PasswordCredential
+    → Identity & Access Platform
+
+User
+    → User Platform
+```
+
+Cross-owner User creation occurs through the User Platform public mutation Contract:
+
+```text
+UserRegistrationWriter
+```
+
+Identity & Access does not directly mutate User-owned persistence.
+
+Concrete persistence implementations are wired by the API Application Composition Root.
+
+This keeps production Platform source dependent on public Contracts rather than peer Platform concrete infrastructure.
+
+## P2-M02 Email Rules
+
+Registration email handling is:
+
+```text
+trim surrounding whitespace
+
+validate structural email form
+
+maximum 254 Unicode code points
+
+preserve the trimmed email representation
+
+lowercase normalizedEmail
+
+enforce normalizedEmail uniqueness
+
+do not perform provider-specific normalization
+```
+
+Email verification is intentionally not part of P2-M02.
+
+It remains:
+
+```text
+P2-M05 — Email Verification
+```
+
+## P2-M02 Password Rules
+
+The registration password policy is:
+
+```text
+minimum 15 Unicode code points
+
+maximum 128 Unicode code points
+
+NFC normalization before hashing
+
+no trimming
+
+no truncation
+
+spaces allowed
+
+Unicode allowed
+
+no composition rules
+```
+
+Passwords are hashed with:
+
+```text
+Argon2id
+
+memoryCost   19456 KiB
+timeCost     2
+parallelism  1
+hashLength   32
+version      0x13
+```
+
+Password hashing occurs before the registration database transaction is opened.
+
+Raw passwords are not persisted or returned through:
+
+```text
+public API responses
+
+ApplicationError public messages
+
+diagnostic causes
+```
+
+## P2-M02 Persistence
+
+P2-M02 adds Identity & Access-owned persistence for:
+
+```text
+ActorEmail
+
+PasswordCredential
+```
+
+Canonical business tables after P2-M02 are:
+
+```text
+identity_actors
+
+identity_actor_emails
+
+identity_password_credentials
+
+users
+```
+
+P2-M02 adds the committed migration:
+
+```text
+20260809170217_actor_email_password_credential
+```
+
+Current canonical migration history:
+
+```text
+20260809133830_actor_user_baseline
+
+20260809170217_actor_email_password_credential
+```
+
+A fresh disposable PostgreSQL database was successfully reconstructed using only committed migrations.
+
+## P2-M02 Registration API
+
+The API Application exposes:
+
+```text
+POST /registration
+```
+
+Successful registration returns:
+
+```text
+HTTP 201
+
+actorId
+userId
+```
+
+The public registration response does not expose:
+
+```text
+password
+
+password hash
+
+Credential identifiers
+
+internal persistence models
+
+Session
+
+token
+
+cookie
+```
+
+Current public registration error behavior includes:
+
+```text
+400 — invalid transport request
+
+400 — invalid email
+
+400 — invalid password
+
+409 — duplicate normalized email
+```
+
+Database/provider-specific failures are translated into AI World error semantics before reaching the public API.
+
+## P2-M02 Validation Evidence
+
+P2-M02 closure validation proves:
+
+```text
+Frozen dependency install               PASS
+
+Prettier                                PASS
+
+Lint                                    PASS
+
+TypeScript                              PASS
+
+Identity unit tests                     17 / 17 PASS
+
+Identity integration tests              11 / 11 PASS
+
+User integration tests                   4 / 4 PASS
+
+API registration integration             5 / 5 PASS
+
+Database integration total              20 / 20 PASS
+
+API baseline tests                        7 / 7 PASS
+
+Chromium browser E2E                      1 / 1 PASS
+
+Production build                        PASS
+
+Prisma schema validation                PASS
+
+Canonical migration status              PASS
+
+Fresh migration reconstruction          PASS
+
+Architecture validation                 PASS
+```
+
+Current architecture validation result:
+
+```text
+98 modules
+
+171 dependencies
+
+0 dependency violations
+```
+
+After database-backed validation, test-owned canonical business rows are:
+
+```text
+identity_actors               0
+
+identity_actor_emails         0
+
+identity_password_credentials 0
+
+users                         0
+```
+
+## P2-M02 Architecture Review Correction
+
+Final canonical-document review identified one concrete peer-Platform wiring issue before closure.
+
+The corrected dependency direction is:
+
+```text
+Identity & Access infrastructure
+    ↓
+UserRegistrationWriter public Contract
+```
+
+rather than:
+
+```text
+Identity & Access infrastructure
+    ↓
+User concrete persistence implementation
+```
+
+The API Composition Root now wires the concrete User persistence writer.
+
+Focused validation after the correction passed:
+
+```text
+Identity typecheck/build/lint            PASS
+
+API typecheck/lint                       PASS
+
+Identity unit tests                      17 / 17 PASS
+
+API baseline tests                        7 / 7 PASS
+
+Database integration total              20 / 20 PASS
+
+Architecture validation                 98 modules / 171 dependencies / 0 violations
+```
+
+## P2-M02 Scope Boundary
+
+P2-M02 intentionally does not implement:
+
+```text
+password login
+
+credential authentication flow
+
+Session creation
+
+Session validation
+
+logout
+
+email verification workflow
+
+password recovery
+
+User Profile editing
+
+Roles
+
+Permissions
+
+owner-side Authorization
+```
+
+Those remain later Phase 2 milestones.
+
+Current delivery position:
+
+```text
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+NEXT
+
+Phase 2 — Identity Platform
+ACTIVE
+```
+
 ---
 
 # 73. Phase 2 Milestone P2-M03 — Password Authentication
 
+Reuse the password Credential and Argon2id baseline established by P2-M02.
+
 Implement:
 
 ```text
-Argon2id hashing;
+login input validation;
 
-login;
+canonical identity lookup;
 
-credential verification;
+stored password Credential lookup;
 
-safe authentication errors.
+Argon2id credential verification;
+
+successful password-authentication result;
+
+safe authentication errors;
+
+credential and password secrecy.
+```
+
+P2-M03 must not create Session lifecycle implicitly unless that behavior is deliberately pulled forward and documented.
+
+Session creation, validation, expiration, revocation, and logout remain primarily:
+
+```text
+P2-M04 — Session Management
 ```
 
 ---
@@ -5430,7 +5909,7 @@ TECHNICAL DEBT.
 
 ---
 
-# 339. Current Status After Phase 0
+# 339. Historical Status Immediately After Phase 0
 
 ```text
 PROJECT
@@ -6291,6 +6770,7 @@ rather than speculative scale.
 ```text
 PHASE 0
 ARCHITECTURE FOUNDATION
+    COMPLETE
     ✅ Architecture contract
     ✅ Repository architecture
     ✅ Technology stack
@@ -6299,29 +6779,38 @@ ARCHITECTURE FOUNDATION
 
 PHASE 1
 ENGINEERING FOUNDATION
-    Workspace
-    API
-    Web
-    Configuration
-    Database
-    Migrations
-    Observability
-    Testing
-    CI
+    COMPLETE
+    EXIT: ENGINEERING-READY
+    ✅ Workspace
+    ✅ API
+    ✅ Web
+    ✅ Configuration
+    ✅ Database
+    ✅ Migrations
+    ✅ Observability
+    ✅ Testing
+    ✅ CI
+    ✅ Architecture boundary baseline
 
 
 PHASE 2
 IDENTITY PLATFORM
-    Identity & Access
-    User
-    Email
-    Authentication
-    Sessions
-    Authorization
+    ACTIVE
+    ✅ P2-M01 Actor and User Baseline — CLOSED
+    ✅ P2-M02 Registration — CLOSED
+    →  P2-M03 Password Authentication — NEXT
+    ☐  P2-M04 Session Management
+    ☐  P2-M05 Email Verification
+    ☐  P2-M06 Recovery
+    ☐  P2-M07 User Profile
+    ☐  P2-M08 Roles and Permissions
+    ☐  P2-M09 Owner-Side Authorization
+    ☐  P2-M10 Session Security UX
 
 
 PHASE 3
 PLATFORM KERNEL BASELINE
+    NOT STARTED
     Identifiers
     Namespace
     Events
@@ -6333,6 +6822,7 @@ PLATFORM KERNEL BASELINE
 
 PHASE 4
 KNOWLEDGE
+    NOT STARTED
     Canonical Knowledge
     Typed domain resources
     Anime v1
@@ -6344,6 +6834,7 @@ KNOWLEDGE
 
 PHASE 5
 MEDIA
+    NOT STARTED
     Assets
     Storage
     Upload
@@ -6353,6 +6844,7 @@ MEDIA
 
 PHASE 6
 DISCOVERY
+    NOT STARTED
     Search
     Filters
     Ranking
@@ -6361,6 +6853,7 @@ DISCOVERY
 
 PHASE 7
 AI / CREATOR
+    NOT STARTED
     Provider Adapter
     Generation
     Context
@@ -6371,6 +6864,7 @@ AI / CREATOR
 
 PHASE 8
 COMPOSITION / CMS
+    NOT STARTED
     Pages
     Blocks
     Editing
@@ -6381,6 +6875,7 @@ COMPOSITION / CMS
 
 PHASE 9
 ENGAGEMENT
+    NOT STARTED
     Favorites
     Collections
     optional Progress
@@ -6390,6 +6885,7 @@ ENGAGEMENT
 
 PHASE 10
 PRODUCTION OPERATIONS
+    NOT STARTED
     Environments
     Deployment
     Observability
@@ -6404,7 +6900,7 @@ PRODUCTION OPERATIONS
 
 ---
 
-# 399. Immediate Next Action
+# 399. Historical Immediate Next Action at Phase 0 Acceptance
 
 Upon acceptance of this roadmap:
 
@@ -6428,7 +6924,7 @@ beginning with repository/workspace implementation.
 
 ---
 
-# 400. First Implementation Sequence
+# 400. Historical First Implementation Sequence
 
 The initial implementation should proceed approximately:
 
@@ -6472,7 +6968,7 @@ The exact command-by-command sequence may be refined during implementation witho
 
 ---
 
-# 401. Coding Authorization
+# 401. Historical Coding Authorization at Phase 0 Acceptance
 
 From the moment this document is accepted:
 
@@ -6663,6 +7159,8 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 72, 398, and 410.
+
 ```text
 DOCUMENT
 P0-D18 — AI World Master Roadmap
@@ -6707,3 +7205,48 @@ P1-M01 — Workspace Bootstrap
 IMPLEMENTATION STATUS
 AUTHORIZED TO BEGIN
 ```
+
+
+---
+
+# 410. Current Delivery Snapshot
+
+As of the latest roadmap review:
+
+```text
+DATE
+2026-08-10
+
+CURRENT PHASE
+Phase 2 — Identity Platform
+
+PHASE STATUS
+ACTIVE
+
+COMPLETED
+P2-M01 — Actor and User Baseline
+P2-M02 — Registration
+
+NEXT
+P2-M03 — Password Authentication
+
+BLOCKED
+None
+
+DEFERRED
+P2-M04 through P2-M10 remain planned in their accepted Phase 2 order.
+
+ARCHITECTURE CHANGES
+P2-M02 concrete User persistence wiring moved to the API Composition Root so Identity & Access depends only on the UserRegistrationWriter public Contract.
+
+DOCUMENTATION DEBT
+Roadmap README, Documentation Standard, project Definition of Done, and Closure Review Template remain empty placeholders and are intentionally deferred to a dedicated governance/documentation task.
+```
+
+The next implementation work is:
+
+```text
+P2-M03 — Password Authentication
+```
+
+P2-M03 begins only after the P2-M02 Git checkpoint and remote CI validation are complete.

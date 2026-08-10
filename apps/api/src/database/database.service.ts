@@ -16,6 +16,10 @@ export class DatabaseService implements OnApplicationShutdown {
     });
   }
 
+  getClient(): DatabaseClient {
+    return this.database;
+  }
+
   async checkReadiness(): Promise<void> {
     await this.database.$queryRaw`SELECT 1`;
   }

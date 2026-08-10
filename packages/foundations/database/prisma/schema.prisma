@@ -14,7 +14,9 @@ model Actor {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  user User?
+  email              ActorEmail?
+  passwordCredential PasswordCredential?
+  user               User?
 
   @@map("identity_actors")
 }
@@ -28,4 +30,29 @@ model User {
   actor Actor @relation(fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   @@map("users")
+}
+
+model ActorEmail {
+  id              String   @id @default(uuid()) @db.Uuid
+  actorId         String   @unique @map("actor_id") @db.Uuid
+  email           String   @db.Text
+  normalizedEmail String   @unique @map("normalized_email") @db.Text
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  actor Actor @relation(fields: [actorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("identity_actor_emails")
+}
+
+model PasswordCredential {
+  id           String   @id @default(uuid()) @db.Uuid
+  actorId      String   @unique @map("actor_id") @db.Uuid
+  passwordHash String   @map("password_hash") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  actor Actor @relation(fields: [actorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("identity_password_credentials")
 }

@@ -1,6 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 
 import { PrismaClient } from './generated/prisma/client';
+import type { TransactionClient } from './generated/prisma/internal/prismaNamespace';
 
 export interface DatabaseClientOptions {
   readonly connectionString: string;
@@ -15,3 +16,4 @@ export function createDatabaseClient(options: DatabaseClientOptions): PrismaClie
 }
 
 export type DatabaseClient = ReturnType<typeof createDatabaseClient>;
+export type DatabaseTransactionClient = TransactionClient;

@@ -9,17 +9,27 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./infrastructure": {
+      "types": "./dist/infrastructure.d.ts",
+      "default": "./dist/infrastructure.js"
     }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "vitest run --exclude \"test/**/*.integration.spec.ts\"",
     "test:integration": "vitest run integration",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p test/tsconfig.json"
   },
   "devDependencies": {
-    "@ai-world/foundation-database": "workspace:*",
     "@types/node": "24.13.3",
     "vitest": "4.1.10"
+  },
+  "dependencies": {
+    "@ai-world/foundation-database": "workspace:*",
+    "@ai-world/foundation-errors": "workspace:*",
+    "@ai-world/platform-user": "workspace:*",
+    "argon2": "0.45.1"
   }
 }
