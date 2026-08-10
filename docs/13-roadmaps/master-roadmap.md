@@ -1,8 +1,5 @@
 # AI World Master Roadmap
 
-Current Delivery | Phase 2 ACTIVE — P2-M03 Password Authentication VALIDATING; P2-M04 Session Management NEXT
-Last Reviewed | 2026-08-10
-
 ## Document Metadata
 
 | Field | Value |
@@ -15,7 +12,7 @@ Last Reviewed | 2026-08-10
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-10 |
-| Current Delivery | Phase 2 ACTIVE — P2-M03 Password Authentication NEXT |
+| Current Delivery | Phase 2 ACTIVE — P2-M04 Session Management CLOSED; P2-M05 Email Verification NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -580,9 +577,12 @@ P2-M02 — Registration
 CLOSED
 
 P2-M03 — Password Authentication
-VALIDATING
+CLOSED
 
 P2-M04 — Session Management
+CLOSED
+
+P2-M05 — Email Verification
 NEXT
 ```
 
@@ -596,13 +596,13 @@ P2-M02 — Registration
 CLOSED
 
 P2-M03 — Password Authentication
-VALIDATING
+CLOSED
 
 P2-M04 — Session Management
-NEXT
+CLOSED
 
 P2-M05 — Email Verification
-PLANNED
+NEXT
 
 P2-M06 — Recovery
 PLANNED
@@ -2084,6 +2084,12 @@ P2-M02 — Registration
 CLOSED
 
 P2-M03 — Password Authentication
+CLOSED
+
+P2-M04 — Session Management
+CLOSED
+
+P2-M05 — Email Verification
 NEXT
 
 Phase 2 — Identity Platform
@@ -2123,10 +2129,10 @@ public API transport.
 Current milestone status:
 
 ```text
-VALIDATING
+CLOSED
 ```
 
-Git checkpoint and remote validation remain before final closure.
+P2-M03 is CLOSED after its intentional Git checkpoint and successful remote validation.
 
 ## P2-M03 Authentication Boundary
 
@@ -2495,24 +2501,25 @@ P2-M02 — Registration
 CLOSED
 
 P2-M03 — Password Authentication
-VALIDATING
+CLOSED
 
 P2-M04 — Session Management
+CLOSED
+
+P2-M05 — Email Verification
 NEXT
 
 Phase 2 — Identity Platform
 ACTIVE
 ```
 
-P2-M03 closes after:
+P2-M03 closure gate is complete:
 
-```text
 intentional Git checkpoint
 
 successful remote validation
-```
 
-P2-M04 must not begin before that closure gate is complete.
+P2-M04 subsequently implemented and validated Session Management.
 
 
 ---
@@ -2553,6 +2560,22 @@ read-only authentication persistence;
 no Session/token/cookie creation.
 ```
 
+P2-M04 subsequently implements the Session security baseline that P2-M03 intentionally excluded:
+
+```text
+Session creation;
+
+Session validation;
+
+Session expiration;
+
+Session revocation;
+
+logout;
+
+Secure HttpOnly cookie transport.
+```
+
 Broader controls such as:
 
 ```text
@@ -2560,11 +2583,9 @@ rate limiting;
 
 account lockout policy;
 
-Session security;
+device/activity Session management;
 
-Session revocation;
-
-cookie security
+advanced Session Security UX
 ```
 
 remain separate capabilities and should be introduced only in their accepted milestone scope.
@@ -2574,33 +2595,570 @@ remain separate capabilities and should be introduced only in their accepted mil
 
 # 75. Phase 2 Milestone P2-M04 — Session Management
 
-Implement opaque server-side Sessions.
+P2-M04 implements Identity-owned opaque server-side Session management.
 
-Capabilities:
+Milestone status:
 
 ```text
-create;
-
-validate;
-
-expire;
-
-revoke;
-
-logout.
+P2-M04 — Session Management
+CLOSED
 ```
+
+## P2-M04 Session Ownership
+
+Session lifecycle is owned by:
+
+```text
+Identity & Access Platform
+```
+
+Applications consume Session capabilities through Identity contracts.
+
+Applications do not own:
+
+```text
+Session persistence;
+
+Session token generation;
+
+Session validation rules;
+
+Session expiration;
+
+Session revocation;
+
+logout semantics.
+```
+
+The API Application owns transport concerns such as HTTP routes, cookie reading, cookie writing, and response shaping.
+
+## P2-M04 Session Persistence
+
+The Identity persistence model introduces:
+
+```text
+identity_sessions
+```
+
+Relationship:
+
+```text
+Actor 1 → many Sessions
+```
+
+A Session stores:
+
+```text
+id
+
+actorId
+
+tokenDigest
+
+expiresAt
+
+revokedAt
+
+createdAt
+
+updatedAt
+```
+
+The Session migration is:
+
+```text
+20260810123113_actor_session_baseline
+```
+
+The Session foreign key is:
+
+```text
+identity_sessions.actor_id
+    → identity_actors.id
+
+ON DELETE CASCADE
+
+ON UPDATE CASCADE
+```
+
+Indexes exist for:
+
+```text
+actor_id
+
+expires_at
+
+unique token_digest
+```
+
+Physical Prisma schema and migration mechanics remain owned by the Database Foundation. Identity & Access remains the business owner of Session semantics and lifecycle.
+
+## P2-M04 Opaque Session Token
+
+Session authentication uses an opaque cryptographically random token.
+
+Token generation:
+
+```text
+32 cryptographically random bytes
+
+→ unpadded base64url
+
+→ opaque Session token
+```
+
+The raw Session token is never persisted.
+
+Before persistence:
+
+```text
+raw token
+
+→ SHA-256
+
+→ 64-character lowercase hexadecimal digest
+```
+
+Only the digest is stored in:
+
+```text
+identity_sessions.token_digest
+```
+
+This preserves the invariant:
+
+```text
+raw Session secret
+    NEVER stored in PostgreSQL
+```
+
+## P2-M04 Session Lifetime
+
+The initial Session lifetime is:
+
+```text
+7-day absolute expiration
+```
+
+P2-M04 does not implement sliding expiration.
+
+A newly created Session has:
+
+```text
+revokedAt = NULL
+```
+
+Multiple concurrent Sessions for the same Actor are permitted.
+
+Device and activity metadata remain outside P2-M04 scope.
+
+## P2-M04 Session Creation
+
+Successful password sign-in is coordinated inside Identity & Access through:
+
+```text
+SignInWithPassword
+
+AuthenticatePassword
+        ↓
+CreateSession
+```
+
+The API controller does not independently coordinate password authentication and Session creation as separate business operations.
+
+`CreateSession`:
+
+```text
+receives actorId;
+
+generates the raw opaque token;
+
+digests the token with SHA-256;
+
+calculates absolute expiration;
+
+persists the digest only;
+
+returns the raw token for the Application transport boundary.
+```
+
+## P2-M04 Session Validation
+
+Session validation receives the raw opaque token and derives its digest before persistence lookup.
+
+A Session is valid only when:
+
+```text
+token digest exists
+
+AND
+
+revokedAt IS NULL
+
+AND
+
+expiresAt > current time
+```
+
+The expiration boundary is strict:
+
+```text
+expiresAt == now
+→ expired
+```
+
+Unknown, revoked, and expired Sessions expose the same public authentication failure:
+
+```text
+HTTP 401
+
+identity.session.invalid
+
+Authentication is required.
+```
+
+The public API does not reveal why Session validation failed.
+
+## P2-M04 Session Revocation
+
+Identity & Access supports:
+
+```text
+logout by token digest;
+
+Actor-scoped Session revocation.
+```
+
+Revocation persists:
+
+```text
+revokedAt
+```
+
+Revocation operations are intentionally idempotent.
+
+The following cases do not expose Session existence:
+
+```text
+unknown Session;
+
+already-revoked Session;
+
+repeated logout.
+```
+
+Logout does not return whether a Session existed.
+
+## P2-M04 Password Sign-In API
+
+The existing endpoint remains:
+
+```text
+POST /authentication/password
+```
+
+Successful password authentication now:
+
+```text
+validates credentials;
+
+creates a Session;
+
+sets the Session cookie;
+
+returns HTTP 200.
+```
+
+The JSON success body remains:
+
+```json
+{
+  "actorId": "..."
+}
+```
+
+It does not expose:
+
+```text
+Session ID;
+
+raw Session token;
+
+token digest;
+
+password;
+
+password hash;
+
+Credential identifiers.
+```
+
+Wrong-password and unknown-email failures remain equivalent:
+
+```text
+HTTP 401
+
+identity.authentication.invalid_credentials
+
+The email or password is incorrect.
+```
+
+No Session is created and no Session cookie is issued when password authentication fails.
+
+## P2-M04 Session API
+
+The API Application exposes:
+
+```text
+GET /session
+
+DELETE /session
+```
+
+`GET /session` validates the Session cookie and returns:
+
+```json
+{
+  "actorId": "...",
+  "expiresAt": "..."
+}
+```
+
+It does not expose:
+
+```text
+Session ID;
+
+raw token;
+
+token digest.
+```
+
+`DELETE /session`:
+
+```text
+revokes the Session when a token is present;
+
+clears the browser cookie;
+
+returns HTTP 204;
+
+remains successful when the cookie is missing;
+
+remains successful for repeated logout.
+```
+
+## P2-M04 Browser Cookie
+
+The first-party Session cookie is:
+
+```text
+ai_world_session
+```
+
+Cookie policy:
+
+```text
+HttpOnly
+
+SameSite=Lax
+
+Path=/
+
+Max-Age aligned with the 7-day Session lifetime
+
+Expires aligned with Session expiration
+
+Secure in production
+
+not Secure for local/test HTTP
+
+no explicit Domain
+```
+
+The raw opaque Session token is transported only through the cookie boundary and is not returned in the JSON response.
+
+P2-M04 does not use browser localStorage for the Session secret.
+
+The initial browser deployment baseline is same-site. Generalized cross-site CSRF handling and deployment-specific Domain policy are not introduced speculatively; exact controls remain tied to deployment topology.
+
+## P2-M04 JWT Boundary
+
+JWT is not the default first-party browser Session storage model.
+
+P2-M04 uses:
+
+```text
+server-managed opaque Sessions
+```
+
+JWT/JWS remains available for later capabilities where the accepted technology strategy requires it, but is not introduced as the user Session mechanism here.
+
+## P2-M04 Security Invariants
+
+P2-M04 validation proves:
+
+```text
+raw Session token is not persisted;
+
+raw Session token is not returned in JSON;
+
+database stores only SHA-256 token digest;
+
+production Session cookie includes Secure;
+
+Session cookie is HttpOnly;
+
+Session cookie uses SameSite=Lax;
+
+expired Sessions are rejected;
+
+revoked Sessions are rejected;
+
+unknown Sessions are rejected;
+
+logout is idempotent;
+
+repeated logout does not change the original revokedAt;
+
+missing-cookie logout succeeds;
+
+wrong-password authentication creates no Session;
+
+unknown-email authentication creates no Session.
+```
+
+## P2-M04 Validation Evidence
+
+Full P2-M04 local validation completed successfully.
+
+```text
+Frozen dependency install
+PASS
+
+Formatting
+PASS
+
+Lint
+8 / 8 tasks
+
+Typecheck
+15 / 15 tasks
+
+Normal repository tests
+12 / 12 Turbo tasks
+
+Identity & Access unit tests
+41 / 41
+
+API unit tests
+12 / 12
+
+API integration tests
+18 / 18
+
+Registration API integration
+5 / 5
+
+Password sign-in API integration
+6 / 6
+
+Session lifecycle API integration
+7 / 7
+
+Repository integration lane
+PASS
+
+E2E
+PASS
+
+Production build
+PASS
+
+Architecture
+147 modules
+294 dependencies
+0 violations
+
+Prisma validation
+PASS
+
+Prisma migrations
+3 migrations
+database schema up to date
+
+Post-validation business rows
+identity_actors                  0
+identity_actor_emails            0
+identity_password_credentials    0
+users                            0
+identity_sessions                0
+
+git diff --check
+PASS
+```
+
+The Session API integration exercises the real path:
+
+```text
+HTTP
+
+→ Nest Application
+
+→ Identity & Access use cases
+
+→ PrismaSessionRepository
+
+→ PostgreSQL
+
+→ identity_sessions
+```
+
+This provides end-to-end proof of Session creation, digest-at-rest, validation, expiration rejection, revocation, logout, cookie clearing, and post-logout rejection.
+
+## P2-M04 Closure
+
+P2-M04 implementation and local validation are complete.
+
+Current milestone position:
+
+```text
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+CLOSED
+
+P2-M04 — Session Management
+CLOSED
+
+P2-M05 — Email Verification
+NEXT
+
+Phase 2 — Identity Platform
+ACTIVE
+```
+
+P2-M05 may proceed after the intentional P2-M04 Git checkpoint and successful remote validation.
 
 ---
 
 # 76. Session Web Integration
 
-First-party Web should authenticate through:
+P2-M04 establishes the first-party browser Session transport through:
 
 ```text
 Secure HttpOnly cookie
 ```
 
-according to Security architecture.
+with the concrete cookie baseline documented in Section 75.
+
+The first-party Web should consume this Session mechanism rather than introducing a separate browser token-storage model.
+
+Deployment-topology-specific cookie and CSRF controls remain governed by the accepted Security architecture and Technology Strategy.
 
 ---
 
@@ -7236,9 +7794,9 @@ IDENTITY PLATFORM
     ACTIVE
     ✅ P2-M01 Actor and User Baseline — CLOSED
     ✅ P2-M02 Registration — CLOSED
-    →  P2-M03 Password Authentication — NEXT
-    ☐  P2-M04 Session Management
-    ☐  P2-M05 Email Verification
+    ✅ P2-M03 Password Authentication — CLOSED
+    ✅ P2-M04 Session Management — CLOSED
+    →  P2-M05 Email Verification — NEXT
     ☐  P2-M06 Recovery
     ☐  P2-M07 User Profile
     ☐  P2-M08 Roles and Permissions
@@ -7664,45 +8222,67 @@ ACTIVE
 COMPLETED
 P2-M01 — Actor and User Baseline
 P2-M02 — Registration
-
-VALIDATING
 P2-M03 — Password Authentication
+P2-M04 — Session Management
 
 NEXT
-P2-M04 — Session Management
+P2-M05 — Email Verification
 
 BLOCKED
 None
 
 DEFERRED
-P2-M05 through P2-M10 remain planned in their accepted Phase 2 order.
+P2-M06 through P2-M10 remain planned in their accepted Phase 2 order.
 
-P2-M03 IMPLEMENTATION
-Password authentication validates an Actor through canonical email lookup and Argon2id PasswordCredential verification.
+P2-M04 IMPLEMENTATION
+Identity & Access owns opaque server-managed Session creation, validation, expiration, revocation, and logout.
 
-P2-M03 SECURITY
-Unknown email and wrong password expose the same HTTP 401 public failure. Unknown identities still execute Argon2id verification against a fixed dummy hash.
+P2-M04 TOKEN SECURITY
+Session tokens use 32 cryptographically random bytes encoded as base64url.
+Only the SHA-256 64-character hexadecimal digest is persisted.
+The raw Session token is never persisted and is never returned in JSON.
 
-P2-M03 PERSISTENCE
-Read only. No Prisma schema change and no new migration.
+P2-M04 LIFETIME
+Sessions use a 7-day absolute expiration.
+P2-M04 does not implement sliding expiration.
+Multiple concurrent Actor Sessions are allowed.
 
-P2-M03 API
+P2-M04 VALIDATION
+A Session is valid only when its digest exists, revokedAt is null, and expiresAt is greater than the current time.
+Unknown, expired, and revoked Sessions expose the same canonical HTTP 401 failure.
+
+P2-M04 REVOCATION
+Logout and Actor-scoped revocation are idempotent.
+Repeated logout and unknown Sessions do not expose Session existence.
+
+P2-M04 API
 POST /authentication/password
-Success: HTTP 200 + actorId only
-Invalid request: HTTP 400
-Invalid credentials: HTTP 401
+GET /session
+DELETE /session
 
-SESSION BOUNDARY
-No Session, token, JWT, cookie, revocation, or logout behavior is implemented by P2-M03.
+P2-M04 COOKIE
+ai_world_session
+HttpOnly
+SameSite=Lax
+Path=/
+Secure in production
+Max-Age aligned with Session expiration
+No explicit Domain
 
-ARCHITECTURE VALIDATION
-113 modules
-211 dependencies
-0 violations
+P2-M04 BROWSER STORAGE
+No localStorage Session secret.
+JWT is not the default first-party browser Session model.
 
-DATABASE INTEGRATION
-26 / 26 tests passing
-Post-validation Actor, ActorEmail, PasswordCredential, and User row counts are all zero.
+VALIDATION
+Identity unit tests: 41 / 41
+API unit tests: 12 / 12
+API integration tests: 18 / 18
+Repository integration lane: PASS
+E2E: PASS
+Production build: PASS
+Architecture: 147 modules / 294 dependencies / 0 violations
+Prisma: 3 migrations / schema up to date
+Post-validation Actor, ActorEmail, PasswordCredential, User, and Session row counts: all zero.
 
 DOCUMENTATION DEBT
 Roadmap README, Documentation Standard, project Definition of Done, and Closure Review Template remain empty placeholders and are intentionally deferred to a dedicated governance/documentation task.
@@ -7711,9 +8291,7 @@ Roadmap README, Documentation Standard, project Definition of Done, and Closure 
 The next implementation milestone is:
 
 ```text
-P2-M04 — Session Management
+P2-M05 — Email Verification
 ```
 
-P2-M04 begins only after the P2-M03 Git checkpoint and remote validation complete successfully.
-
----
+P2-M05 begins only after the P2-M04 Git checkpoint and remote validation complete successfully.
