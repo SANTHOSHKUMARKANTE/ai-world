@@ -1,11 +1,22 @@
 import { type LogLevel } from '@ai-world/foundation-observability';
-import { AuthenticatePassword, RegisterUser } from '@ai-world/platform-identity-access';
+import {
+  AuthenticatePassword,
+  CreateSession,
+  LogoutSession,
+  RegisterUser,
+  SignInWithPassword,
+  ValidateSession,
+} from '@ai-world/platform-identity-access';
 import {
   ARGON2ID_AUTHENTICATION_DUMMY_PASSWORD_HASH,
   Argon2idPasswordHasher,
   Argon2idPasswordVerifier,
+  NodeSessionTokenGenerator,
   PrismaPasswordAuthenticationReader,
   PrismaRegistrationTransaction,
+  PrismaSessionRepository,
+  Sha256SessionTokenDigester,
+  SystemSessionClock,
 } from '@ai-world/platform-identity-access/infrastructure';
 import { PrismaUserRegistrationWriter } from '@ai-world/platform-user/infrastructure';
 import { DynamicModule, Module } from '@nestjs/common';
@@ -19,6 +30,8 @@ import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
 import { ObservabilityModule } from './observability/observability.module';
 import { RegistrationController } from './registration/registration.controller';
+import { SessionController } from './session/session.controller';
+import { SessionCookie } from './session/session-cookie';
 
 export interface AppModuleOptions {
   readonly databaseUrl: string;
@@ -50,6 +63,7 @@ export class AppModule {
         HealthController,
         RegistrationController,
         PasswordAuthenticationController,
+        SessionController,
       ],
 
       providers: [
@@ -78,6 +92,61 @@ export class AppModule {
               new Argon2idPasswordVerifier(),
               ARGON2ID_AUTHENTICATION_DUMMY_PASSWORD_HASH,
             );
+          },
+        },
+
+        {
+          provide: CreateSession,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): CreateSession => {
+            return new CreateSession(
+              new PrismaSessionRepository(database.getClient()),
+              new NodeSessionTokenGenerator(),
+              new Sha256SessionTokenDigester(),
+              new SystemSessionClock(),
+            );
+          },
+        },
+
+        {
+          provide: SignInWithPassword,
+          inject: [AuthenticatePassword, CreateSession],
+          useFactory: (
+            authenticatePassword: AuthenticatePassword,
+            createSession: CreateSession,
+          ): SignInWithPassword => {
+            return new SignInWithPassword(authenticatePassword, createSession);
+          },
+        },
+
+        {
+          provide: ValidateSession,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): ValidateSession => {
+            return new ValidateSession(
+              new PrismaSessionRepository(database.getClient()),
+              new Sha256SessionTokenDigester(),
+              new SystemSessionClock(),
+            );
+          },
+        },
+
+        {
+          provide: LogoutSession,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): LogoutSession => {
+            return new LogoutSession(
+              new PrismaSessionRepository(database.getClient()),
+              new Sha256SessionTokenDigester(),
+              new SystemSessionClock(),
+            );
+          },
+        },
+
+        {
+          provide: SessionCookie,
+          useFactory: (): SessionCookie => {
+            return new SessionCookie(options.environment);
           },
         },
       ],

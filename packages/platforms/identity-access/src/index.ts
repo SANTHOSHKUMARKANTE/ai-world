@@ -45,3 +45,49 @@ export type {
 } from './authentication/password-authentication-reader';
 
 export type { PasswordVerifier } from './password/password-verifier';
+
+export type { SessionTokenGenerator } from './session/session-token-generator';
+
+export type { SessionTokenDigester } from './session/session-token-digester';
+
+export {
+  CreateSession,
+  SESSION_ABSOLUTE_TTL_MILLISECONDS,
+  type CreateSessionInput,
+  type CreateSessionResult,
+} from './session/create-session';
+
+export type { SessionClock } from './session/session-clock';
+
+export type {
+  CreatedSessionRecord,
+  CreateSessionRecordInput,
+  SessionRepository,
+} from './session/session-repository';
+
+export {
+  ValidateSession,
+  type ValidateSessionInput,
+  type ValidateSessionResult,
+} from './session/validate-session';
+
+export type {
+  SessionValidationReader,
+  SessionValidationRecord,
+} from './session/session-validation-reader';
+
+export { LogoutSession, type LogoutSessionInput } from './session/logout-session';
+
+export { RevokeSession, type RevokeSessionInput } from './session/revoke-session';
+
+export type {
+  RevokeSessionByActorInput,
+  RevokeSessionByTokenDigestInput,
+  SessionRevocationWriter,
+} from './session/session-revocation-writer';
+
+export {
+  SignInWithPassword,
+  type SignInWithPasswordInput,
+  type SignInWithPasswordResult,
+} from './authentication/sign-in-with-password';

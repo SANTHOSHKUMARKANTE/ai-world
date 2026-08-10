@@ -15,3 +15,17 @@ export {
 } from './password/argon2id-password-verifier';
 
 export { PrismaPasswordAuthenticationReader } from './authentication/prisma-password-authentication-reader';
+
+export {
+  NodeSessionTokenGenerator,
+  SESSION_TOKEN_RANDOM_BYTES,
+} from './session/node-session-token-generator';
+
+export {
+  SESSION_TOKEN_DIGEST_LENGTH,
+  Sha256SessionTokenDigester,
+} from './session/sha256-session-token-digester';
+
+export { PrismaSessionRepository } from './session/prisma-session-repository';
+
+export { SystemSessionClock } from './session/system-session-clock';
