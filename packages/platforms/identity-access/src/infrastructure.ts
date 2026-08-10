@@ -8,3 +8,10 @@ export {
 } from './password/argon2id-password-hasher';
 
 export { PrismaRegistrationTransaction } from './registration/prisma-registration-transaction';
+
+export {
+  Argon2idPasswordVerifier,
+  ARGON2ID_AUTHENTICATION_DUMMY_PASSWORD_HASH,
+} from './password/argon2id-password-verifier';
+
+export { PrismaPasswordAuthenticationReader } from './authentication/prisma-password-authentication-reader';

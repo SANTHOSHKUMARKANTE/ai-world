@@ -1,5 +1,8 @@
 # AI World Master Roadmap
 
+Current Delivery | Phase 2 ACTIVE — P2-M03 Password Authentication VALIDATING; P2-M04 Session Management NEXT
+Last Reviewed | 2026-08-10
+
 ## Document Metadata
 
 | Field | Value |
@@ -577,6 +580,9 @@ P2-M02 — Registration
 CLOSED
 
 P2-M03 — Password Authentication
+VALIDATING
+
+P2-M04 — Session Management
 NEXT
 ```
 
@@ -590,10 +596,10 @@ P2-M02 — Registration
 CLOSED
 
 P2-M03 — Password Authentication
-NEXT
+VALIDATING
 
 P2-M04 — Session Management
-PLANNED
+NEXT
 
 P2-M05 — Email Verification
 PLANNED
@@ -625,7 +631,7 @@ docs/templates/closure-review-template.md
 remain empty placeholders and are deferred to a dedicated governance/documentation task.
 ```
 
-They do not redefine P2-M02 closure criteria.
+They do not redefine current milestone closure criteria.
 
 ---
 
@@ -2088,49 +2094,481 @@ ACTIVE
 
 # 73. Phase 2 Milestone P2-M03 — Password Authentication
 
-Reuse the password Credential and Argon2id baseline established by P2-M02.
+P2-M03 reuses the password Credential and Argon2id baseline established by P2-M02.
 
-Implement:
+Implemented scope:
 
 ```text
-login input validation;
+login transport validation;
 
-canonical identity lookup;
+canonical email normalization;
 
-stored password Credential lookup;
+canonical Identity lookup;
 
-Argon2id credential verification;
+stored PasswordCredential lookup;
 
-successful password-authentication result;
+Argon2id password verification;
 
-safe authentication errors;
+safe authentication failure semantics;
 
-credential and password secrecy.
+unknown-identity anti-enumeration verification;
+
+successful Actor authentication result;
+
+real PostgreSQL integration;
+
+public API transport.
 ```
 
-P2-M03 must not create Session lifecycle implicitly unless that behavior is deliberately pulled forward and documented.
+Current milestone status:
 
-Session creation, validation, expiration, revocation, and logout remain primarily:
+```text
+VALIDATING
+```
+
+Git checkpoint and remote validation remain before final closure.
+
+## P2-M03 Authentication Boundary
+
+Password authentication is owned by:
+
+```text
+Identity & Access Platform
+```
+
+The use case is:
+
+```text
+email
++
+password
+
+    ↓
+
+AuthenticatePassword
+
+    ↓
+
+ActorEmail lookup
+
+    ↓
+
+PasswordCredential lookup
+
+    ↓
+
+Argon2id verification
+
+    ↓
+
+authenticated actorId
+```
+
+The User Platform does not participate in credential authentication.
+
+Authentication answers:
+
+```text
+Which Actor successfully proved possession of this Credential?
+```
+
+It does not resolve or return User profile state.
+
+## P2-M03 Authentication Input Rules
+
+Authentication email input is normalized through:
+
+```text
+trim surrounding whitespace
+
+lowercase canonical email
+```
+
+Authentication password input is normalized through:
+
+```text
+Unicode NFC
+```
+
+Authentication does not reuse registration-specific validation errors or registration policy semantics.
+
+Transport payload validation remains separate from credential authentication semantics.
+
+## P2-M03 Password Verification
+
+Password verification is represented through:
+
+```text
+PasswordVerifier
+```
+
+with the Argon2id implementation:
+
+```text
+Argon2idPasswordVerifier
+```
+
+Registration continues to use:
+
+```text
+PasswordHasher
+Argon2idPasswordHasher
+```
+
+Hashing and verification remain separate capabilities.
+
+The stored Argon2id hash parameters remain those established by P2-M02:
+
+```text
+memoryCost   19456 KiB
+
+timeCost     2
+
+parallelism  1
+
+hashLength   32
+
+version      0x13
+```
+
+## P2-M03 Unknown-Identity Handling
+
+Unknown email and wrong password intentionally expose the same public failure:
+
+```text
+HTTP 401
+
+identity.authentication.invalid_credentials
+
+The email or password is incorrect.
+```
+
+Unknown identities do not skip password verification.
+
+Instead, authentication verifies the supplied password against:
+
+```text
+ARGON2ID_AUTHENTICATION_DUMMY_PASSWORD_HASH
+```
+
+so the missing-identity path still performs Argon2id verification work.
+
+The dummy hash is not a secret and does not represent a real Actor or Credential.
+
+Its purpose is to reduce obvious account-enumeration differences between:
+
+```text
+unknown email
+
+and
+
+known email + wrong password.
+```
+
+No claim of perfectly identical wall-clock execution time is made.
+
+## P2-M03 Persistence
+
+P2-M03 authentication persistence is:
+
+```text
+READ ONLY
+```
+
+The authentication reader uses existing Identity-owned persistence:
+
+```text
+identity_actor_emails.normalized_email
+
+identity_password_credentials.password_hash
+
+identity_password_credentials.actor_id
+```
+
+P2-M03 introduces:
+
+```text
+NO new table
+
+NO new column
+
+NO Prisma schema change
+
+NO database migration
+```
+
+The canonical migration history therefore remains:
+
+```text
+20260809133830_actor_user_baseline
+
+20260809170217_actor_email_password_credential
+```
+
+## P2-M03 Authentication API
+
+The API Application exposes:
+
+```text
+POST /authentication/password
+```
+
+Successful authentication returns:
+
+```text
+HTTP 200
+
+actorId
+```
+
+The successful response intentionally does not return:
+
+```text
+userId
+
+password
+
+passwordHash
+
+Credential ID
+
+Session
+
+token
+
+cookie
+```
+
+Invalid transport payload returns:
+
+```text
+HTTP 400
+
+identity.authentication.invalid_request
+
+The authentication request is invalid.
+```
+
+Invalid credentials return:
+
+```text
+HTTP 401
+
+identity.authentication.invalid_credentials
+
+The email or password is incorrect.
+```
+
+Wrong-password and unknown-email failures use the same public error code, message, and HTTP status.
+
+## P2-M03 Session Boundary
+
+P2-M03 intentionally does not implement:
+
+```text
+Session creation
+
+Session validation
+
+Session expiration
+
+Session revocation
+
+logout
+
+access token
+
+refresh token
+
+JWT
+
+authentication cookie
+```
+
+Those remain primarily:
 
 ```text
 P2-M04 — Session Management
 ```
 
+A successful P2-M03 password-authentication result proves Actor authentication only.
+
+## P2-M03 Validation Evidence
+
+Full P2-M03 local validation proves:
+
+```text
+Frozen dependency install               PASS
+
+Prettier                                PASS
+
+Lint                                    PASS
+
+TypeScript                              PASS
+
+Identity unit tests                     23 / 23 PASS
+
+Identity integration tests              11 / 11 PASS
+
+User integration tests                   4 / 4 PASS
+
+API baseline tests                        7 / 7 PASS
+
+API registration integration             5 / 5 PASS
+
+API authentication integration           6 / 6 PASS
+
+API integration total                   11 / 11 PASS
+
+Repository integration total            26 / 26 PASS
+
+Chromium browser E2E                      1 / 1 PASS
+
+Production build                        PASS
+
+Prisma schema validation                PASS
+
+Canonical migration status              PASS
+
+Architecture validation                 PASS
+```
+
+Current architecture validation result:
+
+```text
+113 modules
+
+211 dependencies
+
+0 dependency violations
+```
+
+Canonical database state after integration execution:
+
+```text
+identity_actors               0
+
+identity_actor_emails         0
+
+identity_password_credentials 0
+
+users                         0
+```
+
+P2-M03 security validation proves:
+
+```text
+successful canonicalized-email authentication;
+
+real Argon2id verification;
+
+wrong password → HTTP 401;
+
+unknown email → HTTP 401;
+
+wrong-password and unknown-email public failures equivalent;
+
+raw password absent from public response;
+
+passwordHash absent from public response;
+
+Credential ID absent from public response;
+
+Actor identity absent from failed-authentication response;
+
+no Session returned;
+
+no token returned;
+
+no cookie created;
+
+authentication does not create or mutate registration-owned state.
+```
+
+## P2-M03 Current Delivery Position
+
+```text
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+VALIDATING
+
+P2-M04 — Session Management
+NEXT
+
+Phase 2 — Identity Platform
+ACTIVE
+```
+
+P2-M03 closes after:
+
+```text
+intentional Git checkpoint
+
+successful remote validation
+```
+
+P2-M04 must not begin before that closure gate is complete.
+
+
 ---
 
 # 74. Authentication Security
 
-Must prevent:
+P2-M03 authentication security must prevent:
 
 ```text
 plain-password persistence;
 
 credential disclosure;
 
-unsafe error detail;
+unsafe authentication error detail;
 
-password logging.
+password logging;
+
+obvious account existence disclosure.
 ```
+
+Current implementation satisfies the P2-M03 security boundary through:
+
+```text
+Argon2id credential verification;
+
+safe ApplicationError public messages;
+
+equivalent public failures for unknown email and wrong password;
+
+dummy-hash verification for unknown identities;
+
+no password or passwordHash in API responses;
+
+no Credential identifiers in failed responses;
+
+read-only authentication persistence;
+
+no Session/token/cookie creation.
+```
+
+Broader controls such as:
+
+```text
+rate limiting;
+
+account lockout policy;
+
+Session security;
+
+Session revocation;
+
+cookie security
+```
+
+remain separate capabilities and should be introduced only in their accepted milestone scope.
+
 
 ---
 
@@ -7227,26 +7665,55 @@ COMPLETED
 P2-M01 — Actor and User Baseline
 P2-M02 — Registration
 
-NEXT
+VALIDATING
 P2-M03 — Password Authentication
+
+NEXT
+P2-M04 — Session Management
 
 BLOCKED
 None
 
 DEFERRED
-P2-M04 through P2-M10 remain planned in their accepted Phase 2 order.
+P2-M05 through P2-M10 remain planned in their accepted Phase 2 order.
 
-ARCHITECTURE CHANGES
-P2-M02 concrete User persistence wiring moved to the API Composition Root so Identity & Access depends only on the UserRegistrationWriter public Contract.
+P2-M03 IMPLEMENTATION
+Password authentication validates an Actor through canonical email lookup and Argon2id PasswordCredential verification.
+
+P2-M03 SECURITY
+Unknown email and wrong password expose the same HTTP 401 public failure. Unknown identities still execute Argon2id verification against a fixed dummy hash.
+
+P2-M03 PERSISTENCE
+Read only. No Prisma schema change and no new migration.
+
+P2-M03 API
+POST /authentication/password
+Success: HTTP 200 + actorId only
+Invalid request: HTTP 400
+Invalid credentials: HTTP 401
+
+SESSION BOUNDARY
+No Session, token, JWT, cookie, revocation, or logout behavior is implemented by P2-M03.
+
+ARCHITECTURE VALIDATION
+113 modules
+211 dependencies
+0 violations
+
+DATABASE INTEGRATION
+26 / 26 tests passing
+Post-validation Actor, ActorEmail, PasswordCredential, and User row counts are all zero.
 
 DOCUMENTATION DEBT
 Roadmap README, Documentation Standard, project Definition of Done, and Closure Review Template remain empty placeholders and are intentionally deferred to a dedicated governance/documentation task.
 ```
 
-The next implementation work is:
+The next implementation milestone is:
 
 ```text
-P2-M03 — Password Authentication
+P2-M04 — Session Management
 ```
 
-P2-M03 begins only after the P2-M02 Git checkpoint and remote CI validation are complete.
+P2-M04 begins only after the P2-M03 Git checkpoint and remote validation complete successfully.
+
+---

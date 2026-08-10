@@ -27,3 +27,21 @@ export type {
   RegistrationTransaction,
   RegistrationTransactionResources,
 } from './registration/registration-transaction';
+
+export {
+  AuthenticatePassword,
+  type AuthenticatePasswordInput,
+  type AuthenticatePasswordResult,
+} from './authentication/authenticate-password';
+
+export {
+  normalizeAuthenticationEmail,
+  normalizeAuthenticationPassword,
+} from './authentication/authentication-input';
+
+export type {
+  PasswordAuthenticationCredential,
+  PasswordAuthenticationReader,
+} from './authentication/password-authentication-reader';
+
+export type { PasswordVerifier } from './password/password-verifier';
