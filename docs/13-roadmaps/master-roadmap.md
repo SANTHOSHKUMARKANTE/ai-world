@@ -12,7 +12,7 @@
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-11 |
-| Current Delivery | Phase 2 ACTIVE — P2-M05 Email Verification CLOSED; P2-M06 Recovery NEXT |
+| Current Delivery | Phase 2 ACTIVE — P2-M06 Recovery CLOSED; P2-M07 User Profile NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -586,6 +586,9 @@ P2-M05 — Email Verification
 CLOSED
 
 P2-M06 — Recovery
+CLOSED
+
+P2-M07 — User Profile
 NEXT
 ```
 
@@ -608,10 +611,10 @@ P2-M05 — Email Verification
 CLOSED
 
 P2-M06 — Recovery
-NEXT
+CLOSED
 
 P2-M07 — User Profile
-PLANNED
+NEXT
 
 P2-M08 — Roles and Permissions
 PLANNED
@@ -3787,18 +3790,701 @@ This remains the canonical boundary for later email-dependent Identity capabilit
 
 # 79. Phase 2 Milestone P2-M06 — Recovery
 
-Implement controlled:
+P2-M06 implemented controlled password recovery through Identity & Access while reusing the shared Email Foundation introduced by P2-M05.
+
+Milestone status:
 
 ```text
-forgot password;
+P2-M06 — Recovery
+CLOSED
+```
 
-reset flow;
+Implemented scope:
 
-single-use/expiring recovery semantics.
+```text
+public forgot-password request;
+
+enumeration-safe recovery issuance;
+
+Identity-owned recovery challenge persistence;
+
+secure recovery token generation;
+
+SHA-256 digest-only token persistence;
+
+1-hour absolute token expiration;
+
+replacement recovery issuance;
+
+previous-token invalidation;
+
+Recovery email delivery through Email Foundation;
+
+replacement-password validation;
+
+Argon2id replacement password hashing;
+
+single-use recovery reset;
+
+atomic challenge consumption;
+
+atomic PasswordCredential replacement;
+
+atomic Actor-wide Session revocation;
+
+public Recovery API;
+
+real PostgreSQL lifecycle/security proof;
+
+real SMTP → Mailpit recovery proof.
+```
+
+## P2-M06 Architecture Boundary
+
+Canonical ownership is:
+
+```text
+Identity & Access Platform
+    owns password recovery policy
+    owns recovery challenge state
+    owns recovery token lifecycle
+    owns password replacement
+    owns Session invalidation after reset
+
+Email Foundation
+    owns provider-neutral email delivery
+    owns SMTP delivery infrastructure
+
+API Application
+    owns runtime composition
+```
+
+The canonical issuance flow is:
+
+```text
+public API request
+    ↓
+Identity & Access
+    ↓
+ActorEmail lookup
+    ↓
+PasswordCredential applicability check
+    ↓
+recovery challenge
+    ↓
+Email Foundation
+    ↓
+SMTP adapter
+    ↓
+email provider
+```
+
+Identity & Access depends only on the Email Foundation delivery Contract.
+
+Recovery does not directly depend on:
+
+```text
+Nodemailer
+
+Mailpit
+```
+
+P2-M06 does not introduce:
+
+```text
+Redis
+
+queue infrastructure
+
+outbox infrastructure
+
+distributed transaction infrastructure
+```
+
+because none are required by the accepted Recovery scope.
+
+## P2-M06 Persistence
+
+Recovery challenges are persisted in:
+
+```text
+identity_password_recovery_challenges
+```
+
+Each challenge references:
+
+```text
+ActorEmail
+```
+
+The persistence invariant is:
+
+```text
+one current PasswordRecoveryChallenge per ActorEmail
+```
+
+The persisted challenge contains:
+
+```text
+id
+
+actorEmailId
+
+tokenDigest
+
+expiresAt
+
+consumedAt
+
+createdAt
+
+updatedAt
+```
+
+P2-M06 added the committed migration:
+
+```text
+20260811090103_actor_password_recovery_baseline
+```
+
+Canonical migration history after P2-M06:
+
+```text
+20260809133830_actor_user_baseline
+
+20260809170217_actor_email_password_credential
+
+20260810123113_actor_session_baseline
+
+20260811061735_actor_email_verification_baseline
+
+20260811090103_actor_password_recovery_baseline
+```
+
+Canonical migration count:
+
+```text
+5
+```
+
+## P2-M06 Recovery Token Security
+
+Recovery tokens use:
+
+```text
+32 cryptographically random bytes
+
+    ↓
+
+base64url raw token
+
+    ↓
+
+43 characters
+
+    ↓
+
+no padding
+```
+
+The raw recovery token is delivered through email only.
+
+The raw token is never persisted.
+
+Persistence stores only:
+
+```text
+SHA-256
+
+lowercase hexadecimal
+
+64 characters
+```
+
+Recovery tokens use:
+
+```text
+1-hour absolute expiration
+```
+
+P2-M06 does not implement sliding recovery-token expiration.
+
+## P2-M06 Forgot-Password Request
+
+Recovery request email input is:
+
+```text
+trimmed
+
+lowercased for normalized lookup
+```
+
+The stored ActorEmail representation is retained for delivery.
+
+The request endpoint deliberately does not expose account existence.
+
+Normal public behavior is equivalent for:
+
+```text
+known recoverable email
+
+unknown email
+
+semantically invalid email
+
+ActorEmail without a usable PasswordCredential
+```
+
+Each produces the same successful no-content transport result under normal operation.
+
+A recoverable ActorEmail may be:
+
+```text
+verified
+
+or
+
+unverified
+```
+
+Email verification is not a precondition for Recovery.
+
+Issuance performs:
+
+```text
+normalized email lookup
+
+    ↓
+
+generate raw recovery token
+
+    ↓
+
+SHA-256 digest
+
+    ↓
+
+expiresAt = now + 1 hour
+
+    ↓
+
+upsert current challenge
+
+    ↓
+
+deliver raw token through EmailDelivery
+```
+
+## P2-M06 Replacement Issuance
+
+A repeated Recovery request for the same ActorEmail replaces:
+
+```text
+tokenDigest
+
+expiresAt
+```
+
+and resets:
+
+```text
+consumedAt
+```
+
+on the current challenge.
+
+Therefore the previously issued raw recovery token becomes invalid immediately.
+
+## P2-M06 Replacement Password Policy
+
+Recovery replacement passwords use the same accepted password strength baseline as registration:
+
+```text
+minimum 15 Unicode code points
+
+maximum 128 Unicode code points
+
+NFC normalization
+
+no trimming
+
+no truncation
+
+spaces allowed
+
+Unicode allowed
+```
+
+Recovery exposes Recovery-specific validation semantics rather than registration-specific error codes.
+
+Replacement password hashing reuses:
+
+```text
+Argon2idPasswordHasher
+```
+
+Hashing occurs before opening the Recovery database transaction.
+
+The raw replacement password is never passed into the Recovery persistence transaction.
+
+## P2-M06 Reset Transaction
+
+Password reset receives:
+
+```text
+raw recovery token
+
+new password
+```
+
+Application processing performs:
+
+```text
+validate + NFC-normalize password
+
+    ↓
+
+SHA-256 recovery-token digest
+
+    ↓
+
+Argon2id replacement password hash
+
+    ↓
+
+single PostgreSQL transaction
+```
+
+The transaction atomically:
+
+```text
+validates the current challenge
+
+    ↓
+
+conditionally consumes the challenge
+
+    ↓
+
+replaces PasswordCredential.passwordHash
+
+    ↓
+
+revokes every non-revoked Actor Session
+```
+
+The same canonical invalid-token failure is exposed for:
+
+```text
+unknown token
+
+expired token
+
+already consumed token
+
+superseded token
+
+token no longer applicable to a usable password Credential
+```
+
+Challenge consumption is conditional.
+
+Concurrent reset attempts therefore permit:
+
+```text
+one successful consumer only
+```
+
+If password replacement or Session revocation fails after transaction processing begins:
+
+```text
+the complete transaction rolls back
+```
+
+Therefore challenge consumption, password replacement, and Session revocation cannot partially commit.
+
+## P2-M06 Session Security
+
+A successful Recovery reset revokes:
+
+```text
+every non-revoked Session owned by the Actor
+```
+
+This includes multiple concurrently existing Actor Sessions.
+
+The reset does not issue a new Session automatically.
+
+The User must authenticate with the replacement password to establish a new Session.
+
+## P2-M06 Email Verification Boundary
+
+Recovery intentionally does not mutate:
+
+```text
+ActorEmail.verifiedAt
+```
+
+A successful Recovery reset therefore proves possession of the Recovery token for password-reset purposes only.
+
+It does not redefine the P2-M05 email-verification lifecycle.
+
+## P2-M06 API
+
+The API Application exposes:
+
+```text
+POST /password-recovery/request
+
+POST /password-recovery/reset
+```
+
+### POST /password-recovery/request
+
+Accepts:
+
+```json
+{
+  "email": "person@example.com"
+}
+```
+
+An authenticated Session is not required.
+
+Success:
+
+```text
+HTTP 204
+```
+
+Known and unknown email addresses expose the same normal success response.
+
+Semantically invalid string email values are also enumeration-safe successful no-ops.
+
+Malformed transport shape is rejected through the canonical Recovery request-validation failure.
+
+### POST /password-recovery/reset
+
+Accepts:
+
+```json
+{
+  "token": "opaque recovery token",
+  "password": "replacement password"
+}
+```
+
+An authenticated Session is not required.
+
+Success:
+
+```text
+HTTP 204
+```
+
+Unknown, expired, consumed, superseded, and otherwise invalid tokens expose one canonical Recovery invalid-token failure.
+
+## P2-M06 PostgreSQL Lifecycle and Security Proof
+
+PostgreSQL-backed integration tests prove:
+
+```text
+Recovery request requires no Session;
+
+normalized email lookup;
+
+unknown email enumeration-safe behavior;
+
+semantically invalid email enumeration-safe behavior;
+
+raw token absent from persistence;
+
+stored SHA-256 digest matches issued raw token;
+
+1-hour absolute expiration;
+
+replacement request reuses the current challenge;
+
+replacement request invalidates the previous token;
+
+expired-token rejection without state mutation;
+
+single-use reset;
+
+replay rejection;
+
+replacement password persistence;
+
+old-password rejection after reset;
+
+new-password authentication after reset;
+
+ActorEmail verification state remains unchanged;
+
+every existing Actor Session is revoked;
+
+concurrent reset permits one successful consumer only;
+
+forced Session-revocation failure rolls back challenge consumption;
+
+forced Session-revocation failure rolls back password replacement;
+
+forced Session-revocation failure preserves previous Session state;
+
+the same Recovery token remains usable after transactional rollback.
+```
+
+## P2-M06 Real SMTP and Mailpit Proof
+
+The real provider integration exercises:
+
+```text
+POST /password-recovery/request
+
+    ↓
+
+IssuePasswordRecovery
+
+    ↓
+
+EmailDelivery
+
+    ↓
+
+SmtpEmailDelivery
+
+    ↓
+
+real SMTP
+
+    ↓
+
+Mailpit
+
+    ↓
+
+actual delivered 43-character raw token
+
+    ↓
+
+SHA-256 digest matches PostgreSQL
+
+    ↓
+
+POST /password-recovery/reset
+
+    ↓
+
+challenge consumed
+
++
+
+password replaced
+
++
+
+all prior Sessions revoked
+
+    ↓
+
+old password rejected
+
+new password accepted
+
+    ↓
+
+exact delivered token replay rejected
+```
+
+## P2-M06 Validation Evidence
+
+Final P2-M06 validation:
+
+```text
+Format check                              PASS
+
+Lint                                      PASS
+
+TypeScript                                PASS
+
+Identity unit tests                       72 / 72 PASS
+
+Identity integration tests                11 / 11 PASS
+
+User integration tests                     4 / 4 PASS
+
+API unit tests                            12 / 12 PASS
+
+API PostgreSQL integration tests          45 / 45 PASS
+
+Repository integration tests              60 / 60 PASS
+
+Real SMTP → Mailpit integration            2 / 2 PASS
+
+Production build                          PASS
+
+Architecture validation                   PASS
+
+Git diff validation                       PASS
+
+GitHub Actions CI / Validate               PASS
+```
+
+Final architecture result:
+
+```text
+216 modules
+
+473 dependencies
+
+0 dependency violations
+```
+
+Canonical persistence state:
+
+```text
+5 committed migrations
+
+schema up to date
+```
+
+Implementation checkpoint:
+
+```text
+15f7832 feat(identity): complete password recovery lifecycle
+```
+
+P2-M06 implementation, local validation, PostgreSQL security validation, real provider validation, Git checkpoint, and remote CI validation are complete.
+
+## P2-M06 Delivery Position
+
+```text
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+CLOSED
+
+P2-M04 — Session Management
+CLOSED
+
+P2-M05 — Email Verification
+CLOSED
+
+P2-M06 — Recovery
+CLOSED
+
+P2-M07 — User Profile
+NEXT
+
+Phase 2 — Identity Platform
+ACTIVE
 ```
 
 ---
-
 # 80. Phase 2 Milestone P2-M07 — User Profile
 
 Implement minimal:
@@ -8396,8 +9082,8 @@ IDENTITY PLATFORM
     ✅ P2-M03 Password Authentication — CLOSED
     ✅ P2-M04 Session Management — CLOSED
     ✅ P2-M05 Email Verification — CLOSED
-    →  P2-M06 Recovery — NEXT
-    ☐  P2-M07 User Profile
+    ✅ P2-M06 Recovery — CLOSED
+    →  P2-M07 User Profile — NEXT
     ☐  P2-M08 Roles and Permissions
     ☐  P2-M09 Owner-Side Authorization
     ☐  P2-M10 Session Security UX
@@ -8753,7 +9439,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 77, 398, and 410.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 79, 398, and 410.
 
 ```text
 DOCUMENT
@@ -8814,7 +9500,7 @@ DATE
 CURRENT PHASE
 Phase 2 — Identity Platform
 
-PHASE STATUS
+STATUS
 ACTIVE
 
 COMPLETED
@@ -8823,83 +9509,79 @@ P2-M02 — Registration
 P2-M03 — Password Authentication
 P2-M04 — Session Management
 P2-M05 — Email Verification
+P2-M06 — Recovery
 
 NEXT
-P2-M06 — Recovery
+P2-M07 — User Profile
 
 BLOCKED
 None
 
 DEFERRED
-P2-M07 through P2-M10 remain planned in their accepted Phase 2 order.
+P2-M08 through P2-M10 remain planned in their accepted Phase 2 order.
 
-P2-M05 OWNERSHIP
-Identity & Access owns verification state.
-Email Foundation owns delivery.
+P2-M06 OWNERSHIP
+Identity & Access owns Recovery policy, challenge state, password replacement, and post-reset Session invalidation.
+Email Foundation owns provider-neutral email delivery.
 API Application owns concrete runtime composition.
 
-P2-M05 EMAIL FOUNDATION
-Provider-neutral EmailDelivery and EmailMessage Contracts.
-SMTP delivery through SmtpEmailDelivery.
-Mailpit SMTP: 127.0.0.1:1025.
-Mailpit HTTP/API: 127.0.0.1:8025.
-
-P2-M05 PERSISTENCE
-ActorEmail.verifiedAt records successful verification.
-EmailVerificationChallenge references ActorEmail.
+P2-M06 PERSISTENCE
+PasswordRecoveryChallenge references ActorEmail.
 One current challenge exists per ActorEmail.
-Migration: 20260811061735_actor_email_verification_baseline.
-Canonical migration count: 4.
+Migration: 20260811090103_actor_password_recovery_baseline.
+Canonical migration count: 5.
 
-P2-M05 TOKEN SECURITY
+P2-M06 TOKEN SECURITY
 32 cryptographically random bytes.
 Base64url raw token.
 43 characters without padding.
 Raw token delivered through email only.
 Raw token is never persisted.
 SHA-256 lowercase 64-character hexadecimal digest is persisted.
-24-hour absolute expiration.
+1-hour absolute expiration.
 
-P2-M05 RESEND
-A resend replaces the current challenge digest and expiration.
-consumedAt is reset.
-The previously issued raw token becomes invalid.
+P2-M06 REQUEST
+POST /password-recovery/request.
+Session not required.
+HTTP 204 on normal completion.
+Known, unknown, and semantically invalid email values do not expose account existence.
+Repeated issuance replaces the current challenge and invalidates the previous token.
 
-P2-M05 CONFIRMATION
-Unknown, expired, consumed, and no-longer-applicable tokens expose the same canonical invalid-token failure.
-Challenge consumption and ActorEmail verification are atomic.
-Concurrent confirmation permits one successful consumer only.
-A verification-state mutation failure rolls the transaction back.
+P2-M06 PASSWORD POLICY
+15–128 Unicode code points.
+NFC normalization.
+No trimming.
+Argon2id replacement hashing.
 
-P2-M05 API
-POST /email-verification/request
-  authenticated Session required
-  HTTP 204
-  already verified is a successful no-op
+P2-M06 RESET
+POST /password-recovery/reset.
+Session not required.
+HTTP 204 on success.
+Unknown, expired, consumed, superseded, and no-longer-applicable tokens use the same canonical invalid-token failure.
 
-POST /email-verification/confirm
-  opaque token request body
-  Session not required
-  HTTP 204 on success
+P2-M06 TRANSACTION
+Challenge consumption, PasswordCredential replacement, and Actor-wide non-revoked Session revocation are atomic.
+Concurrent reset permits one successful consumer only.
+A later transaction mutation failure rolls the entire reset back.
 
-P2-M05 AUTHENTICATION BOUNDARY
-Unverified password login remains allowed.
-Registration remains uncoupled from email delivery.
-Verification state is not mutated through GET.
+P2-M06 VERIFICATION BOUNDARY
+Recovery is allowed for verified or unverified ActorEmail state.
+Recovery does not mutate ActorEmail.verifiedAt.
 
-P2-M05 VALIDATION
+P2-M06 VALIDATION
 Format check: PASS
 Lint: PASS
 TypeScript: PASS
-Identity unit tests: 53 / 53
+Identity unit tests: 72 / 72
 Identity integration tests: 11 / 11
 User integration tests: 4 / 4
 API unit tests: 12 / 12
-API PostgreSQL integration tests: 31 / 31
-Repository integration tests: 46 / 46
-Real SMTP → Mailpit integration: 1 / 1
+API PostgreSQL integration tests: 45 / 45
+Repository integration tests: 60 / 60
+Real SMTP → Mailpit integration: 2 / 2
 Production build: PASS
-Architecture: 184 modules / 383 dependencies / 0 violations
+Architecture: 216 modules / 473 dependencies / 0 violations
+Prisma: 5 migrations / schema up to date
 Git diff validation: PASS
 GitHub Actions CI / Validate: PASS
 
@@ -8910,7 +9592,7 @@ Roadmap README, Documentation Standard, project Definition of Done, and Closure 
 The next implementation work is:
 
 ```text
-P2-M06 — Recovery
+P2-M07 — User Profile
 ```
 
-P2-M06 may begin because the P2-M05 implementation checkpoint, full local validation, PostgreSQL lifecycle/security proof, real SMTP/Mailpit proof, and remote CI validation completed successfully.
+P2-M07 may begin because the P2-M06 implementation checkpoint, full local validation, PostgreSQL lifecycle/security proof, real SMTP/Mailpit proof, and remote CI validation completed successfully.
