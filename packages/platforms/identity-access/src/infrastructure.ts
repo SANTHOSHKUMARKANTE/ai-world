@@ -29,3 +29,17 @@ export {
 export { PrismaSessionRepository } from './session/prisma-session-repository';
 
 export { SystemSessionClock } from './session/system-session-clock';
+
+export {
+  NodeEmailVerificationTokenGenerator,
+  EMAIL_VERIFICATION_TOKEN_RANDOM_BYTES,
+} from './email-verification/node-email-verification-token-generator';
+
+export {
+  Sha256EmailVerificationTokenDigester,
+  EMAIL_VERIFICATION_TOKEN_DIGEST_LENGTH,
+} from './email-verification/sha256-email-verification-token-digester';
+
+export { PrismaEmailVerificationRepository } from './email-verification/prisma-email-verification-repository';
+
+export { SystemEmailVerificationClock } from './email-verification/system-email-verification-clock';

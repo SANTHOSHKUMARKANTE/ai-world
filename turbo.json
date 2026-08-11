@@ -9,7 +9,18 @@
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true,
-      "passThroughEnv": ["NODE_ENV", "PORT", "DATABASE_URL", "LOG_LEVEL"]
+      "passThroughEnv": [
+        "NODE_ENV",
+        "PORT",
+        "DATABASE_URL",
+        "LOG_LEVEL",
+        "EMAIL_SMTP_HOST",
+        "EMAIL_SMTP_PORT",
+        "EMAIL_SMTP_SECURE",
+        "EMAIL_FROM",
+        "EMAIL_SMTP_USERNAME",
+        "EMAIL_SMTP_PASSWORD"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]

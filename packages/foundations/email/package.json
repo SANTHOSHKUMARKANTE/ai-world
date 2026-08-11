@@ -1,0 +1,29 @@
+{
+  "name": "@ai-world/foundation-email",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Provider-neutral email delivery primitives for AI World",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./smtp": {
+      "types": "./dist/smtp.d.ts",
+      "default": "./dist/smtp.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "nodemailer": "9.0.3"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "8.0.1"
+  }
+}

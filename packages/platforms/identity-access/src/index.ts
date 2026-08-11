@@ -91,3 +91,25 @@ export {
   type SignInWithPasswordInput,
   type SignInWithPasswordResult,
 } from './authentication/sign-in-with-password';
+
+export type { EmailVerificationTokenDigester } from './email-verification/email-verification-token-digester';
+export type { EmailVerificationTokenGenerator } from './email-verification/email-verification-token-generator';
+
+export type {
+  EmailVerificationChallengeWriter,
+  UpsertEmailVerificationChallengeInput,
+} from './email-verification/email-verification-challenge-writer';
+
+export type { EmailVerificationClock } from './email-verification/email-verification-clock';
+
+export type {
+  EmailVerificationActorEmail,
+  EmailVerificationReader,
+} from './email-verification/email-verification-reader';
+
+export {
+  EMAIL_VERIFICATION_ABSOLUTE_TTL_MILLISECONDS,
+  IssueEmailVerification,
+  type IssueEmailVerificationInput,
+  type IssueEmailVerificationResult,
+} from './email-verification/issue-email-verification';

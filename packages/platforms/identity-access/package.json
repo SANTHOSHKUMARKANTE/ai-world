@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@ai-world/foundation-database": "workspace:*",
+    "@ai-world/foundation-email": "workspace:*",
     "@ai-world/foundation-errors": "workspace:*",
     "@ai-world/platform-user": "workspace:*",
     "argon2": "0.45.1"

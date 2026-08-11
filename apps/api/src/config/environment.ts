@@ -11,13 +11,64 @@ const apiEnvironmentSchema = z
     DATABASE_URL: z.url(),
 
     LOG_LEVEL: z.enum(logLevels).default('info'),
+
+    EMAIL_SMTP_HOST: z.string().trim().min(1).default('127.0.0.1'),
+
+    EMAIL_SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(1025),
+
+    EMAIL_SMTP_SECURE: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
+
+    EMAIL_FROM: z.string().trim().min(1).default('AI World <noreply@ai-world.local>'),
+
+    EMAIL_SMTP_USERNAME: z.string().trim().min(1).optional(),
+
+    EMAIL_SMTP_PASSWORD: z.string().min(1).optional(),
   })
-  .transform(({ NODE_ENV, PORT, DATABASE_URL, LOG_LEVEL }) => ({
-    nodeEnv: NODE_ENV,
-    port: PORT,
-    databaseUrl: DATABASE_URL,
-    logLevel: LOG_LEVEL,
-  }));
+  .superRefine(({ EMAIL_SMTP_USERNAME, EMAIL_SMTP_PASSWORD }, context) => {
+    if ((EMAIL_SMTP_USERNAME === undefined) !== (EMAIL_SMTP_PASSWORD === undefined)) {
+      context.addIssue({
+        code: 'custom',
+        message: 'EMAIL_SMTP_USERNAME and EMAIL_SMTP_PASSWORD must be configured together.',
+        path: ['EMAIL_SMTP_USERNAME'],
+      });
+    }
+  })
+  .transform(
+    ({
+      NODE_ENV,
+      PORT,
+      DATABASE_URL,
+      LOG_LEVEL,
+      EMAIL_SMTP_HOST,
+      EMAIL_SMTP_PORT,
+      EMAIL_SMTP_SECURE,
+      EMAIL_FROM,
+      EMAIL_SMTP_USERNAME,
+      EMAIL_SMTP_PASSWORD,
+    }) => ({
+      nodeEnv: NODE_ENV,
+      port: PORT,
+      databaseUrl: DATABASE_URL,
+      logLevel: LOG_LEVEL,
+      email: {
+        smtp: {
+          host: EMAIL_SMTP_HOST,
+          port: EMAIL_SMTP_PORT,
+          secure: EMAIL_SMTP_SECURE,
+          ...(EMAIL_SMTP_USERNAME === undefined
+            ? {}
+            : {
+                username: EMAIL_SMTP_USERNAME,
+                password: EMAIL_SMTP_PASSWORD!,
+              }),
+        },
+        from: EMAIL_FROM,
+      },
+    }),
+  );
 
 export type ApiEnvironment = z.output<typeof apiEnvironmentSchema>;
 

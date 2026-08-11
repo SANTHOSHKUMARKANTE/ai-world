@@ -34,16 +34,33 @@ model User {
 }
 
 model ActorEmail {
-  id              String   @id @default(uuid()) @db.Uuid
-  actorId         String   @unique @map("actor_id") @db.Uuid
-  email           String   @db.Text
-  normalizedEmail String   @unique @map("normalized_email") @db.Text
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id              String    @id @default(uuid()) @db.Uuid
+  actorId         String    @unique @map("actor_id") @db.Uuid
+  email           String    @db.Text
+  normalizedEmail String    @unique @map("normalized_email") @db.Text
+  verifiedAt      DateTime? @map("verified_at") @db.Timestamptz(3)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  actor Actor @relation(fields: [actorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  actor                 Actor                       @relation(fields: [actorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  verificationChallenge EmailVerificationChallenge?
 
   @@map("identity_actor_emails")
+}
+
+model EmailVerificationChallenge {
+  id           String    @id @default(uuid()) @db.Uuid
+  actorEmailId String    @unique @map("actor_email_id") @db.Uuid
+  tokenDigest  String    @unique @map("token_digest") @db.VarChar(64)
+  expiresAt    DateTime  @map("expires_at") @db.Timestamptz(3)
+  consumedAt   DateTime? @map("consumed_at") @db.Timestamptz(3)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  actorEmail ActorEmail @relation(fields: [actorEmailId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([expiresAt])
+  @@map("identity_email_verification_challenges")
 }
 
 model PasswordCredential {
