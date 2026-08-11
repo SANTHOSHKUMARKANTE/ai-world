@@ -12,7 +12,7 @@
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-11 |
-| Current Delivery | Phase 2 ACTIVE — P2-M06 Recovery CLOSED; P2-M07 User Profile NEXT |
+| Current Delivery | Phase 2 ACTIVE — P2-M07 User Profile CLOSED; P2-M08 Roles and Permissions NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -589,6 +589,9 @@ P2-M06 — Recovery
 CLOSED
 
 P2-M07 — User Profile
+CLOSED
+
+P2-M08 — Roles and Permissions
 NEXT
 ```
 
@@ -614,10 +617,10 @@ P2-M06 — Recovery
 CLOSED
 
 P2-M07 — User Profile
-NEXT
+CLOSED
 
 P2-M08 — Roles and Permissions
-PLANNED
+NEXT
 
 P2-M09 — Owner-Side Authorization
 PLANNED
@@ -4478,6 +4481,9 @@ P2-M06 — Recovery
 CLOSED
 
 P2-M07 — User Profile
+CLOSED
+
+P2-M08 — Roles and Permissions
 NEXT
 
 Phase 2 — Identity Platform
@@ -4487,17 +4493,450 @@ ACTIVE
 ---
 # 80. Phase 2 Milestone P2-M07 — User Profile
 
-Implement minimal:
+P2-M07 implemented the minimal shared User Profile capability while preserving the architectural separation between Identity & Access and the User Platform.
+
+Milestone status:
 
 ```text
-display name;
-
-profile basics;
-
-locale/timezone preferences if required.
+P2-M07 — User Profile
+CLOSED
 ```
 
-Avoid broad social profile scope.
+Implemented scope:
+
+```text
+nullable User.displayName persistence;
+
+minimal User Profile ownership in the User Platform;
+
+display-name normalization and validation;
+
+NFC normalization;
+
+leading/trailing whitespace trimming;
+
+internal whitespace preservation;
+
+1–80 Unicode code-point display-name policy;
+
+explicit display-name clearing through null;
+
+UserProfileReader Contract;
+
+UserProfileWriter Contract;
+
+Prisma User Profile repository;
+
+GetUserProfile use case;
+
+UpdateUserProfile use case;
+
+authenticated GET /user-profile;
+
+authenticated PATCH /user-profile;
+
+Session-derived Actor ownership;
+
+strict profile update transport validation;
+
+real PostgreSQL profile lifecycle proof;
+
+owner-isolation and authentication security proof.
+```
+
+## P2-M07 Architecture Boundary
+
+Canonical ownership is:
+
+```text
+Identity & Access Platform
+    owns Actor identity
+    owns authentication
+    owns Session lifecycle
+    validates authenticated Sessions
+
+User Platform
+    owns User
+    owns User.displayName
+    owns display-name policy
+    owns profile read/update behavior
+
+API Application
+    owns HTTP transport
+    owns Session-cookie composition
+    derives actorId from the authenticated Session
+    composes Identity & Access with the User Platform
+```
+
+The canonical authenticated profile flow is:
+
+```text
+Session cookie
+    ↓
+requireSessionToken
+    ↓
+ValidateSession
+    ↓
+authenticated actorId
+    ↓
+User Platform
+    ↓
+User lookup/update by actorId
+```
+
+Profile ownership is never selected by the HTTP client.
+
+The profile API does not accept:
+
+```text
+actorId
+
+userId
+```
+
+as ownership inputs.
+
+## P2-M07 Persistence
+
+P2-M07 extends the existing User model rather than introducing a separate UserProfile table.
+
+The User persistence model now contains:
+
+```text
+id
+
+actorId
+
+displayName
+
+createdAt
+
+updatedAt
+```
+
+`displayName` is nullable.
+
+Canonical meaning:
+
+```text
+null
+    =
+display name not configured
+```
+
+Newly registered Users begin with:
+
+```text
+displayName = null
+```
+
+P2-M07 added the committed migration:
+
+```text
+20260811110742_user_profile_baseline
+```
+
+Canonical migration history after P2-M07:
+
+```text
+20260809133830_actor_user_baseline
+
+20260809170217_actor_email_password_credential
+
+20260810123113_actor_session_baseline
+
+20260811061735_actor_email_verification_baseline
+
+20260811090103_actor_password_recovery_baseline
+
+20260811110742_user_profile_baseline
+```
+
+Canonical migration count:
+
+```text
+6
+```
+
+## P2-M07 Display-Name Policy
+
+The canonical display-name policy is:
+
+```text
+null
+    ↓
+clear display name
+
+string
+    ↓
+trim leading/trailing whitespace
+    ↓
+normalize to NFC
+    ↓
+count Unicode code points
+    ↓
+require 1–80 characters
+    ↓
+persist canonical value
+```
+
+Internal whitespace is preserved.
+
+P2-M07 does not silently truncate display names.
+
+Whitespace-only display names are invalid.
+
+Display names longer than 80 Unicode code points are invalid.
+
+## P2-M07 User Platform Contracts
+
+The User Platform exposes:
+
+```text
+UserProfileReader
+
+UserProfileWriter
+
+GetUserProfile
+
+UpdateUserProfile
+```
+
+The User Platform receives trusted:
+
+```text
+actorId
+```
+
+from its composing application.
+
+It does not depend on:
+
+```text
+Session cookies
+
+Session tokens
+
+NestJS
+
+HTTP transport
+```
+
+for profile semantics.
+
+## P2-M07 API
+
+P2-M07 exposes:
+
+```text
+GET /user-profile
+
+PATCH /user-profile
+```
+
+Both endpoints require an authenticated Session.
+
+Successful responses expose:
+
+```text
+userId
+
+displayName
+```
+
+PATCH accepts only:
+
+```text
+displayName
+```
+
+with either a string value or explicit null.
+
+Unexpected ownership fields including `actorId` and `userId` are rejected by strict transport validation.
+
+## P2-M07 Ownership and Security Proof
+
+PostgreSQL and API integration prove:
+
+```text
+missing Session
+    → 401
+
+expired Session
+    → 401
+
+revoked Session
+    → 401
+
+authenticated Actor
+    → reads its own User profile
+
+authenticated Actor
+    → updates its own User profile
+
+Actor A Session
+    → cannot mutate Actor B User
+
+actorId injection
+    → rejected
+
+userId injection
+    → rejected
+
+missing User for authenticated Actor
+    → canonical 404
+```
+
+Profile mutation changes only User-owned profile state.
+
+The proof verifies that profile updates do not mutate:
+
+```text
+Actor identity state
+
+ActorEmail state
+
+ActorEmail.verifiedAt
+
+PasswordCredential password hash
+
+Session token digest
+
+Session expiration
+
+Session revocation state
+```
+
+## P2-M07 Deferred Profile Scope
+
+The accepted roadmap allowed locale/timezone preferences only if required.
+
+P2-M07 deliberately defers:
+
+```text
+locale
+
+timezone
+```
+
+because no current consumer requires their semantics yet.
+
+P2-M07 also does not introduce:
+
+```text
+avatar
+
+bio
+
+username
+
+handle
+
+social links
+
+followers
+
+public profile pages
+
+media upload
+
+notification preferences
+
+roles or permissions
+```
+
+Those concerns remain outside the minimal User Profile milestone.
+
+## P2-M07 Validation Evidence
+
+Final P2-M07 validation:
+
+```text
+User profile unit tests                    16 / 16 PASS
+
+User persistence integration tests         6 / 6 PASS
+
+Identity unit tests                        72 / 72 PASS
+
+Identity integration tests                 11 / 11 PASS
+
+API unit/e2e tests                         12 / 12 PASS
+
+API PostgreSQL integration tests           59 / 59 PASS
+
+Repository PostgreSQL integration tests    76 / 76 PASS
+
+Real SMTP → Mailpit integration tests       2 / 2 PASS
+
+Repository lint                            PASS
+
+Repository TypeScript                      PASS
+
+Production build                           10 / 10 PASS
+
+Architecture validation                    PASS
+
+Git diff validation                        PASS
+
+GitHub Actions CI / Validate               PASS
+```
+
+Final architecture result:
+
+```text
+231 modules
+
+526 dependencies
+
+0 dependency violations
+```
+
+Canonical persistence state:
+
+```text
+6 committed migrations
+
+schema up to date
+```
+
+Implementation checkpoint:
+
+```text
+b560a45 feat(user): complete user profile lifecycle
+```
+
+P2-M07 implementation, local validation, PostgreSQL ownership/security validation, Git checkpoint, and remote CI validation are complete.
+
+## P2-M07 Delivery Position
+
+```text
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+CLOSED
+
+P2-M04 — Session Management
+CLOSED
+
+P2-M05 — Email Verification
+CLOSED
+
+P2-M06 — Recovery
+CLOSED
+
+P2-M07 — User Profile
+CLOSED
+
+P2-M08 — Roles and Permissions
+NEXT
+
+Phase 2 — Identity Platform
+ACTIVE
+```
 
 ---
 
@@ -9083,8 +9522,8 @@ IDENTITY PLATFORM
     ✅ P2-M04 Session Management — CLOSED
     ✅ P2-M05 Email Verification — CLOSED
     ✅ P2-M06 Recovery — CLOSED
-    →  P2-M07 User Profile — NEXT
-    ☐  P2-M08 Roles and Permissions
+    ✅ P2-M07 User Profile — CLOSED
+    →  P2-M08 Roles and Permissions — NEXT
     ☐  P2-M09 Owner-Side Authorization
     ☐  P2-M10 Session Security UX
 
@@ -9439,7 +9878,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 79, 398, and 410.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 80, 398, and 410.
 
 ```text
 DOCUMENT
@@ -9510,80 +9949,73 @@ P2-M03 — Password Authentication
 P2-M04 — Session Management
 P2-M05 — Email Verification
 P2-M06 — Recovery
+P2-M07 — User Profile
 
 NEXT
-P2-M07 — User Profile
+P2-M08 — Roles and Permissions
 
 BLOCKED
 None
 
 DEFERRED
-P2-M08 through P2-M10 remain planned in their accepted Phase 2 order.
+P2-M09 through P2-M10 remain planned in their accepted Phase 2 order.
+Locale and timezone profile preferences remain deferred until a real consumer defines their semantics.
 
-P2-M06 OWNERSHIP
-Identity & Access owns Recovery policy, challenge state, password replacement, and post-reset Session invalidation.
-Email Foundation owns provider-neutral email delivery.
-API Application owns concrete runtime composition.
+P2-M07 OWNERSHIP
+Identity & Access owns Actor authentication and Session validation.
+User Platform owns User profile state and display-name policy.
+API Application owns authenticated HTTP composition and derives actorId from the validated Session.
 
-P2-M06 PERSISTENCE
-PasswordRecoveryChallenge references ActorEmail.
-One current challenge exists per ActorEmail.
-Migration: 20260811090103_actor_password_recovery_baseline.
-Canonical migration count: 5.
+P2-M07 PERSISTENCE
+User.displayName is nullable.
+No separate UserProfile table was introduced.
+Migration: 20260811110742_user_profile_baseline.
+Canonical migration count: 6.
 
-P2-M06 TOKEN SECURITY
-32 cryptographically random bytes.
-Base64url raw token.
-43 characters without padding.
-Raw token delivered through email only.
-Raw token is never persisted.
-SHA-256 lowercase 64-character hexadecimal digest is persisted.
-1-hour absolute expiration.
+P2-M07 DISPLAY NAME
+Null explicitly clears the configured display name.
+Strings are trimmed at their boundaries and normalized to NFC.
+Internal whitespace is preserved.
+Valid length is 1–80 Unicode code points.
+Invalid values are rejected rather than truncated.
 
-P2-M06 REQUEST
-POST /password-recovery/request.
-Session not required.
-HTTP 204 on normal completion.
-Known, unknown, and semantically invalid email values do not expose account existence.
-Repeated issuance replaces the current challenge and invalidates the previous token.
+P2-M07 APPLICATION
+GetUserProfile reads User profile state by authenticated actorId.
+UpdateUserProfile normalizes and validates displayName before persistence.
+PrismaUserProfileRepository provides the persistence implementation.
 
-P2-M06 PASSWORD POLICY
-15–128 Unicode code points.
-NFC normalization.
-No trimming.
-Argon2id replacement hashing.
+P2-M07 API
+GET /user-profile.
+PATCH /user-profile.
+Both require an authenticated Session.
+Profile ownership is derived from session.actorId.
+Client-supplied actorId and userId are rejected.
 
-P2-M06 RESET
-POST /password-recovery/reset.
-Session not required.
-HTTP 204 on success.
-Unknown, expired, consumed, superseded, and no-longer-applicable tokens use the same canonical invalid-token failure.
+P2-M07 SECURITY
+Unauthenticated, expired-Session, and revoked-Session access is rejected.
+Actor A cannot modify Actor B User state.
+Profile mutation does not alter ActorEmail, PasswordCredential, or Session security state.
+Missing User state for an authenticated Actor produces the canonical profile-not-found failure.
 
-P2-M06 TRANSACTION
-Challenge consumption, PasswordCredential replacement, and Actor-wide non-revoked Session revocation are atomic.
-Concurrent reset permits one successful consumer only.
-A later transaction mutation failure rolls the entire reset back.
-
-P2-M06 VERIFICATION BOUNDARY
-Recovery is allowed for verified or unverified ActorEmail state.
-Recovery does not mutate ActorEmail.verifiedAt.
-
-P2-M06 VALIDATION
-Format check: PASS
-Lint: PASS
-TypeScript: PASS
+P2-M07 VALIDATION
+User profile unit tests: 16 / 16
+User persistence integration tests: 6 / 6
 Identity unit tests: 72 / 72
 Identity integration tests: 11 / 11
-User integration tests: 4 / 4
 API unit tests: 12 / 12
-API PostgreSQL integration tests: 45 / 45
-Repository integration tests: 60 / 60
+API PostgreSQL integration tests: 59 / 59
+Repository integration tests: 76 / 76
 Real SMTP → Mailpit integration: 2 / 2
-Production build: PASS
-Architecture: 216 modules / 473 dependencies / 0 violations
-Prisma: 5 migrations / schema up to date
+Lint: PASS
+TypeScript: PASS
+Production build: 10 / 10
+Architecture: 231 modules / 526 dependencies / 0 violations
+Prisma: 6 migrations / schema up to date
 Git diff validation: PASS
 GitHub Actions CI / Validate: PASS
+
+P2-M07 IMPLEMENTATION
+b560a45 feat(user): complete user profile lifecycle
 
 DOCUMENTATION DEBT
 Roadmap README, Documentation Standard, project Definition of Done, and Closure Review Template remain empty placeholders and are intentionally deferred to a dedicated governance/documentation task.
@@ -9592,7 +10024,7 @@ Roadmap README, Documentation Standard, project Definition of Done, and Closure 
 The next implementation work is:
 
 ```text
-P2-M07 — User Profile
+P2-M08 — Roles and Permissions
 ```
 
-P2-M07 may begin because the P2-M06 implementation checkpoint, full local validation, PostgreSQL lifecycle/security proof, real SMTP/Mailpit proof, and remote CI validation completed successfully.
+P2-M08 may begin because the P2-M07 implementation checkpoint, full local validation, PostgreSQL ownership/security proof, architecture validation, and remote CI validation completed successfully.
