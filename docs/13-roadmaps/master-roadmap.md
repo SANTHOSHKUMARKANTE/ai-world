@@ -11,8 +11,8 @@
 | Status | ACCEPTED |
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-10 |
-| Current Delivery | Phase 2 ACTIVE — P2-M04 Session Management CLOSED; P2-M05 Email Verification NEXT |
+| Last Reviewed | 2026-08-11 |
+| Current Delivery | Phase 2 ACTIVE — P2-M05 Email Verification CLOSED; P2-M06 Recovery NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -583,6 +583,9 @@ P2-M04 — Session Management
 CLOSED
 
 P2-M05 — Email Verification
+CLOSED
+
+P2-M06 — Recovery
 NEXT
 ```
 
@@ -602,10 +605,10 @@ P2-M04 — Session Management
 CLOSED
 
 P2-M05 — Email Verification
-NEXT
+CLOSED
 
 P2-M06 — Recovery
-PLANNED
+NEXT
 
 P2-M07 — User Profile
 PLANNED
@@ -3164,25 +3167,621 @@ Deployment-topology-specific cookie and CSRF controls remain governed by the acc
 
 # 77. Phase 2 Milestone P2-M05 — Email Verification
 
-Introduce:
+P2-M05 implemented the first complete Identity-owned email verification lifecycle through the shared Email Foundation.
+
+Milestone status:
 
 ```text
-Email Foundation;
+P2-M05 — Email Verification
+CLOSED
+```
 
-local Mailpit;
+Implemented scope:
 
-verification tokens;
+```text
+Email Foundation delivery Contract;
 
-verification lifecycle.
+SMTP delivery adapter;
+
+local Mailpit infrastructure;
+
+Identity-owned verification state;
+
+ActorEmail verification timestamp;
+
+verification challenge persistence;
+
+secure verification token generation;
+
+SHA-256 digest-only token persistence;
+
+24-hour absolute token expiration;
+
+authenticated verification issuance;
+
+verification resend;
+
+previous-token invalidation;
+
+single-use verification confirmation;
+
+atomic verification transaction;
+
+public verification API;
+
+real PostgreSQL lifecycle and security proof;
+
+real SMTP → Mailpit provider proof.
+```
+
+## P2-M05 Architecture Boundary
+
+The canonical flow is:
+
+```text
+Web / API
+    ↓
+Identity & Access Platform
+    ↓
+verification state
+    ↓
+Email Foundation
+    ↓
+SMTP adapter
+    ↓
+email provider
+```
+
+Canonical ownership is:
+
+```text
+Identity & Access Platform
+    owns ActorEmail verification state
+    owns verification challenge lifecycle
+    owns token policy
+    owns verification confirmation
+
+Email Foundation
+    owns provider-neutral email delivery
+    owns SMTP delivery adapter
+
+API Application
+    owns runtime composition
+```
+
+Identity & Access depends on the Email Foundation delivery Contract.
+
+Identity & Access does not depend directly on:
+
+```text
+Nodemailer
+
+Mailpit
+```
+
+Registration remains uncoupled from email delivery.
+
+A registration success therefore does not depend on SMTP or provider availability.
+
+## P2-M05 Email Foundation
+
+P2-M05 materialized:
+
+```text
+@ai-world/foundation-email
+```
+
+with the provider-neutral public Contract:
+
+```text
+EmailDelivery
+EmailMessage
+```
+
+and concrete infrastructure adapter:
+
+```text
+SmtpEmailDelivery
+```
+
+Local development uses:
+
+```text
+Mailpit
+
+SMTP
+127.0.0.1:1025
+
+HTTP / API
+127.0.0.1:8025
+```
+
+## P2-M05 Persistence
+
+ActorEmail now records:
+
+```text
+verifiedAt
+```
+
+Verification challenges are persisted in:
+
+```text
+identity_email_verification_challenges
+```
+
+The challenge references:
+
+```text
+ActorEmail
+```
+
+The persistence invariant is:
+
+```text
+one current verification challenge per ActorEmail
+```
+
+P2-M05 added the committed migration:
+
+```text
+20260811061735_actor_email_verification_baseline
+```
+
+Canonical migration history after P2-M05:
+
+```text
+20260809133830_actor_user_baseline
+
+20260809170217_actor_email_password_credential
+
+20260810123113_actor_session_baseline
+
+20260811061735_actor_email_verification_baseline
+```
+
+Canonical migration count:
+
+```text
+4
+```
+
+## P2-M05 Verification Token Security
+
+Verification tokens use:
+
+```text
+32 cryptographically random bytes
+
+    ↓
+
+base64url raw token
+
+    ↓
+
+43 characters
+
+    ↓
+
+no padding
+```
+
+The raw verification token is delivered through email.
+
+The raw token is never persisted.
+
+Persistence stores only:
+
+```text
+SHA-256
+
+lowercase hexadecimal
+
+64 characters
+```
+
+Verification tokens expire through:
+
+```text
+24-hour absolute expiration
+```
+
+P2-M05 does not implement sliding verification-token expiration.
+
+## P2-M05 Issuance and Resend
+
+Verification issuance requires an authenticated Actor Session.
+
+The flow is:
+
+```text
+authenticated actorId
+
+    ↓
+
+resolve ActorEmail
+
+    ↓
+
+already verified?
+    → successful no-op
+
+    ↓
+
+generate raw verification token
+
+    ↓
+
+SHA-256 digest
+
+    ↓
+
+persist current challenge
+
+    ↓
+
+deliver raw token through EmailDelivery
+```
+
+A resend replaces:
+
+```text
+tokenDigest
+
+expiresAt
+```
+
+and resets:
+
+```text
+consumedAt
+```
+
+on the current challenge.
+
+Therefore the previously issued raw verification token immediately becomes invalid.
+
+Persistence occurs before SMTP delivery.
+
+If SMTP delivery fails:
+
+```text
+the delivery error propagates
+```
+
+and a later retry replaces the current challenge with a new token/digest.
+
+P2-M05 intentionally does not introduce:
+
+```text
+outbox
+
+durable queue
+
+distributed transaction
+```
+
+because those capabilities are not required by the accepted milestone scope.
+
+## P2-M05 Confirmation
+
+Confirmation receives the raw token delivered through email.
+
+The flow is:
+
+```text
+raw token
+
+    ↓
+
+SHA-256 digest
+
+    ↓
+
+challenge lookup
+
+    ↓
+
+validate challenge state
+
+    ↓
+
+atomic database transaction
+
+    ├── consume challenge
+    └── set ActorEmail.verifiedAt
+```
+
+The same canonical invalid-token failure is exposed for:
+
+```text
+unknown token
+
+expired token
+
+already consumed token
+
+token that is no longer applicable
+```
+
+This prevents public verification-state differences from exposing internal challenge state.
+
+Challenge consumption uses a conditional persistence update.
+
+Concurrent confirmation therefore permits:
+
+```text
+one successful consumer only
+```
+
+If the ActorEmail verification mutation fails after challenge consumption begins:
+
+```text
+the complete transaction rolls back
+```
+
+and the challenge remains unconsumed.
+
+## P2-M05 API
+
+The API Application exposes:
+
+```text
+POST /email-verification/request
+
+POST /email-verification/confirm
+```
+
+### POST /email-verification/request
+
+Requires:
+
+```text
+valid ai_world_session cookie
+```
+
+The endpoint accepts no meaningful payload.
+
+Success:
+
+```text
+HTTP 204
+```
+
+An already verified ActorEmail produces:
+
+```text
+HTTP 204
+
+no additional verification email
+```
+
+Missing, unknown, expired, or revoked Session state uses the existing canonical Session authentication failure.
+
+### POST /email-verification/confirm
+
+Accepts:
+
+```json
+{
+  "token": "opaque verification token"
+}
+```
+
+Confirmation deliberately does not require an authenticated Session.
+
+Possession of the valid single-use emailed token is the verification proof.
+
+Success:
+
+```text
+HTTP 204
+```
+
+Invalid verification tokens use the canonical public invalid-token failure.
+
+P2-M05 does not mutate verification state through GET requests.
+
+## P2-M05 Authentication Boundary
+
+P2-M05 intentionally allows:
+
+```text
+password authentication
+```
+
+for an Actor whose ActorEmail has not yet been verified.
+
+Therefore:
+
+```text
+unverified email
+    does not block
+password authentication
+```
+
+Future verification requirements must be introduced only where a later accepted capability requires them.
+
+## P2-M05 Lifecycle and Security Proof
+
+PostgreSQL-backed API integration tests prove:
+
+```text
+verification request requires authenticated Session;
+
+unknown Session is rejected;
+
+valid Session issues verification;
+
+raw verification token is not persisted;
+
+stored token digest is SHA-256 hexadecimal;
+
+already verified request is a successful no-op;
+
+confirmation does not require a Session;
+
+unknown token is rejected;
+
+malformed confirmation transport is rejected;
+
+resend generates a replacement token;
+
+resend invalidates the previous token;
+
+expired token is rejected without verification mutation;
+
+consumed token replay is rejected;
+
+concurrent confirmation allows one successful consumer only;
+
+verification-state mutation failure rolls back challenge consumption.
+```
+
+The real provider proof exercises:
+
+```text
+API
+
+    ↓
+
+Identity & Access
+
+    ↓
+
+Email Foundation
+
+    ↓
+
+SmtpEmailDelivery
+
+    ↓
+
+real SMTP
+
+    ↓
+
+Mailpit
+
+    ↓
+
+actual delivered raw token
+
+    ↓
+
+SHA-256 digest matches PostgreSQL
+
+    ↓
+
+confirmation without Session
+
+    ↓
+
+ActorEmail.verifiedAt
+
++
+
+challenge.consumedAt
+
+    ↓
+
+replay rejected
+```
+
+## P2-M05 Validation Evidence
+
+Final P2-M05 validation:
+
+```text
+Format check                              PASS
+
+Lint                                      PASS
+
+TypeScript                                PASS
+
+Identity unit tests                       53 / 53 PASS
+
+Identity integration tests                11 / 11 PASS
+
+User integration tests                     4 / 4 PASS
+
+API unit tests                            12 / 12 PASS
+
+API PostgreSQL integration tests          31 / 31 PASS
+
+Repository integration tests              46 / 46 PASS
+
+Real SMTP → Mailpit integration            1 / 1 PASS
+
+Production build                          PASS
+
+Architecture validation                   PASS
+
+Git diff validation                       PASS
+
+GitHub Actions CI / Validate               PASS
+```
+
+Final architecture result:
+
+```text
+184 modules
+
+383 dependencies
+
+0 dependency violations
+```
+
+Canonical persistence state:
+
+```text
+4 committed migrations
+
+schema up to date
+```
+
+P2-M05 implementation, local validation, real provider validation, Git checkpoint, and remote CI validation are complete.
+
+## P2-M05 Delivery Position
+
+```text
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+CLOSED
+
+P2-M04 — Session Management
+CLOSED
+
+P2-M05 — Email Verification
+CLOSED
+
+P2-M06 — Recovery
+NEXT
+
+Phase 2 — Identity Platform
+ACTIVE
 ```
 
 ---
 
 # 78. Email Verification Ownership
 
-Identity & Access owns verification state.
+The accepted ownership rule is implemented and validated:
 
-Email Foundation owns delivery.
+```text
+Identity & Access
+    owns verification state
+
+Email Foundation
+    owns delivery
+```
+
+This remains the canonical boundary for later email-dependent Identity capabilities, including Recovery.
 
 ---
 
@@ -7796,13 +8395,12 @@ IDENTITY PLATFORM
     ✅ P2-M02 Registration — CLOSED
     ✅ P2-M03 Password Authentication — CLOSED
     ✅ P2-M04 Session Management — CLOSED
-    →  P2-M05 Email Verification — NEXT
-    ☐  P2-M06 Recovery
+    ✅ P2-M05 Email Verification — CLOSED
+    →  P2-M06 Recovery — NEXT
     ☐  P2-M07 User Profile
     ☐  P2-M08 Roles and Permissions
     ☐  P2-M09 Owner-Side Authorization
     ☐  P2-M10 Session Security UX
-
 
 PHASE 3
 PLATFORM KERNEL BASELINE
@@ -8155,7 +8753,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 72, 398, and 410.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 77, 398, and 410.
 
 ```text
 DOCUMENT
@@ -8211,7 +8809,7 @@ As of the latest roadmap review:
 
 ```text
 DATE
-2026-08-10
+2026-08-11
 
 CURRENT PHASE
 Phase 2 — Identity Platform
@@ -8224,74 +8822,95 @@ P2-M01 — Actor and User Baseline
 P2-M02 — Registration
 P2-M03 — Password Authentication
 P2-M04 — Session Management
+P2-M05 — Email Verification
 
 NEXT
-P2-M05 — Email Verification
+P2-M06 — Recovery
 
 BLOCKED
 None
 
 DEFERRED
-P2-M06 through P2-M10 remain planned in their accepted Phase 2 order.
+P2-M07 through P2-M10 remain planned in their accepted Phase 2 order.
 
-P2-M04 IMPLEMENTATION
-Identity & Access owns opaque server-managed Session creation, validation, expiration, revocation, and logout.
+P2-M05 OWNERSHIP
+Identity & Access owns verification state.
+Email Foundation owns delivery.
+API Application owns concrete runtime composition.
 
-P2-M04 TOKEN SECURITY
-Session tokens use 32 cryptographically random bytes encoded as base64url.
-Only the SHA-256 64-character hexadecimal digest is persisted.
-The raw Session token is never persisted and is never returned in JSON.
+P2-M05 EMAIL FOUNDATION
+Provider-neutral EmailDelivery and EmailMessage Contracts.
+SMTP delivery through SmtpEmailDelivery.
+Mailpit SMTP: 127.0.0.1:1025.
+Mailpit HTTP/API: 127.0.0.1:8025.
 
-P2-M04 LIFETIME
-Sessions use a 7-day absolute expiration.
-P2-M04 does not implement sliding expiration.
-Multiple concurrent Actor Sessions are allowed.
+P2-M05 PERSISTENCE
+ActorEmail.verifiedAt records successful verification.
+EmailVerificationChallenge references ActorEmail.
+One current challenge exists per ActorEmail.
+Migration: 20260811061735_actor_email_verification_baseline.
+Canonical migration count: 4.
 
-P2-M04 VALIDATION
-A Session is valid only when its digest exists, revokedAt is null, and expiresAt is greater than the current time.
-Unknown, expired, and revoked Sessions expose the same canonical HTTP 401 failure.
+P2-M05 TOKEN SECURITY
+32 cryptographically random bytes.
+Base64url raw token.
+43 characters without padding.
+Raw token delivered through email only.
+Raw token is never persisted.
+SHA-256 lowercase 64-character hexadecimal digest is persisted.
+24-hour absolute expiration.
 
-P2-M04 REVOCATION
-Logout and Actor-scoped revocation are idempotent.
-Repeated logout and unknown Sessions do not expose Session existence.
+P2-M05 RESEND
+A resend replaces the current challenge digest and expiration.
+consumedAt is reset.
+The previously issued raw token becomes invalid.
 
-P2-M04 API
-POST /authentication/password
-GET /session
-DELETE /session
+P2-M05 CONFIRMATION
+Unknown, expired, consumed, and no-longer-applicable tokens expose the same canonical invalid-token failure.
+Challenge consumption and ActorEmail verification are atomic.
+Concurrent confirmation permits one successful consumer only.
+A verification-state mutation failure rolls the transaction back.
 
-P2-M04 COOKIE
-ai_world_session
-HttpOnly
-SameSite=Lax
-Path=/
-Secure in production
-Max-Age aligned with Session expiration
-No explicit Domain
+P2-M05 API
+POST /email-verification/request
+  authenticated Session required
+  HTTP 204
+  already verified is a successful no-op
 
-P2-M04 BROWSER STORAGE
-No localStorage Session secret.
-JWT is not the default first-party browser Session model.
+POST /email-verification/confirm
+  opaque token request body
+  Session not required
+  HTTP 204 on success
 
-VALIDATION
-Identity unit tests: 41 / 41
+P2-M05 AUTHENTICATION BOUNDARY
+Unverified password login remains allowed.
+Registration remains uncoupled from email delivery.
+Verification state is not mutated through GET.
+
+P2-M05 VALIDATION
+Format check: PASS
+Lint: PASS
+TypeScript: PASS
+Identity unit tests: 53 / 53
+Identity integration tests: 11 / 11
+User integration tests: 4 / 4
 API unit tests: 12 / 12
-API integration tests: 18 / 18
-Repository integration lane: PASS
-E2E: PASS
+API PostgreSQL integration tests: 31 / 31
+Repository integration tests: 46 / 46
+Real SMTP → Mailpit integration: 1 / 1
 Production build: PASS
-Architecture: 147 modules / 294 dependencies / 0 violations
-Prisma: 3 migrations / schema up to date
-Post-validation Actor, ActorEmail, PasswordCredential, User, and Session row counts: all zero.
+Architecture: 184 modules / 383 dependencies / 0 violations
+Git diff validation: PASS
+GitHub Actions CI / Validate: PASS
 
 DOCUMENTATION DEBT
 Roadmap README, Documentation Standard, project Definition of Done, and Closure Review Template remain empty placeholders and are intentionally deferred to a dedicated governance/documentation task.
 ```
 
-The next implementation milestone is:
+The next implementation work is:
 
 ```text
-P2-M05 — Email Verification
+P2-M06 — Recovery
 ```
 
-P2-M05 begins only after the P2-M04 Git checkpoint and remote validation complete successfully.
+P2-M06 may begin because the P2-M05 implementation checkpoint, full local validation, PostgreSQL lifecycle/security proof, real SMTP/Mailpit proof, and remote CI validation completed successfully.
