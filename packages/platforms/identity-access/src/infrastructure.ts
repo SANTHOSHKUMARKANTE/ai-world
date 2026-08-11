@@ -61,3 +61,5 @@ export { PrismaPasswordRecoveryRepository } from './recovery/prisma-password-rec
 export { SystemPasswordRecoveryClock } from './recovery/system-password-recovery-clock';
 
 export { PrismaPasswordRecoveryResetTransaction } from './recovery/prisma-password-recovery-reset-transaction';
+
+export { PrismaAuthorizationRepository } from './authorization/prisma-authorization-repository';

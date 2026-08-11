@@ -2,9 +2,11 @@ import type { EmailDelivery } from '@ai-world/foundation-email';
 import { SmtpEmailDelivery, type SmtpEmailDeliveryOptions } from '@ai-world/foundation-email/smtp';
 import { type LogLevel } from '@ai-world/foundation-observability';
 import {
+  AssignRoleToActor,
   AuthenticatePassword,
   ConfirmEmailVerification,
   CreateSession,
+  EvaluatePermission,
   IssueEmailVerification,
   IssuePasswordRecovery,
   LogoutSession,
@@ -20,6 +22,7 @@ import {
   NodeEmailVerificationTokenGenerator,
   NodePasswordRecoveryTokenGenerator,
   NodeSessionTokenGenerator,
+  PrismaAuthorizationRepository,
   PrismaEmailVerificationConfirmationTransaction,
   PrismaEmailVerificationRepository,
   PrismaPasswordAuthenticationReader,
@@ -208,6 +211,22 @@ export class AppModule {
               new Sha256SessionTokenDigester(),
               new SystemSessionClock(),
             );
+          },
+        },
+
+        {
+          provide: AssignRoleToActor,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): AssignRoleToActor => {
+            return new AssignRoleToActor(new PrismaAuthorizationRepository(database.getClient()));
+          },
+        },
+
+        {
+          provide: EvaluatePermission,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): EvaluatePermission => {
+            return new EvaluatePermission(new PrismaAuthorizationRepository(database.getClient()));
           },
         },
 

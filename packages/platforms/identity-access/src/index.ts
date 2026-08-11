@@ -1,5 +1,31 @@
 export type { Actor } from './actor';
 
+export {
+  AssignRoleToActor,
+  type AssignRoleToActorInput,
+} from './authorization/assign-role-to-actor';
+
+export {
+  EvaluatePermission,
+  type EvaluatePermissionInput,
+  type EvaluatePermissionResult,
+} from './authorization/evaluate-permission';
+
+export type { Permission } from './authorization/permission';
+
+export type {
+  EvaluateActorPermissionInput,
+  PermissionEvaluationReader,
+} from './authorization/permission-evaluation-reader';
+
+export type {
+  AssignActorRoleInput,
+  AssignActorRoleResult,
+  RoleAssignmentWriter,
+} from './authorization/role-assignment-writer';
+
+export type { Role } from './authorization/role';
+
 export type { PasswordHasher } from './password/password-hasher';
 
 export {
