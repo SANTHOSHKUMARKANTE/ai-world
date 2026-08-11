@@ -252,6 +252,9 @@ importers:
       '@ai-world/foundation-database':
         specifier: workspace:*
         version: link:../../foundations/database
+      '@ai-world/foundation-errors':
+        specifier: workspace:*
+        version: link:../../foundations/errors
     devDependencies:
       '@types/node':
         specifier: 24.13.3

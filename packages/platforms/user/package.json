@@ -26,6 +26,7 @@
     "vitest": "4.1.10"
   },
   "dependencies": {
-    "@ai-world/foundation-database": "workspace:*"
+    "@ai-world/foundation-database": "workspace:*",
+    "@ai-world/foundation-errors": "workspace:*"
   }
 }

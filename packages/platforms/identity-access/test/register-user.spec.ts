@@ -66,6 +66,7 @@ function createResources(events: string[]): {
   const user = {
     id: 'user-1',
     actorId: actor.id,
+    displayName: null,
     createdAt: now,
     updatedAt: now,
   };

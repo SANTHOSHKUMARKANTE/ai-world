@@ -34,7 +34,11 @@ import {
   SystemPasswordRecoveryClock,
   SystemSessionClock,
 } from '@ai-world/platform-identity-access/infrastructure';
-import { PrismaUserRegistrationWriter } from '@ai-world/platform-user/infrastructure';
+import { GetUserProfile, UpdateUserProfile } from '@ai-world/platform-user';
+import {
+  PrismaUserProfileRepository,
+  PrismaUserRegistrationWriter,
+} from '@ai-world/platform-user/infrastructure';
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
@@ -50,6 +54,7 @@ import { PasswordRecoveryController } from './password-recovery/password-recover
 import { RegistrationController } from './registration/registration.controller';
 import { SessionController } from './session/session.controller';
 import { SessionCookie } from './session/session-cookie';
+import { UserProfileController } from './user-profile/user-profile.controller';
 
 export interface AppEmailOptions {
   readonly smtp: Omit<SmtpEmailDeliveryOptions, 'from'>;
@@ -126,6 +131,7 @@ export class AppModule {
         SessionController,
         EmailVerificationController,
         PasswordRecoveryController,
+        UserProfileController,
       ],
 
       providers: [
@@ -261,6 +267,22 @@ export class AppModule {
               new Argon2idPasswordHasher(),
               new SystemPasswordRecoveryClock(),
             );
+          },
+        },
+
+        {
+          provide: GetUserProfile,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): GetUserProfile => {
+            return new GetUserProfile(new PrismaUserProfileRepository(database.getClient()));
+          },
+        },
+
+        {
+          provide: UpdateUserProfile,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): UpdateUserProfile => {
+            return new UpdateUserProfile(new PrismaUserProfileRepository(database.getClient()));
           },
         },
 
