@@ -12,7 +12,7 @@
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-11 |
-| Current Delivery | Phase 2 ACTIVE — P2-M07 User Profile CLOSED; P2-M08 Roles and Permissions NEXT |
+| Current Delivery | Phase 2 ACTIVE — P2-M08 Roles and Permissions CLOSED; P2-M09 Owner-Side Authorization NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -592,6 +592,9 @@ P2-M07 — User Profile
 CLOSED
 
 P2-M08 — Roles and Permissions
+CLOSED
+
+P2-M09 — Owner-Side Authorization
 NEXT
 ```
 
@@ -620,10 +623,10 @@ P2-M07 — User Profile
 CLOSED
 
 P2-M08 — Roles and Permissions
-NEXT
+CLOSED
 
 P2-M09 — Owner-Side Authorization
-PLANNED
+NEXT
 
 P2-M10 — Session Security UX
 PLANNED
@@ -4484,6 +4487,9 @@ P2-M07 — User Profile
 CLOSED
 
 P2-M08 — Roles and Permissions
+CLOSED
+
+P2-M09 — Owner-Side Authorization
 NEXT
 
 Phase 2 — Identity Platform
@@ -4932,6 +4938,9 @@ P2-M07 — User Profile
 CLOSED
 
 P2-M08 — Roles and Permissions
+CLOSED
+
+P2-M09 — Owner-Side Authorization
 NEXT
 
 Phase 2 — Identity Platform
@@ -4942,16 +4951,568 @@ ACTIVE
 
 # 81. Phase 2 Milestone P2-M08 — Roles and Permissions
 
-Implement:
+P2-M08 implemented the minimal Identity-owned Roles and Permissions baseline required to support later owner-side Authorization without introducing a speculative policy engine.
+
+Milestone status:
 
 ```text
-Role;
+P2-M08 — Roles and Permissions
+CLOSED
+```
 
-Permission;
+Implemented scope:
 
-Role assignment;
+```text
+Identity-owned Role persistence;
 
-Permission evaluation.
+Identity-owned Permission persistence;
+
+Actor-to-Role assignment persistence;
+
+Role-to-Permission grant persistence;
+
+Role and Permission public Contracts;
+
+RoleAssignmentWriter Contract;
+
+PermissionEvaluationReader Contract;
+
+AssignRoleToActor use case;
+
+EvaluatePermission use case;
+
+PrismaAuthorizationRepository;
+
+idempotent Role assignment;
+
+default-deny Permission evaluation;
+
+multi-Role any-grant evaluation;
+
+API Composition Root wiring;
+
+real PostgreSQL persistence proof;
+
+real PostgreSQL authorization behavior proof.
+```
+
+## P2-M08 Architecture Boundary
+
+Canonical ownership is:
+
+```text
+Identity & Access Platform
+    owns Role
+    owns Permission
+    owns Actor-to-Role assignment
+    owns Role-to-Permission grants
+    owns Permission evaluation semantics
+
+Actor
+    is the authorization subject
+
+User Platform
+    does not own Roles
+    does not own Permissions
+    does not evaluate authorization
+
+API Application
+    owns runtime composition
+    exposes no P2-M08 authorization-management HTTP API
+```
+
+The canonical authorization relationship is:
+
+```text
+Actor
+    ↓
+ActorRole
+    ↓
+Role
+    ↓
+RolePermission
+    ↓
+Permission
+```
+
+P2-M08 establishes authorization facts.
+
+P2-M09 remains responsible for enforcing those facts inside trusted owner-side business operations.
+
+## P2-M08 Persistence
+
+P2-M08 adds four Identity-owned persistence models:
+
+```text
+Role
+
+Permission
+
+ActorRole
+
+RolePermission
+```
+
+Canonical tables are:
+
+```text
+identity_roles
+
+identity_permissions
+
+identity_actor_roles
+
+identity_role_permissions
+```
+
+Role uses a unique `key`.
+
+Permission uses a unique `key`.
+
+ActorRole uses the composite identity:
+
+```text
+actorId + roleId
+```
+
+RolePermission uses the composite identity:
+
+```text
+roleId + permissionId
+```
+
+The authorization foreign-key rules are:
+
+```text
+Actor deletion
+    → cascades ActorRole assignments
+
+Role deletion
+    → cascades ActorRole assignments
+    → cascades RolePermission grants
+
+Permission deletion
+    → cascades RolePermission grants
+```
+
+Unrelated Actor, Role, and Permission rows remain intact.
+
+P2-M08 added the committed migration:
+
+```text
+20260811132518_identity_authorization_baseline
+```
+
+Canonical migration history after P2-M08:
+
+```text
+20260809133830_actor_user_baseline
+
+20260809170217_actor_email_password_credential
+
+20260810123113_actor_session_baseline
+
+20260811061735_actor_email_verification_baseline
+
+20260811090103_actor_password_recovery_baseline
+
+20260811110742_user_profile_baseline
+
+20260811132518_identity_authorization_baseline
+```
+
+Canonical migration count:
+
+```text
+7
+```
+
+## P2-M08 Role Baseline
+
+P2-M08 does not require an explicit persisted ordinary-User Role.
+
+The baseline is:
+
+```text
+ordinary authenticated Actor
+    → no elevated Role required
+```
+
+Registration remains unchanged and continues to create:
+
+```text
+Actor
+
+ActorEmail
+
+PasswordCredential
+
+User
+```
+
+No default Role is assigned during registration.
+
+P2-M08 also does not add canonical Role or Permission seed data to the Database Foundation.
+
+Role and Permission definitions remain Identity-owned and demand-driven by real protected capabilities.
+
+## P2-M08 Role Assignment
+
+Role assignment is exposed through:
+
+```text
+AssignRoleToActor
+```
+
+Input:
+
+```text
+actorId
+
+roleKey
+```
+
+Assignment semantics are:
+
+```text
+new assignment
+    → success
+
+existing assignment
+    → successful idempotent no-op
+
+missing Actor
+    → canonical Actor not-found failure
+
+missing Role
+    → canonical Role not-found failure
+```
+
+Duplicate Actor-to-Role assignment is prevented by persistence identity.
+
+## P2-M08 Permission Evaluation
+
+Permission evaluation is exposed through:
+
+```text
+EvaluatePermission
+```
+
+Input:
+
+```text
+actorId
+
+permissionKey
+```
+
+Result:
+
+```text
+allowed
+    true | false
+```
+
+The canonical rule is:
+
+```text
+any assigned Role grants the requested Permission
+    → allowed = true
+
+otherwise
+    → allowed = false
+```
+
+Default-deny behavior includes:
+
+```text
+unknown Actor
+    → false
+
+Actor with no Role
+    → false
+
+unknown Permission
+    → false
+
+assigned Role without the Permission
+    → false
+
+Permission granted only through an unrelated Role
+    → false
+
+another Actor's grant
+    → does not leak
+```
+
+Permission evaluation deliberately does not throw a `forbidden` error.
+
+P2-M09 will translate denied authorization facts into owner-side operation denial where required.
+
+## P2-M08 Public Contracts and Infrastructure
+
+P2-M08 exposes:
+
+```text
+Role
+
+Permission
+
+RoleAssignmentWriter
+
+PermissionEvaluationReader
+
+AssignRoleToActor
+
+EvaluatePermission
+```
+
+Concrete PostgreSQL behavior is provided by:
+
+```text
+PrismaAuthorizationRepository
+```
+
+The API Composition Root wires `AssignRoleToActor` and `EvaluatePermission` against the real Prisma repository.
+
+P2-M08 does not expose:
+
+```text
+Role-management HTTP endpoints
+
+Permission-management HTTP endpoints
+
+Role-assignment HTTP endpoints
+```
+
+because no accepted consumer requires those transports yet.
+
+## P2-M08 PostgreSQL Persistence Proof
+
+Persistence integration tests prove:
+
+```text
+Role persistence;
+
+Role key uniqueness;
+
+Permission persistence;
+
+Permission key uniqueness;
+
+ActorRole persistence;
+
+duplicate ActorRole rejection;
+
+RolePermission persistence;
+
+duplicate RolePermission rejection;
+
+missing Actor foreign-key rejection;
+
+missing Role foreign-key rejection;
+
+missing Permission foreign-key rejection;
+
+Actor deletion cascade;
+
+Role deletion cascade;
+
+Permission deletion cascade;
+
+unrelated authorization state preservation.
+```
+
+## P2-M08 PostgreSQL Authorization Behavior Proof
+
+Production-path PostgreSQL integration tests prove:
+
+```text
+Role assignment through AssignRoleToActor;
+
+PrismaAuthorizationRepository assignment persistence;
+
+repeated Role assignment is idempotent;
+
+missing Actor produces canonical not-found behavior;
+
+missing Role produces canonical not-found behavior;
+
+matching Role Permission grants access;
+
+Actor with no Role is denied;
+
+Role without Permission is denied;
+
+unknown Permission is denied;
+
+unknown Actor is denied without exposing existence;
+
+unrelated Role grant does not authorize;
+
+multiple assigned Roles allow when any Role grants;
+
+another Actor's Permission grant does not leak.
+```
+
+The real evaluation path is:
+
+```text
+EvaluatePermission
+    ↓
+PermissionEvaluationReader
+    ↓
+PrismaAuthorizationRepository
+    ↓
+ActorRole
+    ↓
+Role
+    ↓
+RolePermission
+    ↓
+Permission
+    ↓
+PostgreSQL
+```
+
+## P2-M08 Deferred Authorization Scope
+
+P2-M08 deliberately does not introduce:
+
+```text
+ABAC
+
+Policy engine
+
+OPA
+
+Casbin
+
+role hierarchy
+
+direct Actor Permissions
+
+explicit deny rules
+
+dynamic authorization expressions
+
+Universe-scoped Role assignments
+
+Universe-scoped Permission grants
+
+authorization cache
+
+Redis
+
+external authorization service
+
+admin Role UI
+
+Permission-management UI
+
+frontend-only authorization
+
+Audit pull-forward
+```
+
+Universe-scoped Authorization remains architecturally permitted and should be introduced only when a real consumer requires its semantics.
+
+## P2-M08 Validation Evidence
+
+Final P2-M08 validation:
+
+```text
+Format check                              PASS
+
+Lint                                      9 / 9 PASS
+
+TypeScript                                17 / 17 PASS
+
+Identity unit tests                       78 / 78 PASS
+
+Identity integration tests                38 / 38 PASS
+
+User integration tests                     6 / 6 PASS
+
+API unit/e2e tests                        12 / 12 PASS
+
+API PostgreSQL integration tests          59 / 59 PASS
+
+Repository PostgreSQL integration tests  103 / 103 PASS
+
+Real SMTP → Mailpit integration tests       2 / 2 PASS
+
+Production build                          10 / 10 PASS
+
+Architecture validation                   PASS
+
+Prisma schema validation                  PASS
+
+Canonical migration status                PASS
+
+Git diff validation                       PASS
+
+GitHub Actions CI / Validate               PASS
+```
+
+Final architecture result:
+
+```text
+245 modules
+
+556 dependencies
+
+0 dependency violations
+```
+
+Canonical persistence state:
+
+```text
+7 committed migrations
+
+schema up to date
+```
+
+Implementation checkpoint:
+
+```text
+7f8cfb3 feat(identity): complete roles and permissions baseline
+```
+
+P2-M08 implementation, local validation, PostgreSQL persistence/authorization validation, architecture validation, Git checkpoint, and remote CI validation are complete.
+
+## P2-M08 Delivery Position
+
+```text
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+CLOSED
+
+P2-M04 — Session Management
+CLOSED
+
+P2-M05 — Email Verification
+CLOSED
+
+P2-M06 — Recovery
+CLOSED
+
+P2-M07 — User Profile
+CLOSED
+
+P2-M08 — Roles and Permissions
+CLOSED
+
+P2-M09 — Owner-Side Authorization
+NEXT
+
+Phase 2 — Identity Platform
+ACTIVE
 ```
 
 ---
@@ -9523,8 +10084,8 @@ IDENTITY PLATFORM
     ✅ P2-M05 Email Verification — CLOSED
     ✅ P2-M06 Recovery — CLOSED
     ✅ P2-M07 User Profile — CLOSED
-    →  P2-M08 Roles and Permissions — NEXT
-    ☐  P2-M09 Owner-Side Authorization
+    ✅ P2-M08 Roles and Permissions — CLOSED
+    →  P2-M09 Owner-Side Authorization — NEXT
     ☐  P2-M10 Session Security UX
 
 PHASE 3
@@ -9878,7 +10439,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 80, 398, and 410.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 81, 398, and 410.
 
 ```text
 DOCUMENT
@@ -9950,72 +10511,90 @@ P2-M04 — Session Management
 P2-M05 — Email Verification
 P2-M06 — Recovery
 P2-M07 — User Profile
+P2-M08 — Roles and Permissions
 
 NEXT
-P2-M08 — Roles and Permissions
+P2-M09 — Owner-Side Authorization
 
 BLOCKED
 None
 
 DEFERRED
-P2-M09 through P2-M10 remain planned in their accepted Phase 2 order.
+P2-M10 — Session Security UX remains planned in its accepted Phase 2 order.
+Universe-scoped authorization remains deferred until a real consumer requires its semantics.
 Locale and timezone profile preferences remain deferred until a real consumer defines their semantics.
 
-P2-M07 OWNERSHIP
-Identity & Access owns Actor authentication and Session validation.
-User Platform owns User profile state and display-name policy.
-API Application owns authenticated HTTP composition and derives actorId from the validated Session.
+P2-M08 OWNERSHIP
+Identity & Access owns Role, Permission, Actor-to-Role assignment, Role-to-Permission grants, and Permission evaluation.
+Actor is the authorization subject.
+User Platform does not own or evaluate authorization.
+API Application owns runtime composition.
 
-P2-M07 PERSISTENCE
-User.displayName is nullable.
-No separate UserProfile table was introduced.
-Migration: 20260811110742_user_profile_baseline.
-Canonical migration count: 6.
+P2-M08 MODEL
+Minimal RBAC baseline.
+Actor → Role.
+Role → Permission.
+No direct Actor Permission grants.
+No explicit deny rules.
+No Role hierarchy.
 
-P2-M07 DISPLAY NAME
-Null explicitly clears the configured display name.
-Strings are trimmed at their boundaries and normalized to NFC.
-Internal whitespace is preserved.
-Valid length is 1–80 Unicode code points.
-Invalid values are rejected rather than truncated.
+P2-M08 PERSISTENCE
+Role, Permission, ActorRole, and RolePermission.
+Migration: 20260811132518_identity_authorization_baseline.
+Canonical migration count: 7.
 
-P2-M07 APPLICATION
-GetUserProfile reads User profile state by authenticated actorId.
-UpdateUserProfile normalizes and validates displayName before persistence.
-PrismaUserProfileRepository provides the persistence implementation.
+P2-M08 REGISTRATION
+Registration is unchanged.
+No explicit persisted ordinary-User Role is required.
+No default Role is assigned during registration.
+No canonical Role or Permission seed data was added to the Database Foundation.
 
-P2-M07 API
-GET /user-profile.
-PATCH /user-profile.
-Both require an authenticated Session.
-Profile ownership is derived from session.actorId.
-Client-supplied actorId and userId are rejected.
+P2-M08 ROLE ASSIGNMENT
+AssignRoleToActor accepts actorId + roleKey.
+First assignment succeeds.
+Repeated assignment is an idempotent success.
+Missing Actor and missing Role use canonical not-found failures.
 
-P2-M07 SECURITY
-Unauthenticated, expired-Session, and revoked-Session access is rejected.
-Actor A cannot modify Actor B User state.
-Profile mutation does not alter ActorEmail, PasswordCredential, or Session security state.
-Missing User state for an authenticated Actor produces the canonical profile-not-found failure.
+P2-M08 PERMISSION EVALUATION
+EvaluatePermission accepts actorId + permissionKey.
+Any assigned Role granting the Permission allows.
+Otherwise evaluation denies by default.
+Unknown Actor, no Role, unknown Permission, wrong Role, and unrelated Actor grants all deny.
 
-P2-M07 VALIDATION
-User profile unit tests: 16 / 16
-User persistence integration tests: 6 / 6
-Identity unit tests: 72 / 72
-Identity integration tests: 11 / 11
-API unit tests: 12 / 12
+P2-M08 APPLICATION
+RoleAssignmentWriter.
+PermissionEvaluationReader.
+AssignRoleToActor.
+EvaluatePermission.
+PrismaAuthorizationRepository.
+
+P2-M08 API
+AssignRoleToActor and EvaluatePermission are wired through the API Composition Root.
+No Role-management, Permission-management, or Role-assignment HTTP endpoints were introduced.
+
+P2-M08 P2-M09 BOUNDARY
+P2-M08 returns authorization facts as allowed true/false.
+P2-M09 will enforce those facts inside trusted owner-side operations and introduce forbidden semantics where required.
+
+P2-M08 VALIDATION
+Format check: PASS
+Lint: 9 / 9
+TypeScript: 17 / 17
+Identity unit tests: 78 / 78
+Identity integration tests: 38 / 38
+User integration tests: 6 / 6
+API unit/e2e tests: 12 / 12
 API PostgreSQL integration tests: 59 / 59
-Repository integration tests: 76 / 76
-Real SMTP → Mailpit integration: 2 / 2
-Lint: PASS
-TypeScript: PASS
+Repository PostgreSQL integration tests: 103 / 103
+Real SMTP → Mailpit integration tests: 2 / 2
 Production build: 10 / 10
-Architecture: 231 modules / 526 dependencies / 0 violations
-Prisma: 6 migrations / schema up to date
+Architecture: 245 modules / 556 dependencies / 0 violations
+Prisma: 7 migrations / schema up to date
 Git diff validation: PASS
 GitHub Actions CI / Validate: PASS
 
-P2-M07 IMPLEMENTATION
-b560a45 feat(user): complete user profile lifecycle
+P2-M08 IMPLEMENTATION
+7f8cfb3 feat(identity): complete roles and permissions baseline
 
 DOCUMENTATION DEBT
 Roadmap README, Documentation Standard, project Definition of Done, and Closure Review Template remain empty placeholders and are intentionally deferred to a dedicated governance/documentation task.
@@ -10024,7 +10603,7 @@ Roadmap README, Documentation Standard, project Definition of Done, and Closure 
 The next implementation work is:
 
 ```text
-P2-M08 — Roles and Permissions
+P2-M09 — Owner-Side Authorization
 ```
 
-P2-M08 may begin because the P2-M07 implementation checkpoint, full local validation, PostgreSQL ownership/security proof, architecture validation, and remote CI validation completed successfully.
+P2-M09 may begin because the P2-M08 implementation checkpoint, full local validation, PostgreSQL persistence/authorization proof, architecture validation, and remote CI validation completed successfully.
