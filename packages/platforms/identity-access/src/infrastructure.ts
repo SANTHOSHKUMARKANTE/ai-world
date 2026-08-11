@@ -45,3 +45,19 @@ export { PrismaEmailVerificationRepository } from './email-verification/prisma-e
 export { SystemEmailVerificationClock } from './email-verification/system-email-verification-clock';
 
 export { PrismaEmailVerificationConfirmationTransaction } from './email-verification/prisma-email-verification-confirmation-transaction';
+
+export {
+  NodePasswordRecoveryTokenGenerator,
+  PASSWORD_RECOVERY_TOKEN_RANDOM_BYTES,
+} from './recovery/node-password-recovery-token-generator';
+
+export {
+  PASSWORD_RECOVERY_TOKEN_DIGEST_LENGTH,
+  Sha256PasswordRecoveryTokenDigester,
+} from './recovery/sha256-password-recovery-token-digester';
+
+export { PrismaPasswordRecoveryRepository } from './recovery/prisma-password-recovery-repository';
+
+export { SystemPasswordRecoveryClock } from './recovery/system-password-recovery-clock';
+
+export { PrismaPasswordRecoveryResetTransaction } from './recovery/prisma-password-recovery-reset-transaction';

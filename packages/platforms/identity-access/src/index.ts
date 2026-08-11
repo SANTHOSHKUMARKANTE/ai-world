@@ -93,6 +93,7 @@ export {
 } from './authentication/sign-in-with-password';
 
 export type { EmailVerificationTokenDigester } from './email-verification/email-verification-token-digester';
+
 export type { EmailVerificationTokenGenerator } from './email-verification/email-verification-token-generator';
 
 export type {
@@ -123,3 +124,46 @@ export type {
   ConfirmEmailVerificationTransactionInput,
   EmailVerificationConfirmationTransaction,
 } from './email-verification/email-verification-confirmation-transaction';
+
+export type { PasswordRecoveryTokenGenerator } from './recovery/password-recovery-token-generator';
+
+export type { PasswordRecoveryTokenDigester } from './recovery/password-recovery-token-digester';
+
+export {
+  normalizePasswordRecoveryEmail,
+  PASSWORD_RECOVERY_EMAIL_MAX_LENGTH,
+} from './recovery/password-recovery-email';
+
+export type {
+  PasswordRecoveryActorEmail,
+  PasswordRecoveryReader,
+} from './recovery/password-recovery-reader';
+
+export type {
+  PasswordRecoveryChallengeWriter,
+  UpsertPasswordRecoveryChallengeInput,
+} from './recovery/password-recovery-challenge-writer';
+
+export type { PasswordRecoveryClock } from './recovery/password-recovery-clock';
+
+export {
+  IssuePasswordRecovery,
+  PASSWORD_RECOVERY_ABSOLUTE_TTL_MILLISECONDS,
+  type IssuePasswordRecoveryInput,
+} from './recovery/issue-password-recovery';
+
+export {
+  normalizeAndValidatePasswordRecoveryPassword,
+  PASSWORD_RECOVERY_PASSWORD_MAX_LENGTH,
+  PASSWORD_RECOVERY_PASSWORD_MIN_LENGTH,
+} from './recovery/password-recovery-password';
+
+export type {
+  PasswordRecoveryResetTransaction,
+  ResetPasswordWithRecoveryTransactionInput,
+} from './recovery/password-recovery-reset-transaction';
+
+export {
+  ResetPasswordWithRecovery,
+  type ResetPasswordWithRecoveryInput,
+} from './recovery/reset-password-with-recovery';

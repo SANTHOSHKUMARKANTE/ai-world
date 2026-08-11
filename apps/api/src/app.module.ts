@@ -6,8 +6,10 @@ import {
   ConfirmEmailVerification,
   CreateSession,
   IssueEmailVerification,
+  IssuePasswordRecovery,
   LogoutSession,
   RegisterUser,
+  ResetPasswordWithRecovery,
   SignInWithPassword,
   ValidateSession,
 } from '@ai-world/platform-identity-access';
@@ -16,15 +18,20 @@ import {
   Argon2idPasswordHasher,
   Argon2idPasswordVerifier,
   NodeEmailVerificationTokenGenerator,
+  NodePasswordRecoveryTokenGenerator,
   NodeSessionTokenGenerator,
   PrismaEmailVerificationConfirmationTransaction,
   PrismaEmailVerificationRepository,
   PrismaPasswordAuthenticationReader,
+  PrismaPasswordRecoveryRepository,
+  PrismaPasswordRecoveryResetTransaction,
   PrismaRegistrationTransaction,
   PrismaSessionRepository,
   Sha256EmailVerificationTokenDigester,
+  Sha256PasswordRecoveryTokenDigester,
   Sha256SessionTokenDigester,
   SystemEmailVerificationClock,
+  SystemPasswordRecoveryClock,
   SystemSessionClock,
 } from '@ai-world/platform-identity-access/infrastructure';
 import { PrismaUserRegistrationWriter } from '@ai-world/platform-user/infrastructure';
@@ -39,6 +46,7 @@ import { EmailVerificationController } from './email-verification/email-verifica
 import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
 import { ObservabilityModule } from './observability/observability.module';
+import { PasswordRecoveryController } from './password-recovery/password-recovery.controller';
 import { RegistrationController } from './registration/registration.controller';
 import { SessionController } from './session/session.controller';
 import { SessionCookie } from './session/session-cookie';
@@ -117,6 +125,7 @@ export class AppModule {
         PasswordAuthenticationController,
         SessionController,
         EmailVerificationController,
+        PasswordRecoveryController,
       ],
 
       providers: [
@@ -221,6 +230,36 @@ export class AppModule {
               new PrismaEmailVerificationConfirmationTransaction(database.getClient()),
               new Sha256EmailVerificationTokenDigester(),
               new SystemEmailVerificationClock(),
+            );
+          },
+        },
+
+        {
+          provide: IssuePasswordRecovery,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): IssuePasswordRecovery => {
+            const repository = new PrismaPasswordRecoveryRepository(database.getClient());
+
+            return new IssuePasswordRecovery(
+              repository,
+              repository,
+              new NodePasswordRecoveryTokenGenerator(),
+              new Sha256PasswordRecoveryTokenDigester(),
+              new SystemPasswordRecoveryClock(),
+              emailDelivery,
+            );
+          },
+        },
+
+        {
+          provide: ResetPasswordWithRecovery,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): ResetPasswordWithRecovery => {
+            return new ResetPasswordWithRecovery(
+              new PrismaPasswordRecoveryResetTransaction(database.getClient()),
+              new Sha256PasswordRecoveryTokenDigester(),
+              new Argon2idPasswordHasher(),
+              new SystemPasswordRecoveryClock(),
             );
           },
         },
