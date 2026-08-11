@@ -1,6 +1,16 @@
 export type { Actor } from './actor';
 
 export {
+  ADMINISTRATOR_ROLE_KEY,
+  IDENTITY_AUTHORIZATION_MANAGE_PERMISSION_KEY,
+} from './authorization/authorization-policy';
+
+export {
+  AssignRoleToActorAsActor,
+  type AssignRoleToActorAsActorInput,
+} from './authorization/assign-role-to-actor-as-actor';
+
+export {
   AssignRoleToActor,
   type AssignRoleToActorInput,
 } from './authorization/assign-role-to-actor';

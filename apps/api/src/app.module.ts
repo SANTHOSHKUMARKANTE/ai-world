@@ -3,6 +3,7 @@ import { SmtpEmailDelivery, type SmtpEmailDeliveryOptions } from '@ai-world/foun
 import { type LogLevel } from '@ai-world/foundation-observability';
 import {
   AssignRoleToActor,
+  AssignRoleToActorAsActor,
   AuthenticatePassword,
   ConfirmEmailVerification,
   CreateSession,
@@ -47,6 +48,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PasswordAuthenticationController } from './authentication/password-authentication.controller';
+import { AuthorizationController } from './authorization/authorization.controller';
 import { DatabaseModule } from './database/database.module';
 import { DatabaseService } from './database/database.service';
 import { EmailVerificationController } from './email-verification/email-verification.controller';
@@ -135,6 +137,7 @@ export class AppModule {
         EmailVerificationController,
         PasswordRecoveryController,
         UserProfileController,
+        AuthorizationController,
       ],
 
       providers: [
@@ -227,6 +230,17 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): EvaluatePermission => {
             return new EvaluatePermission(new PrismaAuthorizationRepository(database.getClient()));
+          },
+        },
+
+        {
+          provide: AssignRoleToActorAsActor,
+          inject: [EvaluatePermission, AssignRoleToActor],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            assignRoleToActor: AssignRoleToActor,
+          ): AssignRoleToActorAsActor => {
+            return new AssignRoleToActorAsActor(evaluatePermission, assignRoleToActor);
           },
         },
 
