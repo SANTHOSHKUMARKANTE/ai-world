@@ -38,6 +38,9 @@ importers:
       '@ai-world/foundation-database':
         specifier: workspace:*
         version: link:../../packages/foundations/database
+      '@ai-world/foundation-email':
+        specifier: workspace:*
+        version: link:../../packages/foundations/email
       '@ai-world/foundation-errors':
         specifier: workspace:*
         version: link:../../packages/foundations/errors

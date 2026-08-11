@@ -10,14 +10,16 @@
     "dev": "nest start --watch",
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "test": "vitest run --exclude \"test/**/*.integration.spec.ts\"",
-    "test:integration": "vitest run integration",
+    "test": "vitest run --exclude \"test/**/*.integration.spec.ts\" --exclude \"test/**/*.mailpit.spec.ts\"",
+    "test:integration": "vitest run integration --exclude \"test/**/*.mailpit.spec.ts\"",
+    "test:integration:mailpit": "vitest run test/email-verification-mailpit.mailpit.spec.ts",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json"
   },
   "dependencies": {
     "@ai-world/foundation-configuration": "workspace:*",
     "@ai-world/foundation-database": "workspace:*",
+    "@ai-world/foundation-email": "workspace:*",
     "@ai-world/foundation-errors": "workspace:*",
     "@ai-world/foundation-observability": "workspace:*",
     "@ai-world/platform-identity-access": "workspace:*",

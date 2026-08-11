@@ -1,7 +1,7 @@
-import { ApplicationError } from '@ai-world/foundation-errors';
 import { LogoutSession, ValidateSession } from '@ai-world/platform-identity-access';
 import { Controller, Delete, Get, Headers, HttpCode, HttpStatus, Res } from '@nestjs/common';
 
+import { requireSessionToken } from './require-session-token';
 import { SessionCookie } from './session-cookie';
 
 interface CookieResponse {
@@ -11,24 +11,6 @@ interface CookieResponse {
 export interface SessionResponse {
   readonly actorId: string;
   readonly expiresAt: string;
-}
-
-function requireSessionToken(
-  sessionCookie: SessionCookie,
-  cookieHeader: string | undefined,
-): string {
-  const token = sessionCookie.read(cookieHeader);
-
-  if (!token) {
-    throw new ApplicationError({
-      code: 'identity.session.invalid',
-      kind: 'unauthenticated',
-      message: 'Session validation failed because no Session cookie was supplied.',
-      publicMessage: 'Authentication is required.',
-    });
-  }
-
-  return token;
 }
 
 @Controller('session')

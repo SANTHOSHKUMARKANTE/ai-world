@@ -43,3 +43,5 @@ export {
 export { PrismaEmailVerificationRepository } from './email-verification/prisma-email-verification-repository';
 
 export { SystemEmailVerificationClock } from './email-verification/system-email-verification-clock';
+
+export { PrismaEmailVerificationConfirmationTransaction } from './email-verification/prisma-email-verification-confirmation-transaction';

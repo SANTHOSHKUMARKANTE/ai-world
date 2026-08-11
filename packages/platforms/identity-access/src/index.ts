@@ -113,3 +113,13 @@ export {
   type IssueEmailVerificationInput,
   type IssueEmailVerificationResult,
 } from './email-verification/issue-email-verification';
+
+export {
+  ConfirmEmailVerification,
+  type ConfirmEmailVerificationInput,
+} from './email-verification/confirm-email-verification';
+
+export type {
+  ConfirmEmailVerificationTransactionInput,
+  EmailVerificationConfirmationTransaction,
+} from './email-verification/email-verification-confirmation-transaction';

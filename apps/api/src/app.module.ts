@@ -1,7 +1,11 @@
+import type { EmailDelivery } from '@ai-world/foundation-email';
+import { SmtpEmailDelivery, type SmtpEmailDeliveryOptions } from '@ai-world/foundation-email/smtp';
 import { type LogLevel } from '@ai-world/foundation-observability';
 import {
   AuthenticatePassword,
+  ConfirmEmailVerification,
   CreateSession,
+  IssueEmailVerification,
   LogoutSession,
   RegisterUser,
   SignInWithPassword,
@@ -11,11 +15,16 @@ import {
   ARGON2ID_AUTHENTICATION_DUMMY_PASSWORD_HASH,
   Argon2idPasswordHasher,
   Argon2idPasswordVerifier,
+  NodeEmailVerificationTokenGenerator,
   NodeSessionTokenGenerator,
+  PrismaEmailVerificationConfirmationTransaction,
+  PrismaEmailVerificationRepository,
   PrismaPasswordAuthenticationReader,
   PrismaRegistrationTransaction,
   PrismaSessionRepository,
+  Sha256EmailVerificationTokenDigester,
   Sha256SessionTokenDigester,
+  SystemEmailVerificationClock,
   SystemSessionClock,
 } from '@ai-world/platform-identity-access/infrastructure';
 import { PrismaUserRegistrationWriter } from '@ai-world/platform-user/infrastructure';
@@ -26,6 +35,7 @@ import { AppService } from './app.service';
 import { PasswordAuthenticationController } from './authentication/password-authentication.controller';
 import { DatabaseModule } from './database/database.module';
 import { DatabaseService } from './database/database.service';
+import { EmailVerificationController } from './email-verification/email-verification.controller';
 import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
 import { ObservabilityModule } from './observability/observability.module';
@@ -33,15 +43,57 @@ import { RegistrationController } from './registration/registration.controller';
 import { SessionController } from './session/session.controller';
 import { SessionCookie } from './session/session-cookie';
 
+export interface AppEmailOptions {
+  readonly smtp: Omit<SmtpEmailDeliveryOptions, 'from'>;
+  readonly from: string;
+}
+
 export interface AppModuleOptions {
   readonly databaseUrl: string;
   readonly environment: string;
   readonly logLevel: LogLevel;
+
+  /**
+   * Production/runtime configuration.
+   *
+   * Existing API tests do not need to supply this unless they exercise
+   * email delivery. main.ts supplies the parsed environment explicitly.
+   */
+  readonly email?: AppEmailOptions;
+
+  /**
+   * Test/composition override that avoids real SMTP delivery.
+   */
+  readonly emailDelivery?: EmailDelivery;
+}
+
+const DEFAULT_LOCAL_EMAIL_OPTIONS: AppEmailOptions = {
+  smtp: {
+    host: '127.0.0.1',
+    port: 1025,
+    secure: false,
+  },
+  from: 'AI World <noreply@ai-world.local>',
+};
+
+function createEmailDelivery(options: AppModuleOptions): EmailDelivery {
+  if (options.emailDelivery) {
+    return options.emailDelivery;
+  }
+
+  const email = options.email ?? DEFAULT_LOCAL_EMAIL_OPTIONS;
+
+  return new SmtpEmailDelivery({
+    ...email.smtp,
+    from: email.from,
+  });
 }
 
 @Module({})
 export class AppModule {
   static register(options: AppModuleOptions): DynamicModule {
+    const emailDelivery = createEmailDelivery(options);
+
     return {
       module: AppModule,
 
@@ -64,6 +116,7 @@ export class AppModule {
         RegistrationController,
         PasswordAuthenticationController,
         SessionController,
+        EmailVerificationController,
       ],
 
       providers: [
@@ -139,6 +192,35 @@ export class AppModule {
               new PrismaSessionRepository(database.getClient()),
               new Sha256SessionTokenDigester(),
               new SystemSessionClock(),
+            );
+          },
+        },
+
+        {
+          provide: IssueEmailVerification,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): IssueEmailVerification => {
+            const repository = new PrismaEmailVerificationRepository(database.getClient());
+
+            return new IssueEmailVerification(
+              repository,
+              repository,
+              new NodeEmailVerificationTokenGenerator(),
+              new Sha256EmailVerificationTokenDigester(),
+              new SystemEmailVerificationClock(),
+              emailDelivery,
+            );
+          },
+        },
+
+        {
+          provide: ConfirmEmailVerification,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): ConfirmEmailVerification => {
+            return new ConfirmEmailVerification(
+              new PrismaEmailVerificationConfirmationTransaction(database.getClient()),
+              new Sha256EmailVerificationTokenDigester(),
+              new SystemEmailVerificationClock(),
             );
           },
         },

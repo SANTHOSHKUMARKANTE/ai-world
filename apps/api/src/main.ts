@@ -12,6 +12,7 @@ async function bootstrap() {
       databaseUrl: environment.databaseUrl,
       environment: environment.nodeEnv,
       logLevel: environment.logLevel,
+      email: environment.email,
     }),
     {
       bufferLogs: true,
