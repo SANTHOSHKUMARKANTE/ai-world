@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@ai-world/foundation-database": "workspace:*",
-    "@ai-world/foundation-errors": "workspace:*"
+    "@ai-world/foundation-errors": "workspace:*",
+    "@ai-world/kernel-identifiers": "workspace:*"
   }
 }
