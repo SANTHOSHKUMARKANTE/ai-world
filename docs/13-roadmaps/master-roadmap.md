@@ -12,7 +12,7 @@
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-12 |
-| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events NEXT |
+| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events DEFERRED; P3-M04 Audit NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -610,6 +610,9 @@ P3-M02 — Namespace
 CLOSED
 
 P3-M03 — Events
+DEFERRED
+
+P3-M04 — Audit
 NEXT
 ```
 
@@ -623,10 +626,10 @@ P3-M02 — Namespace
 CLOSED
 
 P3-M03 — Events
-NEXT
+DEFERRED — no current production consumer
 
 P3-M04 — Audit
-PLANNED
+NEXT
 
 P3-M05 — Taxonomy
 PLANNED
@@ -653,13 +656,15 @@ remain empty placeholders and are deferred to a dedicated governance/documentati
 
 They do not redefine the completed Phase 2 closure criteria or completed P3-M01/P3-M02 closure evidence.
 
+P3-M03 has been reviewed against the current repository and deferred because no production capability presently requires publication/subscription mechanics. The first concrete Event consumers remain future capabilities such as Knowledge lifecycle Events.
+
 The next implementation milestone is:
 
 ```text
-P3-M03 — Events
+P3-M04 — Audit
 ```
 
-P3-M03 must remain minimal and demand-driven. It should establish only the typed internal Event semantics required by real consumers, beginning in-process and without introducing distributed broker infrastructure.
+P3-M04 should establish only the reusable Audit Record semantics justified by real security-sensitive operations. It must not require Events merely to satisfy sequencing, and it must remain distinct from ordinary application logging.
 
 ---
 
@@ -8438,7 +8443,7 @@ Kernel → Platform dependency prohibition remains intact;
 full repository regression validation remains green.
 ```
 
-Current Phase 3 position:
+Phase 3 position at P3-M02 closure:
 
 ```text
 P3-M01 — Identifiers
@@ -8470,11 +8475,235 @@ P3-M03 must remain demand-driven and establish only the smallest typed internal 
 
 P3-M03 does not justify Kafka, RabbitMQ, or another distributed broker by default.
 
+This block records the historical delivery position at P3-M02 closure. The current delivery position is maintained in Sections 23A, 97, 398, and 410.
+
 ---
 
 # 97. Phase 3 Milestone P3-M03 — Events
 
-Implement:
+P3-M03 was evaluated against the current production codebase before introducing a new Kernel package or Event mechanism.
+
+Milestone status:
+
+```text
+P3-M03 — Events
+DEFERRED
+```
+
+Deferral reason:
+
+```text
+NO current production Event publisher
+
+NO current production Event subscriber
+
+NO current cross-capability operation requires asynchronous Event propagation
+
+NO current requirement for Event-driven eventual consistency
+
+NO current requirement for durable Event delivery
+```
+
+Repository inspection found ordinary browser/React `FormEvent` usage, but no AI World business Event mechanism. Searches for publication/subscription vocabulary also found no production publisher, subscriber, emitter, dispatcher, or listener implementation.
+
+Existing API `requestId` values provide request/error correlation at the transport boundary, but they do not by themselves justify a generalized Event context model.
+
+The architecture still reserves Event responsibilities for the Platform Kernel:
+
+```text
+Events Kernel
+    owns shared Event mechanics
+    owns Event envelope conventions
+    owns publication/subscription mechanics
+
+Producing Capability
+    owns the semantic meaning of each Event
+
+Event consumers
+    own only their derived state
+    do not gain ownership of producer state
+```
+
+The dependency rule remains:
+
+```text
+Event
+    describes something that already happened
+
+producer
+    must not depend on consumers
+
+Commands and Events
+    remain distinct
+```
+
+## P3-M03 Demand Review Result
+
+The current implemented Platforms already complete their required synchronous business operations without a shared Event mechanism.
+
+Potential existing operations such as:
+
+```text
+Role assignment
+
+password Recovery reset
+
+email verification confirmation
+
+User Profile update
+```
+
+do not currently have an independent post-operation consumer whose requirement justifies adding publication/subscription infrastructure.
+
+Adding Events only because these operations are significant would violate the Phase 3 demand-driven rule.
+
+The first explicit future Event consumer remains the Knowledge phase, where the roadmap already anticipates meaningful lifecycle facts such as:
+
+```text
+KnowledgeCreated
+
+KnowledgeUpdated
+
+KnowledgePublished
+
+KnowledgeArchived
+```
+
+Final Event names and Contracts remain intentionally undefined until that real producer/consumer boundary exists.
+
+## P3-M03 Implementation Outcome
+
+P3-M03 therefore introduces:
+
+```text
+NO @ai-world/kernel-events package
+
+NO Event base class
+
+NO generic Event envelope
+
+NO Event publisher abstraction
+
+NO Event subscriber abstraction
+
+NO in-process Event bus
+
+NO Event persistence
+
+NO Prisma schema change
+
+NO database migration
+
+NO queue
+
+NO Kafka
+
+NO RabbitMQ
+```
+
+No speculative compatibility layer is created for a future Event design.
+
+## P3-M03 Activation Gate
+
+P3-M03 should be reactivated when a real capability requires one or more of:
+
+```text
+independent post-operation consumers;
+
+producer/consumer decoupling;
+
+in-process publication to multiple consumers;
+
+eventual consistency between owned capabilities;
+
+meaningful lifecycle Event Contracts;
+
+correlation/context that must flow with business Events.
+```
+
+The expected first strong candidate is:
+
+```text
+Phase 4 Knowledge lifecycle
+    → P4-M08 Knowledge Events
+```
+
+A future earlier consumer may reactivate P3-M03 if the requirement becomes concrete.
+
+## P3-M03 Audit Boundary
+
+P3-M04 Audit does not automatically require Events.
+
+Audit and Events remain separate concepts:
+
+```text
+Event
+    communicates a business fact to interested consumers
+
+Audit Record
+    durably records an accountability fact
+
+Log
+    records operational/diagnostic information
+```
+
+P3-M04 may therefore proceed directly if current security-sensitive operations justify reusable Audit Record semantics.
+
+## P3-M03 Closure Decision
+
+P3-M03 is intentionally deferred rather than implemented speculatively.
+
+The milestone review proves:
+
+```text
+Event architecture was inspected before implementation;
+
+no real current Event consumer exists;
+
+no unnecessary Kernel package was created;
+
+no distributed infrastructure was introduced;
+
+future Knowledge Event needs remain explicitly preserved;
+
+Phase 3 can continue to the next demand-justified milestone.
+```
+
+Current Phase 3 position:
+
+```text
+P3-M01 — Identifiers
+CLOSED
+
+P3-M02 — Namespace
+CLOSED
+
+P3-M03 — Events
+DEFERRED — pending real consumer
+
+P3-M04 — Audit
+NEXT
+
+P3-M05 — Taxonomy
+PLANNED
+
+P3-M06 — Relationships
+PLANNED
+
+P3-M07 — Architecture Enforcement Expansion
+PLANNED
+
+Phase 3 — Platform Kernel Baseline
+ACTIVE
+```
+
+---
+
+# 98. Events Initial Scope
+
+When P3-M03 is reactivated, begin with the smallest mechanism required by the real producer and consumer.
+
+The preferred initial direction remains:
 
 ```text
 typed internal Events;
@@ -8483,21 +8712,25 @@ in-process publication;
 
 subscription;
 
-correlation/context.
+minimal correlation/context.
 ```
 
----
+Do not introduce durable or distributed delivery unless a measured requirement exists.
 
-# 98. Events Initial Scope
-
-Do not add:
+Do not add by default:
 
 ```text
 Kafka;
 
 RabbitMQ;
 
-distributed broker.
+distributed broker;
+
+outbox infrastructure;
+
+Event store;
+
+stream-processing platform.
 ```
 
 ---
@@ -12604,7 +12837,7 @@ PASS
 
 Phase 3 is currently ACTIVE and is not yet eligible for phase closure.
 
-Completed Phase 3 evidence so far:
+Phase 3 evidence so far:
 
 ```text
 P3-M01 — Identifiers
@@ -12665,6 +12898,21 @@ not required
 Kernel Namespace unit tests
 19 / 19 PASS
 
+P3-M03 — Events
+DEFERRED — no current production consumer
+
+Event publisher/subscriber requirement
+not currently present
+
+Kernel Events package
+not created
+
+Event persistence migration
+not required
+
+Distributed Event infrastructure
+not introduced
+
 Repository PostgreSQL integration
 118 / 118 PASS
 
@@ -12695,7 +12943,7 @@ Phase 3 completion still requires the remaining demand-justified Kernel work and
 The next milestone is:
 
 ```text
-P3-M03 — Events
+P3-M04 — Audit
 ```
 
 ---
@@ -12953,8 +13201,8 @@ PLATFORM KERNEL BASELINE
     ACTIVE
     ✅ P3-M01 Identifiers — CLOSED
     ✅ P3-M02 Namespace — CLOSED
-    →  P3-M03 Events — NEXT
-    P3-M04 Audit — PLANNED
+    ↷  P3-M03 Events — DEFERRED (pending real consumer)
+    →  P3-M04 Audit — NEXT
     P3-M05 Taxonomy — PLANNED
     P3-M06 Relationships — PLANNED
     P3-M07 Architecture Enforcement Expansion — PLANNED
@@ -13300,7 +13548,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 96, 398, 410, and 411.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 97, 398, 410, and 411.
 
 ```text
 DOCUMENT
@@ -13367,16 +13615,20 @@ COMPLETED
 P3-M01 — Identifiers
 P3-M02 — Namespace
 
+DEFERRED
+P3-M03 — Events — pending real consumer
+
 CURRENT MILESTONE
-P3-M03 — Events
+P3-M04 — Audit
 
 NEXT
-P3-M03 — Events
+P3-M04 — Audit
 
 BLOCKED
 None
 
 DEFERRED / DEMAND-DRIVEN
+P3-M03 Events remains deferred until a real producer/consumer requirement exists.
 Metadata remains deferred until a real consumer requires it.
 Workflow remains deferred until a real consumer requires it.
 Policy remains deferred until a real consumer requires it.
@@ -13384,7 +13636,6 @@ Localization remains deferred until a real consumer requires it.
 Versioning remains deferred until a real consumer requires it.
 Distributed Event infrastructure remains deferred; no Kafka or RabbitMQ is justified.
 Graph Database remains deferred; Relationships begin with PostgreSQL when required.
-Audit is planned for P3-M04 unless an earlier real consumer requires it.
 Universe-specific Kernel behavior remains forbidden.
 ```
 
@@ -13753,6 +14004,37 @@ GitHub Actions CI / Validate
 PASS
 ```
 
+## P3-M03 Event Demand Review
+
+P3-M03 was reviewed before implementation and intentionally deferred.
+
+Repository inspection found:
+
+```text
+production business Event publisher
+NONE
+
+production business Event subscriber
+NONE
+
+publish/subscribe/dispatch mechanism
+NONE
+
+current eventual-consistency requirement
+NONE
+
+current durable Event delivery requirement
+NONE
+```
+
+Existing React `FormEvent` usage is browser UI behavior and is unrelated to the Platform Kernel Event capability. Existing API `requestId` values remain transport/error correlation and do not justify a generalized business Event envelope.
+
+P3-M03 therefore adds no source package, persistence model, migration, broker, queue, or Event bus.
+
+The first strong future consumer remains Knowledge lifecycle Events in Phase 4 unless an earlier concrete producer/consumer requirement appears.
+
+P3-M04 Audit may proceed independently because Audit Records, business Events, and operational logs remain separate semantics.
+
 ## Current Phase 3 Delivery Position
 
 ```text
@@ -13769,6 +14051,9 @@ P3-M02 — Namespace
 CLOSED
 
 P3-M03 — Events
+DEFERRED — pending real consumer
+
+P3-M04 — Audit
 NEXT
 
 BLOCKERS
@@ -13781,10 +14066,10 @@ NOT YET REACHED
 The next implementation work is:
 
 ```text
-P3-M03 — Events
+P3-M04 — Audit
 ```
 
-P3-M03 must remain demand-driven and establish only the smallest typed internal Event capability justified by real consumers. The initial baseline should remain in-process unless measured requirements later justify durable or distributed Event infrastructure.
+P3-M04 should now inspect existing security-sensitive Identity operations and establish only the smallest reusable Audit Record semantic justified by real accountability requirements. Audit must remain separate from ordinary logs and must not force Event infrastructure without an actual producer/consumer need.
 
 ## Historical Phase 2 Closure Context
 
@@ -14507,11 +14792,13 @@ tag target
 The next implementation work is:
 
 ```text
-P3-M03 — Events
+P3-M04 — Audit
 ```
 
 P3-M01 established canonical Resource identifier semantics.
 
 P3-M02 established the minimal collision-safe NamespacedKey semantic and proved it through the existing Identity Permission vocabulary.
 
-The immediate Phase 3 task is now to determine the smallest typed internal Event contract justified by real consumers. P3-M03 begins in-process and does not introduce Kafka, RabbitMQ, or another distributed broker without demonstrated workload requirements.
+P3-M03 was reviewed and intentionally deferred because the current production codebase has no real Event producer/consumer requirement. No Event package, bus, persistence, queue, Kafka, or RabbitMQ was introduced.
+
+The immediate Phase 3 task is now P3-M04 Audit: determine the smallest reusable Audit Record contract justified by existing security-sensitive operations while keeping Audit distinct from business Events and ordinary logging.
