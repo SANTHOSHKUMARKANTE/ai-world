@@ -12,7 +12,7 @@
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-12 |
-| Current Delivery | Phase 2 COMPLETE — Identity Platform CLOSED; Phase 3 Platform Kernel Baseline NEXT |
+| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -601,42 +601,41 @@ P2-M10 — Session Security UX
 CLOSED
 
 PHASE 3 — Platform Kernel Baseline
+ACTIVE
+
+P3-M01 — Identifiers
+CLOSED
+
+P3-M02 — Namespace
 NEXT
 ```
 
-Final Phase 2 milestone sequence:
+Current Phase 3 milestone sequence:
 
 ```text
-P2-M01 — Actor and User Baseline
+P3-M01 — Identifiers
 CLOSED
 
-P2-M02 — Registration
-CLOSED
+P3-M02 — Namespace
+NEXT
 
-P2-M03 — Password Authentication
-CLOSED
+P3-M03 — Events
+PLANNED
 
-P2-M04 — Session Management
-CLOSED
+P3-M04 — Audit
+PLANNED
 
-P2-M05 — Email Verification
-CLOSED
+P3-M05 — Taxonomy
+PLANNED
 
-P2-M06 — Recovery
-CLOSED
+P3-M06 — Relationships
+PLANNED
 
-P2-M07 — User Profile
-CLOSED
-
-P2-M08 — Roles and Permissions
-CLOSED
-
-P2-M09 — Owner-Side Authorization
-CLOSED
-
-P2-M10 — Session Security UX
-CLOSED
+P3-M07 — Architecture Enforcement Expansion
+PLANNED
 ```
+
+Phase 3 remains demand-driven. A listed milestone may be narrowed, deferred, or satisfied by a smaller implementation when real consumers do not justify broader scope.
 
 Current non-blocking documentation debt:
 
@@ -649,15 +648,15 @@ docs/templates/closure-review-template.md
 remain empty placeholders and are deferred to a dedicated governance/documentation task.
 ```
 
-They do not redefine the completed Phase 2 closure criteria.
+They do not redefine the completed Phase 2 closure criteria or P3-M01 closure evidence.
 
-The next implementation phase is:
+The next implementation milestone is:
 
 ```text
-Phase 3 — Platform Kernel Baseline
+P3-M02 — Namespace
 ```
 
-Phase 3 must remain demand-driven and must not expand into a speculative implementation of every documented Kernel capability.
+P3-M02 must remain minimal and should establish only the namespaced Key semantics required by real consumers such as existing permission keys and upcoming Events, Taxonomy, Relationships, or Definitions.
 
 ---
 
@@ -7207,9 +7206,9 @@ Turborepo path with real GitHub Actions PostgreSQL.
 P2-M10 implementation was delivered through two intentional implementation commits:
 
 ```text
-feat(web): complete session security ux
+9c6ab56 feat(web): complete session security ux
 
-fix(ci): pass database url to web e2e
+05778dd fix(ci): pass database url to web e2e
 ```
 
 The first commit delivered the browser Session Security UX and real Playwright security proof.
@@ -7568,18 +7567,360 @@ until consumers demand them.
 
 # 94. Phase 3 Milestone P3-M01 — Identifiers
 
-Implement stable canonical Resource identifier semantics.
+P3-M01 established the first concrete Platform Kernel capability: canonical AI World Resource identifier semantics shared by real Platform consumers.
 
-Requirements:
+Milestone status:
 
 ```text
-generation;
+P3-M01 — Identifiers
+CLOSED
+```
 
-validation;
+Implemented scope:
 
-representation;
+```text
+@ai-world/kernel-identifiers package;
 
-tests.
+ResourceId semantic type;
+
+canonical Resource identifier generation;
+
+canonical Resource identifier validation;
+
+strict parsing without silent normalization;
+
+Identity & Access consumption through Actor.id;
+
+User Platform consumption through User.id and User.actorId;
+
+unit validation of canonical and invalid identifier forms;
+
+architecture-boundary proof;
+
+full repository regression validation.
+```
+
+## P3-M01 Architecture Boundary
+
+Canonical ownership is:
+
+```text
+Platform Kernel
+    owns ResourceId semantics
+    owns canonical generation
+    owns canonical validation
+    owns canonical parsing rules
+
+Identity & Access Platform
+    owns Actor
+    consumes ResourceId for Actor.id
+
+User Platform
+    owns User
+    consumes ResourceId for User.id
+    consumes ResourceId for User.actorId
+
+Database Foundation
+    owns Prisma/PostgreSQL persistence mechanics
+    does not own Resource identifier business semantics
+```
+
+The dependency direction is:
+
+```text
+Identity & Access ───────┐
+                         ├──→ @ai-world/kernel-identifiers
+User Platform ───────────┘
+```
+
+The Kernel package does not depend upward on:
+
+```text
+Platforms
+
+Universes
+
+Applications.
+```
+
+Existing dependency-cruiser rules already protected this direction, so P3-M01 required no architecture-rule rewrite.
+
+## P3-M01 Canonical ResourceId Semantics
+
+The canonical baseline is:
+
+```text
+semantic name
+ResourceId
+
+runtime representation
+string
+
+canonical textual representation
+lowercase UUID v4
+
+generation
+Node.js crypto.randomUUID()
+
+validation
+strict canonical lowercase UUID v4
+
+parsing
+validate and return the original canonical value
+
+normalization
+none
+
+whitespace trimming
+none
+
+case conversion
+none
+```
+
+Invalid input fails rather than being silently transformed into a different identity value.
+
+Examples rejected by the canonical validator include:
+
+```text
+uppercase UUID text;
+
+surrounding whitespace;
+
+non-v4 UUID values;
+
+nil UUID;
+
+malformed identifier text;
+
+non-string values.
+```
+
+The first implementation deliberately keeps:
+
+```text
+ResourceId = string
+```
+
+at runtime.
+
+This avoids introducing object wrappers or broad branded-type rewrites without evidence while still establishing one shared semantic vocabulary and one canonical validation/generation contract.
+
+## P3-M01 Persistence and Migration Outcome
+
+The Phase 2 persistence baseline already used one compatible identifier scheme:
+
+```text
+Prisma String identifiers
+
+@default(uuid())
+
+PostgreSQL @db.Uuid columns
+```
+
+P3-M01 therefore introduces:
+
+```text
+NO Prisma model change
+
+NO database table
+
+NO database column
+
+NO database migration
+
+NO identifier format replacement
+
+NO Phase 2 data rewrite.
+```
+
+The canonical migration count remains:
+
+```text
+8
+```
+
+and PostgreSQL remains:
+
+```text
+schema up to date.
+```
+
+This is an intentional application of the Section 95 migration rule: migrate only when existing Resource identifiers conflict with the finalized canonical semantics. No such conflict exists in the current Identity/User baseline.
+
+## P3-M01 Real Platform Consumers
+
+P3-M01 is not an unused speculative Kernel abstraction.
+
+The first real consumers are:
+
+```text
+Identity & Access Platform
+    Actor.id: ResourceId
+
+User Platform
+    User.id: ResourceId
+    User.actorId: ResourceId
+```
+
+This proves shared consumption across two existing Platforms before Knowledge begins.
+
+Future capabilities may reuse the same semantic contract for Resource references where appropriate, including potential Knowledge Resources, Audit references, classifications, and Relationships.
+
+P3-M01 does not require every database UUID in AI World to become a canonical ResourceId. Internal persistence identifiers remain capability-owned and should adopt ResourceId semantics only when they represent canonical cross-capability Resource identity.
+
+## P3-M01 Repository Materialization
+
+P3-M01 materialized:
+
+```text
+packages/kernel/identifiers/
+    package.json
+    tsconfig.json
+    tsconfig.test.json
+    src/index.ts
+    src/resource-id.ts
+    test/resource-id.spec.ts
+```
+
+Canonical package:
+
+```text
+@ai-world/kernel-identifiers
+```
+
+The package has no third-party runtime dependency.
+
+Node.js type definitions are development-only support for the built-in:
+
+```text
+node:crypto
+```
+
+identifier generator.
+
+Generated/package-local runtime material remains ignored:
+
+```text
+dist/
+node_modules/
+.turbo/
+```
+
+and is not part of the committed Kernel source surface.
+
+## P3-M01 Validation Evidence
+
+Final P3-M01 local and remote validation:
+
+```text
+Format check                              PASS
+
+Lint                                      10 / 10 PASS
+
+TypeScript                                19 / 19 PASS
+
+Kernel Identifiers unit tests             11 / 11 PASS
+
+Identity unit tests                       83 / 83 PASS
+
+API unit/e2e tests                        12 / 12 PASS
+
+Web Vitest tests                          20 / 20 PASS
+
+Root normal Turbo tasks                   15 / 15 PASS
+
+Identity PostgreSQL integration           41 / 41 PASS
+
+User PostgreSQL integration                6 / 6 PASS
+
+API PostgreSQL integration                71 / 71 PASS
+
+Repository PostgreSQL integration        118 / 118 PASS
+
+Real Chromium browser E2E                  2 / 2 PASS
+
+Root Turborepo browser E2E                 2 / 2 PASS
+
+Prisma schema validation                  PASS
+
+Canonical migration status                8 migrations / schema up to date
+
+Production build                          11 / 11 PASS
+
+Architecture validation                  286 modules
+                                         672 dependencies
+                                           0 violations
+
+Generated-output ignore validation        PASS
+
+Git diff validation                       PASS
+
+GitHub Actions CI / Validate              PASS
+```
+
+P3-M01 does not change Email/SMTP behavior. The existing Phase 2 real SMTP → Mailpit baseline remains the canonical provider proof for those unchanged capabilities.
+
+## P3-M01 Implementation Checkpoint
+
+Implementation checkpoint:
+
+```text
+feat(kernel): establish resource identifier baseline
+```
+
+The exact implementation commit hash remains available from Git history and can be added during a later documentation normalization pass. This roadmap update does not invent a hash that was not captured in the closure input.
+
+The implementation checkpoint passed remote GitHub Actions CI / Validate before roadmap closure.
+
+## P3-M01 Closure
+
+P3-M01 is complete.
+
+The milestone proves:
+
+```text
+one canonical ResourceId semantic vocabulary;
+
+strict UUID v4 generation/validation semantics;
+
+no unnecessary database migration;
+
+no Phase 2 identifier rewrite;
+
+real reuse by Identity & Access and User Platforms;
+
+Kernel → Platform dependency prohibition remains intact;
+
+full repository regression validation remains green.
+```
+
+Current Phase 3 position:
+
+```text
+P3-M01 — Identifiers
+CLOSED
+
+P3-M02 — Namespace
+NEXT
+
+P3-M03 — Events
+PLANNED
+
+P3-M04 — Audit
+PLANNED
+
+P3-M05 — Taxonomy
+PLANNED
+
+P3-M06 — Relationships
+PLANNED
+
+P3-M07 — Architecture Enforcement Expansion
+PLANNED
+
+Phase 3 — Platform Kernel Baseline
+ACTIVE
 ```
 
 ---
@@ -7587,6 +7928,34 @@ tests.
 # 95. Identifier Migration Rule
 
 If Phase 2 Resources were created before generalized Identifiers were finalized, migrate intentionally rather than maintaining multiple unrelated schemes without reason.
+
+P3-M01 applied this rule and found no migration requirement.
+
+The existing Phase 2 canonical Resource persistence already uses:
+
+```text
+UUID identifiers
+
+Prisma uuid() generation
+
+PostgreSQL UUID columns
+```
+
+which is compatible with the finalized P3-M01 ResourceId baseline.
+
+Therefore:
+
+```text
+Actor IDs remain unchanged;
+
+User IDs remain unchanged;
+
+User.actorId references remain unchanged;
+
+all eight committed migrations remain unchanged.
+```
+
+Future identifier migration is required only if a real capability introduces incompatible canonical Resource identity semantics.
 
 ---
 
@@ -11738,13 +12107,68 @@ PASS
 
 # 383. Phase 3 Completion Evidence
 
-Expected:
+Phase 3 is currently ACTIVE and is not yet eligible for phase closure.
+
+Completed Phase 3 evidence so far:
 
 ```text
-shared Kernel semantics
+P3-M01 — Identifiers
+CLOSED
+
+@ai-world/kernel-identifiers
+implemented
+
+ResourceId generation
+implemented
+
+ResourceId validation
+implemented
+
+ResourceId parsing
+implemented
+
+Identity & Access consumption
+Actor.id
+
+User Platform consumption
+User.id
+User.actorId
+
+Identifier persistence migration
+not required
+
+Kernel unit tests
+11 / 11 PASS
+
+Repository PostgreSQL integration
+118 / 118 PASS
+
+Chromium E2E
+2 / 2 PASS
+
+Prisma
+8 migrations
+schema up to date
+
+Build
+11 / 11 PASS
+
+Architecture
+286 modules
+672 dependencies
+0 violations
+
+GitHub Actions CI / Validate
+PASS
 ```
 
-used by real Platform consumers.
+Phase 3 completion still requires the remaining demand-justified Kernel work and the closure criteria in Section 106.
+
+The next milestone is:
+
+```text
+P3-M02 — Namespace
+```
 
 ---
 
@@ -11998,13 +12422,14 @@ IDENTITY PLATFORM
 
 PHASE 3
 PLATFORM KERNEL BASELINE
-    NEXT
-    Identifiers
-    Namespace
-    Events
-    Audit
-    Taxonomy
-    Relationships
+    ACTIVE
+    ✅ P3-M01 Identifiers — CLOSED
+    →  P3-M02 Namespace — NEXT
+    P3-M03 Events — PLANNED
+    P3-M04 Audit — PLANNED
+    P3-M05 Taxonomy — PLANNED
+    P3-M06 Relationships — PLANNED
+    P3-M07 Architecture Enforcement Expansion — PLANNED
     other Kernel capabilities only as required
 
 
@@ -12347,7 +12772,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 85, 398, and 410.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 94, 398, 410, and 411.
 
 ```text
 DOCUMENT
@@ -12405,44 +12830,252 @@ DATE
 2026-08-12
 
 CURRENT PHASE
-Phase 2 — Identity Platform
+Phase 3 — Platform Kernel Baseline
 
 STATUS
-COMPLETE
-
-EXIT OUTCOME
-ONE SHARED IDENTITY PLATFORM
+ACTIVE
 
 COMPLETED
-P2-M01 — Actor and User Baseline
-P2-M02 — Registration
-P2-M03 — Password Authentication
-P2-M04 — Session Management
-P2-M05 — Email Verification
-P2-M06 — Recovery
-P2-M07 — User Profile
-P2-M08 — Roles and Permissions
-P2-M09 — Owner-Side Authorization
-P2-M10 — Session Security UX
+P3-M01 — Identifiers
 
-NEXT PHASE
-Phase 3 — Platform Kernel Baseline
+NEXT
+P3-M02 — Namespace
 
 BLOCKED
 None
 
-DEFERRED
-Universe-scoped authorization remains deferred until a real consumer defines its scope semantics.
-Creator/Editor canonical authorization remains deferred until a real creator-owned capability requires it.
-Administrator bootstrap/provisioning beyond trusted operational assignment remains deferred.
-Locale and timezone profile preferences remain deferred until a real consumer defines their semantics.
-MFA remains deferred until a real Identity/security requirement justifies it.
-Rate limiting and account lockout remain deferred until their operational/security policy is deliberately defined.
-Audit remains available for Phase 3 or justified pull-forward rather than duplicated inside Identity.
-Cross-site browser Session/CSRF policy remains deployment-topology-driven.
+DEFERRED / DEMAND-DRIVEN
+Metadata remains deferred until a real consumer requires it.
+Workflow remains deferred until a real consumer requires it.
+Policy remains deferred until a real consumer requires it.
+Localization remains deferred until a real consumer requires it.
+Versioning remains deferred until a real consumer requires it.
+Distributed Event infrastructure remains deferred; no Kafka or RabbitMQ is justified.
+Graph Database remains deferred; Relationships begin with PostgreSQL when required.
+Audit is planned for P3-M04 unless an earlier real consumer requires it.
+Universe-specific Kernel behavior remains forbidden.
 ```
 
-## Phase 2 Ownership Result
+## Current Phase 3 Ownership Result
+
+```text
+Platform Kernel
+    owns canonical shared semantic primitives
+    currently materialized through Identifiers
+
+Identifiers Kernel
+    owns ResourceId semantics
+    owns canonical generation
+    owns canonical validation
+    owns canonical parsing
+
+Identity & Access Platform
+    owns Actor
+    consumes ResourceId for Actor.id
+
+User Platform
+    owns User
+    consumes ResourceId for User.id
+    consumes ResourceId for User.actorId
+
+Database Foundation
+    owns Prisma/PostgreSQL persistence mechanics
+    does not own ResourceId semantics
+```
+
+## P3-M01 Canonical Identifier Baseline
+
+```text
+Package
+@ai-world/kernel-identifiers
+
+Semantic type
+ResourceId
+
+Runtime representation
+string
+
+Canonical format
+lowercase UUID v4
+
+Generation
+node:crypto randomUUID()
+
+Validation
+strict canonical UUID v4
+
+Normalization
+none
+
+Persistence
+existing PostgreSQL UUID
+
+Database migration
+none
+```
+
+P3-M01 deliberately avoids:
+
+```text
+identifier microservice;
+
+central identifier table;
+
+new distributed ID generator;
+
+ULID/NanoID/Snowflake expansion;
+
+Phase 2 identifier rewrite;
+
+object-wrapper ceremony without a real requirement.
+```
+
+## P3-M01 Real Consumers
+
+```text
+Actor.id
+    ResourceId
+
+User.id
+    ResourceId
+
+User.actorId
+    ResourceId
+```
+
+This is the first proof that a Kernel semantic can be consumed by multiple real Platforms without moving Platform ownership into the Kernel.
+
+## P3-M01 Persistence Result
+
+```text
+Prisma schema change
+NONE
+
+New migration
+NONE
+
+Canonical migrations
+8
+
+Database status
+schema up to date
+```
+
+The existing UUID persistence established in Phase 2 was compatible with the finalized ResourceId semantic baseline.
+
+## P3-M01 Final Validation
+
+```text
+Format check
+PASS
+
+Lint
+10 / 10 PASS
+
+TypeScript
+19 / 19 PASS
+
+Kernel Identifiers unit tests
+11 / 11 PASS
+
+Identity unit tests
+83 / 83 PASS
+
+API unit/e2e tests
+12 / 12 PASS
+
+Web Vitest tests
+20 / 20 PASS
+
+Root normal Turbo tasks
+15 / 15 PASS
+
+Identity PostgreSQL integration
+41 / 41 PASS
+
+User PostgreSQL integration
+6 / 6 PASS
+
+API PostgreSQL integration
+71 / 71 PASS
+
+Repository PostgreSQL integration
+118 / 118 PASS
+
+Real Chromium Playwright E2E
+2 / 2 PASS
+
+Root Turborepo E2E
+2 / 2 PASS
+
+Prisma validation
+PASS
+
+Prisma migration status
+8 migrations
+schema up to date
+
+Production build
+11 / 11 PASS
+
+Architecture
+286 modules
+672 dependencies
+0 violations
+
+Generated-output ignore validation
+PASS
+
+Git diff validation
+PASS
+
+GitHub Actions CI / Validate
+PASS
+```
+
+## P3-M01 Implementation Checkpoint
+
+```text
+feat(kernel): establish resource identifier baseline
+```
+
+The implementation commit passed remote CI. The exact hash is intentionally not fabricated in this documentation update because it was not captured in the supplied closure input.
+
+## Current Phase 3 Delivery Position
+
+```text
+PHASE
+Phase 3 — Platform Kernel Baseline
+
+STATUS
+ACTIVE
+
+P3-M01 — Identifiers
+CLOSED
+
+P3-M02 — Namespace
+NEXT
+
+BLOCKERS
+NONE
+
+PHASE EXIT
+NOT YET REACHED
+```
+
+The next implementation work is:
+
+```text
+P3-M02 — Namespace
+```
+
+P3-M02 must remain demand-driven and should begin by inspecting the existing namespaced vocabulary already present in AI World, especially permission keys, before introducing a new shared Namespace contract.
+
+## Historical Phase 2 Closure Context
+
+Phase 2 remains complete and tagged. The detailed closure snapshot below is retained so Phase 3 changes do not erase the Identity Platform evidence that established the first real consumers for Kernel work.
+
+## Historical Phase 2 Ownership Result
 
 ```text
 Identity & Access Platform
@@ -12478,7 +13111,7 @@ Web Application
     does not persist Session secrets
 ```
 
-## Phase 2 Canonical Security Baseline
+## Historical Phase 2 Canonical Security Baseline
 
 ```text
 password hashing
@@ -12531,7 +13164,7 @@ frontend authorization
 not trusted as enforcement
 ```
 
-## Phase 2 Canonical Privileged Baseline
+## Historical Phase 2 Canonical Privileged Baseline
 
 ```text
 Role
@@ -12550,7 +13183,7 @@ No Actor is assigned Administrator automatically.
 
 Registration remains free of automatic Role assignment.
 
-## Phase 2 Persistence
+## Historical Phase 2 Persistence
 
 Canonical migration history:
 
@@ -12586,7 +13219,7 @@ schema up to date
 
 P2-M10 introduced no new persistence migration.
 
-## P2-M10 Web Delivery
+## Historical P2-M10 Web Delivery
 
 Implemented browser routes:
 
@@ -12642,7 +13275,7 @@ NestJS API
 
 The first-party Web does not introduce a cross-origin CORS dependency for these flows.
 
-## P2-M10 Browser Security
+## Historical P2-M10 Browser Security
 
 Real Playwright proof validates:
 
@@ -12678,7 +13311,7 @@ post-logout /api/session returns 401;
 reload remains signed out.
 ```
 
-## P2-M10 CI Correction
+## Historical P2-M10 CI Correction
 
 GitHub Actions provides:
 
@@ -12702,7 +13335,7 @@ Playwright fails fast in CI if `DATABASE_URL` is unavailable.
 
 The final remote browser proof therefore executes against real CI PostgreSQL rather than the developer-local `55432` fallback.
 
-## Phase 2 Final Validation
+## Historical Phase 2 Final Validation
 
 ```text
 Format check
@@ -12766,7 +13399,7 @@ GitHub Actions CI / Validate
 PASS
 ```
 
-## Phase 2 Implementation Checkpoints
+## Historical Phase 2 Implementation Checkpoints
 
 Major implementation checkpoints include:
 
@@ -12779,16 +13412,14 @@ b560a45 feat(user): complete user profile lifecycle
 
 30eeef4 feat(identity): enforce owner-side authorization
 
-feat(web): complete session security ux
+9c6ab56 feat(web): complete session security ux
 
-fix(ci): pass database url to web e2e
+05778dd fix(ci): pass database url to web e2e
 ```
 
-The exact P2-M10 commit hashes remain available from Git history and may be added to this snapshot during a later documentation normalization pass if desired.
+The exact P2-M10 implementation hashes are now recorded above. Both commits passed remote CI validation before the Phase 2 documentation closure.
 
-They are not required to establish Phase 2 closure because both commits have already passed remote CI validation.
-
-## Phase 2 Documentation Debt
+## Historical Phase 2 Documentation Debt
 
 The following remain intentionally deferred:
 
@@ -12804,7 +13435,7 @@ docs/templates/closure-review-template.md
 
 These placeholders do not invalidate Phase 2 because they do not define or alter the accepted Identity implementation/security closure criteria.
 
-## Phase 2 Closure
+## Historical Phase 2 Closure
 
 ```text
 PHASE
@@ -12826,15 +13457,7 @@ NEXT PHASE
 Phase 3 — Platform Kernel Baseline
 ```
 
-The next implementation work is:
-
-```text
-Phase 3 — Platform Kernel Baseline
-```
-
-Beginning with a Phase 3 entry review that identifies which planned Kernel capability has the first real consumer.
-
-The roadmap must not assume every candidate Kernel capability is required immediately.
+Phase 2 remains closed. Its completed Identity, User, Email, browser-security, persistence, and authorization evidence is retained here as historical closure context while Phase 3 proceeds.
 
 ---
 
@@ -13054,53 +13677,60 @@ Do not guess historical closure hashes.
 
 ## Phase 1 Tag
 
-Phase 1 is already complete.
+Phase 1 is complete and the historical phase tag has been backfilled successfully.
 
-The intended tag is:
+Canonical tag:
 
 ```text
 phase-1-complete
 ```
 
-It should be backfilled only after the exact Phase 1 closure commit is identified and verified from Git history.
+Verified tag target:
+
+```text
+d7c76bf0e8a54ffe8d96ecc15b0fe9063e429e3a
+docs: document architecture boundary baseline
+```
+
+This commit is the final Phase 1 engineering/documentation checkpoint immediately before Phase 2 implementation begins.
+
+The annotated tag has been pushed to the remote repository.
 
 ## Phase 2 Tag
 
-Phase 2 is complete.
+Phase 2 is complete and its annotated phase-completion tag is established.
 
-The intended tag is:
+Canonical tag:
 
 ```text
 phase-2-complete
 ```
 
-The tag must point to the documentation commit that closes P2-M10 and Phase 2 after that commit passes GitHub Actions CI / Validate.
-
-Therefore the correct Phase 2 sequence is:
+Verified tag target:
 
 ```text
-update this Master Roadmap
-
-    ↓
-
-commit Phase 2 documentation closure
-
-    ↓
-
-push main
-
-    ↓
-
-GitHub Actions CI / Validate PASS
-
-    ↓
-
-create annotated phase-2-complete tag
-
-    ↓
-
-push phase-2-complete tag
+eb06e7ac1661efc1bdf182c53d79381d366473f9
+docs(roadmap): close P2-M10 and Phase 2
 ```
+
+The documentation-closure commit passed GitHub Actions CI / Validate before the tag was created.
+
+The annotated tag has been pushed to the remote repository.
+
+Current established phase tags:
+
+```text
+phase-1-complete
+phase-2-complete
+```
+
+Phase 3 does not receive a milestone tag for P3-M01. A future:
+
+```text
+phase-3-complete
+```
+
+will be created only after all accepted Phase 3 closure criteria, roadmap closure documentation, and closure CI are complete.
 
 ## Release Tags Remain Separate
 
@@ -13162,9 +13792,9 @@ tag target
 The next implementation work is:
 
 ```text
-Phase 3 — Platform Kernel Baseline
+P3-M02 — Namespace
 ```
 
-The immediate Phase 3 task is not to implement every candidate Kernel package.
+P3-M01 has established the first real Kernel package and cross-Platform consumer proof.
 
-It is to perform the Phase 3 entry review and determine the smallest Kernel capability required by the next real consumer.
+The immediate Phase 3 task is now to determine the smallest namespaced Key contract justified by existing permission vocabulary and upcoming Event, Taxonomy, Relationship, or Definition consumers.
