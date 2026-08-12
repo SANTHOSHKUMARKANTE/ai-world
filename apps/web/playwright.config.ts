@@ -7,9 +7,23 @@ const apiOrigin = 'http://127.0.0.1:3001';
 
 const localDatabaseUrl = 'postgresql://ai_world:ai_world@127.0.0.1:55432/ai_world';
 
-const databaseUrl = process.env.DATABASE_URL ?? localDatabaseUrl;
-
 const isCI = Boolean(process.env.CI);
+
+function resolveDatabaseUrl(): string {
+  const configuredDatabaseUrl = process.env.DATABASE_URL;
+
+  if (configuredDatabaseUrl) {
+    return configuredDatabaseUrl;
+  }
+
+  if (isCI) {
+    throw new Error('DATABASE_URL must be configured for Playwright E2E in CI.');
+  }
+
+  return localDatabaseUrl;
+}
+
+const databaseUrl = resolveDatabaseUrl();
 
 const webDirectory = __dirname;
 const apiDirectory = resolve(webDirectory, '../api');
