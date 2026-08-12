@@ -11,8 +11,8 @@
 | Status | ACCEPTED |
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-11 |
-| Current Delivery | Phase 2 ACTIVE — P2-M09 Owner-Side Authorization CLOSED; P2-M10 Session Security UX NEXT |
+| Last Reviewed | 2026-08-12 |
+| Current Delivery | Phase 2 COMPLETE — Identity Platform CLOSED; Phase 3 Platform Kernel Baseline NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -549,7 +549,6 @@ Phase 2–10
 
 ---
 
-
 # 23A. Current Delivery Status
 
 The status in Section 23 records the roadmap state at original acceptance.
@@ -568,7 +567,8 @@ COMPLETE
 EXIT OUTCOME: ENGINEERING-READY
 
 PHASE 2 — Identity Platform
-ACTIVE
+COMPLETE
+EXIT OUTCOME: ONE SHARED IDENTITY PLATFORM
 
 P2-M01 — Actor and User Baseline
 CLOSED
@@ -598,10 +598,13 @@ P2-M09 — Owner-Side Authorization
 CLOSED
 
 P2-M10 — Session Security UX
+CLOSED
+
+PHASE 3 — Platform Kernel Baseline
 NEXT
 ```
 
-Current Phase 2 milestone sequence:
+Final Phase 2 milestone sequence:
 
 ```text
 P2-M01 — Actor and User Baseline
@@ -632,7 +635,7 @@ P2-M09 — Owner-Side Authorization
 CLOSED
 
 P2-M10 — Session Security UX
-NEXT
+CLOSED
 ```
 
 Current non-blocking documentation debt:
@@ -646,7 +649,15 @@ docs/templates/closure-review-template.md
 remain empty placeholders and are deferred to a dedicated governance/documentation task.
 ```
 
-They do not redefine current milestone closure criteria.
+They do not redefine the completed Phase 2 closure criteria.
+
+The next implementation phase is:
+
+```text
+Phase 3 — Platform Kernel Baseline
+```
+
+Phase 3 must remain demand-driven and must not expand into a speculative implementation of every documented Kernel capability.
 
 ---
 
@@ -1525,7 +1536,7 @@ CI PostgreSQL/migration wiring          complete
 fresh-database reconstruction proof     complete
 local architecture/full validation      complete
 Git checkpoint                          complete
-GitHub Actions CI / Validate             complete
+GitHub Actions CI / Validate            complete
 ```
 
 Canonical migration:
@@ -2536,7 +2547,6 @@ successful remote validation
 
 P2-M04 subsequently implemented and validated Session Management.
 
-
 ---
 
 # 74. Authentication Security
@@ -2604,7 +2614,6 @@ advanced Session Security UX
 ```
 
 remain separate capabilities and should be introduced only in their accepted milestone scope.
-
 
 ---
 
@@ -3731,7 +3740,7 @@ Architecture validation                   PASS
 
 Git diff validation                       PASS
 
-GitHub Actions CI / Validate               PASS
+GitHub Actions CI / Validate              PASS
 ```
 
 Final architecture result:
@@ -4436,7 +4445,7 @@ Architecture validation                   PASS
 
 Git diff validation                       PASS
 
-GitHub Actions CI / Validate               PASS
+GitHub Actions CI / Validate              PASS
 ```
 
 Final architecture result:
@@ -4503,6 +4512,7 @@ ACTIVE
 ```
 
 ---
+
 # 80. Phase 2 Milestone P2-M07 — User Profile
 
 P2-M07 implemented the minimal shared User Profile capability while preserving the architectural separation between Identity & Access and the User Platform.
@@ -5461,7 +5471,7 @@ Canonical migration status                PASS
 
 Git diff validation                       PASS
 
-GitHub Actions CI / Validate               PASS
+GitHub Actions CI / Validate              PASS
 ```
 
 Final architecture result:
@@ -6236,12 +6246,18 @@ schema up to date
 Implementation checkpoint:
 
 ```text
-__P2_M09_IMPLEMENTATION_COMMIT__ feat(identity): enforce owner-side authorization
+30eeef4 feat(identity): enforce owner-side authorization
+```
+
+Roadmap closure checkpoint:
+
+```text
+a6e4d98 docs(roadmap): close P2-M09
 ```
 
 P2-M09 implementation, local validation, PostgreSQL owner-side authorization proof, API security proof, architecture validation, implementation Git checkpoint, and remote CI validation are complete.
 
-## P2-M09 Delivery Position
+## P2-M09 Delivery Position at Milestone Closure
 
 ```text
 P2-M01 — Actor and User Baseline
@@ -6278,24 +6294,1007 @@ Phase 2 — Identity Platform
 ACTIVE
 ```
 
+This block records the historical delivery position at P2-M09 closure. The current delivery position is maintained in Sections 23A, 398, and 410.
+
 ---
 
 # 85. Phase 2 Milestone P2-M10 — Session Security UX
 
-Initial Web may expose:
+P2-M10 implemented the first complete first-party browser Identity experience for AI World while preserving the server-managed opaque Session security model established by P2-M04.
+
+Milestone status:
 
 ```text
-login;
+P2-M10 — Session Security UX
+CLOSED
+```
+
+Implemented scope:
+
+```text
+same-origin Web → API integration;
+
+typed Web API boundary;
+
+browser Session state;
+
+registration UX;
+
+password sign-in UX;
+
+authenticated Session UX;
+
+logout UX;
+
+basic account/profile UX;
+
+email-verification request UX;
+
+email-verification confirmation UX;
+
+password-recovery request UX;
+
+password-reset UX;
+
+401 → signed-out behavior;
+
+real browser Session-security proof;
+
+real browser registration/sign-in/profile/logout proof;
+
+CI-backed PostgreSQL browser E2E proof.
+```
+
+## P2-M10 Architectural Boundary
+
+The first-party Web uses:
+
+```text
+Browser
+    ↓
+Next.js Web
+    ↓
+same-origin /api/*
+    ↓
+Next.js rewrite
+    ↓
+NestJS API
+```
+
+The browser does not call the Nest API through a separately configured cross-origin frontend transport.
+
+The canonical Web API origin strategy is:
+
+```text
+browser request
+/api/*
+
+    ↓
+
+Next.js rewrite
+
+    ↓
+
+AI_WORLD_API_ORIGIN
+
+default local API origin
+http://127.0.0.1:3001
+```
+
+P2-M10 therefore does not introduce a general CORS policy solely for first-party browser Identity traffic.
+
+The Web runtime may configure:
+
+```text
+AI_WORLD_API_ORIGIN
+```
+
+as a server-side deployment configuration value.
+
+The value must represent an origin and may not contain:
+
+```text
+path
+
+query
+
+fragment.
+```
+
+## P2-M10 Session Security Model
+
+P2-M10 continues using the P2-M04 server-managed opaque Session model.
+
+The first-party Session cookie remains:
+
+```text
+ai_world_session
+```
+
+The browser Session secret remains:
+
+```text
+HttpOnly cookie only
+```
+
+The Web does not introduce:
+
+```text
+JWT browser Sessions;
+
+access-token localStorage;
+
+refresh-token localStorage;
+
+Session token sessionStorage;
+
+client-managed Session token persistence.
+```
+
+The Web determines authentication state through:
+
+```text
+GET /session
+```
+
+rather than trusting a client-submitted Actor identifier.
+
+The canonical authenticated browser state is derived from:
+
+```text
+Session cookie
+    ↓
+GET /session
+    ↓
+validated server Session
+    ↓
+actorId + expiresAt
+```
+
+The browser does not treat the `actorId` returned from password authentication as authoritative Session state.
+
+After successful password sign-in, the Web refreshes:
+
+```text
+GET /session
+```
+
+and derives authenticated state from the server Session.
+
+## P2-M10 Typed Web API Boundary
+
+P2-M10 introduced a typed Web API client boundary.
+
+The client:
+
+```text
+uses same-origin /api requests;
+
+includes browser credentials using same-origin semantics;
+
+translates canonical API error payloads;
+
+preserves status/code/message;
+
+treats requestId as optional;
+
+does not expose transport internals as application state.
+```
+
+Unexpected API failures are converted into a safe Web error rather than exposing provider or infrastructure detail.
+
+The Web Session API exposes:
+
+```text
+getCurrentSession
+
+logout
+```
+
+Session state is represented through:
+
+```text
+loading
+
+anonymous
+
+authenticated
+
+error
+```
+
+A canonical API:
+
+```text
+HTTP 401
+```
+
+during Session lookup maps to:
+
+```text
+anonymous
+```
+
+rather than becoming an ordinary fatal application error.
+
+## P2-M10 Registration UX
+
+The Web exposes:
+
+```text
+/register
+```
+
+Registration accepts:
+
+```text
+email
+
+password
+```
+
+through the existing API:
+
+```text
+POST /registration
+```
+
+Successful registration presents an account-created state and directs the User to sign in.
+
+P2-M10 does not automatically establish a Session after registration.
+
+Registration response identifiers are not used as browser authentication authority.
+
+The Web does not display or persist internal Identity identifiers merely because the registration API returned them.
+
+## P2-M10 Password Sign-In UX
+
+The Web exposes:
+
+```text
+/sign-in
+```
+
+Password sign-in uses:
+
+```text
+POST /authentication/password
+```
+
+The API establishes the Session through the existing secure Session cookie.
+
+After successful authentication, the Web performs:
+
+```text
+GET /session
+```
+
+to establish canonical authenticated browser state.
+
+The password-authentication response `actorId` is not treated as ownership authority.
+
+Invalid credential failures remain safe and do not expose:
+
+```text
+whether the email exists;
+
+Credential identifiers;
+
+password hash;
+
+Session token.
+```
+
+The sign-in experience links to:
+
+```text
+/forgot-password
+```
+
+for password recovery.
+
+## P2-M10 Account and Profile UX
+
+The Web exposes:
+
+```text
+/account
+```
+
+Authenticated account behavior uses:
+
+```text
+GET /user-profile
+
+PATCH /user-profile
+```
+
+Profile ownership is derived exclusively from the authenticated server Session.
+
+The profile mutation request accepts only:
+
+```text
+displayName
+```
+
+The browser does not submit:
+
+```text
+actorId
+
+userId
+```
+
+as profile ownership authority.
+
+Canonical profile update payload:
+
+```json
+{
+  "displayName": "..."
+}
+```
+
+or:
+
+```json
+{
+  "displayName": null
+}
+```
+
+The Web uses the canonical User Profile returned by the API after mutation.
+
+A profile API:
+
+```text
+HTTP 401
+```
+
+causes the Web to revalidate the Session.
+
+If Session validation also returns:
+
+```text
+HTTP 401
+```
+
+the application transitions to:
+
+```text
+signed out
+```
+
+rather than preserving stale authenticated state.
+
+## P2-M10 Logout UX
+
+Logout uses:
+
+```text
+DELETE /session
+```
+
+Successful logout:
+
+```text
+revokes the server Session when present;
+
+clears the browser Session cookie;
+
+transitions Web Session state to anonymous.
+```
+
+The Web does not merely hide authenticated UI while leaving the server Session active.
+
+After logout:
+
+```text
+GET /session
+    → HTTP 401
+```
+
+and a browser reload remains signed out.
+
+## P2-M10 Email Verification UX
+
+The Web exposes:
+
+```text
+/verify-email
+```
+
+Authenticated verification issuance uses:
+
+```text
+POST /email-verification/request
+```
+
+The request does not submit:
+
+```text
+actorId
+
+email
+
+ownership identifiers
+```
+
+because the Actor is derived from the authenticated Session.
+
+Verification confirmation uses:
+
+```text
+POST /email-verification/confirm
+```
+
+with:
+
+```json
+{
+  "token": "..."
+}
+```
+
+Confirmation remains public and possession-based according to the P2-M05 verification model.
+
+P2-M10 does not redefine verification as a prerequisite for password sign-in.
+
+## P2-M10 Password Recovery UX
+
+The Web exposes:
+
+```text
+/forgot-password
+```
+
+Recovery request uses:
+
+```text
+POST /password-recovery/request
+```
+
+with:
+
+```json
+{
+  "email": "..."
+}
+```
+
+The browser presents enumeration-safe completion behavior.
+
+The User-facing success state does not disclose whether:
+
+```text
+the email exists;
+
+the Actor exists;
+
+the email has a PasswordCredential.
+```
+
+The Web also exposes:
+
+```text
+/reset-password
+```
+
+Password reset uses:
+
+```text
+POST /password-recovery/reset
+```
+
+with:
+
+```text
+token
+
+replacement password
+```
+
+A successful reset invokes Session revalidation because P2-M06 revokes every existing Session for the Actor.
+
+The expected successful state is therefore:
+
+```text
+password reset succeeds
+    ↓
+existing Sessions revoked
+    ↓
+GET /session returns 401
+    ↓
+Web becomes anonymous
+    ↓
+User signs in using the replacement password
+```
+
+P2-M10 does not create a replacement Session automatically after Recovery.
+
+## P2-M10 Real Browser Security Proof
+
+P2-M10 added a real Chromium browser security flow through:
+
+```text
+Playwright
+```
+
+The real browser path exercises:
+
+```text
+Next.js Web
+
+    ↓
+
+same-origin /api rewrite
+
+    ↓
+
+NestJS API
+
+    ↓
+
+Identity & Access / User Platform
+
+    ↓
+
+Prisma
+
+    ↓
+
+real PostgreSQL
+```
+
+The browser security test proves:
+
+```text
+registration through the real Web succeeds;
+
+password sign-in through the real Web succeeds;
+
+ai_world_session cookie is created;
+
+Session cookie contains an opaque non-empty secret;
+
+Session cookie is HttpOnly;
+
+Session cookie uses SameSite=Lax;
+
+Session cookie Path is /;
+
+Session cookie is not Secure in local/test HTTP;
+
+document.cookie cannot read the Session secret;
+
+localStorage does not contain the Session secret;
+
+sessionStorage does not contain the Session secret;
+
+browser reload preserves authenticated Session state;
+
+GET /api/session succeeds through the Next.js same-origin proxy;
+
+account/profile operation succeeds through the authenticated Session;
+
+profile PATCH contains displayName only;
+
+profile PATCH does not contain actorId;
+
+profile PATCH does not contain userId;
+
+logout removes the browser Session cookie;
+
+post-logout GET /api/session returns 401;
+
+browser reload remains signed out.
+```
+
+This test proves the browser Session mechanism without introducing a client-readable authentication token.
+
+## P2-M10 Browser E2E Environment
+
+Playwright owns local Web/API orchestration for the browser proof.
+
+The local test topology is:
+
+```text
+PostgreSQL
+127.0.0.1:55432
+
+NestJS API
+127.0.0.1:3001
+
+Next.js Web
+127.0.0.1:3100
+```
+
+Playwright starts:
+
+```text
+API
+pnpm run start
+
+Web
+pnpm run dev:e2e
+```
+
+API readiness uses:
+
+```text
+GET /session
+```
+
+An unauthenticated:
+
+```text
+HTTP 401
+```
+
+is considered valid API readiness because the Session endpoint exists and the API is serving requests.
+
+P2-M10 deliberately does not add a new `/health` endpoint merely for Playwright because the current API does not expose that route in this runtime baseline.
+
+## P2-M10 CI Browser Database Correction
+
+The first remote browser validation exposed a CI-environment configuration gap.
+
+GitHub Actions already provided:
+
+```text
+PostgreSQL
+127.0.0.1:5432
+
+DATABASE_URL
+postgresql://ai_world:ai_world@127.0.0.1:5432/ai_world
+```
+
+and applied all committed migrations before E2E execution.
+
+However the root Turborepo:
+
+```text
+test:e2e
+```
+
+task did not pass `DATABASE_URL` through to the Web E2E task.
+
+As a result the Playwright configuration fell back to the local development database URL:
+
+```text
+127.0.0.1:55432
+```
+
+inside GitHub Actions.
+
+Real browser registration therefore correctly exposed:
+
+```text
+Prisma P1001
+DatabaseNotReachable
+```
+
+rather than producing a false-positive E2E success.
+
+The final CI correction declares:
+
+```text
+test:e2e
+    passThroughEnv
+        DATABASE_URL
+```
+
+in the root Turborepo configuration.
+
+Playwright also fails fast when:
+
+```text
+CI=true
+
+and
+
+DATABASE_URL is missing
+```
+
+instead of silently falling back to the developer-local PostgreSQL port.
+
+After this correction:
+
+```text
+GitHub Actions PostgreSQL
+    ↓
+DATABASE_URL :5432
+    ↓
+Turborepo test:e2e
+    ↓
+Playwright
+    ↓
+NestJS API
+    ↓
+Prisma
+    ↓
+real CI PostgreSQL
+```
+
+was validated successfully.
+
+## P2-M10 Persistence Boundary
+
+P2-M10 introduces:
+
+```text
+NO new Prisma model
+
+NO new table
+
+NO new column
+
+NO new database migration
+```
+
+Canonical migration count remains:
+
+```text
+8
+```
+
+The Phase 2 persistence baseline therefore remains:
+
+```text
+20260809133830_actor_user_baseline
+
+20260809170217_actor_email_password_credential
+
+20260810123113_actor_session_baseline
+
+20260811061735_actor_email_verification_baseline
+
+20260811090103_actor_password_recovery_baseline
+
+20260811110742_user_profile_baseline
+
+20260811132518_identity_authorization_baseline
+
+20260811144700_identity_authorization_administrator_baseline
+```
+
+Database schema status at Phase 2 closure:
+
+```text
+8 migrations found
+
+Database schema is up to date
+```
+
+## P2-M10 Authorization Boundary
+
+P2-M10 does not introduce:
+
+```text
+new Role;
+
+new Permission;
+
+new authorization-management operation;
+
+frontend authorization authority.
+```
+
+P2-M09 remains the canonical owner-side authorization enforcement baseline.
+
+The browser does not become a security enforcement boundary.
+
+Authenticated and authorized backend behavior remains authoritative.
+
+## P2-M10 Deferred Scope
+
+P2-M10 deliberately does not introduce:
+
+```text
+JWT browser Sessions;
+
+refresh tokens;
+
+localStorage authentication;
+
+Session-management dashboard;
+
+device Session management;
+
+Session activity history;
+
+remember-me policy;
+
+multi-factor authentication;
+
+rate limiting;
+
+account lockout;
+
+new Role;
+
+new Permission;
+
+new Session persistence model;
+
+Redis;
+
+distributed Session storage;
+
+cross-site browser deployment policy;
+
+generalized CSRF framework without deployment evidence;
+
+Administrator UI;
+
+authorization-management UI;
+
+Audit pull-forward.
+```
+
+These capabilities remain demand-driven.
+
+## P2-M10 Validation Evidence
+
+Final local and remote P2-M10 validation:
+
+```text
+Node.js                                  24.18.1
+
+pnpm                                     10.17.1
+
+Format check                             PASS
+
+Lint                                      9 / 9 PASS
+
+TypeScript                               17 / 17 PASS
+
+Identity unit tests                      83 / 83 PASS
+
+API unit/e2e tests                       12 / 12 PASS
+
+Web Vitest tests                         20 / 20 PASS
+
+Root normal test tasks                   13 / 13 PASS
+
+Identity PostgreSQL integration          41 / 41 PASS
+
+User PostgreSQL integration               6 / 6 PASS
+
+API PostgreSQL integration               71 / 71 PASS
+
+Repository PostgreSQL integration       118 / 118 PASS
+
+Real SMTP → Mailpit integration           2 / 2 PASS
+
+Real Chromium browser E2E                 2 / 2 PASS
+
+Prisma schema validation                 PASS
+
+Canonical migration status               8 migrations / schema up to date
+
+Production build                         10 / 10 PASS
+
+Architecture validation                 281 modules
+                                        664 dependencies
+                                          0 violations
+
+Git diff validation                      PASS
+
+GitHub Actions CI / Validate             PASS
+```
+
+The final browser E2E proof includes:
+
+```text
+Web browser baseline
+PASS
+
+Real browser Session security
+PASS
+```
+
+The remote CI correction was also validated through the root:
+
+```text
+pnpm run test:e2e
+```
+
+Turborepo path with real GitHub Actions PostgreSQL.
+
+## P2-M10 Implementation Checkpoints
+
+P2-M10 implementation was delivered through two intentional implementation commits:
+
+```text
+feat(web): complete session security ux
+
+fix(ci): pass database url to web e2e
+```
+
+The first commit delivered the browser Session Security UX and real Playwright security proof.
+
+The second commit corrected the CI E2E environment boundary by passing the CI PostgreSQL `DATABASE_URL` through Turborepo and making missing CI database configuration fail fast.
+
+Both implementation checkpoints passed remote GitHub Actions CI / Validate before Phase 2 documentation closure.
+
+## P2-M10 Closure
+
+P2-M10 is complete.
+
+The milestone proves:
+
+```text
+first-party Web registration;
+
+password sign-in;
+
+server-derived authenticated Session state;
+
+secure HttpOnly opaque Session transport;
 
 logout;
 
-registration;
+basic account/profile;
 
-verification;
+email verification UX;
 
-recovery;
+password recovery/reset UX;
 
-basic account/profile.
+401 → signed-out behavior;
+
+real browser security properties;
+
+real browser ownership boundaries;
+
+real PostgreSQL E2E behavior;
+
+CI-backed browser integration.
+```
+
+Final Phase 2 milestone position:
+
+```text
+P2-M01 — Actor and User Baseline
+CLOSED
+
+P2-M02 — Registration
+CLOSED
+
+P2-M03 — Password Authentication
+CLOSED
+
+P2-M04 — Session Management
+CLOSED
+
+P2-M05 — Email Verification
+CLOSED
+
+P2-M06 — Recovery
+CLOSED
+
+P2-M07 — User Profile
+CLOSED
+
+P2-M08 — Roles and Permissions
+CLOSED
+
+P2-M09 — Owner-Side Authorization
+CLOSED
+
+P2-M10 — Session Security UX
+CLOSED
+
+Phase 2 — Identity Platform
+COMPLETE
+```
+
+P2-M10 closes the final planned Phase 2 milestone.
+
+The next implementation phase is:
+
+```text
+Phase 3 — Platform Kernel Baseline
 ```
 
 ---
@@ -6386,6 +7385,83 @@ protected operations prove owner-side Authorization;
 security-sensitive tests pass.
 ```
 
+All accepted Phase 2 closure criteria are satisfied.
+
+Closure evidence includes:
+
+```text
+registration
+    implemented and PostgreSQL-tested
+
+email verification
+    implemented with real SMTP → Mailpit proof
+
+password authentication
+    implemented with Argon2id and anti-enumeration behavior
+
+Session establishment
+    implemented through opaque server-side Sessions
+
+Session browser security
+    implemented through HttpOnly SameSite=Lax cookie transport
+
+logout
+    implemented with server revocation + cookie clearing
+
+Session revocation
+    implemented directly and through Recovery reset
+
+password recovery
+    implemented with single-use digest-only token lifecycle
+
+User Profile
+    implemented in the User Platform separately from Actor security identity
+
+Roles and Permissions
+    implemented and PostgreSQL-proven
+
+owner-side Authorization
+    implemented and API/PostgreSQL-proven
+
+first-party Web Identity UX
+    implemented across registration, sign-in, account/profile,
+    verification, recovery, reset, and logout
+
+real browser security proof
+    implemented with Playwright
+
+CI browser/database proof
+    implemented with GitHub Actions PostgreSQL
+
+full repository validation
+    passed
+
+remote CI / Validate
+    passed
+```
+
+Phase 2 therefore closes without pulling forward speculative:
+
+```text
+Redis
+
+distributed Session infrastructure
+
+JWT browser Sessions
+
+Policy engines
+
+ABAC
+
+Universe-scoped authorization
+
+Creator/Editor canonical provisioning
+
+Audit infrastructure
+
+MFA
+```
+
 ---
 
 # 90. Phase 2 Exit Outcome
@@ -6398,8 +7474,48 @@ ONE SHARED IDENTITY PLATFORM.
 
 All future Universes reuse it.
 
----
+Final Phase 2 state:
 
+```text
+PHASE 2 — IDENTITY PLATFORM
+COMPLETE
+
+MILESTONES
+10 / 10 CLOSED
+
+CANONICAL MIGRATIONS
+8
+
+FINAL ARCHITECTURE
+281 modules
+664 dependencies
+0 violations
+
+REPOSITORY POSTGRESQL INTEGRATION
+118 / 118 PASS
+
+REAL SMTP → MAILPIT
+2 / 2 PASS
+
+REAL CHROMIUM BROWSER E2E
+2 / 2 PASS
+
+PRODUCTION BUILD
+10 / 10 PASS
+
+GITHUB ACTIONS CI / VALIDATE
+PASS
+```
+
+Next:
+
+```text
+Phase 3 — Platform Kernel Baseline.
+```
+
+Phase 3 must implement only the universal semantic capabilities required by real upcoming consumers.
+
+---
 # 91. Phase 3 — Platform Kernel Baseline
 
 Purpose:
@@ -8579,7 +9695,6 @@ operations.
 ```
 
 ---
-
 # 244. Cross-Phase Capability Timing
 
 The following table provides the default first meaningful implementation phase.
@@ -9838,7 +10953,6 @@ design + implementation feedback.
 ```
 
 ---
-
 # 334. ADR Evolution
 
 Important implementation feedback should result in:
@@ -10537,25 +11651,88 @@ setup is reproducible.
 
 # 382. Phase 2 Completion Evidence
 
-Expected:
+Completed Phase 2 evidence includes:
 
 ```text
 registration;
 
-verification;
+email verification;
 
-login;
+password authentication;
 
-Session;
+opaque server-managed Session;
+
+secure HttpOnly browser Session transport;
+
+Session validation;
 
 logout;
 
-recovery;
+Session revocation;
 
-authorization
+password recovery;
+
+User Profile;
+
+Roles;
+
+Permissions;
+
+owner-side Authorization;
+
+first-party account UX;
+
+real SMTP delivery;
+
+real PostgreSQL integration;
+
+real Chromium browser security proof;
+
+remote CI validation.
 ```
 
-working end-to-end.
+Final Phase 2 validation baseline:
+
+```text
+Identity unit tests
+83 / 83 PASS
+
+User PostgreSQL integration
+6 / 6 PASS
+
+Identity PostgreSQL integration
+41 / 41 PASS
+
+API PostgreSQL integration
+71 / 71 PASS
+
+Repository PostgreSQL integration
+118 / 118 PASS
+
+Web Vitest
+20 / 20 PASS
+
+SMTP → Mailpit
+2 / 2 PASS
+
+Chromium E2E
+2 / 2 PASS
+
+Architecture
+281 modules
+664 dependencies
+0 violations
+
+Prisma
+8 migrations
+schema up to date
+
+Build
+10 / 10 PASS
+
+GitHub Actions CI / Validate
+PASS
+```
 
 ---
 
@@ -10805,7 +11982,8 @@ ENGINEERING FOUNDATION
 
 PHASE 2
 IDENTITY PLATFORM
-    ACTIVE
+    COMPLETE
+    EXIT: ONE SHARED IDENTITY PLATFORM
     ✅ P2-M01 Actor and User Baseline — CLOSED
     ✅ P2-M02 Registration — CLOSED
     ✅ P2-M03 Password Authentication — CLOSED
@@ -10815,11 +11993,12 @@ IDENTITY PLATFORM
     ✅ P2-M07 User Profile — CLOSED
     ✅ P2-M08 Roles and Permissions — CLOSED
     ✅ P2-M09 Owner-Side Authorization — CLOSED
-    →  P2-M10 Session Security UX — NEXT
+    ✅ P2-M10 Session Security UX — CLOSED
+
 
 PHASE 3
 PLATFORM KERNEL BASELINE
-    NOT STARTED
+    NEXT
     Identifiers
     Namespace
     Events
@@ -11168,7 +12347,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 84, 398, and 410.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 85, 398, and 410.
 
 ```text
 DOCUMENT
@@ -11215,7 +12394,6 @@ IMPLEMENTATION STATUS
 AUTHORIZED TO BEGIN
 ```
 
-
 ---
 
 # 410. Current Delivery Snapshot
@@ -11224,13 +12402,16 @@ As of the latest roadmap review:
 
 ```text
 DATE
-2026-08-11
+2026-08-12
 
 CURRENT PHASE
 Phase 2 — Identity Platform
 
 STATUS
-ACTIVE
+COMPLETE
+
+EXIT OUTCOME
+ONE SHARED IDENTITY PLATFORM
 
 COMPLETED
 P2-M01 — Actor and User Baseline
@@ -11242,9 +12423,10 @@ P2-M06 — Recovery
 P2-M07 — User Profile
 P2-M08 — Roles and Permissions
 P2-M09 — Owner-Side Authorization
-
-NEXT
 P2-M10 — Session Security UX
+
+NEXT PHASE
+Phase 3 — Platform Kernel Baseline
 
 BLOCKED
 None
@@ -11254,79 +12436,735 @@ Universe-scoped authorization remains deferred until a real consumer defines its
 Creator/Editor canonical authorization remains deferred until a real creator-owned capability requires it.
 Administrator bootstrap/provisioning beyond trusted operational assignment remains deferred.
 Locale and timezone profile preferences remain deferred until a real consumer defines their semantics.
+MFA remains deferred until a real Identity/security requirement justifies it.
+Rate limiting and account lockout remain deferred until their operational/security policy is deliberately defined.
+Audit remains available for Phase 3 or justified pull-forward rather than duplicated inside Identity.
+Cross-site browser Session/CSRF policy remains deployment-topology-driven.
+```
 
-P2-M09 OWNERSHIP
-Identity & Access owns Role, Permission, Permission evaluation, Actor-to-Role assignment, and protected authorization-management behavior.
-Actor is the authorization subject.
-API Application derives the acting Actor from the validated Session.
-Frontend checks are not an authorization boundary.
+## Phase 2 Ownership Result
 
-P2-M09 CANONICAL PRIVILEGED BASELINE
-Role: administrator.
-Permission: identity.authorization.manage.
-Grant: administrator → identity.authorization.manage.
+```text
+Identity & Access Platform
+    owns Actor
+    owns ActorEmail
+    owns PasswordCredential
+    owns Session
+    owns verification lifecycle
+    owns Recovery lifecycle
+    owns Role
+    owns Permission
+    owns authorization evaluation
+    owns protected authorization-management behavior
 
-P2-M09 PERSISTENCE
-Data migration: 20260811144700_identity_authorization_administrator_baseline.
-Canonical migration count: 8.
-No Prisma schema change beyond the P2-M08 authorization schema.
+User Platform
+    owns User
+    owns User Profile
+    owns display-name policy
+
+Email Foundation
+    owns provider-neutral email delivery
+    owns SMTP adapter infrastructure
+
+API Application
+    owns HTTP transport
+    owns runtime composition
+    derives authenticated Actor from Session
+
+Web Application
+    owns browser presentation/state orchestration
+    consumes API through same-origin /api boundary
+    does not own authentication authority
+    does not persist Session secrets
+```
+
+## Phase 2 Canonical Security Baseline
+
+```text
+password hashing
+Argon2id
+
+password authentication
+unknown-email and wrong-password public equivalence
+
+Session model
+opaque server-managed Session
+
+Session persistence
+SHA-256 token digest only
+
+browser Session transport
+HttpOnly
+SameSite=Lax
+Path=/
+Secure in production
+
+browser secret storage
+no localStorage
+no sessionStorage
+not readable through document.cookie
+
+verification token persistence
+SHA-256 digest only
+
+Recovery token persistence
+SHA-256 digest only
+
+Recovery reset
+single-use
+atomic password replacement
+Actor-wide Session revocation
+
+authorization
+Role/Permission default-deny evaluation
+
+owner-side enforcement
+backend trusted boundary
+
+acting Actor authority
+validated Session only
+
+profile ownership
+validated Session only
+
+frontend authorization
+not trusted as enforcement
+```
+
+## Phase 2 Canonical Privileged Baseline
+
+```text
+Role
+administrator
+
+Permission
+identity.authorization.manage
+
+Grant
+administrator
+    →
+identity.authorization.manage
+```
+
 No Actor is assigned Administrator automatically.
-Registration remains unchanged.
-Database Foundation seed remains generic.
 
-P2-M09 OWNER-SIDE ENFORCEMENT
-AssignRoleToActorAsActor.
-Evaluate identity.authorization.manage for the acting Actor.
-Denied authorization returns identity.authorization.forbidden.
-Denied authorization performs no target lookup and no ActorRole mutation.
-Allowed authorization delegates to AssignRoleToActor.
+Registration remains free of automatic Role assignment.
 
-P2-M09 HTTP
-POST /authorization/role-assignments.
-Request accepts targetActorId + roleKey only.
-actingActorId is derived from Session and is not accepted as trusted client input.
-Success: HTTP 204.
-Repeated authorized assignment is idempotent.
+## Phase 2 Persistence
 
-P2-M09 SECURITY
-Missing/revoked/expired Session → 401.
-Authenticated Actor without Permission → 403.
-Unauthorized missing target Actor → 403 without existence disclosure.
-Unauthorized missing Role → 403 without existence disclosure.
-Authorized missing target Actor → 404.
-Authorized missing Role → 404.
-actingActorId transport injection → 400.
-Malformed target Actor identifier → 400.
+Canonical migration history:
 
-P2-M09 VALIDATION
-Format check: PASS
-Lint: 9 / 9
-TypeScript: 17 / 17
-Identity unit tests: 83 / 83
-Identity integration tests: 41 / 41
-User integration tests: 6 / 6
-API unit/e2e tests: 12 / 12
-Authorization API PostgreSQL proof: 12 / 12
-API PostgreSQL integration tests: 71 / 71
-Repository PostgreSQL integration tests: 118 / 118
-Real SMTP → Mailpit integration tests: 2 / 2
-Production build: 10 / 10
-Architecture: 254 modules / 590 dependencies / 0 violations
-Prisma: 8 migrations / schema up to date
-Git diff validation: PASS
-GitHub Actions CI / Validate: PASS
+```text
+20260809133830_actor_user_baseline
 
-P2-M09 IMPLEMENTATION
-__P2_M09_IMPLEMENTATION_COMMIT__ feat(identity): enforce owner-side authorization
+20260809170217_actor_email_password_credential
 
-DOCUMENTATION DEBT
-Roadmap README, Documentation Standard, project Definition of Done, and Closure Review Template remain empty placeholders and are intentionally deferred to a dedicated governance/documentation task.
+20260810123113_actor_session_baseline
+
+20260811061735_actor_email_verification_baseline
+
+20260811090103_actor_password_recovery_baseline
+
+20260811110742_user_profile_baseline
+
+20260811132518_identity_authorization_baseline
+
+20260811144700_identity_authorization_administrator_baseline
+```
+
+Canonical migration count:
+
+```text
+8
+```
+
+Database status:
+
+```text
+schema up to date
+```
+
+P2-M10 introduced no new persistence migration.
+
+## P2-M10 Web Delivery
+
+Implemented browser routes:
+
+```text
+/
+
+/register
+
+/sign-in
+
+/account
+
+/verify-email
+
+/forgot-password
+
+/reset-password
+```
+
+Implemented first-party browser flows:
+
+```text
+registration
+
+password sign-in
+
+Session state
+
+logout
+
+profile read/update
+
+verification issuance
+
+verification confirmation
+
+Recovery request
+
+Recovery reset
+```
+
+The Web API boundary is:
+
+```text
+Browser
+    ↓
+/api/*
+    ↓
+Next.js rewrite
+    ↓
+NestJS API
+```
+
+The first-party Web does not introduce a cross-origin CORS dependency for these flows.
+
+## P2-M10 Browser Security
+
+Real Playwright proof validates:
+
+```text
+Session cookie created after sign-in;
+
+Session cookie is HttpOnly;
+
+Session cookie is SameSite=Lax;
+
+Session cookie Path is /;
+
+Session secret is inaccessible to document.cookie;
+
+Session secret is absent from localStorage;
+
+Session secret is absent from sessionStorage;
+
+authenticated state survives reload;
+
+same-origin /api/session works;
+
+profile mutation submits displayName only;
+
+profile mutation submits no actorId;
+
+profile mutation submits no userId;
+
+logout removes cookie;
+
+post-logout /api/session returns 401;
+
+reload remains signed out.
+```
+
+## P2-M10 CI Correction
+
+GitHub Actions provides:
+
+```text
+PostgreSQL
+127.0.0.1:5432
+
+DATABASE_URL
+postgresql://ai_world:ai_world@127.0.0.1:5432/ai_world
+```
+
+The final E2E task configuration explicitly passes:
+
+```text
+DATABASE_URL
+```
+
+through Turborepo.
+
+Playwright fails fast in CI if `DATABASE_URL` is unavailable.
+
+The final remote browser proof therefore executes against real CI PostgreSQL rather than the developer-local `55432` fallback.
+
+## Phase 2 Final Validation
+
+```text
+Format check
+PASS
+
+Lint
+9 / 9 PASS
+
+TypeScript
+17 / 17 PASS
+
+Identity unit tests
+83 / 83 PASS
+
+API unit/e2e tests
+12 / 12 PASS
+
+Web Vitest tests
+20 / 20 PASS
+
+Root normal test tasks
+13 / 13 PASS
+
+Identity PostgreSQL integration
+41 / 41 PASS
+
+User PostgreSQL integration
+6 / 6 PASS
+
+API PostgreSQL integration
+71 / 71 PASS
+
+Repository PostgreSQL integration
+118 / 118 PASS
+
+Real SMTP → Mailpit
+2 / 2 PASS
+
+Real Chromium Playwright E2E
+2 / 2 PASS
+
+Prisma validation
+PASS
+
+Prisma migration status
+8 migrations
+schema up to date
+
+Production build
+10 / 10 PASS
+
+Architecture
+281 modules
+664 dependencies
+0 violations
+
+Git diff validation
+PASS
+
+GitHub Actions CI / Validate
+PASS
+```
+
+## Phase 2 Implementation Checkpoints
+
+Major implementation checkpoints include:
+
+```text
+15f7832 feat(identity): complete password recovery lifecycle
+
+b560a45 feat(user): complete user profile lifecycle
+
+7f8cfb3 feat(identity): complete roles and permissions baseline
+
+30eeef4 feat(identity): enforce owner-side authorization
+
+feat(web): complete session security ux
+
+fix(ci): pass database url to web e2e
+```
+
+The exact P2-M10 commit hashes remain available from Git history and may be added to this snapshot during a later documentation normalization pass if desired.
+
+They are not required to establish Phase 2 closure because both commits have already passed remote CI validation.
+
+## Phase 2 Documentation Debt
+
+The following remain intentionally deferred:
+
+```text
+docs/13-roadmaps/README.md
+
+docs/00-governance/documentation-standard.md
+
+docs/00-governance/definition-of-done.md
+
+docs/templates/closure-review-template.md
+```
+
+These placeholders do not invalidate Phase 2 because they do not define or alter the accepted Identity implementation/security closure criteria.
+
+## Phase 2 Closure
+
+```text
+PHASE
+Phase 2 — Identity Platform
+
+STATUS
+COMPLETE
+
+MILESTONES
+10 / 10 CLOSED
+
+EXIT OUTCOME
+ONE SHARED IDENTITY PLATFORM
+
+BLOCKERS
+NONE
+
+NEXT PHASE
+Phase 3 — Platform Kernel Baseline
 ```
 
 The next implementation work is:
 
 ```text
-P2-M10 — Session Security UX
+Phase 3 — Platform Kernel Baseline
 ```
 
-P2-M10 may begin because the P2-M09 implementation checkpoint, full local validation, PostgreSQL owner-side authorization proof, API security proof, architecture validation, and remote CI validation completed successfully.
+Beginning with a Phase 3 entry review that identifies which planned Kernel capability has the first real consumer.
+
+The roadmap must not assume every candidate Kernel capability is required immediately.
+
+---
+
+# 411. Phase Completion Git Tags
+
+AI World uses Git tags as durable repository markers for major roadmap phase completion.
+
+Phase tags are:
+
+```text
+engineering roadmap checkpoints
+```
+
+They are not:
+
+```text
+product release versions.
+```
+
+Release/version tags remain governed separately from roadmap phase numbering.
+
+## Phase Tag Naming
+
+Canonical phase-completion tag format:
+
+```text
+phase-1-complete
+
+phase-2-complete
+
+phase-3-complete
+
+...
+
+phase-10-complete
+```
+
+Use lowercase names with the exact:
+
+```text
+phase-<number>-complete
+```
+
+pattern.
+
+## Annotated Tags
+
+Phase completion tags must be:
+
+```text
+annotated Git tags
+```
+
+rather than lightweight tags.
+
+Example:
+
+```text
+git tag -a phase-2-complete -m "Phase 2 complete"
+```
+
+Annotated tags preserve:
+
+```text
+tagger identity;
+
+tag creation time;
+
+closure message;
+
+explicit repository checkpoint.
+```
+
+## Tag Target Rule
+
+A phase-completion tag should point to:
+
+```text
+the final phase documentation-closure commit
+```
+
+after:
+
+```text
+implementation is complete;
+
+full local validation passes;
+
+implementation CI is green;
+
+roadmap documentation records closure;
+
+documentation closure commit is pushed;
+
+documentation closure CI is green.
+```
+
+Canonical sequence:
+
+```text
+implementation complete
+
+    ↓
+
+local closure validation
+
+    ↓
+
+implementation commit(s)
+
+    ↓
+
+remote CI green
+
+    ↓
+
+roadmap closure update
+
+    ↓
+
+documentation closure commit
+
+    ↓
+
+remote CI green
+
+    ↓
+
+annotated phase-completion tag
+
+    ↓
+
+push tag
+```
+
+This ensures a phase tag identifies the complete repository state containing:
+
+```text
+source;
+
+tests;
+
+migrations;
+
+CI configuration;
+
+architecture validation;
+
+roadmap closure documentation.
+```
+
+## Milestone Tag Rule
+
+Individual milestones do not receive Git tags by default.
+
+Milestone history is already represented by:
+
+```text
+Git commits;
+
+roadmap milestone sections;
+
+CI history.
+```
+
+Creating tags for every:
+
+```text
+P1-M01
+
+P1-M02
+
+P2-M01
+
+P2-M02
+
+...
+```
+
+would add repository noise without materially improving phase-level traceability.
+
+A milestone tag should be introduced only when a future operational or release requirement explicitly needs one.
+
+## Historical Tag Backfill
+
+A phase tag may be created after the phase originally closed.
+
+Backfilling a tag:
+
+```text
+does not rewrite Git history.
+```
+
+The tag is attached to the exact historical closure commit.
+
+Therefore earlier completed phases may receive tags when their canonical closure commit can be verified.
+
+The rule is:
+
+```text
+identify exact closure commit
+
+    ↓
+
+verify it represents the completed phase state
+
+    ↓
+
+create annotated tag against that commit
+
+    ↓
+
+push tag
+```
+
+Do not guess historical closure hashes.
+
+## Phase 1 Tag
+
+Phase 1 is already complete.
+
+The intended tag is:
+
+```text
+phase-1-complete
+```
+
+It should be backfilled only after the exact Phase 1 closure commit is identified and verified from Git history.
+
+## Phase 2 Tag
+
+Phase 2 is complete.
+
+The intended tag is:
+
+```text
+phase-2-complete
+```
+
+The tag must point to the documentation commit that closes P2-M10 and Phase 2 after that commit passes GitHub Actions CI / Validate.
+
+Therefore the correct Phase 2 sequence is:
+
+```text
+update this Master Roadmap
+
+    ↓
+
+commit Phase 2 documentation closure
+
+    ↓
+
+push main
+
+    ↓
+
+GitHub Actions CI / Validate PASS
+
+    ↓
+
+create annotated phase-2-complete tag
+
+    ↓
+
+push phase-2-complete tag
+```
+
+## Release Tags Remain Separate
+
+Phase tags must not be confused with product versions such as:
+
+```text
+v0.1.0
+
+v0.2.0
+
+v1.0.0
+```
+
+Roadmap tag:
+
+```text
+phase-2-complete
+```
+
+means:
+
+```text
+the engineering roadmap Phase 2 closure state.
+```
+
+A release tag such as:
+
+```text
+v1.0.0
+```
+
+means:
+
+```text
+a product/software release according to the future release/versioning policy.
+```
+
+The two concepts remain independent.
+
+## Tag Governance Summary
+
+```text
+major Phase closure
+    → annotated tag
+
+ordinary milestone closure
+    → commit + roadmap evidence
+
+historical completed Phase
+    → may be backfilled after exact closure commit verification
+
+release version
+    → separate SemVer/release policy
+
+tag target
+    → final phase documentation closure commit after green CI
+```
+
+The next implementation work is:
+
+```text
+Phase 3 — Platform Kernel Baseline
+```
+
+The immediate Phase 3 task is not to implement every candidate Kernel package.
+
+It is to perform the Phase 3 entry review and determine the smallest Kernel capability required by the next real consumer.
