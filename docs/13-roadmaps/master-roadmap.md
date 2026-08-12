@@ -12,7 +12,7 @@
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-12 |
-| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace NEXT |
+| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -607,6 +607,9 @@ P3-M01 — Identifiers
 CLOSED
 
 P3-M02 — Namespace
+CLOSED
+
+P3-M03 — Events
 NEXT
 ```
 
@@ -617,10 +620,10 @@ P3-M01 — Identifiers
 CLOSED
 
 P3-M02 — Namespace
-NEXT
+CLOSED
 
 P3-M03 — Events
-PLANNED
+NEXT
 
 P3-M04 — Audit
 PLANNED
@@ -648,15 +651,15 @@ docs/templates/closure-review-template.md
 remain empty placeholders and are deferred to a dedicated governance/documentation task.
 ```
 
-They do not redefine the completed Phase 2 closure criteria or P3-M01 closure evidence.
+They do not redefine the completed Phase 2 closure criteria or completed P3-M01/P3-M02 closure evidence.
 
 The next implementation milestone is:
 
 ```text
-P3-M02 — Namespace
+P3-M03 — Events
 ```
 
-P3-M02 must remain minimal and should establish only the namespaced Key semantics required by real consumers such as existing permission keys and upcoming Events, Taxonomy, Relationships, or Definitions.
+P3-M03 must remain minimal and demand-driven. It should establish only the typed internal Event semantics required by real consumers, beginning in-process and without introducing distributed broker infrastructure.
 
 ---
 
@@ -7895,7 +7898,7 @@ Kernel → Platform dependency prohibition remains intact;
 full repository regression validation remains green.
 ```
 
-Current Phase 3 position:
+Phase 3 position at P3-M01 closure:
 
 ```text
 P3-M01 — Identifiers
@@ -7922,6 +7925,8 @@ PLANNED
 Phase 3 — Platform Kernel Baseline
 ACTIVE
 ```
+
+This block records the historical delivery position at P3-M01 closure. The current delivery position is maintained in Sections 23A, 96, 398, and 410.
 
 ---
 
@@ -7961,19 +7966,509 @@ Future identifier migration is required only if a real capability introduces inc
 
 # 96. Phase 3 Milestone P3-M02 — Namespace
 
-Implement namespaced Keys only to the degree required by:
+P3-M02 established the minimal canonical Namespace semantic required by existing permission vocabulary and future shared semantic consumers.
+
+Milestone status:
 
 ```text
-permissions;
-
-Events;
-
-Taxonomy;
-
-Relationships;
-
-Definitions.
+P3-M02 — Namespace
+CLOSED
 ```
+
+Implemented scope:
+
+```text
+@ai-world/kernel-namespace package;
+
+NamespacedKey semantic type;
+
+canonical lowercase dot-separated key representation;
+
+maximum 128-character total length;
+
+minimum two namespace segments;
+
+strict segment validation;
+
+strict parsing without silent normalization;
+
+Identity Permission integration;
+
+Permission.key NamespacedKey typing;
+
+Permission evaluation Contract integration;
+
+runtime validation of identity.authorization.manage;
+
+unit validation of canonical and invalid key forms;
+
+architecture-boundary proof;
+
+full repository regression validation.
+```
+
+## P3-M02 Architecture Boundary
+
+Canonical ownership is:
+
+```text
+Platform Kernel
+    owns NamespacedKey syntax
+    owns NamespacedKey validation
+    owns NamespacedKey parsing rules
+
+Identity & Access Platform
+    owns Permission meaning
+    owns Role meaning
+    owns identity.authorization.manage semantics
+    consumes NamespacedKey for Permission keys
+
+Database Foundation
+    owns Prisma/PostgreSQL persistence mechanics
+    does not own Namespace semantics
+```
+
+Namespace does not become the owner of:
+
+```text
+Permission
+
+Role
+
+Event
+
+Taxonomy
+
+Relationship
+
+Definition
+```
+
+It owns only the shared collision-safe key semantic.
+
+The dependency direction is:
+
+```text
+Identity & Access
+    ↓
+@ai-world/kernel-namespace
+```
+
+The Kernel package remains independent of:
+
+```text
+Platforms
+
+Universes
+
+Applications.
+```
+
+## P3-M02 Canonical NamespacedKey Semantics
+
+The canonical baseline is:
+
+```text
+semantic name
+NamespacedKey
+
+runtime representation
+string
+
+maximum total length
+128 characters
+
+separator
+.
+
+minimum segments
+2
+
+segment start
+lowercase ASCII letter
+
+remaining segment characters
+lowercase ASCII letters
+digits
+single internal hyphens
+
+normalization
+none
+
+whitespace trimming
+none
+
+case conversion
+none
+```
+
+Canonical validation rejects:
+
+```text
+unnamespaced local keys;
+
+uppercase text;
+
+leading or trailing whitespace;
+
+empty segments;
+
+leading or trailing dots;
+
+underscores;
+
+segments beginning with a hyphen;
+
+segments ending with a hyphen;
+
+repeated hyphens;
+
+keys longer than 128 characters;
+
+non-string values.
+```
+
+Valid examples include:
+
+```text
+identity.session
+
+identity.authorization.manage
+
+knowledge.resource.create
+
+knowledge.resource.lifecycle.publish
+
+media.asset.upload
+```
+
+The Kernel intentionally does not require exactly three segments.
+
+The first implementation deliberately keeps:
+
+```text
+NamespacedKey = string
+```
+
+at runtime.
+
+This avoids wrapper-object or branded-type ceremony while still establishing one canonical validation/parsing contract.
+
+## P3-M02 Real Consumer
+
+P3-M02 is not an unused speculative abstraction.
+
+The first production consumer is the existing Identity Permission vocabulary.
+
+The canonical Permission:
+
+```text
+identity.authorization.manage
+```
+
+is now created through:
+
+```text
+parseNamespacedKey('identity.authorization.manage')
+```
+
+so the existing policy constant is validated against the Kernel-owned Namespace contract at runtime initialization.
+
+Identity continues to own what that Permission means.
+
+Conceptually:
+
+```text
+Identity & Access
+    defines
+identity.authorization.manage
+
+Kernel Namespace
+    validates
+identity.authorization.manage
+```
+
+P3-M02 also applies `NamespacedKey` typing to:
+
+```text
+Permission.key
+
+EvaluatePermissionInput.permissionKey
+
+EvaluateActorPermissionInput.permissionKey
+```
+
+This gives both the public Permission Contract and permission-evaluation boundary the same semantic key vocabulary.
+
+## P3-M02 Role-Key Boundary
+
+The existing Role key:
+
+```text
+administrator
+```
+
+remains unchanged.
+
+P3-M02 does not require every local key in AI World to become namespaced.
+
+Role semantics remain Identity-owned, and no current collision requirement justifies replacing:
+
+```text
+administrator
+```
+
+with a namespaced representation.
+
+This preserves the demand-driven rule:
+
+```text
+namespace where collision-safe shared vocabulary is required;
+
+do not namespace every local string merely for uniformity.
+```
+
+## P3-M02 Error-Code Boundary
+
+Existing application/API error codes such as:
+
+```text
+identity.authorization.invalid_request
+
+identity.authorization.forbidden
+```
+
+are not migrated into `NamespacedKey`.
+
+The current application error vocabulary permits forms such as underscores and belongs to the Error/Application contract rather than the minimal Namespace consumer scope.
+
+P3-M02 therefore introduces:
+
+```text
+NO error-code migration
+```
+
+and does not broaden Namespace merely to absorb unrelated vocabularies.
+
+## P3-M02 Persistence and Migration Outcome
+
+The existing canonical Permission key persisted by Phase 2 already satisfies the finalized NamespacedKey contract:
+
+```text
+identity.authorization.manage
+```
+
+P3-M02 therefore introduces:
+
+```text
+NO Prisma model change
+
+NO new table
+
+NO new column
+
+NO data rewrite
+
+NO database migration
+```
+
+Canonical migration count remains:
+
+```text
+8
+```
+
+Database status remains:
+
+```text
+schema up to date
+```
+
+The existing persisted Permission value requires no compatibility layer and no rewrite.
+
+## P3-M02 Repository Materialization
+
+P3-M02 materialized:
+
+```text
+packages/kernel/namespace/
+    package.json
+    tsconfig.json
+    tsconfig.test.json
+    src/index.ts
+    src/namespaced-key.ts
+    test/namespaced-key.spec.ts
+```
+
+Canonical package:
+
+```text
+@ai-world/kernel-namespace
+```
+
+The public Contract exposes:
+
+```text
+NamespacedKey
+
+NAMESPACED_KEY_MAX_LENGTH
+
+isNamespacedKey()
+
+parseNamespacedKey()
+```
+
+Generated/package-local runtime material remains outside committed source through the existing repository ignore rules.
+
+## P3-M02 Infrastructure Boundary
+
+P3-M02 deliberately does not introduce:
+
+```text
+Namespace database table;
+
+central Namespace registry;
+
+Namespace service;
+
+Redis;
+
+Cache;
+
+Queue;
+
+Kafka;
+
+RabbitMQ;
+
+distributed registry.
+```
+
+`NamespacedKey` is a semantic Kernel primitive, not infrastructure.
+
+## P3-M02 Validation Evidence
+
+Final P3-M02 local and remote validation:
+
+```text
+Kernel Namespace lint                     PASS
+
+Kernel Namespace typecheck                PASS
+
+Kernel Namespace unit tests               19 / 19 PASS
+
+Kernel Namespace build                    PASS
+
+Repository lint                           11 / 11 Turbo tasks PASS
+
+Repository TypeScript                     21 / 21 Turbo tasks PASS
+
+Identity unit tests                       83 / 83 PASS
+
+Kernel Identifiers unit tests             11 / 11 PASS
+
+API unit/e2e tests                        12 / 12 PASS
+
+Web Vitest tests                          20 / 20 PASS
+
+Root normal test tasks                    17 / 17 Turbo tasks PASS
+
+Identity PostgreSQL integration           41 / 41 PASS
+
+User PostgreSQL integration                6 / 6 PASS
+
+API PostgreSQL integration                71 / 71 PASS
+
+Repository PostgreSQL integration        118 / 118 PASS
+
+Integration Turbo tasks                   13 / 13 PASS
+
+Real SMTP → Mailpit integration            2 / 2 PASS
+
+Real Chromium browser E2E                  2 / 2 PASS
+
+Prisma schema validation                  PASS
+
+Canonical migration status                8 migrations / schema up to date
+
+Production build                          12 / 12 Turbo tasks PASS
+
+Architecture validation                  291 modules
+                                         681 dependencies
+                                           0 violations
+
+Git diff validation                       PASS
+
+GitHub Actions CI / Validate              PASS
+```
+
+The browser and SMTP proofs are regression validation for unchanged Phase 2 behavior. P3-M02 itself adds no browser, email, or persistence infrastructure.
+
+## P3-M02 Implementation Checkpoint
+
+P3-M02 implementation was committed and pushed before roadmap closure.
+
+The implementation checkpoint passed remote GitHub Actions CI / Validate.
+
+The exact implementation hash is intentionally not invented in this documentation update; Git history remains the source of truth if the hash is added later.
+
+## P3-M02 Closure
+
+P3-M02 is complete.
+
+The milestone proves:
+
+```text
+one canonical NamespacedKey semantic vocabulary;
+
+strict lowercase dot-separated validation;
+
+real reuse by the existing Identity Permission contract;
+
+no unnecessary database migration;
+
+no forced Role-key migration;
+
+no forced application-error migration;
+
+no central Namespace registry or service;
+
+Kernel → Platform dependency prohibition remains intact;
+
+full repository regression validation remains green.
+```
+
+Current Phase 3 position:
+
+```text
+P3-M01 — Identifiers
+CLOSED
+
+P3-M02 — Namespace
+CLOSED
+
+P3-M03 — Events
+NEXT
+
+P3-M04 — Audit
+PLANNED
+
+P3-M05 — Taxonomy
+PLANNED
+
+P3-M06 — Relationships
+PLANNED
+
+P3-M07 — Architecture Enforcement Expansion
+PLANNED
+
+Phase 3 — Platform Kernel Baseline
+ACTIVE
+```
+
+P3-M03 must remain demand-driven and establish only the smallest typed internal Event capability justified by real consumers.
+
+P3-M03 does not justify Kafka, RabbitMQ, or another distributed broker by default.
 
 ---
 
@@ -12137,11 +12632,44 @@ User.actorId
 Identifier persistence migration
 not required
 
-Kernel unit tests
+Kernel Identifiers unit tests
 11 / 11 PASS
+
+P3-M02 — Namespace
+CLOSED
+
+@ai-world/kernel-namespace
+implemented
+
+NamespacedKey validation
+implemented
+
+NamespacedKey parsing
+implemented
+
+NamespacedKey maximum length
+128
+
+Identity Permission consumption
+identity.authorization.manage
+
+Permission Contract typing
+implemented
+
+Permission evaluation Contract typing
+implemented
+
+Namespace persistence migration
+not required
+
+Kernel Namespace unit tests
+19 / 19 PASS
 
 Repository PostgreSQL integration
 118 / 118 PASS
+
+SMTP → Mailpit
+2 / 2 PASS
 
 Chromium E2E
 2 / 2 PASS
@@ -12151,11 +12679,11 @@ Prisma
 schema up to date
 
 Build
-11 / 11 PASS
+12 / 12 Turbo tasks PASS
 
 Architecture
-286 modules
-672 dependencies
+291 modules
+681 dependencies
 0 violations
 
 GitHub Actions CI / Validate
@@ -12167,7 +12695,7 @@ Phase 3 completion still requires the remaining demand-justified Kernel work and
 The next milestone is:
 
 ```text
-P3-M02 — Namespace
+P3-M03 — Events
 ```
 
 ---
@@ -12424,8 +12952,8 @@ PHASE 3
 PLATFORM KERNEL BASELINE
     ACTIVE
     ✅ P3-M01 Identifiers — CLOSED
-    →  P3-M02 Namespace — NEXT
-    P3-M03 Events — PLANNED
+    ✅ P3-M02 Namespace — CLOSED
+    →  P3-M03 Events — NEXT
     P3-M04 Audit — PLANNED
     P3-M05 Taxonomy — PLANNED
     P3-M06 Relationships — PLANNED
@@ -12772,7 +13300,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 94, 398, 410, and 411.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 96, 398, 410, and 411.
 
 ```text
 DOCUMENT
@@ -12837,9 +13365,13 @@ ACTIVE
 
 COMPLETED
 P3-M01 — Identifiers
+P3-M02 — Namespace
+
+CURRENT MILESTONE
+P3-M03 — Events
 
 NEXT
-P3-M02 — Namespace
+P3-M03 — Events
 
 BLOCKED
 None
@@ -12861,7 +13393,7 @@ Universe-specific Kernel behavior remains forbidden.
 ```text
 Platform Kernel
     owns canonical shared semantic primitives
-    currently materialized through Identifiers
+    currently materialized through Identifiers and Namespace
 
 Identifiers Kernel
     owns ResourceId semantics
@@ -12869,9 +13401,17 @@ Identifiers Kernel
     owns canonical validation
     owns canonical parsing
 
+Namespace Kernel
+    owns NamespacedKey syntax
+    owns NamespacedKey validation
+    owns NamespacedKey parsing
+
 Identity & Access Platform
     owns Actor
+    owns Permission semantics
+    owns Role semantics
     consumes ResourceId for Actor.id
+    consumes NamespacedKey for Permission keys
 
 User Platform
     owns User
@@ -12880,7 +13420,7 @@ User Platform
 
 Database Foundation
     owns Prisma/PostgreSQL persistence mechanics
-    does not own ResourceId semantics
+    does not own ResourceId or NamespacedKey semantics
 ```
 
 ## P3-M01 Canonical Identifier Baseline
@@ -13041,6 +13581,178 @@ feat(kernel): establish resource identifier baseline
 
 The implementation commit passed remote CI. The exact hash is intentionally not fabricated in this documentation update because it was not captured in the supplied closure input.
 
+## P3-M02 Canonical Namespace Baseline
+
+```text
+Package
+@ai-world/kernel-namespace
+
+Semantic type
+NamespacedKey
+
+Runtime representation
+string
+
+Canonical structure
+lowercase dot-separated segments
+
+Minimum segments
+2
+
+Maximum length
+128 characters
+
+Segment start
+lowercase ASCII letter
+
+Allowed subsequent segment characters
+lowercase ASCII letters
+digits
+single internal hyphens
+
+Validation
+strict
+
+Normalization
+none
+
+Database migration
+none
+```
+
+P3-M02 deliberately avoids:
+
+```text
+central Namespace registry;
+
+Namespace service;
+
+Namespace persistence table;
+
+forced Role-key migration;
+
+forced error-code migration;
+
+Redis;
+
+Queue;
+
+Kafka;
+
+RabbitMQ.
+```
+
+## P3-M02 Real Consumer
+
+The existing Identity Permission key is the first production consumer:
+
+```text
+identity.authorization.manage
+```
+
+The policy constant is validated through:
+
+```text
+parseNamespacedKey()
+```
+
+and the Namespace semantic is applied to:
+
+```text
+Permission.key
+
+EvaluatePermissionInput.permissionKey
+
+EvaluateActorPermissionInput.permissionKey
+```
+
+The local Role key remains:
+
+```text
+administrator
+```
+
+because P3-M02 does not namespace every local string without a collision requirement.
+
+## P3-M02 Persistence Result
+
+```text
+Prisma schema change
+NONE
+
+New migration
+NONE
+
+Canonical migrations
+8
+
+Database status
+schema up to date
+```
+
+The existing persisted Permission key already satisfies the canonical NamespacedKey contract.
+
+## P3-M02 Final Validation
+
+```text
+Kernel Namespace unit tests
+19 / 19 PASS
+
+Repository lint
+11 / 11 Turbo tasks PASS
+
+Repository TypeScript
+21 / 21 Turbo tasks PASS
+
+Identity unit tests
+83 / 83 PASS
+
+Repository normal test tasks
+17 / 17 Turbo tasks PASS
+
+Identity PostgreSQL integration
+41 / 41 PASS
+
+User PostgreSQL integration
+6 / 6 PASS
+
+API PostgreSQL integration
+71 / 71 PASS
+
+Repository PostgreSQL integration
+118 / 118 PASS
+
+Integration Turbo tasks
+13 / 13 PASS
+
+SMTP → Mailpit
+2 / 2 PASS
+
+Chromium E2E
+2 / 2 PASS
+
+Prisma validation
+PASS
+
+Prisma migration status
+8 migrations
+schema up to date
+
+Production build
+12 / 12 Turbo tasks PASS
+
+Architecture
+291 modules
+681 dependencies
+0 violations
+
+Git diff validation
+PASS
+
+GitHub Actions CI / Validate
+PASS
+```
+
 ## Current Phase 3 Delivery Position
 
 ```text
@@ -13054,6 +13766,9 @@ P3-M01 — Identifiers
 CLOSED
 
 P3-M02 — Namespace
+CLOSED
+
+P3-M03 — Events
 NEXT
 
 BLOCKERS
@@ -13066,10 +13781,10 @@ NOT YET REACHED
 The next implementation work is:
 
 ```text
-P3-M02 — Namespace
+P3-M03 — Events
 ```
 
-P3-M02 must remain demand-driven and should begin by inspecting the existing namespaced vocabulary already present in AI World, especially permission keys, before introducing a new shared Namespace contract.
+P3-M03 must remain demand-driven and establish only the smallest typed internal Event capability justified by real consumers. The initial baseline should remain in-process unless measured requirements later justify durable or distributed Event infrastructure.
 
 ## Historical Phase 2 Closure Context
 
@@ -13792,9 +14507,11 @@ tag target
 The next implementation work is:
 
 ```text
-P3-M02 — Namespace
+P3-M03 — Events
 ```
 
-P3-M01 has established the first real Kernel package and cross-Platform consumer proof.
+P3-M01 established canonical Resource identifier semantics.
 
-The immediate Phase 3 task is now to determine the smallest namespaced Key contract justified by existing permission vocabulary and upcoming Event, Taxonomy, Relationship, or Definition consumers.
+P3-M02 established the minimal collision-safe NamespacedKey semantic and proved it through the existing Identity Permission vocabulary.
+
+The immediate Phase 3 task is now to determine the smallest typed internal Event contract justified by real consumers. P3-M03 begins in-process and does not introduce Kafka, RabbitMQ, or another distributed broker without demonstrated workload requirements.
