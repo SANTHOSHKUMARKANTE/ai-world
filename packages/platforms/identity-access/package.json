@@ -31,6 +31,7 @@
     "@ai-world/foundation-email": "workspace:*",
     "@ai-world/foundation-errors": "workspace:*",
     "@ai-world/kernel-identifiers": "workspace:*",
+    "@ai-world/kernel-namespace": "workspace:*",
     "@ai-world/platform-user": "workspace:*",
     "argon2": "0.45.1"
   }

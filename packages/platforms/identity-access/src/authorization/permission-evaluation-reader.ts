@@ -1,6 +1,8 @@
+import type { NamespacedKey } from '@ai-world/kernel-namespace';
+
 export interface EvaluateActorPermissionInput {
   readonly actorId: string;
-  readonly permissionKey: string;
+  readonly permissionKey: NamespacedKey;
 }
 
 export interface PermissionEvaluationReader {
