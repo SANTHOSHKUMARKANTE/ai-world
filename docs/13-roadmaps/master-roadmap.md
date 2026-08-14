@@ -11,8 +11,8 @@
 | Status | ACCEPTED |
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-12 |
-| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events DEFERRED; P3-M04 Audit NEXT |
+| Last Reviewed | 2026-08-14 |
+| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events DEFERRED; P3-M04 Audit CLOSED; P3-M05 Taxonomy NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -613,6 +613,9 @@ P3-M03 — Events
 DEFERRED
 
 P3-M04 — Audit
+CLOSED
+
+P3-M05 — Taxonomy
 NEXT
 ```
 
@@ -629,10 +632,10 @@ P3-M03 — Events
 DEFERRED — no current production consumer
 
 P3-M04 — Audit
-NEXT
+CLOSED
 
 P3-M05 — Taxonomy
-PLANNED
+NEXT — demand review before implementation
 
 P3-M06 — Relationships
 PLANNED
@@ -654,17 +657,19 @@ docs/templates/closure-review-template.md
 remain empty placeholders and are deferred to a dedicated governance/documentation task.
 ```
 
-They do not redefine the completed Phase 2 closure criteria or completed P3-M01/P3-M02 closure evidence.
+They do not redefine the completed Phase 2 closure criteria or completed P3-M01/P3-M02/P3-M04 closure evidence.
 
-P3-M03 has been reviewed against the current repository and deferred because no production capability presently requires publication/subscription mechanics. The first concrete Event consumers remain future capabilities such as Knowledge lifecycle Events.
+P3-M03 has been reviewed against the current repository and remains deferred because no production capability presently requires publication/subscription mechanics. The first concrete Event consumers remain future capabilities such as Knowledge lifecycle Events.
+
+P3-M04 established the reusable Audit Record baseline through a real security-sensitive Identity consumer. The Audit Kernel owns durable Audit Record mechanics and semantics; Identity & Access owns the meaning of its authorization decision records. P3-M04 does not require Events and does not treat operational logging as Audit.
 
 The next implementation milestone is:
 
 ```text
-P3-M04 — Audit
+P3-M05 — Taxonomy
 ```
 
-P3-M04 should establish only the reusable Audit Record semantics justified by real security-sensitive operations. It must not require Events merely to satisfy sequencing, and it must remain distinct from ordinary application logging.
+P3-M05 must begin with a demand review. It should establish only the smallest Taxonomy semantics required by upcoming Knowledge proof work and must not build a speculative taxonomy platform before a real Resource-classification consumer exists.
 
 ---
 
@@ -8669,7 +8674,7 @@ future Knowledge Event needs remain explicitly preserved;
 Phase 3 can continue to the next demand-justified milestone.
 ```
 
-Current Phase 3 position:
+Phase 3 position at the P3-M03 deferral decision:
 
 ```text
 P3-M01 — Identifiers
@@ -8696,6 +8701,8 @@ PLANNED
 Phase 3 — Platform Kernel Baseline
 ACTIVE
 ```
+
+This block records the historical delivery position at the P3-M03 deferral decision. Current delivery status is maintained in Sections 23A, 99, 383, 398, 410, and 411.
 
 ---
 
@@ -8737,9 +8744,561 @@ stream-processing platform.
 
 # 99. Phase 3 Milestone P3-M04 — Audit
 
-Implement reusable Audit Record semantics.
+P3-M04 established the minimal durable Audit capability justified by existing security-sensitive Identity operations.
 
-Prove integration with Identity operations and future Knowledge mutations.
+Milestone status:
+
+```text
+P3-M04 — Audit
+CLOSED
+```
+
+Implemented scope:
+
+```text
+@ai-world/kernel-audit package;
+
+canonical AuditRecord semantic Contract;
+
+AuditRecorder Contract;
+
+AuditClock Contract;
+
+SystemAuditClock implementation;
+
+createAuditRecord canonical validation;
+
+ResourceId-backed Audit/Actor/Resource identifiers;
+
+NamespacedKey-backed action/resource-type/result semantics;
+
+flat optional business context;
+
+PrismaAuditRecorder durable implementation;
+
+PostgreSQL audit_records persistence;
+
+Identity privileged Role-assignment authorization decision integration;
+
+allowed authorization Audit;
+
+denied authorization Audit;
+
+fail-closed protected mutation when required Audit persistence fails;
+
+real API/PostgreSQL integration proof;
+
+full repository regression and architecture validation.
+```
+
+## P3-M04 Architecture Boundary
+
+Canonical ownership is:
+
+```text
+Audit Kernel
+    owns Audit Record semantics
+    owns Audit Record validation
+    owns the AuditRecorder Contract
+    owns durable Audit Record mechanism
+    owns Audit persistence implementation
+
+Identity & Access Platform
+    owns authorization business meaning
+    owns Role-assignment authorization semantics
+    decides Actor, Action, Resource, result, and business context
+    publishes accountability information through the Audit Contract
+
+Database Foundation
+    owns Prisma/PostgreSQL mechanics
+    does not own Audit business semantics
+
+API Application
+    owns runtime composition
+    wires Identity & Access to the concrete Audit implementation
+```
+
+The dependency direction is:
+
+```text
+Identity & Access
+    ↓
+@ai-world/kernel-audit
+
+@ai-world/kernel-audit
+    ↓
+@ai-world/kernel-identifiers
+@ai-world/kernel-namespace
+@ai-world/foundation-database
+```
+
+Identity & Access does not write `audit_records` directly.
+
+This preserves the accepted Audit dependency rule:
+
+```text
+Capabilities publish Audit information through Audit Contracts.
+
+Capability code must not write Audit tables directly.
+```
+
+P3-M04 does not make Audit depend on Identity & Access to function. The Kernel remains independent of individual Platforms.
+
+## P3-M04 Canonical Audit Record Baseline
+
+The canonical first Audit Record contains:
+
+```text
+id
+    ResourceId
+
+actorId
+    ResourceId
+
+action
+    NamespacedKey
+
+resource.type
+    NamespacedKey
+
+resource.id
+    ResourceId
+
+result
+    NamespacedKey
+
+context
+    optional flat business context
+
+recordedAt
+    Date
+```
+
+The first implementation intentionally keeps the record small.
+
+Optional `context` supports only flat values:
+
+```text
+string
+finite number
+boolean
+null
+```
+
+Nested objects, arrays, non-finite numbers, empty context keys, and other unsupported values are rejected by canonical record creation.
+
+The baseline does not introduce a generalized arbitrary nested metadata document.
+
+P3-M04 does not materialize a separate `scope` field because the first real consumer has no independent scope semantic that requires persistence. Scope remains available for a future Audit Contract extension when a real scoped operation defines its meaning.
+
+P3-M04 also does not invent anonymous/system-Actor semantics without a current consumer. The first consumer has a concrete authenticated acting Actor.
+
+## P3-M04 Identifier and Namespace Reuse
+
+Audit reuses the earlier Phase 3 Kernel primitives rather than creating parallel formats.
+
+Canonical reuse is:
+
+```text
+AuditRecord.id
+    ResourceId
+
+AuditRecord.actorId
+    ResourceId
+
+AuditRecord.resource.id
+    ResourceId
+
+AuditRecord.action
+    NamespacedKey
+
+AuditRecord.resource.type
+    NamespacedKey
+
+AuditRecord.result
+    NamespacedKey
+```
+
+`createAuditRecord()` validates these values through the existing Identifiers and Namespace Kernels.
+
+This provides the first direct proof that P3-M01 and P3-M02 compose into a later shared Kernel capability.
+
+## P3-M04 Persistence
+
+P3-M04 introduces the durable table:
+
+```text
+audit_records
+```
+
+Canonical persisted fields are:
+
+```text
+id             UUID
+actor_id       UUID
+action         VARCHAR(128)
+resource_type  VARCHAR(128)
+resource_id    UUID
+result         VARCHAR(128)
+context        JSONB nullable
+recorded_at    TIMESTAMPTZ(3)
+```
+
+P3-M04 added the committed migration:
+
+```text
+20260812162301_audit_record_baseline
+```
+
+Canonical migration count after P3-M04:
+
+```text
+9
+```
+
+Database status at closure:
+
+```text
+schema valid
+schema up to date
+```
+
+Audit persistence is owned by:
+
+```text
+PrismaAuditRecorder
+```
+
+The recorder:
+
+```text
+generates a canonical ResourceId;
+
+obtains recordedAt through AuditClock;
+
+creates a validated AuditRecord;
+
+persists the durable record through the Database Foundation client.
+```
+
+## P3-M04 First Real Consumer
+
+The first production consumer is the existing protected Identity operation:
+
+```text
+AssignRoleToActorAsActor
+```
+
+This operation is security-sensitive because one Actor attempts to assign a Role to another Actor.
+
+Identity & Access owns the business Audit vocabulary for this operation.
+
+The canonical action is:
+
+```text
+identity.authorization.role-assignment.decision
+```
+
+The target Resource type is:
+
+```text
+identity.actor
+```
+
+The authorization result uses Identity-owned namespaced result semantics such as:
+
+```text
+identity.authorization.allowed
+
+identity.authorization.denied
+```
+
+The target Actor identifier is stored as the Resource identifier.
+
+The requested local Role key is stored as business context:
+
+```text
+roleKey
+```
+
+The local Role key remains Identity-owned and is not forced into NamespacedKey merely because it appears in Audit context.
+
+## P3-M04 Authorization Decision Semantics
+
+P3-M04 deliberately audits the authorization decision rather than falsely claiming that a Role assignment mutation completed.
+
+Conceptually:
+
+```text
+acting Actor
+    ↓
+EvaluatePermission
+    ↓
+authorization decision
+    ↓
+AuditRecorder.record(...decision...)
+    ↓
+if allowed
+    protected Role-assignment mutation
+
+if denied
+    forbidden ApplicationError
+```
+
+For an allowed decision, the Audit Record is durably written before the protected mutation proceeds.
+
+Therefore:
+
+```text
+required Audit persistence fails
+    → protected mutation does not execute
+```
+
+This is a fail-closed accountability boundary for the protected operation.
+
+The Audit action is intentionally a:
+
+```text
+role-assignment decision
+```
+
+rather than:
+
+```text
+role assigned
+```
+
+so a later target/Role lookup or persistence failure does not make the Audit Record semantically false. The record states that the acting Actor was authorized to attempt the operation, not that the operation necessarily committed.
+
+Denied authorization is also recorded as an accountability decision before the canonical forbidden response is produced when Audit persistence succeeds.
+
+The existing security rule remains intact:
+
+```text
+unauthorized Actor
+    → authorization evaluated
+    → denied decision audited
+    → no target Actor lookup
+    → no target Role lookup
+    → no Role assignment mutation
+```
+
+Audit therefore does not weaken the existing target/Role existence non-disclosure behavior.
+
+## P3-M04 API Composition
+
+The API Application wires one concrete Audit implementation:
+
+```text
+DatabaseService
+    ↓
+PrismaAuditRecorder
+    ↓
+AssignRoleToActorAsActor
+```
+
+The API Application depends on the Audit infrastructure export only for composition.
+
+Identity & Access depends on the Audit Contract and remains unaware of Prisma Audit persistence details.
+
+No new Audit HTTP endpoint is introduced by P3-M04.
+
+Audit Query remains a separate later capability.
+
+## P3-M04 Audit vs Events and Logging
+
+P3-M04 preserves three separate semantics:
+
+```text
+Audit Record
+    durable accountability record
+
+Business Event
+    fact communicated to independent consumers
+
+Operational Log
+    diagnostic/operational information
+```
+
+P3-M04 therefore introduces:
+
+```text
+NO @ai-world/kernel-events package
+
+NO Event bus
+
+NO Event publisher/subscriber mechanism
+
+NO Kafka
+
+NO RabbitMQ
+
+NO Redis Streams
+
+NO outbox
+
+NO queue
+```
+
+P3-M03 remains deferred.
+
+Operational Pino logging remains useful but is not treated as the canonical Audit store.
+
+## P3-M04 Query and Retention Boundary
+
+The architecture reserves later Audit capabilities for:
+
+```text
+Audit Query
+
+Audit Retention
+```
+
+P3-M04 does not implement them because the first real consumer requires durable record creation, not a user-facing Audit search capability or retention engine.
+
+P3-M04 therefore adds no:
+
+```text
+Audit query API;
+
+Audit viewing UI;
+
+search/filter framework;
+
+retention scheduler;
+
+retention policy engine;
+
+archive pipeline.
+```
+
+Those capabilities remain demand-driven.
+
+## P3-M04 Validation Evidence
+
+Final P3-M04 local and remote validation:
+
+```text
+Format check                              PASS
+
+Lint                                      12 / 12 Turbo tasks PASS
+
+TypeScript                                23 / 23 Turbo tasks PASS
+
+Kernel Audit unit tests                   11 / 11 PASS
+
+Identity unit tests                       84 / 84 PASS
+
+API unit/e2e tests                        12 / 12 PASS
+
+Web Vitest tests                          20 / 20 PASS
+
+Root normal test tasks                    19 / 19 Turbo tasks PASS
+
+Identity PostgreSQL integration           41 / 41 PASS
+
+User PostgreSQL integration                6 / 6 PASS
+
+API PostgreSQL integration                71 / 71 PASS
+
+Repository PostgreSQL integration        118 / 118 PASS
+
+Focused Authorization API/PostgreSQL      12 / 12 PASS
+
+Integration Turbo tasks                   14 / 14 PASS
+
+Real SMTP → Mailpit integration            2 / 2 PASS
+
+Real Chromium browser E2E                  2 / 2 PASS
+
+Prisma schema validation                  PASS
+
+Canonical migration status                9 migrations / schema up to date
+
+Production build                          13 / 13 Turbo tasks PASS
+
+Architecture validation                  307 modules
+                                         718 dependencies
+                                           0 violations
+
+Git diff validation                       PASS
+
+GitHub Actions CI / Validate              PASS
+```
+
+P3-M04 changes no email, browser Session, or Web behavior. SMTP/Mailpit and Chromium results are regression proof for previously completed capabilities.
+
+## P3-M04 Implementation Checkpoint
+
+Implementation checkpoint:
+
+```text
+8a0be6b feat(kernel): establish audit baseline
+```
+
+The implementation checkpoint was pushed to `origin/main` and passed remote GitHub Actions CI / Validate before this roadmap closure update.
+
+## P3-M04 Closure
+
+P3-M04 is complete.
+
+The milestone proves:
+
+```text
+one canonical durable Audit Record semantic;
+
+Audit-owned persistence mechanism;
+
+ResourceId and NamespacedKey reuse;
+
+real Identity security-sensitive consumption;
+
+allowed and denied authorization accountability records;
+
+fail-closed protected mutation when required Audit persistence fails;
+
+no direct Identity writes to Audit persistence;
+
+Audit remains separate from Events and operational logging;
+
+no speculative Audit Query or Retention implementation;
+
+no distributed infrastructure;
+
+full repository regression and architecture validation remains green.
+```
+
+Phase 3 position at P3-M04 closure:
+
+```text
+P3-M01 — Identifiers
+CLOSED
+
+P3-M02 — Namespace
+CLOSED
+
+P3-M03 — Events
+DEFERRED — pending real consumer
+
+P3-M04 — Audit
+CLOSED
+
+P3-M05 — Taxonomy
+NEXT — demand review before implementation
+
+P3-M06 — Relationships
+PLANNED
+
+P3-M07 — Architecture Enforcement Expansion
+PLANNED
+
+Phase 3 — Platform Kernel Baseline
+ACTIVE
+```
+
+P3-M04 is an ordinary milestone closure and does not receive a Git tag.
+
+The next work is P3-M05 Taxonomy demand review. Taxonomy should be implemented only if upcoming Knowledge proof establishes a concrete need for shared classification semantics.
 
 ---
 
@@ -12913,8 +13472,56 @@ not required
 Distributed Event infrastructure
 not introduced
 
+P3-M04 — Audit
+CLOSED
+
+@ai-world/kernel-audit
+implemented
+
+AuditRecord semantics
+implemented
+
+AuditRecorder Contract
+implemented
+
+PrismaAuditRecorder
+implemented
+
+Durable Audit persistence
+audit_records
+
+First real consumer
+Identity privileged Role-assignment authorization decision
+
+Allowed decision Audit
+implemented
+
+Denied decision Audit
+implemented
+
+Audit failure protected-mutation behavior
+fail closed
+
+Audit Query
+not implemented
+
+Audit Retention
+not implemented
+
+Kernel Audit unit tests
+11 / 11 PASS
+
+Identity unit tests
+84 / 84 PASS
+
+Repository normal test tasks
+19 / 19 Turbo tasks PASS
+
 Repository PostgreSQL integration
 118 / 118 PASS
+
+Integration Turbo tasks
+14 / 14 PASS
 
 SMTP → Mailpit
 2 / 2 PASS
@@ -12923,15 +13530,15 @@ Chromium E2E
 2 / 2 PASS
 
 Prisma
-8 migrations
+9 migrations
 schema up to date
 
 Build
-12 / 12 Turbo tasks PASS
+13 / 13 Turbo tasks PASS
 
 Architecture
-291 modules
-681 dependencies
+307 modules
+718 dependencies
 0 violations
 
 GitHub Actions CI / Validate
@@ -12943,8 +13550,10 @@ Phase 3 completion still requires the remaining demand-justified Kernel work and
 The next milestone is:
 
 ```text
-P3-M04 — Audit
+P3-M05 — Taxonomy
 ```
+
+P3-M05 begins with demand review rather than automatic implementation.
 
 ---
 
@@ -13202,8 +13811,8 @@ PLATFORM KERNEL BASELINE
     ✅ P3-M01 Identifiers — CLOSED
     ✅ P3-M02 Namespace — CLOSED
     ↷  P3-M03 Events — DEFERRED (pending real consumer)
-    →  P3-M04 Audit — NEXT
-    P3-M05 Taxonomy — PLANNED
+    ✅ P3-M04 Audit — CLOSED
+    →  P3-M05 Taxonomy — NEXT (demand review)
     P3-M06 Relationships — PLANNED
     P3-M07 Architecture Enforcement Expansion — PLANNED
     other Kernel capabilities only as required
@@ -13548,7 +14157,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 97, 398, 410, and 411.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 99, 383, 398, 410, and 411.
 
 ```text
 DOCUMENT
@@ -13603,7 +14212,7 @@ As of the latest roadmap review:
 
 ```text
 DATE
-2026-08-12
+2026-08-14
 
 CURRENT PHASE
 Phase 3 — Platform Kernel Baseline
@@ -13614,15 +14223,16 @@ ACTIVE
 COMPLETED
 P3-M01 — Identifiers
 P3-M02 — Namespace
+P3-M04 — Audit
 
 DEFERRED
 P3-M03 — Events — pending real consumer
 
 CURRENT MILESTONE
-P3-M04 — Audit
+P3-M05 — Taxonomy
 
 NEXT
-P3-M04 — Audit
+P3-M05 — Taxonomy — demand review before implementation
 
 BLOCKED
 None
@@ -13634,6 +14244,8 @@ Workflow remains deferred until a real consumer requires it.
 Policy remains deferred until a real consumer requires it.
 Localization remains deferred until a real consumer requires it.
 Versioning remains deferred until a real consumer requires it.
+Audit Query remains deferred until a real search/view consumer exists.
+Audit Retention remains deferred until a real retention requirement exists.
 Distributed Event infrastructure remains deferred; no Kafka or RabbitMQ is justified.
 Graph Database remains deferred; Relationships begin with PostgreSQL when required.
 Universe-specific Kernel behavior remains forbidden.
@@ -13644,7 +14256,7 @@ Universe-specific Kernel behavior remains forbidden.
 ```text
 Platform Kernel
     owns canonical shared semantic primitives
-    currently materialized through Identifiers and Namespace
+    currently materialized through Identifiers, Namespace, and Audit
 
 Identifiers Kernel
     owns ResourceId semantics
@@ -13657,12 +14269,22 @@ Namespace Kernel
     owns NamespacedKey validation
     owns NamespacedKey parsing
 
+Audit Kernel
+    owns Audit Record semantics
+    owns Audit Record validation
+    owns AuditRecorder Contract
+    owns durable Audit Record mechanism
+    owns Prisma Audit persistence implementation
+
 Identity & Access Platform
     owns Actor
     owns Permission semantics
     owns Role semantics
+    owns authorization decision meaning
     consumes ResourceId for Actor.id
     consumes NamespacedKey for Permission keys
+    publishes accountability information through Audit Contracts
+    does not write Audit tables directly
 
 User Platform
     owns User
@@ -13671,7 +14293,7 @@ User Platform
 
 Database Foundation
     owns Prisma/PostgreSQL persistence mechanics
-    does not own ResourceId or NamespacedKey semantics
+    does not own ResourceId, NamespacedKey, or Audit business semantics
 ```
 
 ## P3-M01 Canonical Identifier Baseline
@@ -14033,7 +14655,229 @@ P3-M03 therefore adds no source package, persistence model, migration, broker, q
 
 The first strong future consumer remains Knowledge lifecycle Events in Phase 4 unless an earlier concrete producer/consumer requirement appears.
 
-P3-M04 Audit may proceed independently because Audit Records, business Events, and operational logs remain separate semantics.
+P3-M04 Audit proceeded independently because Audit Records, business Events, and operational logs remain separate semantics. P3-M03 remains deferred.
+
+## P3-M04 Canonical Audit Baseline
+
+```text
+Package
+@ai-world/kernel-audit
+
+Primary semantic
+AuditRecord
+
+Record identifier
+ResourceId
+
+Actor identifier
+ResourceId
+
+Action
+NamespacedKey
+
+Resource type
+NamespacedKey
+
+Resource identifier
+ResourceId
+
+Result
+NamespacedKey
+
+Context
+optional flat primitive business context
+
+Timestamp
+recordedAt
+
+Durable implementation
+PrismaAuditRecorder
+
+Persistence
+audit_records
+
+Migration
+20260812162301_audit_record_baseline
+```
+
+P3-M04 deliberately avoids:
+
+```text
+Event dependency;
+
+Audit Event bus;
+
+Kafka;
+
+RabbitMQ;
+
+Redis Streams;
+
+outbox;
+
+Audit query API;
+
+Audit viewing UI;
+
+retention framework;
+
+nested arbitrary metadata;
+
+direct Platform writes to Audit tables.
+```
+
+## P3-M04 Real Consumer
+
+The first production consumer is the protected Identity operation:
+
+```text
+AssignRoleToActorAsActor
+```
+
+Identity owns the business meaning of the authorization decision.
+
+Canonical first action:
+
+```text
+identity.authorization.role-assignment.decision
+```
+
+Canonical target Resource type:
+
+```text
+identity.actor
+```
+
+The Audit result records whether authorization was allowed or denied, and the requested local `roleKey` is supplied as flat business context.
+
+The action is intentionally an authorization decision rather than a claim that the Role mutation completed.
+
+For the allowed path:
+
+```text
+authorization allowed
+    ↓
+Audit decision persisted
+    ↓
+protected mutation may execute
+```
+
+If required Audit persistence fails, the protected Role-assignment mutation does not execute.
+
+For the denied path, the decision is audited before the canonical forbidden response when Audit persistence succeeds. Target/Role existence remains undisclosed because authorization denial still occurs before target/Role lookup.
+
+## P3-M04 Persistence Result
+
+```text
+Prisma schema change
+YES
+
+New table
+audit_records
+
+New migration
+20260812162301_audit_record_baseline
+
+Canonical migrations
+9
+
+Database status
+schema up to date
+```
+
+The canonical persisted record contains:
+
+```text
+id
+actor_id
+action
+resource_type
+resource_id
+result
+context
+recorded_at
+```
+
+## P3-M04 Final Validation
+
+```text
+Format check
+PASS
+
+Lint
+12 / 12 Turbo tasks PASS
+
+TypeScript
+23 / 23 Turbo tasks PASS
+
+Kernel Audit unit tests
+11 / 11 PASS
+
+Identity unit tests
+84 / 84 PASS
+
+API unit/e2e tests
+12 / 12 PASS
+
+Web Vitest tests
+20 / 20 PASS
+
+Root normal test tasks
+19 / 19 Turbo tasks PASS
+
+Identity PostgreSQL integration
+41 / 41 PASS
+
+User PostgreSQL integration
+6 / 6 PASS
+
+API PostgreSQL integration
+71 / 71 PASS
+
+Repository PostgreSQL integration
+118 / 118 PASS
+
+Focused Authorization API/PostgreSQL
+12 / 12 PASS
+
+Integration Turbo tasks
+14 / 14 PASS
+
+SMTP → Mailpit
+2 / 2 PASS
+
+Chromium E2E
+2 / 2 PASS
+
+Prisma validation
+PASS
+
+Prisma migration status
+9 migrations
+schema up to date
+
+Production build
+13 / 13 Turbo tasks PASS
+
+Architecture
+307 modules
+718 dependencies
+0 violations
+
+Git diff validation
+PASS
+
+GitHub Actions CI / Validate
+PASS
+```
+
+## P3-M04 Implementation Checkpoint
+
+```text
+8a0be6b feat(kernel): establish audit baseline
+```
+
+The implementation checkpoint is pushed to `origin/main` and remote CI is green.
 
 ## Current Phase 3 Delivery Position
 
@@ -14054,7 +14898,16 @@ P3-M03 — Events
 DEFERRED — pending real consumer
 
 P3-M04 — Audit
-NEXT
+CLOSED
+
+P3-M05 — Taxonomy
+NEXT — demand review before implementation
+
+P3-M06 — Relationships
+PLANNED
+
+P3-M07 — Architecture Enforcement Expansion
+PLANNED
 
 BLOCKERS
 NONE
@@ -14066,10 +14919,10 @@ NOT YET REACHED
 The next implementation work is:
 
 ```text
-P3-M04 — Audit
+P3-M05 — Taxonomy
 ```
 
-P3-M04 should now inspect existing security-sensitive Identity operations and establish only the smallest reusable Audit Record semantic justified by real accountability requirements. Audit must remain separate from ordinary logs and must not force Event infrastructure without an actual producer/consumer need.
+P3-M05 begins with demand inspection of upcoming Knowledge classification needs. If no real shared Taxonomy consumer exists yet, the milestone may be narrowed or deferred rather than implemented speculatively.
 
 ## Historical Phase 2 Closure Context
 
@@ -14724,7 +15577,7 @@ phase-1-complete
 phase-2-complete
 ```
 
-Phase 3 does not receive a milestone tag for P3-M01. A future:
+Phase 3 does not receive milestone tags for P3-M01, P3-M02, or P3-M04. A future:
 
 ```text
 phase-3-complete
@@ -14792,7 +15645,7 @@ tag target
 The next implementation work is:
 
 ```text
-P3-M04 — Audit
+P3-M05 — Taxonomy
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -14801,4 +15654,6 @@ P3-M02 established the minimal collision-safe NamespacedKey semantic and proved 
 
 P3-M03 was reviewed and intentionally deferred because the current production codebase has no real Event producer/consumer requirement. No Event package, bus, persistence, queue, Kafka, or RabbitMQ was introduced.
 
-The immediate Phase 3 task is now P3-M04 Audit: determine the smallest reusable Audit Record contract justified by existing security-sensitive operations while keeping Audit distinct from business Events and ordinary logging.
+P3-M04 established the durable Audit Record baseline through `@ai-world/kernel-audit`, PostgreSQL `audit_records`, and a real Identity authorization-decision consumer. Audit remains separate from Events and operational logging; Audit Query and Retention remain deferred until real consumers require them.
+
+The immediate Phase 3 task is now P3-M05 Taxonomy demand review: determine whether upcoming Knowledge proof work has a concrete shared classification requirement, and implement only the smallest justified Taxonomy contract if that requirement exists.
