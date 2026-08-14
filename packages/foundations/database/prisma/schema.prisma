@@ -172,3 +172,14 @@ model AuditRecord {
 
   @@map("audit_records")
 }
+
+model KnowledgeResource {
+  id           String   @id @db.Uuid
+  universeKey  String   @map("universe_key") @db.VarChar(128)
+  resourceType String   @map("resource_type") @db.VarChar(128)
+  lifecycle    String   @db.VarChar(32)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("knowledge_resources")
+}
