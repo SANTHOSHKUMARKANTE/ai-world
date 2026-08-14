@@ -1,6 +1,7 @@
 import type { EmailDelivery } from '@ai-world/foundation-email';
 import { SmtpEmailDelivery, type SmtpEmailDeliveryOptions } from '@ai-world/foundation-email/smtp';
 import { type LogLevel } from '@ai-world/foundation-observability';
+import { PrismaAuditRecorder } from '@ai-world/kernel-audit/infrastructure';
 import {
   AssignRoleToActor,
   AssignRoleToActorAsActor,
@@ -235,12 +236,17 @@ export class AppModule {
 
         {
           provide: AssignRoleToActorAsActor,
-          inject: [EvaluatePermission, AssignRoleToActor],
+          inject: [EvaluatePermission, AssignRoleToActor, DatabaseService],
           useFactory: (
             evaluatePermission: EvaluatePermission,
             assignRoleToActor: AssignRoleToActor,
+            database: DatabaseService,
           ): AssignRoleToActorAsActor => {
-            return new AssignRoleToActorAsActor(evaluatePermission, assignRoleToActor);
+            return new AssignRoleToActorAsActor(
+              evaluatePermission,
+              assignRoleToActor,
+              new PrismaAuditRecorder(database.getClient()),
+            );
           },
         },
 

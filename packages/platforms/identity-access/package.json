@@ -30,6 +30,7 @@
     "@ai-world/foundation-database": "workspace:*",
     "@ai-world/foundation-email": "workspace:*",
     "@ai-world/foundation-errors": "workspace:*",
+    "@ai-world/kernel-audit": "workspace:*",
     "@ai-world/kernel-identifiers": "workspace:*",
     "@ai-world/kernel-namespace": "workspace:*",
     "@ai-world/platform-user": "workspace:*",

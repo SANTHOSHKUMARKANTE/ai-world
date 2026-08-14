@@ -19,6 +19,14 @@ if (!databaseUrl) {
 
 const runMarker = `api-authorization-${randomUUID()}`;
 
+const ROLE_ASSIGNMENT_DECISION_AUDIT_ACTION = 'identity.authorization.role-assignment.decision';
+
+const IDENTITY_ACTOR_AUDIT_RESOURCE_TYPE = 'identity.actor';
+
+const AUTHORIZATION_ALLOWED_AUDIT_RESULT = 'identity.authorization.allowed';
+
+const AUTHORIZATION_DENIED_AUDIT_RESULT = 'identity.authorization.denied';
+
 function createAuthorizationEmail(label: string): string {
   return `${runMarker}-${label}-${randomUUID()}@example.com`;
 }
@@ -87,6 +95,23 @@ describe('Authorization API', () => {
     if (actorIds.length === 0) {
       return;
     }
+
+    await database.auditRecord.deleteMany({
+      where: {
+        OR: [
+          {
+            actorId: {
+              in: actorIds,
+            },
+          },
+          {
+            resourceId: {
+              in: actorIds,
+            },
+          },
+        ],
+      },
+    });
 
     await database.user.deleteMany({
       where: {
@@ -188,6 +213,23 @@ describe('Authorization API', () => {
     });
   }
 
+  async function findRoleAssignmentDecisionAuditRecords(
+    actingActorId: string,
+    targetActorId: string,
+  ) {
+    return database.auditRecord.findMany({
+      where: {
+        actorId: actingActorId,
+        action: ROLE_ASSIGNMENT_DECISION_AUDIT_ACTION,
+        resourceType: IDENTITY_ACTOR_AUDIT_RESOURCE_TYPE,
+        resourceId: targetActorId,
+      },
+      orderBy: {
+        recordedAt: 'asc',
+      },
+    });
+  }
+
   beforeAll(async () => {
     database = createDatabaseClient({
       connectionString: databaseUrl,
@@ -271,6 +313,26 @@ describe('Authorization API', () => {
     });
 
     await expect(countAdministratorAssignments(target.actorId)).resolves.toBe(0);
+
+    const auditRecords = await findRoleAssignmentDecisionAuditRecords(
+      actingActor.actorId,
+      target.actorId,
+    );
+
+    expect(auditRecords).toHaveLength(1);
+
+    expect(auditRecords[0]).toMatchObject({
+      actorId: actingActor.actorId,
+      action: ROLE_ASSIGNMENT_DECISION_AUDIT_ACTION,
+      resourceType: IDENTITY_ACTOR_AUDIT_RESOURCE_TYPE,
+      resourceId: target.actorId,
+      result: AUTHORIZATION_DENIED_AUDIT_RESULT,
+      context: {
+        roleKey: ADMINISTRATOR_ROLE_KEY,
+      },
+    });
+
+    expect(auditRecords[0]?.recordedAt).toBeInstanceOf(Date);
   });
 
   it('does not expose a missing target Actor to an unauthorized Actor', async () => {
@@ -417,6 +479,26 @@ describe('Authorization API', () => {
     });
 
     expect(assignment?.assignedAt).toBeInstanceOf(Date);
+
+    const auditRecords = await findRoleAssignmentDecisionAuditRecords(
+      administrator.actorId,
+      target.actorId,
+    );
+
+    expect(auditRecords).toHaveLength(1);
+
+    expect(auditRecords[0]).toMatchObject({
+      actorId: administrator.actorId,
+      action: ROLE_ASSIGNMENT_DECISION_AUDIT_ACTION,
+      resourceType: IDENTITY_ACTOR_AUDIT_RESOURCE_TYPE,
+      resourceId: target.actorId,
+      result: AUTHORIZATION_ALLOWED_AUDIT_RESULT,
+      context: {
+        roleKey: ADMINISTRATOR_ROLE_KEY,
+      },
+    });
+
+    expect(auditRecords[0]?.recordedAt).toBeInstanceOf(Date);
   });
 
   it('treats repeated authorized Role assignment as an idempotent success', async () => {

@@ -159,3 +159,16 @@ model RolePermission {
   @@index([permissionId])
   @@map("identity_role_permissions")
 }
+
+model AuditRecord {
+  id           String   @id @db.Uuid
+  actorId      String   @map("actor_id") @db.Uuid
+  action       String   @db.VarChar(128)
+  resourceType String   @map("resource_type") @db.VarChar(128)
+  resourceId   String   @map("resource_id") @db.Uuid
+  result       String   @db.VarChar(128)
+  context      Json?    @db.JsonB
+  recordedAt   DateTime @map("recorded_at") @db.Timestamptz(3)
+
+  @@map("audit_records")
+}

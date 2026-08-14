@@ -1,4 +1,7 @@
 import { ApplicationError } from '@ai-world/foundation-errors';
+import type { AuditRecorder, RecordAuditInput } from '@ai-world/kernel-audit';
+import { describe, expect, it } from 'vitest';
+
 import {
   AssignRoleToActor,
   AssignRoleToActorAsActor,
@@ -10,7 +13,11 @@ import {
   type PermissionEvaluationReader,
   type RoleAssignmentWriter,
 } from '../src';
-import { describe, expect, it } from 'vitest';
+
+const ADMINISTRATOR_ACTOR_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+const ORDINARY_ACTOR_ID = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+const TARGET_ACTOR_ID = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
+const MISSING_TARGET_ACTOR_ID = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
 
 class FakePermissionEvaluationReader implements PermissionEvaluationReader {
   readonly inputs: EvaluateActorPermissionInput[] = [];
@@ -36,52 +43,85 @@ class FakeRoleAssignmentWriter implements RoleAssignmentWriter {
   }
 }
 
+class FakeAuditRecorder implements AuditRecorder {
+  readonly inputs: RecordAuditInput[] = [];
+
+  constructor(private readonly failure?: Error) {}
+
+  async record(input: RecordAuditInput): Promise<void> {
+    this.inputs.push(input);
+
+    if (this.failure) {
+      throw this.failure;
+    }
+  }
+}
+
 describe('AssignRoleToActorAsActor', () => {
-  it('authorizes the acting Actor before assigning the Role to the target Actor', async () => {
+  it('audits an allowed authorization decision before assigning the Role', async () => {
     const permissionReader = new FakePermissionEvaluationReader(true);
     const roleWriter = new FakeRoleAssignmentWriter();
+    const auditRecorder = new FakeAuditRecorder();
 
     const useCase = new AssignRoleToActorAsActor(
       new EvaluatePermission(permissionReader),
       new AssignRoleToActor(roleWriter),
+      auditRecorder,
     );
 
     await expect(
       useCase.execute({
-        actingActorId: 'administrator-actor',
-        targetActorId: 'target-actor',
+        actingActorId: ADMINISTRATOR_ACTOR_ID,
+        targetActorId: TARGET_ACTOR_ID,
         roleKey: 'administrator',
       }),
     ).resolves.toBeUndefined();
 
     expect(permissionReader.inputs).toEqual([
       {
-        actorId: 'administrator-actor',
+        actorId: ADMINISTRATOR_ACTOR_ID,
         permissionKey: IDENTITY_AUTHORIZATION_MANAGE_PERMISSION_KEY,
+      },
+    ]);
+
+    expect(auditRecorder.inputs).toEqual([
+      {
+        actorId: ADMINISTRATOR_ACTOR_ID,
+        action: 'identity.authorization.role-assignment.decision',
+        resource: {
+          type: 'identity.actor',
+          id: TARGET_ACTOR_ID,
+        },
+        result: 'identity.authorization.allowed',
+        context: {
+          roleKey: 'administrator',
+        },
       },
     ]);
 
     expect(roleWriter.inputs).toEqual([
       {
-        actorId: 'target-actor',
+        actorId: TARGET_ACTOR_ID,
         roleKey: 'administrator',
       },
     ]);
   });
 
-  it('returns forbidden and performs no Role assignment when the acting Actor lacks Permission', async () => {
+  it('audits a denied authorization decision and performs no Role assignment', async () => {
     const permissionReader = new FakePermissionEvaluationReader(false);
     const roleWriter = new FakeRoleAssignmentWriter();
+    const auditRecorder = new FakeAuditRecorder();
 
     const useCase = new AssignRoleToActorAsActor(
       new EvaluatePermission(permissionReader),
       new AssignRoleToActor(roleWriter),
+      auditRecorder,
     );
 
     const error = await useCase
       .execute({
-        actingActorId: 'ordinary-actor',
-        targetActorId: 'target-actor',
+        actingActorId: ORDINARY_ACTOR_ID,
+        targetActorId: TARGET_ACTOR_ID,
         roleKey: 'administrator',
       })
       .catch((caught: unknown) => caught);
@@ -96,8 +136,23 @@ describe('AssignRoleToActorAsActor', () => {
 
     expect(permissionReader.inputs).toEqual([
       {
-        actorId: 'ordinary-actor',
+        actorId: ORDINARY_ACTOR_ID,
         permissionKey: IDENTITY_AUTHORIZATION_MANAGE_PERMISSION_KEY,
+      },
+    ]);
+
+    expect(auditRecorder.inputs).toEqual([
+      {
+        actorId: ORDINARY_ACTOR_ID,
+        action: 'identity.authorization.role-assignment.decision',
+        resource: {
+          type: 'identity.actor',
+          id: TARGET_ACTOR_ID,
+        },
+        result: 'identity.authorization.denied',
+        context: {
+          roleKey: 'administrator',
+        },
       },
     ]);
 
@@ -107,16 +162,18 @@ describe('AssignRoleToActorAsActor', () => {
   it('does not expose a missing target Actor to an unauthorized acting Actor', async () => {
     const permissionReader = new FakePermissionEvaluationReader(false);
     const roleWriter = new FakeRoleAssignmentWriter('actor_not_found');
+    const auditRecorder = new FakeAuditRecorder();
 
     const useCase = new AssignRoleToActorAsActor(
       new EvaluatePermission(permissionReader),
       new AssignRoleToActor(roleWriter),
+      auditRecorder,
     );
 
     const error = await useCase
       .execute({
-        actingActorId: 'ordinary-actor',
-        targetActorId: 'missing-target-actor',
+        actingActorId: ORDINARY_ACTOR_ID,
+        targetActorId: MISSING_TARGET_ACTOR_ID,
         roleKey: 'administrator',
       })
       .catch((caught: unknown) => caught);
@@ -126,22 +183,39 @@ describe('AssignRoleToActorAsActor', () => {
       kind: 'forbidden',
     });
 
+    expect(auditRecorder.inputs).toEqual([
+      {
+        actorId: ORDINARY_ACTOR_ID,
+        action: 'identity.authorization.role-assignment.decision',
+        resource: {
+          type: 'identity.actor',
+          id: MISSING_TARGET_ACTOR_ID,
+        },
+        result: 'identity.authorization.denied',
+        context: {
+          roleKey: 'administrator',
+        },
+      },
+    ]);
+
     expect(roleWriter.inputs).toEqual([]);
   });
 
-  it('preserves canonical target not-found behavior after authorization succeeds', async () => {
+  it('preserves canonical target not-found behavior after an allowed authorization decision', async () => {
     const permissionReader = new FakePermissionEvaluationReader(true);
     const roleWriter = new FakeRoleAssignmentWriter('actor_not_found');
+    const auditRecorder = new FakeAuditRecorder();
 
     const useCase = new AssignRoleToActorAsActor(
       new EvaluatePermission(permissionReader),
       new AssignRoleToActor(roleWriter),
+      auditRecorder,
     );
 
     const error = await useCase
       .execute({
-        actingActorId: 'administrator-actor',
-        targetActorId: 'missing-target-actor',
+        actingActorId: ADMINISTRATOR_ACTOR_ID,
+        targetActorId: MISSING_TARGET_ACTOR_ID,
         roleKey: 'administrator',
       })
       .catch((caught: unknown) => caught);
@@ -152,27 +226,44 @@ describe('AssignRoleToActorAsActor', () => {
       publicMessage: 'Actor not found.',
     });
 
+    expect(auditRecorder.inputs).toEqual([
+      {
+        actorId: ADMINISTRATOR_ACTOR_ID,
+        action: 'identity.authorization.role-assignment.decision',
+        resource: {
+          type: 'identity.actor',
+          id: MISSING_TARGET_ACTOR_ID,
+        },
+        result: 'identity.authorization.allowed',
+        context: {
+          roleKey: 'administrator',
+        },
+      },
+    ]);
+
     expect(roleWriter.inputs).toEqual([
       {
-        actorId: 'missing-target-actor',
+        actorId: MISSING_TARGET_ACTOR_ID,
         roleKey: 'administrator',
       },
     ]);
   });
 
-  it('preserves canonical Role not-found behavior after authorization succeeds', async () => {
+  it('preserves canonical Role not-found behavior after an allowed authorization decision', async () => {
     const permissionReader = new FakePermissionEvaluationReader(true);
     const roleWriter = new FakeRoleAssignmentWriter('role_not_found');
+    const auditRecorder = new FakeAuditRecorder();
 
     const useCase = new AssignRoleToActorAsActor(
       new EvaluatePermission(permissionReader),
       new AssignRoleToActor(roleWriter),
+      auditRecorder,
     );
 
     const error = await useCase
       .execute({
-        actingActorId: 'administrator-actor',
-        targetActorId: 'target-actor',
+        actingActorId: ADMINISTRATOR_ACTOR_ID,
+        targetActorId: TARGET_ACTOR_ID,
         roleKey: 'missing-role',
       })
       .catch((caught: unknown) => caught);
@@ -183,11 +274,50 @@ describe('AssignRoleToActorAsActor', () => {
       publicMessage: 'Role not found.',
     });
 
+    expect(auditRecorder.inputs).toEqual([
+      {
+        actorId: ADMINISTRATOR_ACTOR_ID,
+        action: 'identity.authorization.role-assignment.decision',
+        resource: {
+          type: 'identity.actor',
+          id: TARGET_ACTOR_ID,
+        },
+        result: 'identity.authorization.allowed',
+        context: {
+          roleKey: 'missing-role',
+        },
+      },
+    ]);
+
     expect(roleWriter.inputs).toEqual([
       {
-        actorId: 'target-actor',
+        actorId: TARGET_ACTOR_ID,
         roleKey: 'missing-role',
       },
     ]);
+  });
+
+  it('does not perform the privileged mutation when required Audit persistence fails', async () => {
+    const permissionReader = new FakePermissionEvaluationReader(true);
+    const roleWriter = new FakeRoleAssignmentWriter();
+    const auditFailure = new Error('Audit persistence unavailable.');
+    const auditRecorder = new FakeAuditRecorder(auditFailure);
+
+    const useCase = new AssignRoleToActorAsActor(
+      new EvaluatePermission(permissionReader),
+      new AssignRoleToActor(roleWriter),
+      auditRecorder,
+    );
+
+    await expect(
+      useCase.execute({
+        actingActorId: ADMINISTRATOR_ACTOR_ID,
+        targetActorId: TARGET_ACTOR_ID,
+        roleKey: 'administrator',
+      }),
+    ).rejects.toBe(auditFailure);
+
+    expect(auditRecorder.inputs).toHaveLength(1);
+    expect(roleWriter.inputs).toEqual([]);
   });
 });

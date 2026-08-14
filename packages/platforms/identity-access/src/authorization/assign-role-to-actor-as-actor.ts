@@ -1,5 +1,12 @@
 import { ApplicationError } from '@ai-world/foundation-errors';
+import type { AuditRecorder } from '@ai-world/kernel-audit';
 
+import {
+  IDENTITY_ACTOR_AUDIT_RESOURCE_TYPE,
+  IDENTITY_AUTHORIZATION_ALLOWED_AUDIT_RESULT,
+  IDENTITY_AUTHORIZATION_DENIED_AUDIT_RESULT,
+  IDENTITY_AUTHORIZATION_ROLE_ASSIGNMENT_DECISION_AUDIT_ACTION,
+} from './authorization-audit-policy';
 import { IDENTITY_AUTHORIZATION_MANAGE_PERMISSION_KEY } from './authorization-policy';
 import type { AssignRoleToActor } from './assign-role-to-actor';
 import type { EvaluatePermission } from './evaluate-permission';
@@ -14,6 +21,7 @@ export class AssignRoleToActorAsActor {
   constructor(
     private readonly evaluatePermission: EvaluatePermission,
     private readonly assignRoleToActor: AssignRoleToActor,
+    private readonly auditRecorder: AuditRecorder,
   ) {}
 
   async execute(input: AssignRoleToActorAsActorInput): Promise<void> {
@@ -23,6 +31,19 @@ export class AssignRoleToActorAsActor {
     });
 
     if (!evaluation.allowed) {
+      await this.auditRecorder.record({
+        actorId: input.actingActorId,
+        action: IDENTITY_AUTHORIZATION_ROLE_ASSIGNMENT_DECISION_AUDIT_ACTION,
+        resource: {
+          type: IDENTITY_ACTOR_AUDIT_RESOURCE_TYPE,
+          id: input.targetActorId,
+        },
+        result: IDENTITY_AUTHORIZATION_DENIED_AUDIT_RESULT,
+        context: {
+          roleKey: input.roleKey,
+        },
+      });
+
       throw new ApplicationError({
         code: 'identity.authorization.forbidden',
         kind: 'forbidden',
@@ -31,6 +52,19 @@ export class AssignRoleToActorAsActor {
         publicMessage: 'You do not have permission to perform this action.',
       });
     }
+
+    await this.auditRecorder.record({
+      actorId: input.actingActorId,
+      action: IDENTITY_AUTHORIZATION_ROLE_ASSIGNMENT_DECISION_AUDIT_ACTION,
+      resource: {
+        type: IDENTITY_ACTOR_AUDIT_RESOURCE_TYPE,
+        id: input.targetActorId,
+      },
+      result: IDENTITY_AUTHORIZATION_ALLOWED_AUDIT_RESULT,
+      context: {
+        roleKey: input.roleKey,
+      },
+    });
 
     await this.assignRoleToActor.execute({
       actorId: input.targetActorId,
