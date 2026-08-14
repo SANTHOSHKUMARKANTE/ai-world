@@ -12,7 +12,7 @@
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-14 |
-| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events DEFERRED; P3-M04 Audit CLOSED; P3-M05 Taxonomy DEFERRED; P3-M06 Relationships DEFERRED; P3-M07 Architecture Enforcement Expansion NEXT |
+| Current Delivery | Phase 3 COMPLETE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events DEFERRED; P3-M04 Audit CLOSED; P3-M05 Taxonomy DEFERRED; P3-M06 Relationships DEFERRED; P3-M07 Architecture Enforcement Expansion CLOSED; Phase 4 Knowledge Platform NEXT — P4-M01 Knowledge Resource Model |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -601,7 +601,8 @@ P2-M10 — Session Security UX
 CLOSED
 
 PHASE 3 — Platform Kernel Baseline
-ACTIVE
+COMPLETE
+EXIT OUTCOME: MINIMAL SHARED SEMANTIC KERNEL
 
 P3-M01 — Identifiers
 CLOSED
@@ -622,10 +623,16 @@ P3-M06 — Relationships
 DEFERRED — no current Resource-relationship consumer
 
 P3-M07 — Architecture Enforcement Expansion
+CLOSED
+
+PHASE 4 — Knowledge Platform
+NEXT
+
+P4-M01 — Knowledge Resource Model
 NEXT
 ```
 
-Current Phase 3 milestone sequence:
+Final Phase 3 milestone sequence:
 
 ```text
 P3-M01 — Identifiers
@@ -635,22 +642,22 @@ P3-M02 — Namespace
 CLOSED
 
 P3-M03 — Events
-DEFERRED — no current production consumer
+DEFERRED — pending real consumer
 
 P3-M04 — Audit
 CLOSED
 
 P3-M05 — Taxonomy
-DEFERRED — no current Resource-classification consumer
+DEFERRED — pending real Knowledge classification consumer
 
 P3-M06 — Relationships
-DEFERRED — no current Resource-relationship consumer
+DEFERRED — pending real Knowledge relationship consumer
 
 P3-M07 — Architecture Enforcement Expansion
-NEXT
+CLOSED
 ```
 
-Phase 3 remains demand-driven. A listed milestone may be narrowed, deferred, or satisfied by a smaller implementation when real consumers do not justify broader scope.
+Phase 3 remained demand-driven through closure. A listed milestone could be narrowed, deferred, or satisfied by a smaller implementation when real consumers did not justify broader scope. The deferred Event, Taxonomy, and Relationships milestones therefore do not block closure because each was reviewed against the implemented repository and retains a concrete Phase 4 activation gate.
 
 Current non-blocking documentation debt:
 
@@ -663,23 +670,39 @@ docs/templates/closure-review-template.md
 remain empty placeholders and are deferred to a dedicated governance/documentation task.
 ```
 
-They do not redefine the completed Phase 2 closure criteria or completed P3-M01/P3-M02/P3-M04 closure evidence.
+They do not redefine the completed Phase 2 or Phase 3 closure criteria.
 
-P3-M03 has been reviewed against the current repository and remains deferred because no production capability presently requires publication/subscription mechanics. The first concrete Event consumers remain future capabilities such as Knowledge lifecycle Events.
+P3-M03 remains deferred because no production capability presently requires business Event publication/subscription mechanics. Its first strong activation point remains Phase 4 Knowledge lifecycle Events.
 
-P3-M04 established the reusable Audit Record baseline through a real security-sensitive Identity consumer. The Audit Kernel owns durable Audit Record mechanics and semantics; Identity & Access owns the meaning of its authorization decision records. P3-M04 does not require Events and does not treat operational logging as Audit.
+P3-M04 established the reusable durable Audit Record baseline through a real security-sensitive Identity consumer. Audit remains separate from business Events and operational logging.
 
-P3-M05 was reviewed against the current repository and is intentionally deferred because no implemented Resource currently requires reusable shared classification semantics. Knowledge and proof Universes do not yet exist, so creating Taxonomy Definition, Term, hierarchy, classification persistence, or a Taxonomy registry now would be speculative. The first strong activation point remains Phase 4 Knowledge Taxonomy Integration when a real Knowledge Resource requires classification such as Anime Genre or History Era.
+P3-M05 remains deferred because no implemented Resource currently requires reusable shared classification semantics. Its first strong activation point remains P4-M05 Taxonomy Integration when a real Knowledge Resource requires classification such as Anime Genre or History Era.
 
-P3-M06 was reviewed against the current repository and is intentionally deferred because no implemented production capability currently owns or consumes a semantic Resource-to-Resource Relationship. Existing relational persistence inside Identity and User is capability-owned data modeling and does not justify a shared Relationships Kernel. Knowledge and proof Universes do not yet exist. The first strong activation point remains Phase 4 Knowledge Relationship Integration when real typed Knowledge Resources require connections such as Character APPEARS_IN Series or Person PARTICIPATED_IN Event.
+P3-M06 remains deferred because no implemented production capability currently owns or consumes a reusable semantic Resource-to-Resource Relationship. Its first strong activation point remains P4-M06 Relationship Integration when real typed Knowledge Resources require connections such as Character APPEARS_IN Series or Person PARTICIPATED_IN Event.
+
+P3-M07 closed the concrete architecture-enforcement gaps exposed by the package structure that now exists. It added automated protection against application deep imports into package source, package-to-package deep imports into foreign package source, and production package dependencies on another package's infrastructure implementation. Application composition roots and integration tests remain able to compose infrastructure where ownership requires it.
+
+The Phase 3 implementation checkpoint for P3-M07 is:
+
+```text
+aaf6e80 feat(architecture): expand package boundary enforcement
+```
+
+That implementation checkpoint is pushed and its GitHub Actions CI / Validate run is green.
+
+The next implementation phase is:
+
+```text
+Phase 4 — Knowledge Platform
+```
 
 The next implementation milestone is:
 
 ```text
-P3-M07 — Architecture Enforcement Expansion
+P4-M01 — Knowledge Resource Model
 ```
 
-P3-M07 should strengthen only architecture rules justified by the source areas that now actually exist: Foundations, Platform Kernel packages, Identity & Access, User, API, and Web. It must not invent enforcement for future Knowledge or Universe packages before those areas materialize.
+Phase 4 must begin with the smallest canonical Knowledge Resource model justified by the Anime/History proof strategy. Deferred Events, Taxonomy, and Relationships should be activated only when a real Phase 4 consumer establishes their exact semantics.
 
 ---
 
@@ -9535,37 +9558,264 @@ A Graph Database may be evaluated only if measured traversal, scale, or query re
 
 # 104. Phase 3 Milestone P3-M07 — Architecture Enforcement Expansion
 
-P3-M07 is the next active Phase 3 milestone after the demand-driven deferral of Events, Taxonomy, and Relationships where no current consumers exist.
+P3-M07 strengthened automated ownership enforcement only where the current repository demonstrated concrete unprotected package boundaries.
 
-Strengthen automated rules only where current repository structure provides real boundaries to protect.
-
-Review and, where gaps are proven, enforce:
+Milestone status:
 
 ```text
-Foundation → Platform forbidden;
-
-Kernel → Platform forbidden;
-
-Platform → Universe forbidden when Universe packages materialize;
-
-deep-import restrictions;
-
-workspace/public-entrypoint restrictions;
-
-cycle detection;
-
-application/layer dependency direction;
-
-Kernel independence from named Platforms.
+P3-M07 — Architecture Enforcement Expansion
+CLOSED
 ```
 
-Do not create speculative architecture rules for package areas that do not yet exist. P3-M07 should expand the existing dependency-cruiser baseline from concrete violations or concrete unprotected boundaries, not from imagined future repository shapes.
+The demand review first confirmed that the existing dependency-cruiser baseline already enforced:
+
+```text
+no circular source dependencies;
+
+no unresolvable imports;
+
+no undeclared external dependencies;
+
+no production source using dev-only dependencies;
+
+no cross-application source dependencies;
+
+Foundations do not depend upward;
+
+Kernel does not depend upward;
+
+Platforms do not depend on Universes or Applications;
+
+Universes do not depend on Applications.
+```
+
+P3-M07 did not duplicate or rewrite those working rules.
+
+## P3-M07 Concrete Enforcement Gaps
+
+The implemented repository now contains real Foundation, Kernel, Platform, API, and Web package boundaries. Inspection showed three concrete gaps that the Phase 1 baseline did not yet reject:
+
+```text
+Application source could deep-import package-internal src files.
+
+Package source could deep-import another package's internal src files.
+
+Package production source could consume another package's infrastructure export
+instead of depending on the owning package's public semantic Contract.
+```
+
+These gaps were now material because the repository includes public package exports and concrete infrastructure exports such as Audit and User persistence adapters.
+
+## P3-M07 New Architecture Rules
+
+P3-M07 added exactly three dependency-cruiser rules:
+
+```text
+applications-do-not-deep-import-package-source
+
+packages-do-not-deep-import-other-package-source
+
+package-production-does-not-depend-on-foreign-infrastructure
+```
+
+The first rule requires Applications to consume packages through declared package exports rather than package-internal `src` files.
+
+The second rule requires packages to consume other packages through declared package exports rather than another package's internal `src` files. A package remains free to organize and import its own source internally.
+
+The third rule prevents production package source from depending on another package's infrastructure implementation. Production package code should depend on the foreign owner's public semantic Contract instead.
+
+The rule intentionally permits:
+
+```text
+Application composition roots
+    → package infrastructure
+
+integration tests
+    → package infrastructure
+```
+
+because those are legitimate composition/proof boundaries.
+
+P3-M07 does not globally prohibit Platform-to-Platform dependencies. The existing Identity & Access registration flow may continue to depend on the User Platform's public `UserRegistrationWriter` Contract. The enforcement concern is bypassing owner-controlled public Contracts or importing foreign infrastructure directly from production package source.
+
+## P3-M07 Controlled Negative Proofs
+
+The new rules were validated with temporary controlled violations that were deleted immediately after each proof.
+
+Proof 1:
+
+```text
+packages/platforms/identity-access/src
+    → @ai-world/kernel-audit/infrastructure
+```
+
+Result:
+
+```text
+REJECTED
+package-production-does-not-depend-on-foreign-infrastructure
+```
+
+Proof 2:
+
+```text
+packages/platforms/user/src
+    → ../../../kernel/identifiers/src/resource-id
+```
+
+Result:
+
+```text
+REJECTED
+packages-do-not-deep-import-other-package-source
+```
+
+Proof 3:
+
+```text
+apps/api/src
+    → ../../../packages/kernel/audit/src/create-audit-record
+```
+
+Result:
+
+```text
+REJECTED
+applications-do-not-deep-import-package-source
+```
+
+After the temporary probes were removed, the real repository graph remained clean.
+
+## P3-M07 Validation Evidence
+
+Final local P3-M07 validation:
+
+```text
+Prettier — architecture config/documentation
+PASS
+
+Repository format check
+PASS
+
+Architecture configuration ESLint
+PASS
+
+Repository lint
+12 / 12 Turbo tasks PASS
+
+Production build through architecture:check
+13 / 13 Turbo tasks PASS
+
+Architecture validation
+307 modules
+718 dependencies
+0 violations
+
+git diff --check
+PASS
+
+Controlled foreign-infrastructure negative proof
+PASS — violation rejected
+
+Controlled package deep-import negative proof
+PASS — violation rejected
+
+Controlled application deep-import negative proof
+PASS — violation rejected
+
+GitHub Actions CI / Validate
+PASS
+```
+
+P3-M07 changes no product behavior and therefore introduces:
+
+```text
+NO new package
+
+NO Prisma model
+
+NO database table
+
+NO database column
+
+NO database migration
+
+NO Redis
+
+NO Queue
+
+NO Kafka
+
+NO RabbitMQ
+
+NO Graph Database
+
+NO speculative Knowledge/Universe package rule requiring packages that do not yet exist.
+```
+
+Canonical migration count remains:
+
+```text
+9
+```
+
+## P3-M07 Documentation
+
+The canonical engineering boundary document was updated alongside the configuration:
+
+```text
+docs/03-engineering/architecture-boundaries.md
+```
+
+The original P1-M13 architecture-boundary baseline remains historical evidence. P3-M07 records the later package-boundary expansion justified by real Kernel and Platform code.
+
+## P3-M07 Implementation Checkpoint
+
+Implementation checkpoint:
+
+```text
+aaf6e80 feat(architecture): expand package boundary enforcement
+```
+
+The checkpoint was pushed to `origin/main` and GitHub Actions CI / Validate is green.
+
+## P3-M07 Closure
+
+P3-M07 is complete.
+
+The milestone proves:
+
+```text
+current layer-direction rules remain intact;
+
+applications cannot bypass package exports through source deep imports;
+
+packages cannot bypass foreign package exports through source deep imports;
+
+production package source cannot depend on foreign infrastructure implementations;
+
+application composition remains possible;
+
+integration-test infrastructure composition remains possible;
+
+real Platform-to-Platform public Contract dependencies remain possible;
+
+controlled negative proofs fail as expected;
+
+the complete real repository graph remains clean;
+
+no speculative future package architecture was introduced.
+```
+
+P3-M07 closes the final accepted Phase 3 milestone.
 
 ---
 
 # 105. Phase 3 Testing
 
-Kernel tests should prove:
+Phase 3 validation proves both semantic Kernel behavior and automated ownership boundaries.
+
+Kernel tests prove, where implemented:
 
 ```text
 Universe neutrality;
@@ -9578,6 +9828,24 @@ persistence integrity;
 
 cross-consumer reuse.
 ```
+
+Architecture validation additionally proves:
+
+```text
+primary layer direction;
+
+cycle protection;
+
+package export boundaries;
+
+application/package deep-import rejection;
+
+foreign infrastructure rejection from production package source;
+
+clean real repository graph after controlled negative proofs.
+```
+
+Deferred capabilities do not require artificial test suites. Their evidence is the documented demand review and activation gate until a real consumer exists.
 
 ---
 
@@ -9594,12 +9862,56 @@ deferred Knowledge-driven capabilities have clear ownership and Phase 4 activati
 
 no Kernel capability contains Anime/History-specific business logic;
 
-architecture checks protect the primary layer direction;
+architecture checks protect the primary layer direction and current package boundaries;
 
 no speculative distributed or graph infrastructure was introduced.
 ```
 
+All accepted Phase 3 closure criteria are satisfied.
+
+Closure evidence is:
+
+```text
+Identifiers
+implemented and consumed by Identity & Access and User
+
+Namespace
+implemented and consumed by Identity Permission semantics
+
+Events
+reviewed and deferred with Phase 4 Knowledge Event activation gate
+
+Audit
+implemented durably and consumed by a real Identity authorization decision
+
+Taxonomy
+reviewed and deferred with P4-M05 activation gate
+
+Relationships
+reviewed and deferred with P4-M06 activation gate
+
+Architecture enforcement expansion
+implemented with three concrete package-boundary rules and negative proofs
+
+Universe neutrality
+preserved — no Anime/History business logic exists in Kernel packages
+
+Distributed infrastructure
+not introduced
+
+Graph infrastructure
+not introduced
+
+Repository architecture
+307 modules / 718 dependencies / 0 violations
+
+P3-M07 remote CI
+PASS
+```
+
 A deferred milestone does not block Phase 3 closure merely because it appeared in the original likely scope. Deferral is valid when repository evidence shows no current consumer and the roadmap preserves a concrete future activation gate.
+
+Phase 3 is therefore complete and Phase 4 Knowledge may become the next implementation phase after the Phase 3 documentation-closure commit is pushed, its CI is green, and the `phase-3-complete` repository tag is established according to Section 411.
 
 ---
 
@@ -9610,6 +9922,48 @@ AI World gains:
 ```text
 MINIMAL SHARED SEMANTIC KERNEL.
 ```
+
+Final Phase 3 state:
+
+```text
+PHASE 3 — PLATFORM KERNEL BASELINE
+COMPLETE
+
+CLOSED MILESTONES
+P3-M01 — Identifiers
+P3-M02 — Namespace
+P3-M04 — Audit
+P3-M07 — Architecture Enforcement Expansion
+
+DEFERRED WITH ACTIVATION GATES
+P3-M03 — Events
+P3-M05 — Taxonomy
+P3-M06 — Relationships
+
+CANONICAL MIGRATIONS
+9
+
+FINAL ARCHITECTURE
+307 modules
+718 dependencies
+0 violations
+
+P3-M07 IMPLEMENTATION CHECKPOINT
+aaf6e80 feat(architecture): expand package boundary enforcement
+
+P3-M07 GITHUB ACTIONS CI / VALIDATE
+PASS
+```
+
+Next:
+
+```text
+Phase 4 — Knowledge Platform
+
+P4-M01 — Knowledge Resource Model
+```
+
+Phase 4 is the first major multi-Universe architecture proof and should activate deferred Kernel capabilities only when real Knowledge consumers require them.
 
 ---
 
@@ -12190,7 +12544,9 @@ Audit;
 
 namespaced permissions;
 
-event integrity.
+package/public-boundary enforcement;
+
+Event integrity when business Events activate.
 ```
 
 ---
@@ -12303,7 +12659,7 @@ Emphasize security-critical flows.
 
 # 300. Phase 3 Testing
 
-Emphasize semantic Kernel contracts.
+Emphasize semantic Kernel contracts and controlled architecture-boundary negative proofs.
 
 ---
 
@@ -13577,9 +13933,9 @@ PASS
 
 # 383. Phase 3 Completion Evidence
 
-Phase 3 is currently ACTIVE and is not yet eligible for phase closure.
+Phase 3 is COMPLETE.
 
-Phase 3 evidence so far:
+Final Phase 3 evidence:
 
 ```text
 P3-M01 — Identifiers
@@ -13588,21 +13944,13 @@ CLOSED
 @ai-world/kernel-identifiers
 implemented
 
-ResourceId generation
+ResourceId generation / validation / parsing
 implemented
 
-ResourceId validation
-implemented
-
-ResourceId parsing
-implemented
-
-Identity & Access consumption
-Actor.id
-
-User Platform consumption
-User.id
-User.actorId
+Real consumers
+Identity Actor.id
+User User.id
+User User.actorId
 
 Identifier persistence migration
 not required
@@ -13616,23 +13964,14 @@ CLOSED
 @ai-world/kernel-namespace
 implemented
 
-NamespacedKey validation
-implemented
-
-NamespacedKey parsing
+NamespacedKey validation / parsing
 implemented
 
 NamespacedKey maximum length
 128
 
-Identity Permission consumption
+Real consumer
 identity.authorization.manage
-
-Permission Contract typing
-implemented
-
-Permission evaluation Contract typing
-implemented
 
 Namespace persistence migration
 not required
@@ -13641,10 +13980,7 @@ Kernel Namespace unit tests
 19 / 19 PASS
 
 P3-M03 — Events
-DEFERRED — no current production consumer
-
-Event publisher/subscriber requirement
-not currently present
+DEFERRED — pending real consumer
 
 Kernel Events package
 not created
@@ -13654,6 +13990,9 @@ not required
 
 Distributed Event infrastructure
 not introduced
+
+Activation gate
+Phase 4 P4-M08 Knowledge Events or an earlier concrete producer/consumer
 
 P3-M04 — Audit
 CLOSED
@@ -13670,7 +14009,7 @@ implemented
 PrismaAuditRecorder
 implemented
 
-Durable Audit persistence
+Durable persistence
 audit_records
 
 First real consumer
@@ -13682,14 +14021,8 @@ implemented
 Denied decision Audit
 implemented
 
-Audit failure protected-mutation behavior
-fail closed
-
-Audit Query
-not implemented
-
-Audit Retention
-not implemented
+Required Audit failure behavior
+protected mutation fails closed
 
 Kernel Audit unit tests
 11 / 11 PASS
@@ -13697,44 +14030,15 @@ Kernel Audit unit tests
 Identity unit tests
 84 / 84 PASS
 
-Repository normal test tasks
-19 / 19 Turbo tasks PASS
-
 Repository PostgreSQL integration
 118 / 118 PASS
-
-Integration Turbo tasks
-14 / 14 PASS
-
-SMTP → Mailpit
-2 / 2 PASS
-
-Chromium E2E
-2 / 2 PASS
 
 Prisma
 9 migrations
 schema up to date
 
-Build
-13 / 13 Turbo tasks PASS
-
-Architecture
-307 modules
-718 dependencies
-0 violations
-
-GitHub Actions CI / Validate
-PASS
-
 P3-M05 — Taxonomy
-DEFERRED — no current Resource-classification consumer
-
-Implemented Knowledge Platform
-NONE
-
-Implemented Universe packages
-NONE
+DEFERRED — pending real Knowledge classification consumer
 
 Kernel Taxonomy package
 not created
@@ -13742,20 +14046,11 @@ not created
 Taxonomy persistence migration
 not required
 
-First activation gate
-Phase 4 P4-M05 Knowledge Taxonomy Integration
+Activation gate
+Phase 4 P4-M05 Taxonomy Integration
 
 P3-M06 — Relationships
-DEFERRED — no current Resource-relationship consumer
-
-Production semantic Resource-to-Resource Relationship consumer
-NONE
-
-Implemented Knowledge Platform
-NONE
-
-Implemented Universe packages
-NONE
+DEFERRED — pending real Knowledge relationship consumer
 
 Kernel Relationships package
 not created
@@ -13766,22 +14061,93 @@ not required
 Graph Database
 not introduced
 
-First activation gate
-Phase 4 P4-M06 Knowledge Relationship Integration
+Activation gate
+Phase 4 P4-M06 Relationship Integration
 
 P3-M07 — Architecture Enforcement Expansion
-NEXT
+CLOSED
+
+New rule
+applications-do-not-deep-import-package-source
+
+New rule
+packages-do-not-deep-import-other-package-source
+
+New rule
+package-production-does-not-depend-on-foreign-infrastructure
+
+Application deep-import negative proof
+PASS — rejected
+
+Package deep-import negative proof
+PASS — rejected
+
+Foreign-infrastructure negative proof
+PASS — rejected
+
+Repository format check
+PASS
+
+Repository lint
+12 / 12 Turbo tasks PASS
+
+Production build through architecture:check
+13 / 13 Turbo tasks PASS
+
+Final architecture
+307 modules
+718 dependencies
+0 violations
+
+Git diff validation
+PASS
+
+P3-M07 implementation checkpoint
+aaf6e80 feat(architecture): expand package boundary enforcement
+
+P3-M07 GitHub Actions CI / Validate
+PASS
 ```
 
-Phase 3 completion still requires P3-M07 and the closure criteria in Section 106.
+Phase 3 closure additionally proves:
+
+```text
+all currently justified Kernel semantics are implemented;
+
+unjustified Kernel semantics were deferred rather than scaffolded;
+
+Identity consumes ResourceId, NamespacedKey, and Audit where relevant;
+
+Kernel remains Universe-neutral;
+
+package owners retain public Contract control;
+
+application composition roots may still compose infrastructure;
+
+production packages cannot bypass foreign owners through infrastructure imports;
+
+no Redis, Kafka, RabbitMQ, Graph Database, or speculative distributed system was introduced.
+```
+
+Phase 3 exit outcome:
+
+```text
+MINIMAL SHARED SEMANTIC KERNEL
+```
+
+The Phase 3 roadmap closure is represented by this documentation update. The annotated `phase-3-complete` tag is intentionally not claimed as established yet. Under Section 411, it must target the final Phase 3 documentation-closure commit only after that commit is pushed and its GitHub Actions CI / Validate run is green.
+
+The next phase is:
+
+```text
+Phase 4 — Knowledge Platform
+```
 
 The next milestone is:
 
 ```text
-P3-M07 — Architecture Enforcement Expansion
+P4-M01 — Knowledge Resource Model
 ```
-
-P3-M07 begins by inspecting the architecture rules already enforced by dependency-cruiser and should add only concrete missing protections justified by the repository areas that currently exist.
 
 ---
 
@@ -14035,20 +14401,24 @@ IDENTITY PLATFORM
 
 PHASE 3
 PLATFORM KERNEL BASELINE
-    ACTIVE
+    COMPLETE
+    EXIT: MINIMAL SHARED SEMANTIC KERNEL
     ✅ P3-M01 Identifiers — CLOSED
     ✅ P3-M02 Namespace — CLOSED
     ↷  P3-M03 Events — DEFERRED (pending real consumer)
     ✅ P3-M04 Audit — CLOSED
-    ↷  P3-M05 Taxonomy — DEFERRED (no current Resource-classification consumer)
-    ↷  P3-M06 Relationships — DEFERRED (no current Resource-relationship consumer)
-    →  P3-M07 Architecture Enforcement Expansion — NEXT
-    other Kernel capabilities only as required
+    ↷  P3-M05 Taxonomy — DEFERRED (pending real Knowledge classification consumer)
+    ↷  P3-M06 Relationships — DEFERRED (pending real Knowledge relationship consumer)
+    ✅ P3-M07 Architecture Enforcement Expansion — CLOSED
+    ✅ 307 modules / 718 dependencies / 0 violations
+    ✅ P3-M07 CI / Validate — PASS
+    tag phase-3-complete pending documentation-closure CI
 
 
 PHASE 4
 KNOWLEDGE
-    NOT STARTED
+    NEXT
+    → P4-M01 Knowledge Resource Model — NEXT
     Canonical Knowledge
     Typed domain resources
     Anime v1
@@ -14385,7 +14755,7 @@ Begin implementation of the AI World repository/workspace baseline.
 
 # 409. Acceptance
 
-The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 99, 383, 398, 410, and 411.
+The following block preserves the Phase 0 acceptance snapshot from 2026-08-08. Current delivery status is tracked in Sections 23A, 104, 106, 107, 383, 398, 410, and 411.
 
 ```text
 DOCUMENT
@@ -14446,26 +14816,33 @@ CURRENT PHASE
 Phase 3 — Platform Kernel Baseline
 
 STATUS
-ACTIVE
+COMPLETE
+
+EXIT OUTCOME
+MINIMAL SHARED SEMANTIC KERNEL
 
 COMPLETED
 P3-M01 — Identifiers
 P3-M02 — Namespace
 P3-M04 — Audit
-
-DEFERRED
-P3-M03 — Events — no current production consumer
-P3-M05 — Taxonomy — no current Resource-classification consumer
-P3-M06 — Relationships — no current Resource-relationship consumer
-
-CURRENT MILESTONE
 P3-M07 — Architecture Enforcement Expansion
 
-NEXT
-P3-M07 — Architecture Enforcement Expansion — inspect current enforcement gaps before changing rules
+DEFERRED WITH ACTIVATION GATES
+P3-M03 — Events — pending real producer/consumer
+P3-M05 — Taxonomy — pending real Knowledge classification consumer
+P3-M06 — Relationships — pending real Knowledge relationship consumer
+
+NEXT PHASE
+Phase 4 — Knowledge Platform
+
+NEXT MILESTONE
+P4-M01 — Knowledge Resource Model
 
 BLOCKED
 None
+
+PHASE 3 TAG STATUS
+phase-3-complete pending this documentation-closure commit and green closure CI
 
 DEFERRED / DEMAND-DRIVEN
 P3-M03 Events remains deferred until a real producer/consumer requirement exists.
@@ -15213,6 +15590,90 @@ require a reusable typed connection
 through shared Relationship mechanics
 ```
 
+## P3-M07 Architecture Enforcement Expansion
+
+P3-M07 is closed.
+
+Final implementation result:
+
+```text
+Configuration
+.dependency-cruiser.mjs
+
+Canonical documentation
+docs/03-engineering/architecture-boundaries.md
+
+New rule
+applications-do-not-deep-import-package-source
+
+New rule
+packages-do-not-deep-import-other-package-source
+
+New rule
+package-production-does-not-depend-on-foreign-infrastructure
+```
+
+The rules protect public package ownership without breaking legitimate composition:
+
+```text
+Application composition roots
+may consume package infrastructure
+
+Integration tests
+may compose package infrastructure
+
+Production package source
+must not consume foreign package infrastructure
+
+Applications and packages
+must not bypass declared package exports by deep-importing foreign src files
+```
+
+Controlled negative proof:
+
+```text
+Identity production source → @ai-world/kernel-audit/infrastructure
+REJECTED
+
+User production source → kernel-identifiers/src/resource-id
+REJECTED
+
+API source → kernel-audit/src/create-audit-record
+REJECTED
+```
+
+Final validation:
+
+```text
+Repository format check
+PASS
+
+Repository lint
+12 / 12 Turbo tasks PASS
+
+Production build through architecture:check
+13 / 13 Turbo tasks PASS
+
+Architecture
+307 modules
+718 dependencies
+0 violations
+
+Git diff validation
+PASS
+
+GitHub Actions CI / Validate
+PASS
+```
+
+Implementation checkpoint:
+
+```text
+aaf6e80 feat(architecture): expand package boundary enforcement
+```
+
+P3-M07 introduced no package, persistence model, migration, queue, broker, Graph Database, or speculative Knowledge/Universe implementation.
+
 ## Current Phase 3 Delivery Position
 
 ```text
@@ -15220,7 +15681,10 @@ PHASE
 Phase 3 — Platform Kernel Baseline
 
 STATUS
-ACTIVE
+COMPLETE
+
+EXIT OUTCOME
+MINIMAL SHARED SEMANTIC KERNEL
 
 P3-M01 — Identifiers
 CLOSED
@@ -15235,28 +15699,34 @@ P3-M04 — Audit
 CLOSED
 
 P3-M05 — Taxonomy
-DEFERRED — no current Resource-classification consumer
+DEFERRED — pending real Knowledge classification consumer
 
 P3-M06 — Relationships
-DEFERRED — no current Resource-relationship consumer
+DEFERRED — pending real Knowledge relationship consumer
 
 P3-M07 — Architecture Enforcement Expansion
-NEXT
+CLOSED
 
 BLOCKERS
 NONE
 
 PHASE EXIT
-NOT YET REACHED
+REACHED
+
+NEXT PHASE
+Phase 4 — Knowledge Platform
+
+NEXT MILESTONE
+P4-M01 — Knowledge Resource Model
 ```
 
-The next implementation work is:
+The next implementation work, after the Phase 3 closure tag is established according to Section 411, is:
 
 ```text
-P3-M07 — Architecture Enforcement Expansion
+P4-M01 — Knowledge Resource Model
 ```
 
-P3-M07 begins with inspection of the existing dependency-cruiser and workspace boundary rules. Only concrete missing protections should be added; future Knowledge/Universe rules should not be invented before those packages exist.
+Phase 4 begins the first major multi-Universe proof. It should reactivate Events, Taxonomy, or Relationships only when concrete Knowledge operations establish their required contracts.
 
 ## Historical Phase 2 Closure Context
 
@@ -15644,7 +16114,7 @@ NEXT PHASE
 Phase 3 — Platform Kernel Baseline
 ```
 
-Phase 2 remains closed. Its completed Identity, User, Email, browser-security, persistence, and authorization evidence is retained here as historical closure context while Phase 3 proceeds.
+Phase 2 remains closed. Its completed Identity, User, Email, browser-security, persistence, and authorization evidence is retained here as historical closure context. Phase 3 has now also closed, and Phase 4 Knowledge is next.
 
 ---
 
@@ -15911,13 +16381,69 @@ phase-1-complete
 phase-2-complete
 ```
 
-Phase 3 does not receive milestone tags for P3-M01, P3-M02, or P3-M04. A future:
+Phase 3 does not receive milestone tags for P3-M01, P3-M02, P3-M04, or P3-M07.
+
+Phase 3 itself is now complete at the roadmap level, but the annotated phase tag is intentionally not recorded as established yet.
+
+Canonical pending tag:
 
 ```text
 phase-3-complete
 ```
 
-will be created only after all accepted Phase 3 closure criteria, roadmap closure documentation, and closure CI are complete.
+The P3-M07 implementation checkpoint:
+
+```text
+aaf6e80 feat(architecture): expand package boundary enforcement
+```
+
+is not the final Phase 3 tag target. The tag must point to the documentation-closure commit that contains this completed roadmap state, after that commit is pushed and its GitHub Actions CI / Validate run is green.
+
+## Phase 3 Tag Status
+
+Current Phase 3 repository-tag state:
+
+```text
+Phase 3 implementation
+COMPLETE
+
+P3-M07 implementation CI
+GREEN
+
+Phase 3 roadmap closure
+RECORDED BY THIS FILE
+
+Phase 3 documentation closure commit
+PENDING COMMIT/PUSH
+
+Phase 3 documentation closure CI
+PENDING
+
+phase-3-complete
+NOT YET ESTABLISHED
+```
+
+After this roadmap file is committed and pushed, wait for the documentation-closure CI to become green. Then verify the exact closure `HEAD` and create the annotated tag against that commit.
+
+Canonical command sequence after green closure CI:
+
+```text
+git status -sb
+
+git log -5 --oneline --decorate
+
+git rev-parse HEAD
+
+git tag -a phase-3-complete -m "Phase 3 complete"
+
+git show phase-3-complete --no-patch --decorate
+
+git push origin phase-3-complete
+
+git ls-remote --tags origin phase-3-complete
+```
+
+The exact Phase 3 closure commit hash must be read from Git after the documentation closure commit exists. This roadmap must not invent that future hash.
 
 ## Release Tags Remain Separate
 
@@ -15976,22 +16502,26 @@ tag target
     → final phase documentation closure commit after green CI
 ```
 
-The next implementation work is:
+The next implementation work, after the Phase 3 documentation-closure CI is green and `phase-3-complete` is established, is:
 
 ```text
-P3-M07 — Architecture Enforcement Expansion
+Phase 4 — Knowledge Platform
+
+P4-M01 — Knowledge Resource Model
 ```
 
 P3-M01 established canonical Resource identifier semantics.
 
 P3-M02 established the minimal collision-safe NamespacedKey semantic and proved it through the existing Identity Permission vocabulary.
 
-P3-M03 was reviewed and intentionally deferred because the current production codebase has no real Event producer/consumer requirement. No Event package, bus, persistence, queue, Kafka, or RabbitMQ was introduced.
+P3-M03 was reviewed and intentionally deferred because the production codebase has no real Event producer/consumer requirement. No Event package, bus, persistence, queue, Kafka, or RabbitMQ was introduced.
 
 P3-M04 established the durable Audit Record baseline through `@ai-world/kernel-audit`, PostgreSQL `audit_records`, and a real Identity authorization-decision consumer. Audit remains separate from Events and operational logging; Audit Query and Retention remain deferred until real consumers require them.
 
-P3-M05 Taxonomy was demand-reviewed and intentionally deferred because no implemented Resource currently requires reusable shared classification semantics. No Taxonomy package, persistence model, registry, or migration was introduced. Its first strong activation gate remains Phase 4 Knowledge Taxonomy Integration.
+P3-M05 Taxonomy was demand-reviewed and intentionally deferred because no implemented Resource currently requires reusable shared classification semantics. No Taxonomy package, persistence model, registry, or migration was introduced. Its first strong activation gate remains Phase 4 P4-M05 Taxonomy Integration.
 
-P3-M06 Relationships was demand-reviewed and intentionally deferred because no implemented production capability currently requires a shared semantic Resource-to-Resource relationship. No Relationships package, Relationship Type/Instance persistence, traversal layer, Graph Database, or migration was introduced. Its first strong activation gate remains Phase 4 Knowledge Relationship Integration.
+P3-M06 Relationships was demand-reviewed and intentionally deferred because no implemented production capability currently requires a shared semantic Resource-to-Resource relationship. No Relationships package, Relationship Type/Instance persistence, traversal layer, Graph Database, or migration was introduced. Its first strong activation gate remains Phase 4 P4-M06 Relationship Integration.
 
-The immediate Phase 3 task is now P3-M07 Architecture Enforcement Expansion: inspect the current dependency rules and strengthen only concrete unprotected boundaries that exist in the repository today.
+P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
+
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is next.
