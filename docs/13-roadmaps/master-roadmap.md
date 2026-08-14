@@ -12,7 +12,7 @@
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-14 |
-| Current Delivery | Phase 3 COMPLETE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events DEFERRED; P3-M04 Audit CLOSED; P3-M05 Taxonomy DEFERRED; P3-M06 Relationships DEFERRED; P3-M07 Architecture Enforcement Expansion CLOSED; Phase 4 Knowledge Platform NEXT — P4-M01 Knowledge Resource Model |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -626,9 +626,12 @@ P3-M07 — Architecture Enforcement Expansion
 CLOSED
 
 PHASE 4 — Knowledge Platform
-NEXT
+ACTIVE
 
 P4-M01 — Knowledge Resource Model
+CLOSED
+
+P4-M02 — Typed Domain Resource Support
 NEXT
 ```
 
@@ -690,7 +693,7 @@ aaf6e80 feat(architecture): expand package boundary enforcement
 
 That implementation checkpoint is pushed and its GitHub Actions CI / Validate run is green.
 
-The next implementation phase is:
+The current implementation phase is:
 
 ```text
 Phase 4 — Knowledge Platform
@@ -699,10 +702,10 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M01 — Knowledge Resource Model
+P4-M02 — Typed Domain Resource Support
 ```
 
-Phase 4 must begin with the smallest canonical Knowledge Resource model justified by the Anime/History proof strategy. Deferred Events, Taxonomy, and Relationships should be activated only when a real Phase 4 consumer establishes their exact semantics.
+P4-M01 established the smallest canonical Knowledge Resource model justified by the Anime/History proof strategy. P4-M02 must now prove typed domain specialization without pulling later Knowledge milestones forward. Deferred Events, Taxonomy, and Relationships should be activated only when a real Phase 4 consumer establishes their exact semantics.
 
 ---
 
@@ -1451,7 +1454,7 @@ AI World becomes:
 ENGINEERING-READY.
 ```
 
-Next:
+At Phase 1 closure, the next work was:
 
 ```text
 Phase 2 — Identity Platform.
@@ -8519,7 +8522,7 @@ This block records the historical delivery position at P3-M02 closure. The curre
 
 # 97. Phase 3 Milestone P3-M03 — Events
 
-P3-M03 was evaluated against the current production codebase before introducing a new Kernel package or Event mechanism.
+At the time of the P3-M03 demand review, P3-M03 was evaluated against the implemented production codebase before introducing a new Kernel package or Event mechanism.
 
 Milestone status:
 
@@ -8577,7 +8580,7 @@ Commands and Events
 
 ## P3-M03 Demand Review Result
 
-The current implemented Platforms already complete their required synchronous business operations without a shared Event mechanism.
+At the time of the P3-M03 demand review, the implemented Platforms already completed their required synchronous business operations without a shared Event mechanism.
 
 Potential existing operations such as:
 
@@ -8591,7 +8594,7 @@ email verification confirmation
 User Profile update
 ```
 
-do not currently have an independent post-operation consumer whose requirement justifies adding publication/subscription infrastructure.
+did not have an independent post-operation consumer whose requirement justified adding publication/subscription infrastructure at review time.
 
 Adding Events only because these operations are significant would violate the Phase 3 demand-driven rule.
 
@@ -9346,14 +9349,14 @@ P3-M05 — Taxonomy
 DEFERRED — no current Resource-classification consumer
 ```
 
-Current repository evidence:
+Repository evidence at the time of the P3-M05 demand review:
 
 ```text
-implemented Knowledge Platform
-NONE
+Knowledge Platform
+NOT YET IMPLEMENTED AT REVIEW TIME
 
-implemented Universe packages
-NONE
+Universe packages
+NOT YET IMPLEMENTED AT REVIEW TIME
 
 production Resource-classification consumer
 NONE
@@ -9368,7 +9371,7 @@ shared classification persistence requirement
 NONE
 ```
 
-The current Identity & Access and User Platforms do not require a shared Taxonomy semantic. Existing Role, Permission, profile, Session, verification, Recovery, and Audit concepts remain owned by their existing capabilities and must not be forced into Taxonomy merely to materialize the roadmap item.
+At the time of the P3-M05 demand review, the implemented Identity & Access and User Platforms did not require a shared Taxonomy semantic. Existing Role, Permission, profile, Session, verification, Recovery, and Audit concepts remain owned by their existing capabilities and must not be forced into Taxonomy merely to materialize the roadmap item.
 
 P3-M05 therefore introduces:
 
@@ -9446,14 +9449,14 @@ P3-M06 — Relationships
 DEFERRED — no current Resource-relationship consumer
 ```
 
-Repository inspection found:
+Repository evidence at the time of the P3-M06 demand review:
 
 ```text
-implemented Knowledge Platform
-NONE
+Knowledge Platform
+NOT YET IMPLEMENTED AT REVIEW TIME
 
-implemented Universe packages
-NONE
+Universe packages
+NOT YET IMPLEMENTED AT REVIEW TIME
 
 production semantic Resource-to-Resource Relationship consumer
 NONE
@@ -9997,23 +10000,25 @@ without becoming untyped or Universe-specific.
 
 # 110. Phase 4 Repository Materialization
 
-Expected:
+Current Phase 4 materialization begins with:
 
 ```text
 packages/platforms/knowledge/
-
-packages/universes/anime/
-
-packages/universes/history/
 ```
 
-and required Kernel packages.
+The Anime and History Universe packages are introduced only when the typed multi-Universe proof requires them. Deferred Kernel capabilities remain deferred and are activated only when a concrete Phase 4 consumer establishes the required semantics.
 
 ---
 
 # 111. Phase 4 Milestone P4-M01 — Knowledge Resource Model
 
 Define and implement the minimum canonical Knowledge Resource model.
+
+Milestone status:
+
+```text
+CLOSED
+```
 
 Requirements should include:
 
@@ -10030,6 +10035,14 @@ audit fields;
 
 typed public Contract.
 ```
+
+Implementation checkpoint:
+
+```text
+af7edb8 feat(knowledge): establish knowledge resource baseline
+```
+
+P4-M01 established `@ai-world/platform-knowledge`, the canonical `KnowledgeResource` public Contract, durable PostgreSQL persistence, and the initial `DRAFT` lifecycle. The implementation commit is pushed and its GitHub Actions CI / Validate run is green.
 
 ---
 
@@ -10081,10 +10094,10 @@ create;
 
 read;
 
-update;
-
-archive/delete according to lifecycle.
+update.
 ```
+
+Lifecycle-driven archive behavior remains owned by P4-M07 unless the roadmap is deliberately revised.
 
 ---
 
@@ -11904,7 +11917,7 @@ The following table provides the default first meaningful implementation phase.
 | Email | Phase 2 |
 | Identifiers | Phase 3 or pulled into Phase 2 |
 | Namespace | Phase 3 |
-| Events | Phase 3 |
+| Events | Phase 3 demand review; activate with P4-M08 Knowledge Events or another real producer/consumer |
 | Audit | Phase 3 or pulled into Phase 2 |
 | Taxonomy | Phase 3 demand review; activate with Phase 4 Knowledge classification when required |
 | Relationships | Phase 3 demand review; activate with Phase 4 Knowledge relationships when required |
@@ -14135,7 +14148,7 @@ Phase 3 exit outcome:
 MINIMAL SHARED SEMANTIC KERNEL
 ```
 
-The Phase 3 roadmap closure is represented by this documentation update. The annotated `phase-3-complete` tag is intentionally not claimed as established yet. Under Section 411, it must target the final Phase 3 documentation-closure commit only after that commit is pushed and its GitHub Actions CI / Validate run is green.
+The Phase 3 roadmap closure is represented by the annotated `phase-3-complete` tag at `9b424ee96e1722e4fa6774580b960284ab071dbe` (`docs(roadmap): close P3-M07 and Phase 3`).
 
 The next phase is:
 
@@ -14143,17 +14156,55 @@ The next phase is:
 Phase 4 — Knowledge Platform
 ```
 
-The next milestone is:
+The current next milestone is:
 
 ```text
-P4-M01 — Knowledge Resource Model
+P4-M02 — Typed Domain Resource Support
 ```
 
 ---
 
 # 384. Phase 4 Completion Evidence
 
-Expected:
+Current completed Phase 4 evidence:
+
+```text
+P4-M01 — Knowledge Resource Model
+CLOSED
+
+Package
+@ai-world/platform-knowledge
+
+Canonical public model
+KnowledgeResource
+
+Shared semantics
+ResourceId
+NamespacedKey-backed Universe and Resource Type association
+DRAFT-only initial lifecycle
+createdAt / updatedAt audit fields
+
+Persistence
+knowledge_resources
+
+Migration
+20260814135808_knowledge_resource_baseline
+
+Canonical migration count
+10
+
+Implementation checkpoint
+af7edb8 feat(knowledge): establish knowledge resource baseline
+
+Implementation CI
+GitHub Actions CI / Validate — PASS
+```
+
+The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
+
+P4-M01 deliberately introduced no generic JSON payload, Universe registry, Taxonomy, Relationships, Events, API, Web behavior, or expanded lifecycle.
+
+Phase 4 remains active. Its eventual completion evidence is expected to include:
 
 ```text
 Anime and History
@@ -14412,13 +14463,14 @@ PLATFORM KERNEL BASELINE
     ✅ P3-M07 Architecture Enforcement Expansion — CLOSED
     ✅ 307 modules / 718 dependencies / 0 violations
     ✅ P3-M07 CI / Validate — PASS
-    tag phase-3-complete pending documentation-closure CI
+    ✅ phase-3-complete ESTABLISHED
 
 
 PHASE 4
 KNOWLEDGE
-    NEXT
-    → P4-M01 Knowledge Resource Model — NEXT
+    ACTIVE
+    ✅ P4-M01 Knowledge Resource Model — CLOSED
+    → P4-M02 Typed Domain Resource Support — NEXT
     Canonical Knowledge
     Typed domain resources
     Anime v1
@@ -14813,36 +14865,28 @@ DATE
 2026-08-14
 
 CURRENT PHASE
-Phase 3 — Platform Kernel Baseline
-
-STATUS
-COMPLETE
-
-EXIT OUTCOME
-MINIMAL SHARED SEMANTIC KERNEL
-
-COMPLETED
-P3-M01 — Identifiers
-P3-M02 — Namespace
-P3-M04 — Audit
-P3-M07 — Architecture Enforcement Expansion
-
-DEFERRED WITH ACTIVATION GATES
-P3-M03 — Events — pending real producer/consumer
-P3-M05 — Taxonomy — pending real Knowledge classification consumer
-P3-M06 — Relationships — pending real Knowledge relationship consumer
-
-NEXT PHASE
 Phase 4 — Knowledge Platform
 
-NEXT MILESTONE
+STATUS
+ACTIVE
+
+COMPLETED IN PHASE 4
 P4-M01 — Knowledge Resource Model
+
+NEXT MILESTONE
+P4-M02 — Typed Domain Resource Support
 
 BLOCKED
 None
 
 PHASE 3 TAG STATUS
-phase-3-complete pending this documentation-closure commit and green closure CI
+phase-3-complete ESTABLISHED
+
+P4-M01 IMPLEMENTATION
+af7edb8 feat(knowledge): establish knowledge resource baseline
+
+P4-M01 IMPLEMENTATION CI
+GREEN
 
 DEFERRED / DEMAND-DRIVEN
 P3-M03 Events remains deferred until a real producer/consumer requirement exists.
@@ -14860,7 +14904,7 @@ Graph Database remains deferred; future Relationships should begin with PostgreS
 Universe-specific Kernel behavior remains forbidden.
 ```
 
-## Current Phase 3 Ownership Result
+## Historical Phase 3 Ownership Result at Closure
 
 ```text
 Platform Kernel
@@ -15674,7 +15718,7 @@ aaf6e80 feat(architecture): expand package boundary enforcement
 
 P3-M07 introduced no package, persistence model, migration, queue, broker, Graph Database, or speculative Knowledge/Universe implementation.
 
-## Current Phase 3 Delivery Position
+## Historical Phase 3 Delivery Position at Closure
 
 ```text
 PHASE
@@ -15720,7 +15764,7 @@ NEXT MILESTONE
 P4-M01 — Knowledge Resource Model
 ```
 
-The next implementation work, after the Phase 3 closure tag is established according to Section 411, is:
+At Phase 3 closure, the next implementation work after establishing the Phase 3 tag was:
 
 ```text
 P4-M01 — Knowledge Resource Model
@@ -16114,7 +16158,7 @@ NEXT PHASE
 Phase 3 — Platform Kernel Baseline
 ```
 
-Phase 2 remains closed. Its completed Identity, User, Email, browser-security, persistence, and authorization evidence is retained here as historical closure context. Phase 3 has now also closed, and Phase 4 Knowledge is next.
+Phase 2 remains closed. Its completed Identity, User, Email, browser-security, persistence, and authorization evidence is retained here as historical closure context. Phase 3 has now also closed, and Phase 4 Knowledge is active.
 
 ---
 
@@ -16379,13 +16423,14 @@ Current established phase tags:
 ```text
 phase-1-complete
 phase-2-complete
+phase-3-complete
 ```
 
 Phase 3 does not receive milestone tags for P3-M01, P3-M02, P3-M04, or P3-M07.
 
-Phase 3 itself is now complete at the roadmap level, but the annotated phase tag is intentionally not recorded as established yet.
+Phase 3 is complete and its annotated phase-completion tag is established.
 
-Canonical pending tag:
+Canonical tag:
 
 ```text
 phase-3-complete
@@ -16411,39 +16456,24 @@ P3-M07 implementation CI
 GREEN
 
 Phase 3 roadmap closure
-RECORDED BY THIS FILE
+COMPLETE
 
 Phase 3 documentation closure commit
-PENDING COMMIT/PUSH
+9b424ee96e1722e4fa6774580b960284ab071dbe
 
 Phase 3 documentation closure CI
-PENDING
+GREEN
 
 phase-3-complete
-NOT YET ESTABLISHED
+ESTABLISHED
 ```
 
-After this roadmap file is committed and pushed, wait for the documentation-closure CI to become green. Then verify the exact closure `HEAD` and create the annotated tag against that commit.
-
-Canonical command sequence after green closure CI:
+Verified tag target:
 
 ```text
-git status -sb
-
-git log -5 --oneline --decorate
-
-git rev-parse HEAD
-
-git tag -a phase-3-complete -m "Phase 3 complete"
-
-git show phase-3-complete --no-patch --decorate
-
-git push origin phase-3-complete
-
-git ls-remote --tags origin phase-3-complete
+9b424ee96e1722e4fa6774580b960284ab071dbe
+docs(roadmap): close P3-M07 and Phase 3
 ```
-
-The exact Phase 3 closure commit hash must be read from Git after the documentation closure commit exists. This roadmap must not invent that future hash.
 
 ## Release Tags Remain Separate
 
@@ -16502,12 +16532,12 @@ tag target
     → final phase documentation closure commit after green CI
 ```
 
-The next implementation work, after the Phase 3 documentation-closure CI is green and `phase-3-complete` is established, is:
+The current next implementation work is:
 
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M01 — Knowledge Resource Model
+P4-M02 — Typed Domain Resource Support
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -16524,4 +16554,4 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active, P4-M01 is closed, and P4-M02 is next.
