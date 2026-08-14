@@ -3,6 +3,17 @@ const internalSource = '^(apps|packages)/';
 const productionSource =
   '^(apps/[^/]+|packages/(foundations|kernel|platforms|universes)/[^/]+)/src/';
 
+const packageSource = '^packages/(foundations|kernel|platforms|universes)/([^/]+)/';
+
+const packageProductionSource = '^packages/(foundations|kernel|platforms|universes)/([^/]+)/src/';
+
+const packageInternalSource = '^packages/(foundations|kernel|platforms|universes)/[^/]+/src/';
+
+const packageInfrastructure = [
+  '^packages/(foundations|kernel|platforms|universes)/[^/]+/src/infrastructure([./]|$)',
+  '^packages/(foundations|kernel|platforms|universes)/[^/]+/dist/infrastructure([./]|$)',
+];
+
 export default {
   forbidden: [
     {
@@ -63,6 +74,47 @@ export default {
       to: {
         path: '^apps/',
         pathNot: '^apps/$1/',
+      },
+    },
+
+    {
+      name: 'applications-do-not-deep-import-package-source',
+      comment:
+        'Applications must consume packages through declared package exports rather than package-internal src files.',
+      severity: 'error',
+      from: {
+        path: '^apps/[^/]+/',
+      },
+      to: {
+        path: packageInternalSource,
+      },
+    },
+
+    {
+      name: 'packages-do-not-deep-import-other-package-source',
+      comment:
+        'Packages must consume other packages through declared package exports rather than package-internal src files.',
+      severity: 'error',
+      from: {
+        path: packageSource,
+      },
+      to: {
+        path: packageInternalSource,
+        pathNot: '^packages/$1/$2/src/',
+      },
+    },
+
+    {
+      name: 'package-production-does-not-depend-on-foreign-infrastructure',
+      comment:
+        'Package production source must depend on another package through its public semantic Contract rather than its infrastructure implementation. Application composition roots and integration tests may compose infrastructure.',
+      severity: 'error',
+      from: {
+        path: packageProductionSource,
+      },
+      to: {
+        path: packageInfrastructure,
+        pathNot: '^packages/$1/$2/',
       },
     },
 
@@ -132,6 +184,7 @@ export default {
     exclude: {
       path: '^packages/foundations/database/(src|dist)/generated/',
     },
+
     enhancedResolveOptions: {
       exportsFields: ['exports'],
       conditionNames: ['import', 'require', 'node', 'default'],

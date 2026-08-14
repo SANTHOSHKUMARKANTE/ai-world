@@ -866,3 +866,473 @@ Proof
 ```
 
 This is the canonical Phase 1 architecture-boundary enforcement baseline for AI World.
+
+---
+
+## 36. P3-M07 Architecture Enforcement Expansion
+
+P3-M07 reviewed the Phase 1 dependency-cruiser baseline after the first concrete Platform Kernel packages became real production dependencies.
+
+The review was demand-driven.
+
+It did not replace the existing architecture rules or introduce a new architecture framework.
+
+The existing rules already enforce:
+
+```text
+no circular dependencies;
+
+no unresolvable imports;
+
+no undeclared package dependencies;
+
+no production source dependency on dev-only packages;
+
+no cross-application source dependencies;
+
+Foundations do not depend upward;
+
+Kernel does not depend upward;
+
+Platforms do not depend upward;
+
+Universes do not depend on Applications.
+```
+
+These rules continue to protect the primary architectural layer direction.
+
+### 36.1 Phase 3 Boundary Review
+
+P3-M07 reviewed the concrete package boundaries introduced by:
+
+```text
+@ai-world/kernel-identifiers
+
+@ai-world/kernel-namespace
+
+@ai-world/kernel-audit
+```
+
+and their current consumers:
+
+```text
+Identity & Access Platform
+
+User Platform
+
+API Application composition root.
+```
+
+Identifiers and Namespace expose semantic package-root Contracts.
+
+Audit exposes both:
+
+```text
+@ai-world/kernel-audit
+
+and
+
+@ai-world/kernel-audit/infrastructure
+```
+
+for distinct purposes.
+
+The root Audit export is the semantic Contract consumed by capabilities such as Identity & Access.
+
+The infrastructure export exists so an Application composition root can construct the concrete persistence implementation.
+
+This created a concrete need to distinguish:
+
+```text
+allowed
+Application composition → package infrastructure
+
+from
+
+forbidden
+package production source → foreign package infrastructure.
+```
+
+### 36.2 Concrete Gaps Found
+
+The P1-M13 rules correctly protected architectural layer direction, but they did not prevent every package-boundary bypass.
+
+Three concrete gaps were identified.
+
+#### Application Deep Import
+
+An Application could potentially bypass a package export surface and import another package's internal source file directly.
+
+Conceptually:
+
+```text
+apps/api
+    ↓
+packages/kernel/audit/src/create-audit-record
+```
+
+This bypasses the owner-controlled package export boundary.
+
+#### Cross-Package Source Deep Import
+
+One package could potentially import another package's internal source file directly.
+
+Conceptually:
+
+```text
+packages/platforms/user
+    ↓
+packages/kernel/identifiers/src/resource-id
+```
+
+This couples the consumer to package implementation layout rather than the declared public package Contract.
+
+#### Foreign Infrastructure Consumption
+
+Package production source could potentially depend directly on another package's exported infrastructure implementation.
+
+Conceptually:
+
+```text
+Identity & Access production source
+    ↓
+@ai-world/kernel-audit/infrastructure
+```
+
+This would couple one capability implementation directly to another capability's concrete infrastructure rather than its semantic Contract.
+
+Application composition roots may compose infrastructure.
+
+Production package source should not.
+
+### 36.3 Application Package-Source Boundary
+
+P3-M07 adds:
+
+```text
+applications-do-not-deep-import-package-source
+```
+
+The rule prevents Applications from importing package-internal:
+
+```text
+src/
+```
+
+files directly.
+
+Applications must consume packages through their declared package exports.
+
+Allowed:
+
+```ts
+import type { AuditRecorder } from '@ai-world/kernel-audit';
+```
+
+Allowed at an Application composition boundary:
+
+```ts
+import { PrismaAuditRecorder } from '@ai-world/kernel-audit/infrastructure';
+```
+
+Forbidden:
+
+```text
+apps/api
+    ↓
+packages/kernel/audit/src/create-audit-record
+```
+
+### 36.4 Cross-Package Source Boundary
+
+P3-M07 adds:
+
+```text
+packages-do-not-deep-import-other-package-source
+```
+
+A package may use its own internal source structure normally.
+
+It may not reach directly into another package's internal:
+
+```text
+src/
+```
+
+tree.
+
+Cross-package dependencies must use declared package exports.
+
+Allowed:
+
+```ts
+import type { ResourceId } from '@ai-world/kernel-identifiers';
+```
+
+Forbidden:
+
+```text
+packages/platforms/user/src
+    ↓
+packages/kernel/identifiers/src/resource-id
+```
+
+This protects package implementation ownership independently of architectural layer direction.
+
+### 36.5 Foreign Infrastructure Boundary
+
+P3-M07 adds:
+
+```text
+package-production-does-not-depend-on-foreign-infrastructure
+```
+
+Production package source must consume another package through semantic Contracts rather than through its concrete infrastructure implementation.
+
+Forbidden example:
+
+```text
+packages/platforms/identity-access/src
+    ↓
+@ai-world/kernel-audit/infrastructure
+```
+
+The correct production dependency is:
+
+```text
+Identity & Access
+    ↓
+AuditRecorder Contract
+    ↓
+@ai-world/kernel-audit
+```
+
+The Application composition root may then provide:
+
+```text
+PrismaAuditRecorder
+```
+
+from:
+
+```text
+@ai-world/kernel-audit/infrastructure
+```
+
+This preserves:
+
+```text
+Capability
+    depends on Contract
+
+Application
+    composes implementation.
+```
+
+The rule intentionally applies to package production source.
+
+It does not prohibit legitimate infrastructure composition in:
+
+```text
+Applications;
+
+integration tests.
+```
+
+### 36.6 Negative Architecture Proof
+
+P3-M07 validated each new rule through temporary intentionally invalid source probes.
+
+The probes were not committed.
+
+#### Foreign Infrastructure Probe
+
+Temporary dependency:
+
+```text
+packages/platforms/identity-access/src
+    ↓
+@ai-world/kernel-audit/infrastructure
+```
+
+Result:
+
+```text
+package-production-does-not-depend-on-foreign-infrastructure
+
+REJECTED
+```
+
+#### Cross-Package Source Probe
+
+Temporary dependency:
+
+```text
+packages/platforms/user/src
+    ↓
+packages/kernel/identifiers/src/resource-id
+```
+
+Result:
+
+```text
+packages-do-not-deep-import-other-package-source
+
+REJECTED
+```
+
+#### Application Deep-Import Probe
+
+Temporary dependency:
+
+```text
+apps/api/src
+    ↓
+packages/kernel/audit/src/create-audit-record
+```
+
+Result:
+
+```text
+applications-do-not-deep-import-package-source
+
+REJECTED
+```
+
+All temporary probes were deleted after validation.
+
+### 36.7 Valid Dependency Proof
+
+The expanded rules continue to permit the current intended architecture.
+
+Valid examples include:
+
+```text
+Identity & Access
+    ↓
+@ai-world/kernel-identifiers
+
+Identity & Access
+    ↓
+@ai-world/kernel-namespace
+
+Identity & Access
+    ↓
+@ai-world/kernel-audit
+
+User Platform
+    ↓
+@ai-world/kernel-identifiers
+
+Kernel Audit
+    ↓
+@ai-world/kernel-identifiers
+
+Kernel Audit
+    ↓
+@ai-world/kernel-namespace
+
+Kernel Audit
+    ↓
+@ai-world/foundation-database
+
+API Application
+    ↓
+@ai-world/kernel-audit/infrastructure
+
+API Application
+    ↓
+@ai-world/platform-identity-access/infrastructure
+
+API Application
+    ↓
+@ai-world/platform-user/infrastructure
+```
+
+The Application remains the runtime composition boundary.
+
+### 36.8 P3-M07 Scope Boundary
+
+P3-M07 deliberately does not introduce:
+
+```text
+custom AST architecture tooling;
+
+new dependency graph engine;
+
+Nx architecture plugins;
+
+package-specific dependency-cruiser configuration;
+
+architecture suppression files;
+
+architecture exception registry;
+
+automatic package ownership database;
+
+generic cross-Platform dependency prohibition;
+
+Universe-specific rules without Universe production code;
+
+provider-specific rules without Provider implementations;
+
+Prisma leakage rules without a demonstrated enforcement gap.
+```
+
+The existing dependency-cruiser implementation remains sufficient.
+
+Further architecture rules should be added only when real source demonstrates another concrete ownership gap.
+
+### 36.9 P3-M07 Validation
+
+The clean repository graph after the enforcement expansion is:
+
+```text
+Build
+13 / 13 PASS
+
+Lint
+12 / 12 PASS
+
+Format
+PASS
+
+Architecture
+307 modules
+718 dependencies
+0 violations
+
+Git diff validation
+PASS
+```
+
+Negative probes prove that all three new forbidden dependency forms fail architecture validation.
+
+P3-M07 therefore strengthens package ownership without changing runtime product behavior, persistence, public APIs, or infrastructure topology.
+
+No PostgreSQL, Mailpit, or browser behavior is modified by this milestone.
+
+### 36.10 P3-M07 Architecture Contract
+
+The architecture enforcement baseline now includes:
+
+```text
+Layer direction
+    existing P1-M13 rules
+
+Package export ownership
+    Applications cannot deep-import package src
+    Packages cannot deep-import foreign package src
+
+Infrastructure ownership
+    Package production source cannot depend on foreign package infrastructure
+    Applications may compose exported infrastructure
+
+Proof
+    clean repository graph passes
+    application deep import fails
+    cross-package source deep import fails
+    foreign infrastructure dependency fails
+```
+
+This is the minimal architecture-enforcement expansion justified by the current Phase 3 package graph.
