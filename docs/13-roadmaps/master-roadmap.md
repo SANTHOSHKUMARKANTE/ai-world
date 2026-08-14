@@ -12,7 +12,7 @@
 | Version | 1.0.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-14 |
-| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events DEFERRED; P3-M04 Audit CLOSED; P3-M05 Taxonomy NEXT |
+| Current Delivery | Phase 3 ACTIVE — P3-M01 Identifiers CLOSED; P3-M02 Namespace CLOSED; P3-M03 Events DEFERRED; P3-M04 Audit CLOSED; P3-M05 Taxonomy DEFERRED; P3-M06 Relationships DEFERRED; P3-M07 Architecture Enforcement Expansion NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -610,12 +610,18 @@ P3-M02 — Namespace
 CLOSED
 
 P3-M03 — Events
-DEFERRED
+DEFERRED — no current production consumer
 
 P3-M04 — Audit
 CLOSED
 
 P3-M05 — Taxonomy
+DEFERRED — no current Resource-classification consumer
+
+P3-M06 — Relationships
+DEFERRED — no current Resource-relationship consumer
+
+P3-M07 — Architecture Enforcement Expansion
 NEXT
 ```
 
@@ -635,13 +641,13 @@ P3-M04 — Audit
 CLOSED
 
 P3-M05 — Taxonomy
-NEXT — demand review before implementation
+DEFERRED — no current Resource-classification consumer
 
 P3-M06 — Relationships
-PLANNED
+DEFERRED — no current Resource-relationship consumer
 
 P3-M07 — Architecture Enforcement Expansion
-PLANNED
+NEXT
 ```
 
 Phase 3 remains demand-driven. A listed milestone may be narrowed, deferred, or satisfied by a smaller implementation when real consumers do not justify broader scope.
@@ -663,13 +669,17 @@ P3-M03 has been reviewed against the current repository and remains deferred bec
 
 P3-M04 established the reusable Audit Record baseline through a real security-sensitive Identity consumer. The Audit Kernel owns durable Audit Record mechanics and semantics; Identity & Access owns the meaning of its authorization decision records. P3-M04 does not require Events and does not treat operational logging as Audit.
 
+P3-M05 was reviewed against the current repository and is intentionally deferred because no implemented Resource currently requires reusable shared classification semantics. Knowledge and proof Universes do not yet exist, so creating Taxonomy Definition, Term, hierarchy, classification persistence, or a Taxonomy registry now would be speculative. The first strong activation point remains Phase 4 Knowledge Taxonomy Integration when a real Knowledge Resource requires classification such as Anime Genre or History Era.
+
+P3-M06 was reviewed against the current repository and is intentionally deferred because no implemented production capability currently owns or consumes a semantic Resource-to-Resource Relationship. Existing relational persistence inside Identity and User is capability-owned data modeling and does not justify a shared Relationships Kernel. Knowledge and proof Universes do not yet exist. The first strong activation point remains Phase 4 Knowledge Relationship Integration when real typed Knowledge Resources require connections such as Character APPEARS_IN Series or Person PARTICIPATED_IN Event.
+
 The next implementation milestone is:
 
 ```text
-P3-M05 — Taxonomy
+P3-M07 — Architecture Enforcement Expansion
 ```
 
-P3-M05 must begin with a demand review. It should establish only the smallest Taxonomy semantics required by upcoming Knowledge proof work and must not build a speculative taxonomy platform before a real Resource-classification consumer exists.
+P3-M07 should strengthen only architecture rules justified by the source areas that now actually exist: Foundations, Platform Kernel packages, Identity & Access, User, API, and Web. It must not invent enforcement for future Knowledge or Universe packages before those areas materialize.
 
 ---
 
@@ -9304,23 +9314,83 @@ The next work is P3-M05 Taxonomy demand review. Taxonomy should be implemented o
 
 # 100. Phase 3 Milestone P3-M05 — Taxonomy
 
-Implement minimal:
+P3-M05 was demand-reviewed before introducing a Taxonomy Kernel package or persistence model.
+
+Milestone status:
 
 ```text
-Taxonomy Definition;
-
-Term;
-
-Resource classification.
+P3-M05 — Taxonomy
+DEFERRED — no current Resource-classification consumer
 ```
 
-Only features needed by proof Universes.
+Current repository evidence:
+
+```text
+implemented Knowledge Platform
+NONE
+
+implemented Universe packages
+NONE
+
+production Resource-classification consumer
+NONE
+
+Taxonomy Definition consumer
+NONE
+
+Taxonomy Term consumer
+NONE
+
+shared classification persistence requirement
+NONE
+```
+
+The current Identity & Access and User Platforms do not require a shared Taxonomy semantic. Existing Role, Permission, profile, Session, verification, Recovery, and Audit concepts remain owned by their existing capabilities and must not be forced into Taxonomy merely to materialize the roadmap item.
+
+P3-M05 therefore introduces:
+
+```text
+NO @ai-world/kernel-taxonomy package
+
+NO Taxonomy Definition model
+
+NO Term model
+
+NO Resource classification model
+
+NO Taxonomy registry
+
+NO hierarchy implementation
+
+NO Prisma schema change
+
+NO database migration
+```
+
+The first strong activation point remains:
+
+```text
+Phase 4
+P4-M05 — Taxonomy Integration
+```
+
+when a real Knowledge Resource requires reusable classification semantics such as:
+
+```text
+Anime
+Genre
+
+History
+Era / historical classification
+```
+
+At activation, begin with only the smallest shared contract required by the real Knowledge consumer.
 
 ---
 
 # 101. Taxonomy Deferred Features
 
-Potentially defer:
+While P3-M05 remains deferred, the following also remain intentionally unimplemented:
 
 ```text
 complex hierarchy;
@@ -9329,58 +9399,167 @@ aliases;
 
 localization;
 
-advanced governance
+advanced governance;
+
+taxonomy administration UI;
+
+generic ontology machinery;
+
+cross-Universe taxonomy infrastructure without a consumer.
 ```
 
-until needed.
+Activation requires an implemented Resource that needs reusable classification through a shared Taxonomy Definition/Term semantic.
 
 ---
 
 # 102. Phase 3 Milestone P3-M06 — Relationships
 
-Implement:
+P3-M06 was demand-reviewed before introducing a Relationships Kernel package, relationship persistence, or graph-style infrastructure.
+
+Milestone status:
 
 ```text
-Relationship Type;
-
-Relationship Instance;
-
-source/target validation;
-
-direction;
-
-basic traversal.
+P3-M06 — Relationships
+DEFERRED — no current Resource-relationship consumer
 ```
+
+Repository inspection found:
+
+```text
+implemented Knowledge Platform
+NONE
+
+implemented Universe packages
+NONE
+
+production semantic Resource-to-Resource Relationship consumer
+NONE
+
+Relationship Type consumer
+NONE
+
+Relationship Instance consumer
+NONE
+
+relationship traversal consumer
+NONE
+```
+
+Existing database relations such as Actor/User, Actor/Session, Actor/Role, and Audit Resource references are capability-owned persistence/reference semantics. They do not represent the shared typed Resource-connection capability described by K5 Relationships.
+
+The architecture remains reserved for a future real consumer:
+
+```text
+Relationships Kernel
+    owns shared Relationship Type mechanics
+    owns canonical Relationship Instance semantics
+    owns validation mechanics
+    owns traversal semantics
+
+defining Platform or Universe
+    owns the domain meaning of each Relationship Type
+
+source and target Resource owners
+    retain ownership of their Resources
+```
+
+P3-M06 therefore introduces:
+
+```text
+NO @ai-world/kernel-relationships package
+
+NO Relationship Type model
+
+NO Relationship Instance model
+
+NO Relationship Type registry
+
+NO source/target validator framework
+
+NO traversal API
+
+NO relationship persistence table
+
+NO Prisma schema change
+
+NO database migration
+
+NO Graph Database
+
+NO Neo4j
+
+NO Event dependency
+
+NO queue or broker
+```
+
+The first strong activation point remains:
+
+```text
+Phase 4
+P4-M06 — Relationship Integration
+```
+
+when real typed Knowledge Resources require connections such as:
+
+```text
+Anime Character
+    APPEARS_IN
+Series
+
+History Person
+    PARTICIPATED_IN
+Event
+```
+
+At activation, the Relationships Kernel must remain Universe-neutral. Anime or History owns the meaning of concrete Relationship Types; the Kernel owns only shared mechanics.
 
 ---
 
 # 103. Relationships Storage
 
-Initial persistence:
+Because P3-M06 is deferred, no Relationship persistence is introduced during the current Phase 3 baseline.
+
+When a real Relationship consumer activates the capability, the default first persistence remains:
 
 ```text
 PostgreSQL.
 ```
 
-No Graph Database.
+Do not introduce a Graph Database merely because the concept is called Relationships.
+
+A Graph Database may be evaluated only if measured traversal, scale, or query requirements later prove PostgreSQL insufficient.
+
 
 ---
 
 # 104. Phase 3 Milestone P3-M07 — Architecture Enforcement Expansion
 
-Once multiple architectural areas exist, strengthen automated rules:
+P3-M07 is the next active Phase 3 milestone after the demand-driven deferral of Events, Taxonomy, and Relationships where no current consumers exist.
+
+Strengthen automated rules only where current repository structure provides real boundaries to protect.
+
+Review and, where gaps are proven, enforce:
 
 ```text
 Foundation → Platform forbidden;
 
 Kernel → Platform forbidden;
 
-Platform → Universe forbidden;
+Platform → Universe forbidden when Universe packages materialize;
 
 deep-import restrictions;
 
-cycle detection.
+workspace/public-entrypoint restrictions;
+
+cycle detection;
+
+application/layer dependency direction;
+
+Kernel independence from named Platforms.
 ```
+
+Do not create speculative architecture rules for package areas that do not yet exist. P3-M07 should expand the existing dependency-cruiser baseline from concrete violations or concrete unprotected boundaries, not from imagined future repository shapes.
 
 ---
 
@@ -9407,16 +9586,20 @@ cross-consumer reuse.
 Phase 3 closes when:
 
 ```text
-required Kernel capabilities exist;
+all currently demand-justified Kernel capabilities are implemented or explicitly deferred with activation gates;
 
-Identity can consume them where relevant;
+Identity consumes implemented Kernel semantics where relevant;
 
-Knowledge can begin without inventing duplicated primitives;
+deferred Knowledge-driven capabilities have clear ownership and Phase 4 activation points;
 
 no Kernel capability contains Anime/History-specific business logic;
 
-architecture checks protect the primary layer direction.
+architecture checks protect the primary layer direction;
+
+no speculative distributed or graph infrastructure was introduced.
 ```
+
+A deferred milestone does not block Phase 3 closure merely because it appeared in the original likely scope. Deferral is valid when repository evidence shows no current consumer and the roadmap preserves a concrete future activation gate.
 
 ---
 
@@ -11369,8 +11552,8 @@ The following table provides the default first meaningful implementation phase.
 | Namespace | Phase 3 |
 | Events | Phase 3 |
 | Audit | Phase 3 or pulled into Phase 2 |
-| Taxonomy | Phase 3 |
-| Relationships | Phase 3 |
+| Taxonomy | Phase 3 demand review; activate with Phase 4 Knowledge classification when required |
+| Relationships | Phase 3 demand review; activate with Phase 4 Knowledge relationships when required |
 | Knowledge | Phase 4 |
 | Anime Universe | Phase 4 |
 | History Universe | Phase 4 |
@@ -13543,17 +13726,62 @@ Architecture
 
 GitHub Actions CI / Validate
 PASS
+
+P3-M05 — Taxonomy
+DEFERRED — no current Resource-classification consumer
+
+Implemented Knowledge Platform
+NONE
+
+Implemented Universe packages
+NONE
+
+Kernel Taxonomy package
+not created
+
+Taxonomy persistence migration
+not required
+
+First activation gate
+Phase 4 P4-M05 Knowledge Taxonomy Integration
+
+P3-M06 — Relationships
+DEFERRED — no current Resource-relationship consumer
+
+Production semantic Resource-to-Resource Relationship consumer
+NONE
+
+Implemented Knowledge Platform
+NONE
+
+Implemented Universe packages
+NONE
+
+Kernel Relationships package
+not created
+
+Relationship persistence migration
+not required
+
+Graph Database
+not introduced
+
+First activation gate
+Phase 4 P4-M06 Knowledge Relationship Integration
+
+P3-M07 — Architecture Enforcement Expansion
+NEXT
 ```
 
-Phase 3 completion still requires the remaining demand-justified Kernel work and the closure criteria in Section 106.
+Phase 3 completion still requires P3-M07 and the closure criteria in Section 106.
 
 The next milestone is:
 
 ```text
-P3-M05 — Taxonomy
+P3-M07 — Architecture Enforcement Expansion
 ```
 
-P3-M05 begins with demand review rather than automatic implementation.
+P3-M07 begins by inspecting the architecture rules already enforced by dependency-cruiser and should add only concrete missing protections justified by the repository areas that currently exist.
 
 ---
 
@@ -13812,9 +14040,9 @@ PLATFORM KERNEL BASELINE
     ✅ P3-M02 Namespace — CLOSED
     ↷  P3-M03 Events — DEFERRED (pending real consumer)
     ✅ P3-M04 Audit — CLOSED
-    →  P3-M05 Taxonomy — NEXT (demand review)
-    P3-M06 Relationships — PLANNED
-    P3-M07 Architecture Enforcement Expansion — PLANNED
+    ↷  P3-M05 Taxonomy — DEFERRED (no current Resource-classification consumer)
+    ↷  P3-M06 Relationships — DEFERRED (no current Resource-relationship consumer)
+    →  P3-M07 Architecture Enforcement Expansion — NEXT
     other Kernel capabilities only as required
 
 
@@ -14226,19 +14454,23 @@ P3-M02 — Namespace
 P3-M04 — Audit
 
 DEFERRED
-P3-M03 — Events — pending real consumer
+P3-M03 — Events — no current production consumer
+P3-M05 — Taxonomy — no current Resource-classification consumer
+P3-M06 — Relationships — no current Resource-relationship consumer
 
 CURRENT MILESTONE
-P3-M05 — Taxonomy
+P3-M07 — Architecture Enforcement Expansion
 
 NEXT
-P3-M05 — Taxonomy — demand review before implementation
+P3-M07 — Architecture Enforcement Expansion — inspect current enforcement gaps before changing rules
 
 BLOCKED
 None
 
 DEFERRED / DEMAND-DRIVEN
 P3-M03 Events remains deferred until a real producer/consumer requirement exists.
+P3-M05 Taxonomy remains deferred until an implemented Resource requires reusable shared classification semantics.
+P3-M06 Relationships remains deferred until implemented Resources require a reusable typed Resource-to-Resource connection.
 Metadata remains deferred until a real consumer requires it.
 Workflow remains deferred until a real consumer requires it.
 Policy remains deferred until a real consumer requires it.
@@ -14247,7 +14479,7 @@ Versioning remains deferred until a real consumer requires it.
 Audit Query remains deferred until a real search/view consumer exists.
 Audit Retention remains deferred until a real retention requirement exists.
 Distributed Event infrastructure remains deferred; no Kafka or RabbitMQ is justified.
-Graph Database remains deferred; Relationships begin with PostgreSQL when required.
+Graph Database remains deferred; future Relationships should begin with PostgreSQL when required.
 Universe-specific Kernel behavior remains forbidden.
 ```
 
@@ -14879,6 +15111,108 @@ PASS
 
 The implementation checkpoint is pushed to `origin/main` and remote CI is green.
 
+## P3-M05 Taxonomy Demand Review
+
+P3-M05 was reviewed against the implemented repository before creating a Taxonomy Kernel capability.
+
+Current result:
+
+```text
+P3-M05 — Taxonomy
+DEFERRED — no current Resource-classification consumer
+
+Knowledge Platform
+not implemented
+
+Universe packages
+not implemented
+
+shared Resource classification
+not present
+
+Taxonomy package
+not created
+
+Taxonomy persistence
+not introduced
+
+database migration
+not required
+```
+
+The first strong consumer remains Phase 4 Knowledge Taxonomy Integration when actual Knowledge Resources require reusable classification such as Anime Genre or History Era.
+
+Wake-up condition:
+
+```text
+an implemented canonical Resource
+requires reusable shared classification
+through Taxonomy Definition / Term semantics
+```
+
+## P3-M06 Relationships Demand Review
+
+P3-M06 was reviewed against the implemented repository before creating a Relationships Kernel capability.
+
+Current result:
+
+```text
+P3-M06 — Relationships
+DEFERRED — no current Resource-relationship consumer
+
+Knowledge Platform
+not implemented
+
+Universe packages
+not implemented
+
+semantic Resource-to-Resource relationship
+not present in production
+
+Relationships package
+not created
+
+Relationship persistence
+not introduced
+
+Graph Database
+not introduced
+
+database migration
+not required
+```
+
+Repository searches found Audit Resource references and ordinary capability-owned persistence relations, but no shared semantic Relationship Type/Instance consumer.
+
+The architecture remains reserved for future Knowledge proof:
+
+```text
+Relationships Kernel
+    owns shared mechanics
+
+defining Platform / Universe
+    owns concrete Relationship Type meaning
+
+source and target Resource owners
+    retain Resource ownership
+```
+
+The first strong consumer remains Phase 4 Knowledge Relationship Integration, with proof examples such as:
+
+```text
+Anime Character APPEARS_IN Series
+
+History Person PARTICIPATED_IN Event
+```
+
+Wake-up condition:
+
+```text
+implemented canonical Resources
+require a reusable typed connection
+through shared Relationship mechanics
+```
+
 ## Current Phase 3 Delivery Position
 
 ```text
@@ -14901,13 +15235,13 @@ P3-M04 — Audit
 CLOSED
 
 P3-M05 — Taxonomy
-NEXT — demand review before implementation
+DEFERRED — no current Resource-classification consumer
 
 P3-M06 — Relationships
-PLANNED
+DEFERRED — no current Resource-relationship consumer
 
 P3-M07 — Architecture Enforcement Expansion
-PLANNED
+NEXT
 
 BLOCKERS
 NONE
@@ -14919,10 +15253,10 @@ NOT YET REACHED
 The next implementation work is:
 
 ```text
-P3-M05 — Taxonomy
+P3-M07 — Architecture Enforcement Expansion
 ```
 
-P3-M05 begins with demand inspection of upcoming Knowledge classification needs. If no real shared Taxonomy consumer exists yet, the milestone may be narrowed or deferred rather than implemented speculatively.
+P3-M07 begins with inspection of the existing dependency-cruiser and workspace boundary rules. Only concrete missing protections should be added; future Knowledge/Universe rules should not be invented before those packages exist.
 
 ## Historical Phase 2 Closure Context
 
@@ -15645,7 +15979,7 @@ tag target
 The next implementation work is:
 
 ```text
-P3-M05 — Taxonomy
+P3-M07 — Architecture Enforcement Expansion
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -15656,4 +15990,8 @@ P3-M03 was reviewed and intentionally deferred because the current production co
 
 P3-M04 established the durable Audit Record baseline through `@ai-world/kernel-audit`, PostgreSQL `audit_records`, and a real Identity authorization-decision consumer. Audit remains separate from Events and operational logging; Audit Query and Retention remain deferred until real consumers require them.
 
-The immediate Phase 3 task is now P3-M05 Taxonomy demand review: determine whether upcoming Knowledge proof work has a concrete shared classification requirement, and implement only the smallest justified Taxonomy contract if that requirement exists.
+P3-M05 Taxonomy was demand-reviewed and intentionally deferred because no implemented Resource currently requires reusable shared classification semantics. No Taxonomy package, persistence model, registry, or migration was introduced. Its first strong activation gate remains Phase 4 Knowledge Taxonomy Integration.
+
+P3-M06 Relationships was demand-reviewed and intentionally deferred because no implemented production capability currently requires a shared semantic Resource-to-Resource relationship. No Relationships package, Relationship Type/Instance persistence, traversal layer, Graph Database, or migration was introduced. Its first strong activation gate remains Phase 4 Knowledge Relationship Integration.
+
+The immediate Phase 3 task is now P3-M07 Architecture Enforcement Expansion: inspect the current dependency rules and strengthen only concrete unprotected boundaries that exist in the repository today.
