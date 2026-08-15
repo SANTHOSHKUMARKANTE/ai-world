@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-15 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -680,6 +680,9 @@ P4-M06 — Relationship Integration
 DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer
 
 P4-M07 — Knowledge Lifecycle
+CLOSED
+
+P4-M08 — Knowledge Events
 NEXT
 ```
 
@@ -750,7 +753,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M07 — Knowledge Lifecycle
+P4-M08 — Knowledge Events
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -801,6 +804,41 @@ remains CLOSED and unchanged
 ```
 
 This amendment changes forward delivery strategy only. Historical Phase 3 demand-review evidence remains historical evidence and is not retroactively rewritten.
+
+P4-M07 is now CLOSED. It expanded the Knowledge-owned lifecycle from DRAFT-only to the smallest accepted monotonic lifecycle:
+
+```text
+DRAFT
+    ↓
+PUBLISHED
+    ↓
+ARCHIVED
+```
+
+Knowledge now exposes explicit publish and archive owner operations plus actor-facing protected wrappers. Publication is permitted only from DRAFT and archival only from PUBLISHED. Invalid source states fail with `knowledge.resource.lifecycle_conflict`; missing targets preserve `knowledge.resource.not_found`. Knowledge owns the `knowledge.resource.publish` and `knowledge.resource.archive` action semantics, while Identity & Access continues to own Permission representation and evaluation. Administrator and `knowledge-editor` receive both lifecycle Permissions; ordinary persisted Users receive neither automatically. Authorization remains ahead of Resource parsing, lookup, and mutation.
+
+P4-M07 reused the existing persisted lifecycle column, so the Prisma schema remained unchanged. Data-only migration `20260815162000_knowledge_lifecycle_authorization` added the two lifecycle Permissions and Role grants, bringing the canonical migration count to 12. P4-M07 did not add reverse transitions, restore/unpublish, scheduled publication, approval workflow, a Workflow Kernel, business Events, API/Web behavior, or Devotional-specific lifecycle branching.
+
+Implementation checkpoint:
+
+```text
+aaa9e88 feat(knowledge): establish lifecycle baseline
+```
+
+The implementation checkpoint is pushed to `origin/main`. GitHub Actions CI run `31895231315` completed successfully for exact commit `aaa9e88e474b4ae055f7ceac76ebb10342f0e585`.
+
+P4-M07 LOCAL VALIDATION
+
+```text
+21 / 21 validation steps PASS
+Knowledge unit tests: 4 files / 25 tests PASS
+Knowledge integration tests: 4 files / 15 tests PASS
+Canonical migrations: 12
+Devotional consumer typecheck: PASS
+Architecture: 347 modules / 875 dependencies / 0 violations
+```
+
+P4-M08 — Knowledge Events is next. Event Contracts remain undefined until the next milestone establishes a real producer/consumer boundary.
 
 ---
 
@@ -11110,19 +11148,182 @@ P4-M07 should expand the current DRAFT-only Knowledge lifecycle only as far as t
 
 # 119. Phase 4 Milestone P4-M07 — Knowledge Lifecycle
 
-Begin with a simple lifecycle.
+Current milestone status:
 
-Possible baseline:
+```text
+CLOSED
+```
+
+P4-M07 establishes the smallest real lifecycle required by canonical Knowledge publication semantics:
 
 ```text
 DRAFT
-
+    ↓
 PUBLISHED
-
-ARCHIVED.
+    ↓
+ARCHIVED
 ```
 
-Do not build full Workflow engine merely to support three states.
+Lifecycle ownership remains with the Knowledge Platform.
+
+Canonical lifecycle vocabulary:
+
+```text
+DRAFT
+PUBLISHED
+ARCHIVED
+```
+
+Allowed transitions:
+
+```text
+DRAFT -> PUBLISHED
+PUBLISHED -> ARCHIVED
+```
+
+Not introduced:
+
+```text
+PUBLISHED -> DRAFT
+ARCHIVED -> PUBLISHED
+restore
+unpublish
+scheduled publication
+approval workflow
+generic transition graph
+generic Workflow engine
+```
+
+P4-M07 introduces explicit owner operations:
+
+```text
+PublishKnowledgeResource
+ArchiveKnowledgeResource
+```
+
+and protected actor-facing operations:
+
+```text
+PublishKnowledgeResourceAsActor
+ArchiveKnowledgeResourceAsActor
+```
+
+Knowledge owns the semantic Permission actions:
+
+```text
+knowledge.resource.publish
+knowledge.resource.archive
+```
+
+Identity & Access remains the owner of Role, Permission representation, assignment, and evaluation. The existing `administrator` and `knowledge-editor` Roles receive both lifecycle Permissions. No automatic Role assignment is introduced for ordinary Users.
+
+Authorization ordering remains:
+
+```text
+evaluate Permission
+    ↓
+if denied: forbidden, no Resource parse/lookup/mutation
+    ↓
+if allowed: perform Knowledge lifecycle operation
+```
+
+Lifecycle transition failures are intentionally distinguished:
+
+```text
+missing Resource
+    knowledge.resource.not_found
+    kind: not_found
+
+existing Resource in invalid source lifecycle
+    knowledge.resource.lifecycle_conflict
+    kind: conflict
+```
+
+The Prisma-backed Knowledge repository performs a conditional lifecycle update using the expected source lifecycle. This prevents an invalid lifecycle source state from being silently overwritten.
+
+Persistence impact:
+
+```text
+Prisma schema change
+NONE
+
+existing knowledge_resources.lifecycle column
+REUSED
+
+data-only authorization migration
+20260815162000_knowledge_lifecycle_authorization
+
+canonical migration count
+12
+```
+
+P4-M07 deliberately does not introduce:
+
+```text
+Workflow Kernel
+Events Kernel
+Knowledge lifecycle Events
+reverse lifecycle transitions
+restore/unpublish
+scheduled publication
+approval/review workflow
+API routes
+Web UI
+Devotional-specific lifecycle behavior
+Anime or History
+```
+
+Implementation checkpoint:
+
+```text
+aaa9e88 feat(knowledge): establish lifecycle baseline
+```
+
+Exact implementation commit:
+
+```text
+aaa9e88e474b4ae055f7ceac76ebb10342f0e585
+```
+
+GitHub Actions implementation CI:
+
+```text
+run 31895231315
+PASS
+```
+
+P4-M07 LOCAL VALIDATION
+
+```text
+21 / 21 validation steps PASS
+
+Knowledge unit tests
+4 files / 25 tests PASS
+
+Knowledge integration tests
+4 files / 15 tests PASS
+
+Database migrations
+12 / up to date
+
+Devotional consumer typecheck
+PASS
+
+Architecture
+347 modules
+875 dependencies
+0 violations
+```
+
+P4-M07 closure proves that canonical Knowledge now owns a minimal persisted publication lifecycle without introducing a generalized Workflow engine or prematurely materializing business Events.
+
+The next milestone is:
+
+```text
+P4-M08 — Knowledge Events
+```
+
+P4-M08 must establish whether a real producer/consumer boundary now justifies activating the deferred Events capability. Event names, envelope Contracts, and delivery mechanics remain intentionally undefined until that review.
 
 ---
 
@@ -15187,7 +15388,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M07 — Knowledge Lifecycle
+P4-M08 — Knowledge Events
 ```
 
 ---
@@ -15440,6 +15641,55 @@ Database migration NONE
 Canonical migrations remain 11
 Devotional source change NONE
 Knowledge source change NONE
+
+P4-M07 — Knowledge Lifecycle
+CLOSED
+
+Lifecycle
+DRAFT -> PUBLISHED -> ARCHIVED
+
+Allowed transitions
+DRAFT -> PUBLISHED
+PUBLISHED -> ARCHIVED
+
+Reverse transitions
+NONE
+
+Lifecycle owner operations
+PublishKnowledgeResource
+ArchiveKnowledgeResource
+
+Protected actor operations
+PublishKnowledgeResourceAsActor
+ArchiveKnowledgeResourceAsActor
+
+Permission actions
+knowledge.resource.publish
+knowledge.resource.archive
+
+Lifecycle conflict
+knowledge.resource.lifecycle_conflict
+
+Prisma schema change
+NONE
+
+Data-only migration
+20260815162000_knowledge_lifecycle_authorization
+
+Canonical migrations
+12
+
+Implementation checkpoint
+aaa9e88 feat(knowledge): establish lifecycle baseline
+
+Implementation CI
+GitHub Actions run 31895231315 — PASS
+
+Local validation
+21 / 21 steps PASS
+25 unit tests PASS
+15 integration tests PASS
+347 modules / 875 dependencies / 0 architecture violations
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -15458,10 +15708,12 @@ P4-M06 then demand-reviewed Relationships against the same implemented Devotiona
 
 Phase 4 remains active.
 
+P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAFT -> PUBLISHED -> ARCHIVED` semantics, protected publish/archive operations, conditional persistence transitions, and no generic Workflow engine. Events remain separate and are evaluated in P4-M08.
+
 The current next milestone is:
 
 ```text
-P4-M07 — Knowledge Lifecycle
+P4-M08 — Knowledge Events
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -15729,7 +15981,8 @@ KNOWLEDGE
     ✅ P4-M04 Knowledge Authorization — CLOSED
     ↷  P4-M05 Taxonomy Integration — DEFERRED (no implemented Devotional classification consumer)
     ↷  P4-M06 Relationship Integration — DEFERRED (no implemented Devotional Resource-to-Resource relationship consumer)
-    → P4-M07 Knowledge Lifecycle — NEXT
+    ✅ P4-M07 Knowledge Lifecycle — CLOSED
+    → P4-M08 Knowledge Events — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -16135,13 +16388,14 @@ P4-M01 — Knowledge Resource Model
 P4-M02 — Typed Domain Resource Support
 P4-M03 — Knowledge CRUD Baseline
 P4-M04 — Knowledge Authorization
+P4-M07 — Knowledge Lifecycle
 
 DEFERRED IN PHASE 4
 P4-M05 — Taxonomy Integration — no implemented Devotional classification consumer
 P4-M06 — Relationship Integration — no implemented Devotional Resource-to-Resource relationship consumer
 
 NEXT MILESTONE
-P4-M07 — Knowledge Lifecycle
+P4-M08 — Knowledge Events
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -16232,6 +16486,24 @@ Prisma schema unchanged
 No migration
 Canonical migrations remain 11
 Decision: DEFERRED
+
+P4-M07 IMPLEMENTATION RESULT
+Knowledge lifecycle DRAFT -> PUBLISHED -> ARCHIVED
+Allowed transitions DRAFT -> PUBLISHED and PUBLISHED -> ARCHIVED
+Reverse transitions none
+Publish/archive owner operations implemented
+Actor-facing publish/archive authorization implemented
+Permissions knowledge.resource.publish / knowledge.resource.archive
+Administrator + knowledge-editor granted both
+Ordinary User default deny preserved
+Lifecycle conflict knowledge.resource.lifecycle_conflict
+Prisma schema unchanged
+Data-only migration 20260815162000_knowledge_lifecycle_authorization
+Canonical migrations 12
+Implementation aaa9e88
+CI run 31895231315 PASS
+Local validation 21 / 21 PASS
+Decision: CLOSED
 
 BLOCKED
 None
@@ -17912,7 +18184,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M07 — Knowledge Lifecycle
+P4-M08 — Knowledge Events
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -17929,7 +18201,7 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, and P4-M04 are closed; P4-M05 and P4-M06 are deferred after demand review; and P4-M07 is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, P4-M04, and P4-M07 are closed; P4-M05 and P4-M06 are deferred after demand review; and P4-M08 is next.
 
 P4-M02 established the first Devotional typed resource only. Anime remains deferred to its later second-Universe reuse-test milestone, and History remains the later third structural reuse test.
 
@@ -17939,4 +18211,6 @@ P4-M04 established shared authorization around Knowledge create/update mutations
 
 P4-M05 demand-reviewed Taxonomy Integration against the implemented Devotional domain and found no real reusable classification consumer. The Taxonomy Kernel therefore remains deferred and unmaterialized.
 
-P4-M06 demand-reviewed Relationship Integration against the same implemented Devotional domain and found no real reusable Resource-to-Resource relationship consumer. With only `DeityResource` implemented and no `TempleResource` or other second Devotional Resource present, the Relationships Kernel remains deferred and unmaterialized. P4-M07 Knowledge Lifecycle is next.
+P4-M06 demand-reviewed Relationship Integration against the same implemented Devotional domain and found no real reusable Resource-to-Resource relationship consumer. With only `DeityResource` implemented and no `TempleResource` or other second Devotional Resource present, the Relationships Kernel remains deferred and unmaterialized.
+
+P4-M07 then established the smallest canonical Knowledge lifecycle: `DRAFT -> PUBLISHED -> ARCHIVED`, with explicit protected publish/archive operations, lifecycle-specific Permission actions, conditional persistence, and no generalized Workflow engine. P4-M08 Knowledge Events is next.
