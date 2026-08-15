@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-15 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -665,6 +665,9 @@ P4-M01 — Knowledge Resource Model
 CLOSED
 
 P4-M02 — Typed Domain Resource Support
+CLOSED
+
+P4-M03 — Knowledge CRUD Baseline
 NEXT
 ```
 
@@ -735,10 +738,22 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M02 — Typed Domain Resource Support
+P4-M03 — Knowledge CRUD Baseline
 ```
 
-P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged. P4-M02 must now prove typed domain specialization through Devotional only. Anime is not implemented in P4-M02; it is introduced later as the second-Universe reuse test after Devotional has established enough real shared architecture. History remains the later third structural reuse test. Deferred Events, Taxonomy, and Relationships should be activated only when a real Phase 4 consumer establishes their exact semantics.
+P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
+
+P4-M02 is now CLOSED. It established the first Devotional-owned typed specialization through `@ai-world/universe-devotional`, with `DeityResource` specializing the existing canonical `KnowledgeResource`. The Devotional Universe key is `universe.devotional`, the Deity Resource Type key is `devotional.deity`, Knowledge remains unaware of Devotional, and no Anime or History package was materialized.
+
+Implementation checkpoint:
+
+```text
+dbb4a9a feat(devotional): establish deity resource type
+```
+
+The implementation checkpoint is pushed to `origin/main` and its GitHub Actions CI / Validate run is green.
+
+P4-M03 is next. It should add only the canonical Knowledge create/read/update operations required by the roadmap without pulling Authorization, lifecycle expansion, Events, Taxonomy, Relationships, Sources, Citations, Media, Search, or Anime forward prematurely.
 
 Roadmap amendment recorded on 2026-08-15:
 
@@ -10028,7 +10043,7 @@ Phase 4 is the first major multi-Universe architecture proof and should activate
 
 Purpose:
 
-> **Build AI World's canonical structured, typed, connected Knowledge capability and prove it first against Devotional and Anime, while retaining History as the later third structural reuse test.**
+> **Build AI World's canonical structured, typed, connected Knowledge capability beginning with Devotional, then validate reuse through Anime, while retaining History as the later third structural reuse test.**
 
 ---
 
@@ -10054,13 +10069,15 @@ without becoming untyped or Universe-specific.
 
 # 110. Phase 4 Repository Materialization
 
-Current Phase 4 materialization begins with:
+Current Phase 4 materialization is:
 
 ```text
 packages/platforms/knowledge/
+
+packages/universes/devotional/
 ```
 
-The Devotional and Anime Universe packages are introduced only when the typed multi-Universe proof requires them. History remains deferred as the later third structural reuse test. Deferred Kernel capabilities remain deferred and are activated only when a concrete consumer establishes the required semantics.
+Devotional is now the first materialized Universe and consumes the Knowledge public Contract. Anime remains intentionally unmaterialized until its later second-Universe reuse-test milestone. History remains deferred as the later third structural reuse test. Deferred Kernel capabilities remain deferred and are activated only when a concrete consumer establishes the required semantics.
 
 ---
 
@@ -10117,54 +10134,216 @@ for every domain concept.
 
 # 113. Phase 4 Milestone P4-M02 — Typed Domain Resource Support
 
-Prove shared Knowledge can support the first real typed domain model owned by Devotional while Knowledge remains generic and Universe-neutral.
+P4-M02 proved that shared Knowledge can support the first real typed domain model owned by Devotional while Knowledge remains generic and Universe-neutral.
 
-Initial typed proof:
+Milestone status:
 
 ```text
-Devotional
-    Deity
+CLOSED
 ```
 
-P4-M02 should implement only the smallest useful Devotional-owned typed specialization against the existing canonical `KnowledgeResource`.
+Implemented scope:
 
-The expected dependency direction is:
+```text
+@ai-world/universe-devotional
+
+DEVOTIONAL_UNIVERSE_KEY
+    universe.devotional
+
+DEVOTIONAL_DEITY_RESOURCE_TYPE
+    devotional.deity
+
+DeityResource
+    extends KnowledgeResource
+    narrows universeKey to universe.devotional
+    narrows resourceType to devotional.deity
+    adds name: string
+```
+
+The canonical dependency direction is:
 
 ```text
 Devotional Universe
-    →
-Knowledge public Contract
+    ↓
+@ai-world/platform-knowledge public Contract
 ```
 
-Knowledge must not import Devotional.
+Knowledge does not import Devotional.
 
-P4-M02 explicitly introduces:
+Canonical ownership remains:
+
+```text
+Knowledge Platform
+    owns canonical Knowledge Resource identity
+    owns canonical lifecycle semantics
+    owns canonical persistence
+
+Devotional Universe
+    owns the concrete meaning of Deity
+    owns the Devotional Universe key
+    owns the Deity Resource Type key
+    owns Devotional-specific typed fields
+```
+
+P4-M02 introduced no new Knowledge abstraction merely to make Universe specialization symmetrical. The existing `KnowledgeResource` Contract was sufficient.
+
+P4-M02 deliberately introduced:
 
 ```text
 NO Anime package or Anime domain model;
 
 NO History package or History domain model;
 
+NO Knowledge source modification;
+
+NO Prisma schema change;
+
+NO database migration;
+
 NO central switch(universe);
 
 NO central switch(resourceType);
 
-NO universal TypedKnowledgeResource<T> engine merely for symmetry;
+NO universal TypedKnowledgeResource<T> engine;
 
-NO generic Metadata/JSON object engine.
+NO generic Metadata/JSON object engine;
+
+NO CRUD;
+
+NO Authorization;
+
+NO Taxonomy;
+
+NO Relationships;
+
+NO lifecycle expansion;
+
+NO Events;
+
+NO Sources;
+
+NO Citations;
+
+NO Temporal semantics;
+
+NO Media;
+
+NO Search.
 ```
 
-P4-M02 must also not pull forward CRUD, Authorization, Taxonomy, Relationships, lifecycle expansion, Events, Sources, Citations, Temporal semantics, Media, or Search.
+Focused Devotional validation proves:
 
-Knowledge remains the owner of canonical Resource semantics.
+```text
+canonical Devotional Universe key
+PASS
 
-Devotional owns the concrete meaning of Deity.
+canonical Deity Resource Type key
+PASS
 
-Anime is intentionally deferred until a later reuse-test milestone.
+DeityResource specializes KnowledgeResource
+PASS
+
+focused Devotional tests
+3 / 3 PASS
+
+Devotional lint
+PASS
+
+Devotional TypeScript
+PASS
+
+Devotional build
+PASS
+```
+
+Repository validation after the P4-M02 implementation:
+
+```text
+Repository lint
+14 / 14 Turbo tasks PASS
+
+Repository TypeScript
+26 / 26 Turbo tasks PASS
+
+Repository normal tests
+22 / 22 Turbo tasks PASS
+
+Architecture validation
+316 modules
+734 dependencies
+0 violations
+
+Knowledge source diff
+NONE
+
+Prisma diff
+NONE
+
+Anime package
+NOT MATERIALIZED
+
+History package
+NOT MATERIALIZED
+
+forbidden genericization scan
+PASS
+```
+
+Canonical migration count remains:
+
+```text
+10
+```
+
+Implementation checkpoint:
+
+```text
+dbb4a9a feat(devotional): establish deity resource type
+```
+
+The checkpoint was pushed to `origin/main`.
+
+GitHub Actions workflow run `CI` completed successfully for the exact implementation commit `dbb4a9a110f1a29b8597f587f72a1134dd98a1b4`. Its `Validate` job completed with conclusion:
+
+```text
+success
+```
+
+Remote Validate included dependency installation, formatting, lint, TypeScript, tests, database migrations, database integration tests, Chromium browser E2E, build, and architecture validation.
+
+P4-M02 closure proves:
+
+```text
+one real Universe can specialize shared Knowledge without changing Knowledge;
+
+Universe-owned meaning can remain strongly typed;
+
+shared Knowledge does not need named-Universe branches;
+
+Anime does not need to be co-developed merely to claim genericity;
+
+no speculative generic object engine is required;
+
+no duplicate Universe infrastructure is introduced.
+```
+
+Anime remains intentionally deferred to the later second-Universe reuse-test milestone.
+
+The next milestone is:
+
+```text
+P4-M03 — Knowledge CRUD Baseline
+```
 
 ---
 
 # 114. Phase 4 Milestone P4-M03 — Knowledge CRUD Baseline
+
+Current milestone status:
+
+```text
+NEXT
+```
 
 Implement canonical owner operations:
 
@@ -14319,7 +14498,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M02 — Typed Domain Resource Support
+P4-M03 — Knowledge CRUD Baseline
 ```
 
 ---
@@ -14358,23 +14537,70 @@ af7edb8 feat(knowledge): establish knowledge resource baseline
 
 Implementation CI
 GitHub Actions CI / Validate — PASS
+
+P4-M02 — Typed Domain Resource Support
+CLOSED
+
+Package
+@ai-world/universe-devotional
+
+First typed domain model
+DeityResource
+
+Devotional Universe key
+universe.devotional
+
+Deity Resource Type key
+devotional.deity
+
+Domain-specific field
+name: string
+
+Dependency direction
+Devotional → Knowledge public Contract
+
+Knowledge source change for P4-M02
+NONE
+
+Prisma / migration change for P4-M02
+NONE
+
+Anime package
+NOT MATERIALIZED
+
+History package
+NOT MATERIALIZED
+
+Focused Devotional tests
+3 / 3 PASS
+
+P4-M02 architecture
+316 modules
+734 dependencies
+0 violations
+
+Implementation checkpoint
+dbb4a9a feat(devotional): establish deity resource type
+
+P4-M02 implementation CI
+GitHub Actions CI / Validate — PASS
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
 
 P4-M01 deliberately introduced no generic JSON payload, Universe registry, Taxonomy, Relationships, Events, API, Web behavior, or expanded lifecycle.
 
-Phase 4 remains active. The 2026-08-15 roadmap amendment does not reopen P4-M01; its canonical Resource model remains the accepted shared baseline.
+P4-M02 then proved the first real Universe-owned typed specialization without changing Knowledge, persistence, or the canonical lifecycle. It deliberately created only Devotional and kept Anime and History unmaterialized.
 
-Phase 4 eventual completion evidence is expected to include:
+Phase 4 remains active.
+
+The current next milestone is:
 
 ```text
-Devotional and Anime
+P4-M03 — Knowledge CRUD Baseline
 ```
 
-operating through one shared Knowledge Platform.
-
-History remains the later third structural reuse test after the initial proof pair has exercised shared Knowledge and later shared Platform capabilities.
+Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
 
 ---
 
@@ -14634,7 +14860,8 @@ PHASE 4
 KNOWLEDGE
     ACTIVE
     ✅ P4-M01 Knowledge Resource Model — CLOSED
-    → P4-M02 Typed Domain Resource Support — NEXT
+    ✅ P4-M02 Typed Domain Resource Support — CLOSED
+    → P4-M03 Knowledge CRUD Baseline — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -15037,22 +15264,33 @@ ACTIVE
 
 COMPLETED IN PHASE 4
 P4-M01 — Knowledge Resource Model
+P4-M02 — Typed Domain Resource Support
 
 NEXT MILESTONE
-P4-M02 — Typed Domain Resource Support
+P4-M03 — Knowledge CRUD Baseline
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
-    first implementation
+    first implementation — MATERIALIZED
     ↓
 Anime
-    second-Universe reuse test
+    second-Universe reuse test — DEFERRED
     ↓
 History
-    third structural reuse test
+    third structural reuse test — DEFERRED
 
 P4-M01 ROADMAP AMENDMENT EFFECT
 NONE — P4-M01 remains CLOSED and its implementation is unchanged
+
+P4-M02 RESULT
+@ai-world/universe-devotional
+DeityResource
+universe.devotional
+devotional.deity
+Knowledge unchanged
+Prisma unchanged
+Anime not materialized
+History not materialized
 
 BLOCKED
 None
@@ -15064,6 +15302,12 @@ P4-M01 IMPLEMENTATION
 af7edb8 feat(knowledge): establish knowledge resource baseline
 
 P4-M01 IMPLEMENTATION CI
+GREEN
+
+P4-M02 IMPLEMENTATION
+dbb4a9a feat(devotional): establish deity resource type
+
+P4-M02 IMPLEMENTATION CI
 GREEN
 
 DEFERRED / DEMAND-DRIVEN
@@ -16715,7 +16959,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M02 — Typed Domain Resource Support
+P4-M03 — Knowledge CRUD Baseline
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -16732,6 +16976,6 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active, P4-M01 is closed, and P4-M02 is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active, P4-M01 and P4-M02 are closed, and P4-M03 is next.
 
-The accepted P4-M02 proof order is Devotional first and Anime second. History remains the later third structural reuse test.
+P4-M02 established the first Devotional typed resource only. Anime remains deferred to its later second-Universe reuse-test milestone, and History remains the later third structural reuse test.
