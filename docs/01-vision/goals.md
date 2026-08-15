@@ -9,9 +9,9 @@
 | Document ID | P0-D06 |
 | Area | Vision |
 | Status | ACCEPTED |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-08 |
+| Last Reviewed | 2026-08-15 |
 | Authority | Foundational Project Goals |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md` |
@@ -2277,9 +2277,35 @@ Statuses must be updated as implementation changes.
 
 # 129. G17 — Proof-of-Generality Goals
 
-## Goal G17.1 — Anime Proof Universe
+## Goal G17.1 — Devotional Initial Implementation Universe
 
-Use Anime as one early validation of:
+Use Devotional as the first and only Universe implemented initially.
+
+Its purpose is to create real domain pressure against the shared platform through a small, typed, demand-driven model such as:
+
+```text
+Deity and devotional-figure Resources
+
+Scripture and textual Resources
+
+Temples and sacred-place concepts
+
+source and provenance sensitivity
+
+domain-specific relationships
+
+future multilingual and media-rich experiences
+```
+
+Do not build additional Universes merely to make the architecture look generic before Devotional produces real requirements.
+
+---
+
+# 130. Goal G17.2 — Anime Second-Universe Reuse Test
+
+Introduce Anime only after Devotional has established enough real shared architecture for reuse to be measurable.
+
+Anime should challenge the Devotional-shaped architecture through substantially different concerns such as:
 
 ```text
 media-heavy content
@@ -2299,35 +2325,13 @@ discovery
 AI
 ```
 
----
-
-# 130. Goal G17.2 — History Proof Universe
-
-Use History as a structurally different validation involving:
-
-```text
-people
-
-events
-
-places
-
-civilizations
-
-timelines
-
-sources
-
-relationships
-
-factual content
-```
+The objective is not to create a second infrastructure stack. The objective is to reuse the same shared Platforms with different domain meaning.
 
 ---
 
-# 131. Goal G17.3 — Shared Engine Validation
+# 131. Goal G17.3 — Shared Engine Reuse Validation
 
-Anime and History should reuse the same appropriate:
+Anime should reuse the same appropriate capabilities already exercised through Devotional:
 
 ```text
 Identity
@@ -2353,33 +2357,69 @@ CMS
 
 capabilities.
 
+History remains the later third structural reuse test and should reuse the resulting architecture with fewer shared-core changes and no duplicate infrastructure.
+
 ---
 
 # 132. Goal G17.4 — Identify False Generalization
 
-If an abstraction only works naturally for Anime or only for History, it should not be considered universally correct without review.
+Do not declare an abstraction universally correct merely because it works for Devotional.
+
+Anime is the first later reuse test that should challenge assumptions produced by the Devotional implementation.
+
+History then provides a third, structurally different reuse test after Devotional and Anime have supplied real evidence.
 
 ---
 
-# 133. Goal G17.5 — Third Universe Validation
+# 133. Goal G17.5 — History Third Structural Reuse Test
 
-Introduce a third structurally different Universe after the shared architecture matures.
+History is the selected third structurally different Universe.
 
-Potential candidates include:
+Introduce it after:
 
 ```text
-Nature
+Devotional
+    establishes the first real implementation
 
-Science
-
-Education
+Anime
+    validates second-Universe reuse
 ```
+
+History should independently pressure areas such as:
+
+```text
+people
+
+events
+
+places
+
+civilizations
+
+timelines
+
+sources
+
+citations
+
+temporal semantics
+
+uncertainty
+
+factual review
+```
+
+without redefining the core around historical requirements.
 
 ---
 
-# 134. Goal G17.6 — Minimal Third-Universe Core Changes
+# 134. Goal G17.6 — Minimal Later-Universe Core Changes
 
-The third Universe should ideally require:
+Anime should require less new shared architecture than Devotional.
+
+History should ideally require even fewer fundamental shared-core changes.
+
+Later Universe reuse should aim for:
 
 ```text
 no foundational redesign
@@ -2387,9 +2427,11 @@ no foundational redesign
 no duplicated infrastructure
 
 minimal shared capability additions
+
+increasingly more domain definition and configuration
 ```
 
-This will be one of the strongest architectural maturity tests.
+This progression is one of the strongest architectural maturity tests.
 
 ---
 
@@ -2417,7 +2459,7 @@ should increase relative to new core infrastructure.
 
 AI World should remain conceptually capable of supporting domains not anticipated during initial development.
 
-The platform should avoid assumptions tied permanently to the initial proof Universes.
+The platform should avoid assumptions tied permanently to the early implementation and reuse-test Universes.
 
 ---
 
@@ -2733,7 +2775,7 @@ AI
 
 Composition
 
-at least two proof Universes
+Devotional plus at least one later reuse-test Universe
 ```
 
 at intentionally limited depth.
@@ -3270,7 +3312,7 @@ Establish required Kernel capabilities.
 
 Build the initial Knowledge Platform.
 
-Prove reuse using Anime and History.
+Implement Devotional first against shared Platforms.
 ```
 
 ---
@@ -3296,7 +3338,9 @@ basic personalization
 
 production operations
 
-additional proof Universe
+Anime second-Universe reuse test
+
+History third-Universe structural reuse test
 ```
 
 ---
@@ -3452,7 +3496,7 @@ STATUS
 ACCEPTED
 
 VERSION
-1.0.0
+1.1.0
 
 PHASE
 Phase 0 — Architecture Foundation

@@ -9,9 +9,9 @@
 | Document ID | P0-D03 |
 | Area | Vision |
 | Status | ACCEPTED |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-08 |
+| Last Reviewed | 2026-08-15 |
 | Authority | Foundational Product Mission |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md` |
@@ -1710,12 +1710,15 @@ AI World must prove genericity through real implementations.
 
 The platform should initially be tested using at least two substantially different Universes.
 
-Initial proof Universes:
+Initial implementation Universe:
 
 ```text
-Anime
-History
+Devotional
 ```
+
+Anime is introduced later as the second-Universe reuse test.
+
+History follows after Anime as the third structural reuse test.
 
 ---
 
@@ -1723,29 +1726,77 @@ History
 
 A platform designed around only one Universe may accidentally encode hidden assumptions.
 
-Anime and History differ in:
+Devotional is implemented first. Anime is introduced later specifically to test whether the shared architecture can be reused without redesign.
+
+Devotional may exercise:
 
 ```text
-entity structures
+domain-specific sacred/devotional concepts
 
-relationship semantics
+textual and Scripture-like Resources
 
-temporal concepts
+source and provenance sensitivity
 
-source requirements
+careful semantic ownership
 
-media use
+relationships
 
-content workflows
+future multilingual content
 ```
 
-Supporting both helps reveal whether abstractions are genuinely reusable.
+Anime may exercise:
+
+```text
+media-rich Resources
+
+Characters
+
+Series
+
+Episodes
+
+relationships
+
+Genres
+
+presentation variation
+```
+
+Supporting both helps reveal whether abstractions are genuinely reusable without erasing real domain differences.
 
 ---
 
 # 75. Third-Universe Mission
 
-A later third Universe should be introduced with minimal or no changes to core architecture.
+History is the selected later third structural reuse test.
+
+It should be introduced after Devotional has established the first real implementation and Anime has subsequently exercised the shared architecture as a reuse test.
+
+History may independently pressure:
+
+```text
+People
+
+Events
+
+Places
+
+Civilizations
+
+Sources
+
+Citations
+
+time
+
+uncertainty
+
+verification
+
+cross-domain relationships
+```
+
+The objective is to introduce History with minimal or no fundamental changes to core architecture.
 
 This will act as an important architectural maturity test.
 
@@ -2951,7 +3002,7 @@ AI foundation
 
 composition foundation
 
-two proof Universes
+Devotional first, followed later by reuse-test Universes
 ```
 
 without attempting to implement every long-term feature.
@@ -3190,7 +3241,7 @@ STATUS
 ACCEPTED
 
 VERSION
-1.0.0
+1.1.0
 
 PHASE
 Phase 0 — Architecture Foundation

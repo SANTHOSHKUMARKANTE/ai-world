@@ -9,9 +9,9 @@
 | Document ID | P0-D07 |
 | Area | Vision |
 | Status | ACCEPTED |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-08 |
+| Last Reviewed | 2026-08-15 |
 | Authority | Foundational Project Boundaries |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md` |
@@ -1336,21 +1336,25 @@ blocks throughout shared Platform code as the normal extension model.
 
 # 73. NG70 — First Universe Does Not Define the Platform
 
-Anime may be implemented early.
+Devotional may be implemented first.
 
 It must not determine universal concepts simply because it appears first.
 
-History must challenge the assumptions.
+Anime must be introduced later to challenge those assumptions as the second-Universe reuse test.
 
-A third Universe must validate them.
+History must later validate the resulting architecture as the third structural reuse test.
 
 ---
 
 # 74. NG71 — Proof Universes Are Not Product Limits
 
-Anime and History are architectural proof cases.
+Devotional is the initial implementation Universe.
 
-They do not define the final scope of AI World.
+Anime is the later second-Universe reuse test.
+
+History is the third structural reuse test after Anime.
+
+None of them defines the final scope of AI World.
 
 ---
 
@@ -1359,6 +1363,8 @@ They do not define the final scope of AI World.
 The initial implementation does not need:
 
 ```text
+Devotional
+
 Anime
 
 History
@@ -1380,7 +1386,11 @@ Travel
 
 all at once.
 
-Two proof Universes are sufficient to begin architectural validation.
+One real Devotional implementation is sufficient to begin architectural validation.
+
+Anime follows Devotional as the second-Universe reuse test.
+
+History follows after Anime as the selected third structural reuse test.
 
 ---
 
@@ -4156,7 +4166,7 @@ STATUS
 ACCEPTED
 
 VERSION
-1.0.0
+1.1.0
 
 PHASE
 Phase 0 — Architecture Foundation

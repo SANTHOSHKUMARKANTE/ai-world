@@ -9,7 +9,7 @@
 | Document ID | P0-D18 |
 | Area | Roadmaps |
 | Status | ACCEPTED |
-| Version | 1.1.0 |
+| Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-15 |
 | Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support NEXT |
@@ -212,29 +212,34 @@ Production Operations
 
 # 8. Proof Universe Strategy
 
-Devotional and Anime are the initial proof Universes.
+Devotional is the first and only Universe implemented initially.
 
-They are introduced incrementally during the Knowledge phase and expanded as later Platforms mature.
-
-The initial proof order is:
+The sequence is intentionally evidence-driven:
 
 ```text
 Devotional
-    first proof Universe
+    first real Universe implementation
 
 Anime
-    second proof Universe
+    later second-Universe reuse test
+
+History
+    later third structural reuse test
 ```
 
-Their purpose is to validate shared architecture early against structurally different domain models.
+Devotional should be allowed to produce real requirements before AI World attempts to prove cross-Universe reuse.
 
-History remains an important structurally different Universe, but it is intentionally deferred until the initial Devotional and Anime proof has exercised the shared architecture sufficiently.
+Anime is introduced only after enough shared architecture exists for reuse to be measurable.
+
+History follows after Anime as a stronger third structural reuse test.
 
 ---
 
-# 9. Why Devotional and Anime
+# 9. Why Devotional First
 
-Devotional provides pressure around:
+Devotional is implemented first because one real domain should drive the next required capability instead of speculative multi-Universe design.
+
+Devotional can provide pressure around:
 
 ```text
 Deity and devotional-figure Resources;
@@ -254,7 +259,19 @@ content requiring careful semantic ownership;
 future multilingual and media-rich experiences.
 ```
 
-Anime provides pressure around:
+The shared Platform must remain generic while solving those real needs.
+
+Genericity is not proven at this point; it is only designed so that later reuse remains possible.
+
+---
+
+# 10. Reuse-Test Universe Strategy
+
+Anime is the second-Universe reuse test.
+
+It is introduced after Devotional has exercised enough shared architecture to test whether a substantially different domain can reuse the same capabilities without duplicate infrastructure or named-Universe core branches.
+
+Anime can later add pressure around:
 
 ```text
 media-rich Resources;
@@ -274,23 +291,7 @@ presentation variation;
 future creator experiences.
 ```
 
-Together they reduce the risk of overfitting AI World to one domain while proving that the same Knowledge Platform can support substantially different domain semantics.
-
----
-
-# 10. Third Universe Strategy
-
-History is intentionally retained as the next major structural reuse test after:
-
-```text
-Devotional
-
-and
-
-Anime
-```
-
-have exercised the shared architecture sufficiently.
+History is retained as the third structural reuse test after Anime.
 
 History can later add pressure around:
 
@@ -316,9 +317,7 @@ verification;
 cross-domain relationships.
 ```
 
-The objective of the third Universe is not to rebuild shared architecture.
-
-It is to prove that a later Universe can reuse the architecture with fewer shared-core changes and without duplicate infrastructure.
+The objective of both later Universes is reuse, not rebuilding shared architecture.
 
 ---
 
@@ -739,19 +738,22 @@ The next implementation milestone is:
 P4-M02 — Typed Domain Resource Support
 ```
 
-P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe proof strategy and remains unchanged by the later selection of Devotional and Anime as the initial proof pair. P4-M02 must now prove typed domain specialization first through Devotional and then through Anime without pulling later Knowledge milestones forward. History remains the later third structural reuse test. Deferred Events, Taxonomy, and Relationships should be activated only when a real Phase 4 consumer establishes their exact semantics.
+P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged. P4-M02 must now prove typed domain specialization through Devotional only. Anime is not implemented in P4-M02; it is introduced later as the second-Universe reuse test after Devotional has established enough real shared architecture. History remains the later third structural reuse test. Deferred Events, Taxonomy, and Relationships should be activated only when a real Phase 4 consumer establishes their exact semantics.
 
 Roadmap amendment recorded on 2026-08-15:
 
 ```text
-INITIAL PROOF UNIVERSE 1
+FIRST IMPLEMENTATION UNIVERSE
 Devotional
 
-INITIAL PROOF UNIVERSE 2
+SECOND-UNIVERSE REUSE TEST
 Anime
 
-LATER THIRD STRUCTURAL REUSE TEST
+THIRD STRUCTURAL REUSE TEST
 History
+
+P4-M02
+Devotional only — no Anime implementation in this milestone
 
 P4-M01
 remains CLOSED and unchanged
@@ -10115,38 +10117,50 @@ for every domain concept.
 
 # 113. Phase 4 Milestone P4-M02 — Typed Domain Resource Support
 
-Prove shared Knowledge can support typed domain models owned by structurally different Universes.
+Prove shared Knowledge can support the first real typed domain model owned by Devotional while Knowledge remains generic and Universe-neutral.
 
-Proof order:
-
-```text
-1. Devotional
-2. Anime
-```
-
-Devotional first candidate:
+Initial typed proof:
 
 ```text
-Deity
+Devotional
+    Deity
 ```
 
-Anime second candidate:
+P4-M02 should implement only the smallest useful Devotional-owned typed specialization against the existing canonical `KnowledgeResource`.
+
+The expected dependency direction is:
 
 ```text
-Series
+Devotional Universe
+    →
+Knowledge public Contract
 ```
 
-P4-M02 should prove the smallest useful typed specialization from each Universe against the existing canonical `KnowledgeResource`.
+Knowledge must not import Devotional.
 
-Keep the proof set intentionally small.
+P4-M02 explicitly introduces:
 
-P4-M02 does not complete either full proof Universe and must not pull forward CRUD, Authorization, Taxonomy, Relationships, lifecycle expansion, Events, Sources, Citations, Temporal semantics, Media, Search, or a generic Metadata/JSON object engine.
+```text
+NO Anime package or Anime domain model;
+
+NO History package or History domain model;
+
+NO central switch(universe);
+
+NO central switch(resourceType);
+
+NO universal TypedKnowledgeResource<T> engine merely for symmetry;
+
+NO generic Metadata/JSON object engine.
+```
+
+P4-M02 must also not pull forward CRUD, Authorization, Taxonomy, Relationships, lifecycle expansion, Events, Sources, Citations, Temporal semantics, Media, or Search.
 
 Knowledge remains the owner of canonical Resource semantics.
 
-Devotional and Anime own their concrete domain meaning.
+Devotional owns the concrete meaning of Deity.
 
-Shared Knowledge must not branch on a central `switch(universe)` or `switch(resourceType)`.
+Anime is intentionally deferred until a later reuse-test milestone.
 
 ---
 
@@ -10192,15 +10206,13 @@ behave correctly.
 
 # 117. Phase 4 Milestone P4-M05 — Taxonomy Integration
 
-Activate shared Taxonomy only when an implemented Resource requires reusable classification semantics.
+Activate shared Taxonomy only when an implemented Devotional Resource requires reusable classification semantics.
 
-Devotional proof should establish only a real reusable classification required by implemented Devotional Resources. Potential tradition/category semantics are candidates, not pre-approved taxonomy structure.
+Devotional should establish only a real reusable classification required by implemented Devotional Resources. Potential tradition/category semantics are candidates, not pre-approved taxonomy structure.
 
-Anime proof candidate:
+Do not activate Taxonomy for Anime before Anime exists.
 
-```text
-Genre
-```
+When Anime is introduced later, its classifications such as Genre should reuse the shared Taxonomy mechanics if those mechanics are genuinely applicable.
 
 Do not build generic ontology machinery merely to satisfy the milestone.
 
@@ -10208,21 +10220,21 @@ Do not build generic ontology machinery merely to satisfy the milestone.
 
 # 118. Phase 4 Milestone P4-M06 — Relationship Integration
 
-Activate shared Relationships only when real typed Resources require reusable Resource-to-Resource connection semantics.
+Activate shared Relationships only when real implemented Devotional Resources require reusable Resource-to-Resource connection semantics.
 
-Conceptual proof candidates:
+A conceptual Devotional pressure point may be:
 
 ```text
-Devotional Deity
+Deity
     ASSOCIATED_WITH
 Temple
-
-Anime Character
-    APPEARS_IN
-Series
 ```
 
 Final Relationship Type names and validation rules belong to the activation review and the defining Universe.
+
+Do not design Anime Relationship semantics before Anime exists.
+
+When Anime is introduced later, relationships such as Character APPEARS_IN Series should validate reuse of the same shared Relationship mechanics if appropriate.
 
 The Relationships Kernel, when activated, remains Universe-neutral.
 
@@ -10266,13 +10278,15 @@ Final naming belongs to Event Contract design.
 
 # 121. Phase 4 Milestone P4-M09 — Sources
 
-Introduce minimal Source/provenance semantics only when an implemented Devotional or Anime Resource requires traceability to an external or textual source.
+Introduce minimal Source/provenance semantics only when an implemented Devotional Resource requires traceability to an external or textual source.
 
 Devotional Scripture or source-sensitive devotional content is the first likely Phase 4 pressure point.
 
+Anime should not influence the Source model before Anime exists.
+
 History remains the later stronger independent reuse proof for Source semantics.
 
-If the initial proof Universes do not require a shared Source capability, defer implementation rather than inventing it.
+If Devotional does not require a shared Source capability, defer implementation rather than inventing it.
 
 ---
 
@@ -10292,14 +10306,17 @@ Do not overbuild academic citation infrastructure initially.
 
 Conduct a demand review before implementing reusable temporal semantics.
 
-If Devotional or Anime establishes a real requirement, begin with only the smallest shared date/date-range semantics required by that consumer.
+If Devotional establishes a real requirement, begin with only the smallest shared date/date-range semantics required by that consumer.
 
-If neither initial proof Universe requires reusable temporal behavior:
+If Devotional does not require reusable temporal behavior:
 
 ```text
 DEFER implementation
-until the History third-Universe reuse test
 ```
+
+Anime may later provide a second independent pressure point during its reuse test.
+
+If neither Devotional nor Anime establishes the requirement, defer until the History third-Universe reuse test.
 
 History remains the strongest expected pressure around:
 
@@ -10315,7 +10332,7 @@ Avoid creating a universal time ontology prematurely.
 
 ---
 
-# 124. Phase 4 Milestone P4-M12 — Devotional Proof Universe v1
+# 124. Phase 4 Milestone P4-M12 — Devotional Universe v1
 
 Create a minimal Devotional Universe Definition.
 
@@ -10359,9 +10376,9 @@ shared Platform code contains no Devotional-specific core branches.
 
 ---
 
-# 126. Phase 4 Milestone P4-M13 — Anime Proof Universe v1
+# 126. Phase 4 Milestone P4-M13 — Anime Reuse-Test Universe v1
 
-Create a minimal Anime Universe Definition.
+Introduce a minimal Anime Universe Definition as the second-Universe reuse test after Devotional v1 has established real shared architecture.
 
 Potential scope:
 
@@ -10438,9 +10455,9 @@ The Web must consume shared Platform Contracts rather than introducing Universe-
 Review:
 
 ```text
-How many Knowledge changes were Devotional-specific?
+Which shared Knowledge capabilities were genuinely required by Devotional?
 
-How many Knowledge changes were Anime-specific?
+How much of that architecture did Anime reuse without modification?
 
 Did either require duplicate infrastructure?
 
@@ -15024,13 +15041,15 @@ P4-M01 — Knowledge Resource Model
 NEXT MILESTONE
 P4-M02 — Typed Domain Resource Support
 
-INITIAL PROOF UNIVERSE ORDER
+UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
+    first implementation
     ↓
 Anime
-
-LATER THIRD STRUCTURAL REUSE TEST
+    second-Universe reuse test
+    ↓
 History
+    third structural reuse test
 
 P4-M01 ROADMAP AMENDMENT EFFECT
 NONE — P4-M01 remains CLOSED and its implementation is unchanged

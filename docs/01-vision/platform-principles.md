@@ -9,9 +9,9 @@
 | Document ID | P0-D04 |
 | Area | Vision |
 | Status | ACCEPTED |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-08 |
+| Last Reviewed | 2026-08-15 |
 | Authority | Foundational Platform Principles |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md` |
@@ -2354,41 +2354,57 @@ Where practical, validate shared abstractions using multiple consumers.
 
 ---
 
-# 110. Principle 100 — Anime and History Are Initial Architecture Tests
+# 110. Principle 100 — Devotional Is Implemented First; Anime Tests Reuse
 
-Initial proof Universes:
+The first implemented Universe is:
 
 ```text
+Devotional
+```
+
+Devotional supplies the first real domain pressure against shared Platforms.
+
+AI World must not declare the architecture universally generic merely because Devotional works.
+
+Anime is introduced later as the second-Universe reuse test.
+
+Its purpose is to expose false generalization after real Devotional requirements have already shaped the shared architecture.
+
+---
+
+# 111. Principle 101 — History Is the Third Structural Reuse Test
+
+After:
+
+```text
+Devotional
+    first real implementation
+
 Anime
-
-History
+    second-Universe reuse test
 ```
 
-should intentionally exercise different domain requirements.
+introduce History as a third structurally different reuse test.
 
-Their purpose is to expose false generalization.
-
----
-
-# 111. Principle 101 — The Third Universe Is a Key Test
-
-After two proof Universes, introduce another structurally different Universe.
-
-The goal:
+The goal remains:
 
 ```text
-minimal or zero core platform changes
+minimal or zero fundamental core platform changes
 ```
 
-If substantial changes are required, review the abstractions before scaling further.
+If substantial redesign is required, review the abstractions before scaling further.
 
 ---
 
-# 112. Principle 102 — Do Not Optimize Core for Proof Universes
+# 112. Principle 102 — Do Not Optimize Core for Any Proof Universe
 
-Anime and History are architecture tests.
+Devotional, Anime, and History apply different domain pressure at different times.
 
-They must not become implicit hard-coded assumptions in core platform design.
+Devotional is implemented first.
+
+Anime and History are later reuse tests.
+
+None of them may become an implicit hard-coded assumption in core platform design.
 
 ---
 
@@ -4086,7 +4102,7 @@ STATUS
 ACCEPTED
 
 VERSION
-1.0.0
+1.1.0
 
 PHASE
 Phase 0 — Architecture Foundation

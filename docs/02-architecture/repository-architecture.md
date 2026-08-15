@@ -9,9 +9,9 @@
 | Document ID | P0-D16 |
 | Area | Architecture |
 | Status | ACCEPTED |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-08 |
+| Last Reviewed | 2026-08-15 |
 | Authority | Canonical Repository and Source Ownership Architecture |
 | Applies To | Entire AI World Repository |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md` |
@@ -1508,15 +1508,32 @@ and similarly for implemented Kernel capabilities.
 
 # 75. Universe Package Names
 
-Preferred conceptual names:
+Preferred conceptual names include:
 
 ```text
+@ai-world/universe-devotional
+
 @ai-world/universe-anime
 
 @ai-world/universe-history
 ```
 
-when those ownership areas become packages.
+when those ownership areas become real packages.
+
+Materialization order is demand-driven:
+
+```text
+Devotional
+    first implemented Universe package
+
+Anime
+    later second-Universe reuse-test package
+
+History
+    later third structural reuse-test package
+```
+
+Do not create Anime or History packages merely to make the repository look generic before they have real implementation work.
 
 ---
 
@@ -1553,11 +1570,16 @@ Canonical Universe semantic ownership zone:
 ```text
 packages/
 └── universes/
+    ├── devotional/
     ├── anime/
     └── history/
 ```
 
-Future Universes are added here.
+This is a canonical ownership layout, not an instruction to create all directories immediately.
+
+Create each Universe directory only when real implementation begins.
+
+Devotional is materialized first. Anime and History remain later reuse-test Universes until their roadmap work begins.
 
 ---
 
@@ -1607,9 +1629,35 @@ duplicated search engines.
 
 ---
 
-# 81. Anime Ownership Directory
+# 81. Devotional Ownership Directory
 
-Canonical:
+Canonical when implementation begins:
+
+```text
+packages/universes/devotional/
+```
+
+Potential source includes:
+
+```text
+Deity definitions;
+
+Scripture definitions;
+
+Temple definitions;
+
+Devotional-specific configuration;
+
+Devotional-specific typed Extensions when genuinely required.
+```
+
+Devotional owns domain meaning. Shared Platforms continue to own shared capability mechanics and canonical shared Resources.
+
+---
+
+# 82. Later Reuse-Test Universe Ownership Directories
+
+Anime is introduced later as the second-Universe reuse test:
 
 ```text
 packages/universes/anime/
@@ -1622,18 +1670,14 @@ Character definitions;
 
 Series definitions;
 
-Genre taxonomy;
+Genre definitions;
 
 Anime relationships;
 
-Anime-specific typed Extensions.
+Anime-specific typed Extensions when genuinely required.
 ```
 
----
-
-# 82. History Ownership Directory
-
-Canonical:
+History is introduced later as the third structural reuse test:
 
 ```text
 packages/universes/history/
@@ -1648,12 +1692,14 @@ Event definitions;
 
 Place definitions;
 
-Era taxonomy;
+Era definitions;
 
 source requirements;
 
-History-specific typed Extensions.
+History-specific typed Extensions when genuinely required.
 ```
+
+Neither directory should exist merely for symmetry before its implementation work begins.
 
 ---
 
@@ -1737,9 +1783,11 @@ A package under:
 packages/platforms/
 ```
 
-must never import:
+must never import named Universe implementations such as:
 
 ```text
+packages/universes/devotional
+
 packages/universes/anime
 
 packages/universes/history
@@ -1747,21 +1795,30 @@ packages/universes/history
 
 by default.
 
+Shared Platforms must remain unaware of which named Universes currently exist.
+
 ---
 
 # 88. Universe Registration
 
-Applications/Composition Root may import Universe packages for runtime registration.
+Applications/Composition Root may import Universe packages for runtime registration after those packages actually exist.
 
 Conceptually:
 
 ```text
 apps/api/bootstrap
+    imports Devotional Universe registration
+
+later
     imports Anime Universe registration
+
+later still
     imports History Universe registration
 ```
 
-This is acceptable.
+This is acceptable because the Application is the composition boundary.
+
+The shared Platform packages being composed must remain unaware of the named Universes.
 
 ---
 
@@ -3943,6 +4000,7 @@ Possible conceptual structure:
 apps/web/src/
 ├── features/
 ├── universes/
+│   ├── devotional/
 │   ├── anime/
 │   └── history/
 ├── app/
@@ -4973,6 +5031,7 @@ ai-world/
 │   │   └── operations/
 │   │
 │   └── universes/
+│       ├── devotional/
 │       ├── anime/
 │       └── history/
 │
@@ -5051,23 +5110,23 @@ packages/
 
 # 313. Example Knowledge Expansion
 
-Later:
+The first Knowledge/Universe expansion should remain small and Devotional-only:
 
 ```text
 packages/
 ├── kernel/
-│   ├── identifiers/
-│   ├── taxonomy/
-│   ├── relationships/
-│   └── events/
+│   └── identifiers/
 │
 ├── platforms/
 │   └── knowledge/
 │
 └── universes/
-    ├── anime/
-    └── history/
+    └── devotional/
 ```
+
+Taxonomy, Relationships, Events, Anime, and History should appear only when real consumers activate them.
+
+Anime later validates reuse of the resulting Knowledge architecture. History remains the later third structural reuse test.
 
 ---
 
@@ -5905,7 +5964,9 @@ Kernel baseline
         ↓
 Knowledge
         ↓
-Anime + History
+Devotional
+        ↓
+Anime reuse test
         ↓
 Media
         ↓
@@ -6257,7 +6318,7 @@ STATUS
 ACCEPTED
 
 VERSION
-1.0.0
+1.1.0
 
 PHASE
 Phase 0 — Architecture Foundation

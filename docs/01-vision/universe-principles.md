@@ -9,9 +9,9 @@
 | Document ID | P0-D05 |
 | Area | Vision |
 | Status | ACCEPTED |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-08 |
+| Last Reviewed | 2026-08-15 |
 | Authority | Foundational Universe Design Principles |
 | Applies To | Every AI World Universe |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md` |
@@ -3300,11 +3300,13 @@ factual review
 
 ---
 
-# 167. Why Anime + History
+# 167. Why Devotional First, Then Anime
 
-These two Universes intentionally differ.
+Devotional is implemented first so shared architecture is shaped by one real domain rather than by speculative cross-domain abstractions.
 
-If AI World supports both through the same:
+After Devotional establishes real requirements, Anime is introduced as a structurally different second-Universe reuse test.
+
+If both can use the same appropriate:
 
 ```text
 Knowledge Platform
@@ -3324,35 +3326,29 @@ AI
 CMS
 ```
 
-architecture, the design gains meaningful evidence of genericity.
+architecture without duplicate infrastructure or named-Universe core branches, the design gains meaningful evidence of genericity.
 
 ---
 
 # 168. Proof Universe Constraint
 
-Core architecture must not be designed exclusively around Anime or History.
+Core architecture must not be designed exclusively around Devotional merely because it is implemented first.
 
-Both are test cases.
+Anime is introduced later specifically to challenge Devotional-shaped assumptions.
 
-Neither is the platform definition.
+Neither Universe is the platform definition.
+
+History later provides a third structurally different reuse test.
 
 ---
 
 # 169. Third Universe Validation
 
-After Anime and History, a third structurally different Universe should test the architecture.
+After Devotional establishes the first implementation and Anime validates second-Universe reuse, History should test the architecture as the third structurally different Universe.
 
-Good candidates may include:
+History should primarily reuse existing shared capabilities and expose only genuinely missing reusable semantics.
 
-```text
-Nature
-
-Education
-
-Science
-```
-
-The exact selection belongs to the roadmap.
+The exact implementation timing remains controlled by the roadmap.
 
 ---
 
@@ -4355,9 +4351,9 @@ The following are foundational:
 
 11. New Universes should progressively require fewer core modifications.
 
-12. Anime and History are proof Universes, not core assumptions.
+12. Devotional is the first implementation Universe, not the definition of the core.
 
-13. A third Universe must validate the architecture before claiming maturity.
+13. Anime must validate second-Universe reuse, and History must later validate third-Universe structural reuse before claiming maturity.
 
 14. Configuration should remain declarative and validated.
 
@@ -4461,7 +4457,7 @@ Conceptually:
                         │
        ┌────────────────┼────────────────┐
        │                │                │
-     Anime            History          Nature
+  Devotional          Anime           History
        │                │                │
        └────────────────┼────────────────┘
                         │
@@ -4494,7 +4490,7 @@ STATUS
 ACCEPTED
 
 VERSION
-1.0.0
+1.1.0
 
 PHASE
 Phase 0 — Architecture Foundation
