@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-15 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -677,6 +677,9 @@ P4-M05 — Taxonomy Integration
 DEFERRED — no implemented Devotional classification consumer
 
 P4-M06 — Relationship Integration
+DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer
+
+P4-M07 — Knowledge Lifecycle
 NEXT
 ```
 
@@ -726,7 +729,7 @@ P3-M04 established the reusable durable Audit Record baseline through a real sec
 
 P3-M05 remains deferred because no implemented Resource currently requires reusable shared classification semantics. P4-M05 performed the planned activation review against the implemented Devotional domain and still found no real reusable classification consumer. Taxonomy therefore remains unmaterialized until a future implemented Resource establishes that requirement.
 
-P3-M06 remains deferred because no implemented production capability currently owns or consumes a reusable semantic Resource-to-Resource Relationship. Its first strong activation point remains P4-M06 Relationship Integration when real typed Knowledge Resources require connections such as Character APPEARS_IN Series or Person PARTICIPATED_IN Event.
+P3-M06 remains deferred because no implemented production capability currently owns or consumes a reusable semantic Resource-to-Resource Relationship. P4-M06 performed the planned activation review against the implemented Devotional domain and still found no real reusable Resource-to-Resource relationship consumer. Relationships therefore remains unmaterialized until future implemented Resources establish that requirement.
 
 P3-M07 closed the concrete architecture-enforcement gaps exposed by the package structure that now exists. It added automated protection against application deep imports into package source, package-to-package deep imports into foreign package source, and production package dependencies on another package's infrastructure implementation. Application composition roots and integration tests remain able to compose infrastructure where ownership requires it.
 
@@ -747,7 +750,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M06 — Relationship Integration
+P4-M07 — Knowledge Lifecycle
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -10963,21 +10966,63 @@ SPECULATIVE TAXONOMY SCAFFOLDING
 REJECTED
 ```
 
-The next milestone is:
+At P4-M05 demand review, the next milestone became:
 
 ```text
 P4-M06 — Relationship Integration
 ```
 
-P4-M06 must perform the same demand-driven check and activate Relationships only if real implemented Devotional Resources require reusable Resource-to-Resource connection semantics.
+P4-M06 remained demand-driven and required an activation review before any Relationships implementation.
 
 ---
 
 # 118. Phase 4 Milestone P4-M06 — Relationship Integration
 
-Activate shared Relationships only when real implemented Devotional Resources require reusable Resource-to-Resource connection semantics.
+Current milestone status:
 
-A conceptual Devotional pressure point may be:
+```text
+DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer
+```
+
+P4-M06 was demand-reviewed before materializing the deferred Relationships Kernel capability.
+
+The activation gate remains:
+
+```text
+implement Relationships only when
+real implemented Resources require
+reusable Resource-to-Resource connection semantics
+```
+
+Repository evidence at the P4-M06 demand review:
+
+```text
+implemented Devotional Resource types
+DeityResource only
+
+second implemented Devotional Resource type
+NONE
+
+TempleResource
+NOT MATERIALIZED
+
+Devotional relationship field/reference
+NONE
+
+Devotional Relationships dependency
+NONE
+
+Relationships Kernel package
+NOT MATERIALIZED
+
+Relationship Type / Instance persistence
+NONE
+
+Relationship migration
+NONE
+```
+
+The conceptual Devotional pressure point from the roadmap remains only conceptual:
 
 ```text
 Deity
@@ -10985,13 +11030,81 @@ Deity
 Temple
 ```
 
-Final Relationship Type names and validation rules belong to the activation review and the defining Universe.
+Because `Temple` is not yet an implemented Devotional Resource, there is no real pair of typed Resources that currently requires a reusable Relationship Type or Relationship Instance.
 
-Do not design Anime Relationship semantics before Anime exists.
+Inventing `ASSOCIATED_WITH`, `TempleResource`, traversal semantics, or relationship tables merely to satisfy P4-M06 would violate the roadmap rule that shared capabilities must be activated by real consumers rather than speculative symmetry.
 
-When Anime is introduced later, relationships such as Character APPEARS_IN Series should validate reuse of the same shared Relationship mechanics if appropriate.
+The accepted ownership model remains unchanged:
 
-The Relationships Kernel, when activated, remains Universe-neutral.
+```text
+Devotional Universe
+    owns the domain meaning of a specific Relationship Type
+    when it introduces one for a real domain requirement
+
+Relationships Kernel
+    owns Relationship Type infrastructure
+    owns Relationship Instance semantics
+    owns validation mechanics
+    owns shared traversal semantics
+
+Knowledge Platform
+    retains ownership of the connected Knowledge Resources
+```
+
+P4-M06 therefore introduces:
+
+```text
+NO @ai-world/kernel-relationships package
+
+NO Relationship Type model
+
+NO Relationship Instance model
+
+NO relationship traversal layer
+
+NO Graph Database
+
+NO Prisma schema change
+
+NO database migration
+
+NO Devotional source change
+
+NO Knowledge source change
+
+NO API or Web change
+
+NO Anime or History implementation
+```
+
+Canonical migration count remains:
+
+```text
+11
+```
+
+Deferral is intentional and does not represent a failed implementation. The activation gate remains open: once real implemented Devotional Resources require a reusable typed connection, Relationships should be activated with only the smallest Contract, validation, and persistence needed by that real consumer.
+
+P4-M06 demand-review conclusion:
+
+```text
+REAL RESOURCE-TO-RESOURCE RELATIONSHIP CONSUMER
+NONE
+
+RELATIONSHIPS IMPLEMENTATION
+DEFERRED
+
+SPECULATIVE RELATIONSHIP SCAFFOLDING
+REJECTED
+```
+
+The next milestone is:
+
+```text
+P4-M07 — Knowledge Lifecycle
+```
+
+P4-M07 should expand the current DRAFT-only Knowledge lifecycle only as far as the real lifecycle requirement justifies, without introducing a generalized Workflow engine.
 
 ---
 
@@ -15074,7 +15187,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M06 — Relationship Integration
+P4-M07 — Knowledge Lifecycle
 ```
 
 ---
@@ -15312,6 +15425,21 @@ Database migration NONE
 Canonical migrations remain 11
 Devotional source change NONE
 Knowledge source change NONE
+
+P4-M06 — Relationship Integration
+DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer
+
+Demand-review evidence
+DeityResource is the only implemented Devotional Resource type
+Second Devotional Resource type NONE
+TempleResource NOT MATERIALIZED
+Relationships Kernel package NOT MATERIALIZED
+Relationship persistence NONE
+Prisma schema change NONE
+Database migration NONE
+Canonical migrations remain 11
+Devotional source change NONE
+Knowledge source change NONE
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -15326,12 +15454,14 @@ P4-M04 then protected Knowledge create/update mutations through the shared Ident
 
 P4-M05 then demand-reviewed Taxonomy against the currently implemented Devotional domain. Because only `DeityResource` exists and it currently requires no reusable classification semantic, Taxonomy remains deferred and unmaterialized rather than being scaffolded speculatively.
 
+P4-M06 then demand-reviewed Relationships against the same implemented Devotional domain. Because there is still only `DeityResource`, with no second implemented Devotional Resource such as `TempleResource`, there is no real reusable Resource-to-Resource relationship consumer. Relationships therefore remains deferred and unmaterialized.
+
 Phase 4 remains active.
 
 The current next milestone is:
 
 ```text
-P4-M06 — Relationship Integration
+P4-M07 — Knowledge Lifecycle
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -15598,7 +15728,8 @@ KNOWLEDGE
     ✅ P4-M03 Knowledge CRUD Baseline — CLOSED
     ✅ P4-M04 Knowledge Authorization — CLOSED
     ↷  P4-M05 Taxonomy Integration — DEFERRED (no implemented Devotional classification consumer)
-    → P4-M06 Relationship Integration — NEXT
+    ↷  P4-M06 Relationship Integration — DEFERRED (no implemented Devotional Resource-to-Resource relationship consumer)
+    → P4-M07 Knowledge Lifecycle — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -16007,9 +16138,10 @@ P4-M04 — Knowledge Authorization
 
 DEFERRED IN PHASE 4
 P4-M05 — Taxonomy Integration — no implemented Devotional classification consumer
+P4-M06 — Relationship Integration — no implemented Devotional Resource-to-Resource relationship consumer
 
 NEXT MILESTONE
-P4-M06 — Relationship Integration
+P4-M07 — Knowledge Lifecycle
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -16084,6 +16216,18 @@ DeityResource only implemented Devotional Resource type
 No reusable Devotional classification requirement
 Taxonomy Kernel not materialized
 Taxonomy persistence none
+Prisma schema unchanged
+No migration
+Canonical migrations remain 11
+Decision: DEFERRED
+
+P4-M06 DEMAND REVIEW RESULT
+DeityResource only implemented Devotional Resource type
+Second Devotional Resource type none
+TempleResource not materialized
+No reusable Devotional Resource-to-Resource relationship requirement
+Relationships Kernel not materialized
+Relationship persistence none
 Prisma schema unchanged
 No migration
 Canonical migrations remain 11
@@ -17768,7 +17912,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M06 — Relationship Integration
+P4-M07 — Knowledge Lifecycle
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -17785,7 +17929,7 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, and P4-M04 are closed; P4-M05 is deferred after demand review; and P4-M06 is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, and P4-M04 are closed; P4-M05 and P4-M06 are deferred after demand review; and P4-M07 is next.
 
 P4-M02 established the first Devotional typed resource only. Anime remains deferred to its later second-Universe reuse-test milestone, and History remains the later third structural reuse test.
 
@@ -17793,4 +17937,6 @@ P4-M03 established canonical Knowledge create/read/update operations behind Know
 
 P4-M04 established shared authorization around Knowledge create/update mutations through the Identity & Access public permission evaluator. It introduced the `knowledge-editor` capability Role, Knowledge-owned create/update Permission actions, a data-only grant migration, default-deny ordinary User proof, and denial non-disclosure without adding API/Web behavior or changing the Prisma schema.
 
-P4-M05 demand-reviewed Taxonomy Integration against the implemented Devotional domain and found no real reusable classification consumer. The Taxonomy Kernel therefore remains deferred and unmaterialized. P4-M06 must now demand-review Relationship Integration against real Devotional Resource-to-Resource connection requirements.
+P4-M05 demand-reviewed Taxonomy Integration against the implemented Devotional domain and found no real reusable classification consumer. The Taxonomy Kernel therefore remains deferred and unmaterialized.
+
+P4-M06 demand-reviewed Relationship Integration against the same implemented Devotional domain and found no real reusable Resource-to-Resource relationship consumer. With only `DeityResource` implemented and no `TempleResource` or other second Devotional Resource present, the Relationships Kernel remains deferred and unmaterialized. P4-M07 Knowledge Lifecycle is next.
