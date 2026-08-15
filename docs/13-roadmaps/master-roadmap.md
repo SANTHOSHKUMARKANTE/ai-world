@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-15 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -674,6 +674,9 @@ P4-M04 — Knowledge Authorization
 CLOSED
 
 P4-M05 — Taxonomy Integration
+DEFERRED — no implemented Devotional classification consumer
+
+P4-M06 — Relationship Integration
 NEXT
 ```
 
@@ -721,7 +724,7 @@ P3-M03 remains deferred because no production capability presently requires busi
 
 P3-M04 established the reusable durable Audit Record baseline through a real security-sensitive Identity consumer. Audit remains separate from business Events and operational logging.
 
-P3-M05 remains deferred because no implemented Resource currently requires reusable shared classification semantics. Its first strong activation point remains P4-M05 Taxonomy Integration when a real Knowledge Resource requires classification such as Anime Genre or History Era.
+P3-M05 remains deferred because no implemented Resource currently requires reusable shared classification semantics. P4-M05 performed the planned activation review against the implemented Devotional domain and still found no real reusable classification consumer. Taxonomy therefore remains unmaterialized until a future implemented Resource establishes that requirement.
 
 P3-M06 remains deferred because no implemented production capability currently owns or consumes a reusable semantic Resource-to-Resource Relationship. Its first strong activation point remains P4-M06 Relationship Integration when real typed Knowledge Resources require connections such as Character APPEARS_IN Series or Person PARTICIPATED_IN Event.
 
@@ -744,7 +747,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M05 — Taxonomy Integration
+P4-M06 — Relationship Integration
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -10818,27 +10821,155 @@ Remote CI exercised the repository validation pipeline after the P4-M04 implemen
 
 P4-M04 closure proves that shared Identity & Access authorization can protect Knowledge-owned mutations without moving ownership into Identity, exposing resource existence on denial, changing canonical Knowledge persistence, or introducing Universe-specific authorization branches.
 
-The next milestone is:
+At P4-M04 closure, the next milestone was:
 
 ```text
 P4-M05 — Taxonomy Integration
 ```
 
-P4-M05 remains demand-driven. It should activate the deferred shared Taxonomy capability only if an implemented Devotional Resource requires reusable classification semantics.
+P4-M05 remained demand-driven and required an activation review before any Taxonomy implementation.
 
 ---
 
 # 117. Phase 4 Milestone P4-M05 — Taxonomy Integration
 
-Activate shared Taxonomy only when an implemented Devotional Resource requires reusable classification semantics.
+Current milestone status:
 
-Devotional should establish only a real reusable classification required by implemented Devotional Resources. Potential tradition/category semantics are candidates, not pre-approved taxonomy structure.
+```text
+DEFERRED — no implemented Devotional classification consumer
+```
 
-Do not activate Taxonomy for Anime before Anime exists.
+P4-M05 was demand-reviewed before materializing the deferred Taxonomy Kernel capability.
 
-When Anime is introduced later, its classifications such as Genre should reuse the shared Taxonomy mechanics if those mechanics are genuinely applicable.
+The activation gate remains:
 
-Do not build generic ontology machinery merely to satisfy the milestone.
+```text
+implement Taxonomy only when
+an implemented Resource requires
+reusable classification semantics
+```
+
+Repository evidence at the P4-M05 demand review:
+
+```text
+implemented Devotional Resource types
+DeityResource only
+
+DeityResource domain fields
+name only
+
+Devotional taxonomy/classification field
+NONE
+
+Devotional taxonomy dependency
+NONE
+
+Taxonomy Kernel package
+NOT MATERIALIZED
+
+Taxonomy persistence models
+NONE
+
+Taxonomy migration
+NONE
+```
+
+The implemented `DeityResource` currently needs:
+
+```text
+canonical Knowledge identity and lifecycle
++
+Devotional Universe/type specialization
++
+name
+```
+
+It does not currently establish a real requirement for:
+
+```text
+Taxonomy Definition
+
+Taxonomy Term
+
+classification assignment
+
+classification hierarchy
+
+tradition taxonomy
+
+category taxonomy
+```
+
+Potential Devotional tradition/category semantics remain candidates rather than approved taxonomy structure. Creating them merely to satisfy P4-M05 would violate the roadmap rule that shared capabilities must be activated by real consumers rather than speculative symmetry.
+
+The accepted ownership model remains unchanged:
+
+```text
+Taxonomy Kernel
+    owns canonical Taxonomy mechanics
+    owns Taxonomy / Taxonomy Term semantics
+    may own classification association mechanics
+
+Devotional Universe
+    may define domain-specific vocabulary meaning
+    only when a real Devotional requirement exists
+
+Knowledge Platform
+    retains ownership of the classified Knowledge Resource
+```
+
+P4-M05 therefore introduces:
+
+```text
+NO @ai-world/kernel-taxonomy package
+
+NO Taxonomy model
+
+NO Taxonomy Term model
+
+NO classification-assignment model
+
+NO Prisma schema change
+
+NO database migration
+
+NO Devotional source change
+
+NO Knowledge source change
+
+NO API or Web change
+
+NO Anime or History implementation
+```
+
+Canonical migration count remains:
+
+```text
+11
+```
+
+Deferral is intentional and does not represent a failed implementation. The activation gate remains open: if a future implemented Devotional Resource requires reusable classification semantics, Taxonomy should be activated with only the smallest contract and persistence required by that real consumer.
+
+P4-M05 demand-review conclusion:
+
+```text
+REAL CLASSIFICATION CONSUMER
+NONE
+
+TAXONOMY IMPLEMENTATION
+DEFERRED
+
+SPECULATIVE TAXONOMY SCAFFOLDING
+REJECTED
+```
+
+The next milestone is:
+
+```text
+P4-M06 — Relationship Integration
+```
+
+P4-M06 must perform the same demand-driven check and activate Relationships only if real implemented Devotional Resources require reusable Resource-to-Resource connection semantics.
 
 ---
 
@@ -14943,7 +15074,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M05 — Taxonomy Integration
+P4-M06 — Relationship Integration
 ```
 
 ---
@@ -15167,6 +15298,20 @@ e42b3b3 feat(knowledge): establish authorization baseline
 
 P4-M04 implementation CI
 GitHub Actions CI run 31889564998 — PASS
+
+P4-M05 — Taxonomy Integration
+DEFERRED — no implemented Devotional classification consumer
+
+Demand-review evidence
+DeityResource is the only implemented Devotional Resource type
+DeityResource currently adds name only
+Taxonomy Kernel package NOT MATERIALIZED
+Taxonomy persistence NONE
+Prisma schema change NONE
+Database migration NONE
+Canonical migrations remain 11
+Devotional source change NONE
+Knowledge source change NONE
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -15179,12 +15324,14 @@ P4-M03 then established canonical Knowledge-owned create/read/update operations 
 
 P4-M04 then protected Knowledge create/update mutations through the shared Identity & Access permission evaluator, added the Identity-owned `knowledge-editor` Role and Knowledge-owned create/update Permission actions, proved Administrator, editor, and ordinary User behavior against real PostgreSQL, preserved denial non-disclosure, and introduced only the required data-only authorization migration.
 
+P4-M05 then demand-reviewed Taxonomy against the currently implemented Devotional domain. Because only `DeityResource` exists and it currently requires no reusable classification semantic, Taxonomy remains deferred and unmaterialized rather than being scaffolded speculatively.
+
 Phase 4 remains active.
 
 The current next milestone is:
 
 ```text
-P4-M05 — Taxonomy Integration
+P4-M06 — Relationship Integration
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -15450,7 +15597,8 @@ KNOWLEDGE
     ✅ P4-M02 Typed Domain Resource Support — CLOSED
     ✅ P4-M03 Knowledge CRUD Baseline — CLOSED
     ✅ P4-M04 Knowledge Authorization — CLOSED
-    → P4-M05 Taxonomy Integration — NEXT
+    ↷  P4-M05 Taxonomy Integration — DEFERRED (no implemented Devotional classification consumer)
+    → P4-M06 Relationship Integration — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -15857,8 +16005,11 @@ P4-M02 — Typed Domain Resource Support
 P4-M03 — Knowledge CRUD Baseline
 P4-M04 — Knowledge Authorization
 
+DEFERRED IN PHASE 4
+P4-M05 — Taxonomy Integration — no implemented Devotional classification consumer
+
 NEXT MILESTONE
-P4-M05 — Taxonomy Integration
+P4-M06 — Relationship Integration
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -15927,6 +16078,16 @@ API / Web unchanged
 Devotional source unchanged
 Anime not materialized
 History not materialized
+
+P4-M05 DEMAND REVIEW RESULT
+DeityResource only implemented Devotional Resource type
+No reusable Devotional classification requirement
+Taxonomy Kernel not materialized
+Taxonomy persistence none
+Prisma schema unchanged
+No migration
+Canonical migrations remain 11
+Decision: DEFERRED
 
 BLOCKED
 None
@@ -17607,7 +17768,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M05 — Taxonomy Integration
+P4-M06 — Relationship Integration
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -17624,7 +17785,7 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active, P4-M01, P4-M02, P4-M03, and P4-M04 are closed, and P4-M05 is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, and P4-M04 are closed; P4-M05 is deferred after demand review; and P4-M06 is next.
 
 P4-M02 established the first Devotional typed resource only. Anime remains deferred to its later second-Universe reuse-test milestone, and History remains the later third structural reuse test.
 
@@ -17632,4 +17793,4 @@ P4-M03 established canonical Knowledge create/read/update operations behind Know
 
 P4-M04 established shared authorization around Knowledge create/update mutations through the Identity & Access public permission evaluator. It introduced the `knowledge-editor` capability Role, Knowledge-owned create/update Permission actions, a data-only grant migration, default-deny ordinary User proof, and denial non-disclosure without adding API/Web behavior or changing the Prisma schema.
 
-P4-M05 must now demand-review Taxonomy Integration against real Devotional classification requirements before activating the deferred Taxonomy capability.
+P4-M05 demand-reviewed Taxonomy Integration against the implemented Devotional domain and found no real reusable classification consumer. The Taxonomy Kernel therefore remains deferred and unmaterialized. P4-M06 must now demand-review Relationship Integration against real Devotional Resource-to-Resource connection requirements.
