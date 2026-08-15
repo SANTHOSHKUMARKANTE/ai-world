@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-15 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -671,6 +671,9 @@ P4-M03 — Knowledge CRUD Baseline
 CLOSED
 
 P4-M04 — Knowledge Authorization
+CLOSED
+
+P4-M05 — Taxonomy Integration
 NEXT
 ```
 
@@ -741,7 +744,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M04 — Knowledge Authorization
+P4-M05 — Taxonomy Integration
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -758,7 +761,19 @@ c82a325 feat(knowledge): establish crud baseline
 
 The implementation checkpoint is pushed to `origin/main`. GitHub Actions CI run `31885021623` completed successfully for exact commit `c82a325e88cf3ba9567d94c89da55a5fcd609b52`.
 
-P4-M04 is next. It should protect Knowledge mutation operations through the existing shared Identity & Access authorization capability without moving lifecycle expansion or later Knowledge capabilities forward prematurely.
+P4-M04 is now CLOSED. It protects Knowledge create/update mutations through actor-facing Knowledge operations backed by the existing Identity & Access `EvaluatePermission` public Contract. Knowledge owns the semantic action keys `knowledge.resource.create` and `knowledge.resource.update`; Identity & Access owns the `knowledge-editor` Role vocabulary and Permission evaluation. Administrator and Knowledge Editor receive both mutation Permissions, while an ordinary persisted User with no Role assignment is denied by default. Authorization is evaluated before underlying validation, target lookup, or persistence mutation, so denied updates do not reveal target existence and authorized missing-target updates retain the canonical `knowledge.resource.not_found` result.
+
+P4-M04 added the data-only migration `20260815130500_knowledge_authorization_baseline` without changing the Prisma schema. Canonical migration count is now 11. It introduced no Knowledge API or Web behavior, no lifecycle expansion, no Events, Taxonomy, Relationships, Sources, Citations, Media, Search, Anime, or History implementation.
+
+Implementation checkpoint:
+
+```text
+e42b3b3 feat(knowledge): establish authorization baseline
+```
+
+The exact implementation commit is `e42b3b33a61f54ecffbd0086d6dfbd091a832989`. GitHub Actions CI run `31889564998` completed successfully for that commit.
+
+P4-M05 is next. It must begin with a demand review and activate shared Taxonomy only if an implemented Devotional Resource establishes a real reusable classification requirement.
 
 Roadmap amendment recorded on 2026-08-15:
 
@@ -10552,7 +10567,7 @@ Remote Validate exercised the repository CI pipeline, including formatting, lint
 
 P4-M03 closure proves that canonical Knowledge mutation authority now exists behind Knowledge-owned Contracts and persistence without changing the canonical schema, expanding lifecycle semantics, or introducing Universe-specific behavior into the shared Platform.
 
-The next milestone is:
+At P4-M03 closure, the next milestone was:
 
 ```text
 P4-M04 — Knowledge Authorization
@@ -10571,22 +10586,245 @@ Only Knowledge-owned operations mutate canonical Knowledge state.
 Current milestone status:
 
 ```text
-NEXT
+CLOSED
 ```
 
-Protect mutation operations through shared Identity & Access.
+P4-M04 protects canonical Knowledge mutation operations through the existing shared Identity & Access authorization capability while preserving the P4-M03 public owner-operation contract.
 
-Prove:
+Protected actor-facing operations:
 
 ```text
-creator/editor;
+CreateKnowledgeResourceAsActor
 
-admin;
-
-ordinary User
+UpdateKnowledgeResourceAsActor
 ```
 
-behave correctly.
+The P4-M03 owner operations remain public:
+
+```text
+CreateKnowledgeResource
+
+UpdateKnowledgeResource
+```
+
+Authorization dependency:
+
+```text
+Knowledge Platform
+    ↓
+@ai-world/platform-identity-access public Contract
+    ↓
+EvaluatePermission
+```
+
+Knowledge owns the semantic meaning of the protected actions:
+
+```text
+knowledge.resource.create
+
+knowledge.resource.update
+```
+
+Identity & Access owns Role and Permission evaluation vocabulary. P4-M04 adds the Identity-owned Role key:
+
+```text
+knowledge-editor
+```
+
+The grant baseline is:
+
+```text
+administrator
+    → knowledge.resource.create
+    → knowledge.resource.update
+
+knowledge-editor
+    → knowledge.resource.create
+    → knowledge.resource.update
+
+ordinary User
+    → no automatic Role assignment
+    → denied by default
+```
+
+Authorization ordering is intentionally security-first:
+
+```text
+evaluate Permission
+    ↓
+if denied
+    → knowledge.authorization.forbidden
+    → forbidden
+    → no underlying mutation/validation/target lookup
+
+if allowed
+    ↓
+delegate to canonical Knowledge owner operation
+```
+
+The public denied message is:
+
+```text
+You do not have permission to perform this action.
+```
+
+This ordering proves:
+
+```text
+denied create performs no persistence mutation;
+
+denied update performs no persistence mutation;
+
+denied update does not disclose whether the target Resource exists;
+
+authorized update of a missing Resource preserves
+knowledge.resource.not_found.
+```
+
+P4-M04 persistence is a data-only authorization baseline migration:
+
+```text
+20260815130500_knowledge_authorization_baseline
+```
+
+It adds the Knowledge Editor Role, the two Knowledge mutation Permissions, and Role-to-Permission grants for Administrator and Knowledge Editor.
+
+P4-M04 introduces:
+
+```text
+NO Prisma schema change;
+
+NO automatic administrator assignment;
+
+NO automatic knowledge-editor assignment;
+
+NO Knowledge API endpoint;
+
+NO Web change;
+
+NO lifecycle expansion;
+
+NO archive/delete;
+
+NO Knowledge Audit expansion;
+
+NO Events;
+
+NO Taxonomy implementation;
+
+NO Relationships;
+
+NO Sources or Citations;
+
+NO Media or Search;
+
+NO Anime package;
+
+NO History package.
+```
+
+Canonical migration count is now:
+
+```text
+11
+```
+
+Focused local validation:
+
+```text
+Knowledge unit tests
+17 / 17 PASS
+
+Knowledge PostgreSQL integration tests
+10 / 10 PASS
+
+Knowledge lint
+PASS
+
+Knowledge TypeScript
+PASS
+
+Identity lint / TypeScript
+PASS
+
+Devotional consumer TypeScript
+PASS
+
+Architecture validation
+336 modules
+820 dependencies
+0 violations
+```
+
+The PostgreSQL authorization proof includes:
+
+```text
+Knowledge Editor create/update allowed;
+
+Administrator create/update allowed;
+
+persisted ordinary User with zero Role assignments denied;
+
+denied create/update perform no mutation;
+
+denied missing-target update returns forbidden;
+
+authorized missing-target update returns knowledge.resource.not_found.
+```
+
+Scope guards confirmed:
+
+```text
+Prisma schema
+UNCHANGED
+
+API / Web
+UNCHANGED
+
+Devotional source
+UNCHANGED
+
+Anime
+NOT MATERIALIZED
+
+History
+NOT MATERIALIZED
+```
+
+Implementation checkpoint:
+
+```text
+e42b3b3 feat(knowledge): establish authorization baseline
+```
+
+Exact implementation commit:
+
+```text
+e42b3b33a61f54ecffbd0086d6dfbd091a832989
+```
+
+The implementation checkpoint is pushed to `origin/main`.
+
+GitHub Actions workflow run:
+
+```text
+CI
+run 31889564998
+status completed
+conclusion success
+```
+
+Remote CI exercised the repository validation pipeline after the P4-M04 implementation commit.
+
+P4-M04 closure proves that shared Identity & Access authorization can protect Knowledge-owned mutations without moving ownership into Identity, exposing resource existence on denial, changing canonical Knowledge persistence, or introducing Universe-specific authorization branches.
+
+The next milestone is:
+
+```text
+P4-M05 — Taxonomy Integration
+```
+
+P4-M05 remains demand-driven. It should activate the deferred shared Taxonomy capability only if an implemented Devotional Resource requires reusable classification semantics.
 
 ---
 
@@ -14705,7 +14943,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M04 — Knowledge Authorization
+P4-M05 — Taxonomy Integration
 ```
 
 ---
@@ -14855,6 +15093,80 @@ c82a325 feat(knowledge): establish crud baseline
 
 P4-M03 implementation CI
 GitHub Actions CI / Validate — PASS
+
+P4-M04 — Knowledge Authorization
+CLOSED
+
+Protected actor-facing operations
+CreateKnowledgeResourceAsActor
+UpdateKnowledgeResourceAsActor
+
+Authorization Contract
+EvaluatePermission
+@ai-world/platform-identity-access public Contract
+
+Knowledge-owned Permission keys
+knowledge.resource.create
+knowledge.resource.update
+
+Identity-owned capability Role
+knowledge-editor
+
+Grant baseline
+administrator → create/update
+knowledge-editor → create/update
+ordinary User → no automatic Role assignment / denied by default
+
+Forbidden semantic
+knowledge.authorization.forbidden
+kind: forbidden
+
+Authorization ordering
+before underlying validation, target lookup, or mutation
+
+Denied missing-target update
+forbidden without existence disclosure
+
+Authorized missing-target update
+knowledge.resource.not_found
+
+Migration
+20260815130500_knowledge_authorization_baseline
+
+Prisma schema change
+NONE
+
+Canonical migration count
+11
+
+Knowledge unit tests
+17 / 17 PASS
+
+Knowledge PostgreSQL integration tests
+10 / 10 PASS
+
+P4-M04 architecture
+336 modules
+820 dependencies
+0 violations
+
+API / Web change
+NONE
+
+Devotional source change
+NONE
+
+Anime package
+NOT MATERIALIZED
+
+History package
+NOT MATERIALIZED
+
+Implementation checkpoint
+e42b3b3 feat(knowledge): establish authorization baseline
+
+P4-M04 implementation CI
+GitHub Actions CI run 31889564998 — PASS
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -14865,12 +15177,14 @@ P4-M02 then proved the first real Universe-owned typed specialization without ch
 
 P4-M03 then established canonical Knowledge-owned create/read/update operations and Prisma-backed persistence behind public Knowledge Contracts. It kept the existing schema and migration count unchanged, kept lifecycle at DRAFT, and limited the update operation to `resourceType`.
 
+P4-M04 then protected Knowledge create/update mutations through the shared Identity & Access permission evaluator, added the Identity-owned `knowledge-editor` Role and Knowledge-owned create/update Permission actions, proved Administrator, editor, and ordinary User behavior against real PostgreSQL, preserved denial non-disclosure, and introduced only the required data-only authorization migration.
+
 Phase 4 remains active.
 
 The current next milestone is:
 
 ```text
-P4-M04 — Knowledge Authorization
+P4-M05 — Taxonomy Integration
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -15135,7 +15449,8 @@ KNOWLEDGE
     ✅ P4-M01 Knowledge Resource Model — CLOSED
     ✅ P4-M02 Typed Domain Resource Support — CLOSED
     ✅ P4-M03 Knowledge CRUD Baseline — CLOSED
-    → P4-M04 Knowledge Authorization — NEXT
+    ✅ P4-M04 Knowledge Authorization — CLOSED
+    → P4-M05 Taxonomy Integration — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -15540,9 +15855,10 @@ COMPLETED IN PHASE 4
 P4-M01 — Knowledge Resource Model
 P4-M02 — Typed Domain Resource Support
 P4-M03 — Knowledge CRUD Baseline
+P4-M04 — Knowledge Authorization
 
 NEXT MILESTONE
-P4-M04 — Knowledge Authorization
+P4-M05 — Taxonomy Integration
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -15587,6 +15903,31 @@ Devotional source unchanged
 Anime not materialized
 History not materialized
 
+P4-M04 RESULT
+CreateKnowledgeResourceAsActor
+UpdateKnowledgeResourceAsActor
+EvaluatePermission
+knowledge.resource.create
+knowledge.resource.update
+knowledge-editor Role owned by Identity & Access
+administrator and knowledge-editor both granted create/update
+ordinary persisted User with zero Roles denied
+knowledge.authorization.forbidden
+authorization before validation / target lookup / mutation
+denied missing-target update does not disclose existence
+authorized missing-target update preserves knowledge.resource.not_found
+data-only authorization migration
+20260815130500_knowledge_authorization_baseline
+Prisma schema unchanged
+Canonical migrations: 11
+Knowledge unit tests: 17 / 17 PASS
+Knowledge integration tests: 10 / 10 PASS
+Architecture: 336 modules / 820 dependencies / 0 violations
+API / Web unchanged
+Devotional source unchanged
+Anime not materialized
+History not materialized
+
 BLOCKED
 None
 
@@ -15610,6 +15951,12 @@ c82a325 feat(knowledge): establish crud baseline
 
 P4-M03 IMPLEMENTATION CI
 GREEN
+
+P4-M04 IMPLEMENTATION
+e42b3b3 feat(knowledge): establish authorization baseline
+
+P4-M04 IMPLEMENTATION CI
+GREEN — GitHub Actions run 31889564998
 
 DEFERRED / DEMAND-DRIVEN
 P3-M03 Events remains deferred until a real producer/consumer requirement exists.
@@ -17260,7 +17607,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M04 — Knowledge Authorization
+P4-M05 — Taxonomy Integration
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -17277,8 +17624,12 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active, P4-M01, P4-M02, and P4-M03 are closed, and P4-M04 is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active, P4-M01, P4-M02, P4-M03, and P4-M04 are closed, and P4-M05 is next.
 
 P4-M02 established the first Devotional typed resource only. Anime remains deferred to its later second-Universe reuse-test milestone, and History remains the later third structural reuse test.
 
-P4-M03 established canonical Knowledge create/read/update operations behind Knowledge-owned Contracts and Prisma persistence. It introduced no new migration, kept Knowledge lifecycle at DRAFT, and kept the shared Platform Universe-neutral. P4-M04 must now add authorization around those Knowledge mutation operations.
+P4-M03 established canonical Knowledge create/read/update operations behind Knowledge-owned Contracts and Prisma persistence. It introduced no new migration, kept Knowledge lifecycle at DRAFT, and kept the shared Platform Universe-neutral.
+
+P4-M04 established shared authorization around Knowledge create/update mutations through the Identity & Access public permission evaluator. It introduced the `knowledge-editor` capability Role, Knowledge-owned create/update Permission actions, a data-only grant migration, default-deny ordinary User proof, and denial non-disclosure without adding API/Web behavior or changing the Prisma schema.
+
+P4-M05 must now demand-review Taxonomy Integration against real Devotional classification requirements before activating the deferred Taxonomy capability.
