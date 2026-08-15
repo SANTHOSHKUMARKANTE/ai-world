@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-15 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -683,6 +683,9 @@ P4-M07 — Knowledge Lifecycle
 CLOSED
 
 P4-M08 — Knowledge Events
+DEFERRED — no real production Event consumer
+
+P4-M09 — Sources
 NEXT
 ```
 
@@ -726,7 +729,7 @@ remain empty placeholders and are deferred to a dedicated governance/documentati
 
 They do not redefine the completed Phase 2 or Phase 3 closure criteria.
 
-P3-M03 remains deferred because no production capability presently requires business Event publication/subscription mechanics. Its first strong activation point remains Phase 4 Knowledge lifecycle Events.
+P3-M03 remains deferred. P4-M08 performed the planned activation review after P4-M07 established real Knowledge lifecycle transitions. Those transitions now provide plausible future producer points, but no implemented production capability consumes Knowledge business Events and no real producer/consumer Event boundary exists. Events therefore remains unmaterialized until a concrete consumer requires decoupled business notification.
 
 P3-M04 established the reusable durable Audit Record baseline through a real security-sensitive Identity consumer. Audit remains separate from business Events and operational logging.
 
@@ -753,7 +756,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M08 — Knowledge Events
+P4-M09 — Sources
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -11317,7 +11320,7 @@ Architecture
 
 P4-M07 closure proves that canonical Knowledge now owns a minimal persisted publication lifecycle without introducing a generalized Workflow engine or prematurely materializing business Events.
 
-The next milestone is:
+At P4-M07 closure, the next milestone was:
 
 ```text
 P4-M08 — Knowledge Events
@@ -11329,19 +11332,173 @@ P4-M08 must establish whether a real producer/consumer boundary now justifies ac
 
 # 120. Phase 4 Milestone P4-M08 — Knowledge Events
 
-Publish meaningful Events such as conceptual:
+Current milestone status:
+
+```text
+DEFERRED — no real production Event consumer
+```
+
+P4-M08 was demand-reviewed after P4-M07 established the first real Knowledge lifecycle transitions.
+
+The activation gate is:
+
+```text
+activate shared Events only when
+a real implemented producer/consumer boundary
+requires business Event publication/subscription mechanics
+```
+
+P4-M07 now gives Knowledge meaningful state changes that could eventually act as Event producer points:
+
+```text
+DRAFT -> PUBLISHED
+
+PUBLISHED -> ARCHIVED
+```
+
+That alone is not sufficient to materialize shared Events.
+
+Repository evidence at the P4-M08 demand review:
+
+```text
+Knowledge lifecycle transitions
+IMPLEMENTED
+
+production Event publisher
+NONE
+
+production Event subscriber
+NONE
+
+concrete Knowledge Event Contract
+NONE
+
+Events Kernel package
+NOT MATERIALIZED
+
+Event publisher abstraction
+NONE
+
+Event subscriber abstraction
+NONE
+
+Event bus
+NONE
+
+Event/outbox persistence
+NONE
+
+Queue/broker
+NONE
+
+apps/worker
+NOT MATERIALIZED
+
+real production Event consumer
+NONE
+
+real producer/consumer Event boundary
+NONE
+```
+
+Potential names remain conceptual rather than approved Contracts:
 
 ```text
 KnowledgeCreated
-
 KnowledgeUpdated
-
 KnowledgePublished
-
-KnowledgeArchived.
+KnowledgeArchived
 ```
 
-Final naming belongs to Event Contract design.
+No final Event name, payload, envelope, ordering rule, delivery guarantee, retry rule, or subscriber Contract is justified until a real consumer exists.
+
+The accepted ownership model remains unchanged:
+
+```text
+Knowledge Platform
+    owns the business meaning of Knowledge lifecycle changes
+    owns when a future Knowledge Event is semantically true
+
+Events Kernel
+    would own shared Event publication mechanics
+    would own Event envelope conventions
+    would own shared subscription mechanics
+
+Event consumer
+    owns only its derived reaction/projection
+    does not gain Knowledge ownership
+```
+
+P4-M08 therefore introduces:
+
+```text
+NO @ai-world/kernel-events package
+
+NO Event base class
+
+NO generic Event envelope
+
+NO Event publisher abstraction
+
+NO Event subscriber abstraction
+
+NO in-process Event bus
+
+NO outbox
+
+NO Event persistence table
+
+NO Queue
+
+NO broker
+
+NO worker application
+
+NO Prisma schema change
+
+NO database migration
+
+NO Knowledge source change
+
+NO API or Web change
+```
+
+Canonical migration count remains:
+
+```text
+12
+```
+
+Deferral is intentional. The lifecycle operations themselves remain canonical synchronous Knowledge mutations. The absence of Events does not weaken their ownership or persistence semantics.
+
+The activation gate remains open. Events should be reconsidered when a real implemented consumer — for example a future Discovery projection, Media integration, Composition reaction, worker process, or another concrete capability — must react to Knowledge changes without being coupled directly to the Knowledge mutation path.
+
+P4-M08 demand-review conclusion:
+
+```text
+MEANINGFUL LIFECYCLE PRODUCER POINTS
+YES
+
+REAL PRODUCTION EVENT CONSUMER
+NONE
+
+REAL PRODUCER/CONSUMER EVENT BOUNDARY
+NONE
+
+EVENTS IMPLEMENTATION
+DEFERRED
+
+SPECULATIVE EVENT SCAFFOLDING
+REJECTED
+```
+
+The next milestone is:
+
+```text
+P4-M09 — Sources
+```
+
+P4-M09 remains demand-driven and must introduce Source/provenance semantics only if an implemented Devotional Resource establishes a real traceability requirement.
 
 ---
 
@@ -15388,7 +15545,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M08 — Knowledge Events
+P4-M09 — Sources
 ```
 
 ---
@@ -15690,6 +15847,25 @@ Local validation
 25 unit tests PASS
 15 integration tests PASS
 347 modules / 875 dependencies / 0 architecture violations
+
+P4-M08 — Knowledge Events
+DEFERRED — no real production Event consumer
+
+Demand-review evidence
+Knowledge lifecycle transitions implemented
+Production Event publisher NONE
+Production Event subscriber NONE
+Concrete Knowledge Event Contract NONE
+Events Kernel package NOT MATERIALIZED
+Event bus NONE
+Event/outbox persistence NONE
+apps/worker NOT MATERIALIZED
+Real producer/consumer Event boundary NONE
+Prisma schema change NONE
+Database migration NONE
+Canonical migrations remain 12
+Knowledge source change NONE
+API/Web change NONE
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -15706,6 +15882,8 @@ P4-M05 then demand-reviewed Taxonomy against the currently implemented Devotiona
 
 P4-M06 then demand-reviewed Relationships against the same implemented Devotional domain. Because there is still only `DeityResource`, with no second implemented Devotional Resource such as `TempleResource`, there is no real reusable Resource-to-Resource relationship consumer. Relationships therefore remains deferred and unmaterialized.
 
+P4-M08 then demand-reviewed Events after the lifecycle baseline became real. Although publish/archive transitions now provide plausible future producer points, no implemented production consumer currently requires a business Event boundary. Events therefore remains deferred and unmaterialized.
+
 Phase 4 remains active.
 
 P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAFT -> PUBLISHED -> ARCHIVED` semantics, protected publish/archive operations, conditional persistence transitions, and no generic Workflow engine. Events remain separate and are evaluated in P4-M08.
@@ -15713,7 +15891,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next milestone is:
 
 ```text
-P4-M08 — Knowledge Events
+P4-M09 — Sources
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -15982,7 +16160,8 @@ KNOWLEDGE
     ↷  P4-M05 Taxonomy Integration — DEFERRED (no implemented Devotional classification consumer)
     ↷  P4-M06 Relationship Integration — DEFERRED (no implemented Devotional Resource-to-Resource relationship consumer)
     ✅ P4-M07 Knowledge Lifecycle — CLOSED
-    → P4-M08 Knowledge Events — NEXT
+    ↷  P4-M08 Knowledge Events — DEFERRED (no real production Event consumer)
+    → P4-M09 Sources — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -16393,9 +16572,10 @@ P4-M07 — Knowledge Lifecycle
 DEFERRED IN PHASE 4
 P4-M05 — Taxonomy Integration — no implemented Devotional classification consumer
 P4-M06 — Relationship Integration — no implemented Devotional Resource-to-Resource relationship consumer
+P4-M08 — Knowledge Events — no real production Event consumer
 
 NEXT MILESTONE
-P4-M08 — Knowledge Events
+P4-M09 — Sources
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -16504,6 +16684,22 @@ Implementation aaa9e88
 CI run 31895231315 PASS
 Local validation 21 / 21 PASS
 Decision: CLOSED
+
+P4-M08 DEMAND REVIEW RESULT
+Knowledge lifecycle producer points now exist
+Production Event publisher none
+Production Event subscriber none
+Concrete Knowledge Event Contract none
+Events Kernel not materialized
+Event bus none
+Event/outbox persistence none
+Worker application not materialized
+Real production Event consumer none
+Real producer/consumer Event boundary none
+Prisma schema unchanged
+No migration
+Canonical migrations remain 12
+Decision: DEFERRED
 
 BLOCKED
 None
@@ -18184,7 +18380,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M08 — Knowledge Events
+P4-M09 — Sources
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -18201,7 +18397,7 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, P4-M04, and P4-M07 are closed; P4-M05 and P4-M06 are deferred after demand review; and P4-M08 is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, P4-M04, and P4-M07 are closed; P4-M05, P4-M06, and P4-M08 are deferred after demand review; and P4-M09 is next.
 
 P4-M02 established the first Devotional typed resource only. Anime remains deferred to its later second-Universe reuse-test milestone, and History remains the later third structural reuse test.
 
