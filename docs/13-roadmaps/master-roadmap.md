@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-15 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -689,6 +689,9 @@ P4-M09 — Sources
 DEFERRED — no implemented Devotional source-backed Resource
 
 P4-M10 — Citations
+DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source
+
+P4-M11 — Temporal Baseline
 NEXT
 ```
 
@@ -759,7 +762,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M10 — Citations
+P4-M11 — Temporal Baseline
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -848,7 +851,11 @@ At P4-M07 closure, P4-M08 — Knowledge Events was next. P4-M08 later completed 
 
 P4-M09 performed the planned Source/provenance demand review against the currently implemented Devotional domain. `DeityResource` remains the only implemented Devotional Resource type and its only domain-specific field is `name`. No `ScriptureResource`, source-sensitive explanatory Resource, external/textual Source reference, Source Contract, Source persistence model, or provenance requirement exists in production. P4-M09 therefore remains deferred rather than introducing Source infrastructure without a real traceability consumer. Canonical migration count remains 12.
 
-P4-M10 — Citations is next and must receive the same demand review. Citation semantics should not be created merely because Source/provenance concepts are architecturally possible.
+At P4-M09 deferral, P4-M10 — Citations was next and retained the same demand-review requirement. Citation semantics still required a real source-backed Resource with needs distinct from the Source itself.
+
+P4-M10 performed the planned Citation demand review after P4-M09 Sources remained deferred. `DeityResource` is still the only implemented Devotional Resource and still adds only `name`; no source-backed Devotional Resource, Citation field, Citation association, locator semantics, Citation Contract, Citation persistence model, or requirement for Citation semantics distinct from Source exists in production. P4-M10 therefore remains deferred instead of materializing academic or generic Citation infrastructure speculatively. Canonical migration count remains 12.
+
+P4-M11 — Temporal Baseline is next and remains demand-driven. Reusable temporal semantics must likewise be justified by an implemented consumer rather than by possible future domain needs.
 
 ---
 
@@ -11627,25 +11634,164 @@ SPECULATIVE SOURCE INFRASTRUCTURE
 REJECTED
 ```
 
-The next milestone is:
+At P4-M09 deferral, the next milestone was:
 
 ```text
 P4-M10 — Citations
 ```
 
-P4-M10 remains demand-driven. Structured Citation association should be introduced only when a real source-backed Resource requires citation semantics distinct from the Source itself.
+P4-M10 retained the same demand-driven activation gate: structured Citation association would be justified only when a real source-backed Resource required citation semantics distinct from the Source itself.
 
 ---
 
 # 122. Phase 4 Milestone P4-M10 — Citations
 
-Support structured Citation association only when a real source-backed Resource requires citation semantics distinct from the Source itself.
+Current milestone status:
 
-Devotional may activate this through source-sensitive Scripture or explanatory content.
+```text
+DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source
+```
 
-History remains the later independent reuse test for stronger citation requirements.
+P4-M10 was demand-reviewed after P4-M09 Sources remained deferred.
 
-Do not overbuild academic citation infrastructure initially.
+The activation gate is:
+
+```text
+an implemented Resource
+is already source-backed
+and requires structured Citation association
+whose semantics are distinct from the Source itself
+```
+
+Current Devotional production evidence:
+
+```text
+implemented Devotional Resource types
+1
+
+implemented Resource
+DeityResource
+
+DeityResource domain-specific field
+name
+
+Source-backed Devotional Resource
+NONE
+
+ScriptureResource
+NOT MATERIALIZED
+
+Citation field
+NONE
+
+Citation collection/association
+NONE
+
+page/chapter/verse locator semantics
+NONE
+
+real Citation requirement distinct from Source
+NONE
+```
+
+The canonical Ownership Model already reserves Citation ownership appropriately:
+
+```text
+Knowledge Platform
+    owns canonical Citation semantics
+
+Resource / domain consumer
+    establishes the real need for structured citation association
+```
+
+That ownership reservation does not justify materializing Citation infrastructure before a real consumer exists.
+
+P4-M09 Sources is itself deferred because there is no implemented Devotional source-backed Resource. P4-M10 therefore has no real source-backed Resource against which distinct Citation semantics can currently be designed.
+
+P4-M10 therefore introduces:
+
+```text
+NO Citation domain model
+
+NO Citation public Contract
+
+NO Citation association abstraction
+
+NO Citation repository
+
+NO Citation persistence table
+
+NO locator vocabulary
+
+NO academic citation-style framework
+
+NO footnote/endnote framework
+
+NO Citation API
+
+NO Citation Web UI
+
+NO Prisma schema change
+
+NO database migration
+
+NO Devotional source change
+
+NO Knowledge source change
+```
+
+Canonical migration count remains:
+
+```text
+12
+```
+
+Potential future requirements such as:
+
+```text
+Source + page
+
+Source + chapter
+
+Source + verse
+
+Source + passage range
+
+Source + quoted span
+
+Source + edition-specific locator
+```
+
+remain intentionally undefined. They should be derived from an implemented source-backed Resource, not standardized before the domain requires them.
+
+P4-M10 demand-review conclusion:
+
+```text
+SOURCE-BACKED DEVOTIONAL RESOURCE
+NONE
+
+REAL STRUCTURED CITATION ASSOCIATION
+NONE
+
+CITATION SEMANTICS DISTINCT FROM SOURCE REQUIRED
+NO
+
+CITATION IMPLEMENTATION
+DEFERRED
+
+SPECULATIVE CITATION INFRASTRUCTURE
+REJECTED
+```
+
+The activation gate remains open. P4-M10 should be revisited when a real Resource needs structured citation information that cannot be represented merely as its Source reference.
+
+The next milestone is:
+
+```text
+P4-M11 — Temporal Baseline
+```
+
+P4-M11 remains demand-driven and must begin with a demand review before reusable temporal semantics are introduced.
 
 ---
 
@@ -15666,7 +15812,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M10 — Citations
+P4-M11 — Temporal Baseline
 ```
 
 ---
@@ -16005,6 +16151,24 @@ Database migration NONE
 Canonical migrations remain 12
 Devotional source change NONE
 Knowledge source change NONE
+
+P4-M10 — Citations
+DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source
+
+Demand-review evidence
+Implemented Devotional Resource types 1
+DeityResource only
+DeityResource domain-specific field name
+Source-backed Devotional Resource NONE
+Citation field/association NONE
+Structured locator semantics NONE
+Citation Contract/model NONE
+Citation persistence NONE
+Prisma schema change NONE
+Database migration NONE
+Canonical migrations remain 12
+Devotional source change NONE
+Knowledge source change NONE
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -16025,6 +16189,8 @@ P4-M08 then demand-reviewed Events after the lifecycle baseline became real. Alt
 
 P4-M09 then demand-reviewed Source/provenance semantics against the implemented Devotional domain. Because `DeityResource` remains the only Devotional Resource and contains no source-backed content or traceability requirement, Source semantics remain deferred and unmaterialized.
 
+P4-M10 then demand-reviewed Citation semantics after Sources remained deferred. With no implemented source-backed Devotional Resource and no structured Citation association requirement distinct from Source, Citation semantics remain deferred and unmaterialized.
+
 Phase 4 remains active.
 
 P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAFT -> PUBLISHED -> ARCHIVED` semantics, protected publish/archive operations, conditional persistence transitions, and no generic Workflow engine. Events remained separate, and P4-M08 later deferred them after finding no real production Event consumer.
@@ -16032,7 +16198,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next milestone is:
 
 ```text
-P4-M10 — Citations
+P4-M11 — Temporal Baseline
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -16303,7 +16469,8 @@ KNOWLEDGE
     ✅ P4-M07 Knowledge Lifecycle — CLOSED
     ↷  P4-M08 Knowledge Events — DEFERRED (no real production Event consumer)
     ↷  P4-M09 Sources — DEFERRED (no implemented Devotional source-backed Resource)
-    → P4-M10 Citations — NEXT
+    ↷  P4-M10 Citations — DEFERRED (no implemented Devotional Resource requires Citation semantics distinct from Source)
+    → P4-M11 Temporal Baseline — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -16716,9 +16883,10 @@ P4-M05 — Taxonomy Integration — no implemented Devotional classification con
 P4-M06 — Relationship Integration — no implemented Devotional Resource-to-Resource relationship consumer
 P4-M08 — Knowledge Events — no real production Event consumer
 P4-M09 — Sources — no implemented Devotional source-backed Resource
+P4-M10 — Citations — no implemented Devotional Resource requires Citation semantics distinct from Source
 
 NEXT MILESTONE
-P4-M10 — Citations
+P4-M11 — Temporal Baseline
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -16853,6 +17021,20 @@ Source-backed Devotional Resource none
 Real Source traceability requirement none
 Source Contract/model none
 Source persistence none
+Prisma schema unchanged
+No migration
+Canonical migrations remain 12
+Decision: DEFERRED
+
+P4-M10 DEMAND REVIEW RESULT
+Implemented Devotional Resource types 1
+DeityResource only
+Source-backed Devotional Resource none
+Citation field/association none
+Structured Citation locator semantics none
+Citation semantics distinct from Source required no
+Citation Contract/model none
+Citation persistence none
 Prisma schema unchanged
 No migration
 Canonical migrations remain 12
@@ -18537,7 +18719,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M10 — Citations
+P4-M11 — Temporal Baseline
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -18554,7 +18736,7 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, P4-M04, and P4-M07 are closed; P4-M05, P4-M06, P4-M08, and P4-M09 are deferred after demand review; and P4-M10 is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, P4-M04, and P4-M07 are closed; P4-M05, P4-M06, P4-M08, P4-M09, and P4-M10 are deferred after demand review; and P4-M11 is next.
 
 P4-M02 established the first Devotional typed resource only. Anime remains deferred to its later second-Universe reuse-test milestone, and History remains the later third structural reuse test.
 
