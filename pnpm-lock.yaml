@@ -292,6 +292,12 @@ importers:
 
   packages/platforms/knowledge:
     dependencies:
+      '@ai-world/foundation-database':
+        specifier: workspace:*
+        version: link:../../foundations/database
+      '@ai-world/foundation-errors':
+        specifier: workspace:*
+        version: link:../../foundations/errors
       '@ai-world/kernel-identifiers':
         specifier: workspace:*
         version: link:../../kernel/identifiers
@@ -299,9 +305,6 @@ importers:
         specifier: workspace:*
         version: link:../../kernel/namespace
     devDependencies:
-      '@ai-world/foundation-database':
-        specifier: workspace:*
-        version: link:../../foundations/database
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3
