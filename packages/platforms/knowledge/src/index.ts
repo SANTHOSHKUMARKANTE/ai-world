@@ -6,7 +6,9 @@ export {
 export { GetKnowledgeResource, type GetKnowledgeResourceInput } from './get-knowledge-resource';
 
 export {
+  KNOWLEDGE_RESOURCE_ARCHIVED_LIFECYCLE,
   KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE,
+  KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
   isKnowledgeResourceLifecycle,
   type KnowledgeResource,
   type KnowledgeResourceLifecycle,
@@ -16,6 +18,11 @@ export type {
   FindKnowledgeResourceByIdInput,
   KnowledgeResourceReader,
 } from './knowledge-resource-reader';
+
+export type {
+  KnowledgeResourceLifecycleWriter,
+  TransitionKnowledgeResourceLifecycleRecordInput,
+} from './knowledge-resource-lifecycle-writer';
 
 export type {
   CreateKnowledgeResourceRecordInput,
@@ -34,7 +41,9 @@ export {
 } from './create-knowledge-resource-as-actor';
 
 export {
+  KNOWLEDGE_RESOURCE_ARCHIVE_PERMISSION_KEY,
   KNOWLEDGE_RESOURCE_CREATE_PERMISSION_KEY,
+  KNOWLEDGE_RESOURCE_PUBLISH_PERMISSION_KEY,
   KNOWLEDGE_RESOURCE_UPDATE_PERMISSION_KEY,
 } from './knowledge-authorization-policy';
 
@@ -42,3 +51,23 @@ export {
   UpdateKnowledgeResourceAsActor,
   type UpdateKnowledgeResourceAsActorInput,
 } from './update-knowledge-resource-as-actor';
+
+export {
+  ArchiveKnowledgeResource,
+  type ArchiveKnowledgeResourceInput,
+} from './archive-knowledge-resource';
+
+export {
+  ArchiveKnowledgeResourceAsActor,
+  type ArchiveKnowledgeResourceAsActorInput,
+} from './archive-knowledge-resource-as-actor';
+
+export {
+  PublishKnowledgeResource,
+  type PublishKnowledgeResourceInput,
+} from './publish-knowledge-resource';
+
+export {
+  PublishKnowledgeResourceAsActor,
+  type PublishKnowledgeResourceAsActorInput,
+} from './publish-knowledge-resource-as-actor';

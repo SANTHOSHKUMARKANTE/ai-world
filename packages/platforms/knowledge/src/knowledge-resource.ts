@@ -3,7 +3,14 @@ import type { NamespacedKey } from '@ai-world/kernel-namespace';
 
 export const KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE = 'DRAFT' as const;
 
-export type KnowledgeResourceLifecycle = typeof KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE;
+export const KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE = 'PUBLISHED' as const;
+
+export const KNOWLEDGE_RESOURCE_ARCHIVED_LIFECYCLE = 'ARCHIVED' as const;
+
+export type KnowledgeResourceLifecycle =
+  | typeof KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE
+  | typeof KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE
+  | typeof KNOWLEDGE_RESOURCE_ARCHIVED_LIFECYCLE;
 
 export interface KnowledgeResource {
   readonly id: ResourceId;
@@ -20,5 +27,9 @@ export interface KnowledgeResource {
 }
 
 export function isKnowledgeResourceLifecycle(value: unknown): value is KnowledgeResourceLifecycle {
-  return value === KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE;
+  return (
+    value === KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE ||
+    value === KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE ||
+    value === KNOWLEDGE_RESOURCE_ARCHIVED_LIFECYCLE
+  );
 }

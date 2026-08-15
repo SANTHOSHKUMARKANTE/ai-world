@@ -4,6 +4,10 @@ import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 
 import { isKnowledgeResourceLifecycle, type KnowledgeResource } from './knowledge-resource';
 import type {
+  KnowledgeResourceLifecycleWriter,
+  TransitionKnowledgeResourceLifecycleRecordInput,
+} from './knowledge-resource-lifecycle-writer';
+import type {
   FindKnowledgeResourceByIdInput,
   KnowledgeResourceReader,
 } from './knowledge-resource-reader';
@@ -40,7 +44,7 @@ function mapPersistedKnowledgeResource(resource: PersistedKnowledgeResource): Kn
 }
 
 export class PrismaKnowledgeResourceRepository
-  implements KnowledgeResourceReader, KnowledgeResourceWriter
+  implements KnowledgeResourceReader, KnowledgeResourceWriter, KnowledgeResourceLifecycleWriter
 {
   constructor(private readonly database: DatabaseClient) {}
 
@@ -76,6 +80,26 @@ export class PrismaKnowledgeResourceRepository
       },
       data: {
         resourceType: input.resourceType,
+      },
+    });
+
+    if (result.count !== 1) {
+      return null;
+    }
+
+    return this.findById({ id: input.id });
+  }
+
+  async transitionLifecycle(
+    input: TransitionKnowledgeResourceLifecycleRecordInput,
+  ): Promise<KnowledgeResource | null> {
+    const result = await this.database.knowledgeResource.updateMany({
+      where: {
+        id: input.id,
+        lifecycle: input.fromLifecycle,
+      },
+      data: {
+        lifecycle: input.toLifecycle,
       },
     });
 
