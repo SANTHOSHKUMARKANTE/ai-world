@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-15 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -668,6 +668,9 @@ P4-M02 — Typed Domain Resource Support
 CLOSED
 
 P4-M03 — Knowledge CRUD Baseline
+CLOSED
+
+P4-M04 — Knowledge Authorization
 NEXT
 ```
 
@@ -738,22 +741,24 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M03 — Knowledge CRUD Baseline
+P4-M04 — Knowledge Authorization
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
 
-P4-M02 is now CLOSED. It established the first Devotional-owned typed specialization through `@ai-world/universe-devotional`, with `DeityResource` specializing the existing canonical `KnowledgeResource`. The Devotional Universe key is `universe.devotional`, the Deity Resource Type key is `devotional.deity`, Knowledge remains unaware of Devotional, and no Anime or History package was materialized.
+P4-M02 established the first Devotional-owned typed specialization through `@ai-world/universe-devotional`, with `DeityResource` specializing the existing canonical `KnowledgeResource`. Knowledge remains unaware of Devotional, and Anime and History remain unmaterialized.
+
+P4-M03 is now CLOSED. It established canonical Knowledge-owned create/read/update operations, public reader/writer Contracts, and a Prisma-backed Knowledge repository while retaining the existing `knowledge_resources` schema and DRAFT-only lifecycle. The P4-M03 update operation deliberately changes only `resourceType`; Resource identity, Universe association, lifecycle, and creation time remain outside that mutation.
 
 Implementation checkpoint:
 
 ```text
-dbb4a9a feat(devotional): establish deity resource type
+c82a325 feat(knowledge): establish crud baseline
 ```
 
-The implementation checkpoint is pushed to `origin/main` and its GitHub Actions CI / Validate run is green.
+The implementation checkpoint is pushed to `origin/main`. GitHub Actions CI run `31885021623` completed successfully for exact commit `c82a325e88cf3ba9567d94c89da55a5fcd609b52`.
 
-P4-M03 is next. It should add only the canonical Knowledge create/read/update operations required by the roadmap without pulling Authorization, lifecycle expansion, Events, Taxonomy, Relationships, Sources, Citations, Media, Search, or Anime forward prematurely.
+P4-M04 is next. It should protect Knowledge mutation operations through the existing shared Identity & Access authorization capability without moving lifecycle expansion or later Knowledge capabilities forward prematurely.
 
 Roadmap amendment recorded on 2026-08-15:
 
@@ -10329,7 +10334,7 @@ no duplicate Universe infrastructure is introduced.
 
 Anime remains intentionally deferred to the later second-Universe reuse-test milestone.
 
-The next milestone is:
+At P4-M02 closure, the next milestone was:
 
 ```text
 P4-M03 — Knowledge CRUD Baseline
@@ -10342,10 +10347,10 @@ P4-M03 — Knowledge CRUD Baseline
 Current milestone status:
 
 ```text
-NEXT
+CLOSED
 ```
 
-Implement canonical owner operations:
+P4-M03 established canonical Knowledge-owned operations for:
 
 ```text
 create;
@@ -10355,7 +10360,203 @@ read;
 update.
 ```
 
-Lifecycle-driven archive behavior remains owned by P4-M07 unless the roadmap is deliberately revised.
+Implemented public owner operations:
+
+```text
+CreateKnowledgeResource
+
+GetKnowledgeResource
+
+UpdateKnowledgeResource
+```
+
+Implemented public persistence Contracts:
+
+```text
+KnowledgeResourceReader
+
+KnowledgeResourceWriter
+```
+
+Implemented Knowledge-owned infrastructure:
+
+```text
+PrismaKnowledgeResourceRepository
+
+@ai-world/platform-knowledge/infrastructure
+```
+
+Create semantics:
+
+```text
+generate canonical ResourceId;
+
+validate universeKey as NamespacedKey;
+
+validate resourceType as NamespacedKey;
+
+force initial lifecycle to DRAFT;
+
+persist through the Knowledge-owned writer Contract.
+```
+
+Read semantics:
+
+```text
+validate canonical ResourceId;
+
+read through the Knowledge-owned reader Contract;
+
+missing Resource
+    → knowledge.resource.not_found
+    → not_found.
+```
+
+P4-M03 deliberately narrows update semantics to:
+
+```text
+resourceType
+```
+
+The update operation does not expose mutation of:
+
+```text
+id;
+
+universeKey;
+
+lifecycle;
+
+createdAt.
+```
+
+`updatedAt` remains persistence-managed.
+
+This deliberately avoids turning an ordinary update into a lifecycle transition or allowing a canonical Resource to silently move between Universes.
+
+Lifecycle-driven archive behavior remains owned by P4-M07.
+
+Persistence continues to use:
+
+```text
+knowledge_resources
+```
+
+P4-M03 introduced:
+
+```text
+NO Prisma schema change;
+
+NO database migration;
+
+NO lifecycle expansion;
+
+NO API or Web behavior;
+
+NO Authorization implementation;
+
+NO Events;
+
+NO Taxonomy;
+
+NO Relationships;
+
+NO Sources;
+
+NO Citations;
+
+NO Media;
+
+NO Search;
+
+NO Anime package;
+
+NO History package.
+```
+
+Canonical migration count remains:
+
+```text
+10
+```
+
+Focused local validation:
+
+```text
+Knowledge unit tests
+11 / 11 PASS
+
+Knowledge PostgreSQL integration tests
+5 / 5 PASS
+
+Knowledge lint
+PASS
+
+Knowledge TypeScript
+PASS
+
+Devotional consumer TypeScript
+PASS
+
+Architecture validation
+328 modules
+785 dependencies
+0 violations
+```
+
+The Knowledge CRUD tests use Universe-neutral test keys rather than importing or inventing Devotional domain definitions.
+
+Scope guards confirmed:
+
+```text
+Devotional source
+UNCHANGED
+
+Prisma schema / migrations
+UNCHANGED
+
+API / Web
+UNCHANGED
+
+Anime
+NOT MATERIALIZED
+
+History
+NOT MATERIALIZED
+```
+
+Implementation checkpoint:
+
+```text
+c82a325 feat(knowledge): establish crud baseline
+```
+
+Exact implementation commit:
+
+```text
+c82a325e88cf3ba9567d94c89da55a5fcd609b52
+```
+
+The implementation checkpoint is pushed to `origin/main`.
+
+GitHub Actions workflow run:
+
+```text
+CI
+run 31885021623
+status completed
+conclusion success
+```
+
+Remote Validate exercised the repository CI pipeline, including formatting, lint, TypeScript, tests, database migrations, database integration tests, browser E2E, build, and architecture validation.
+
+P4-M03 closure proves that canonical Knowledge mutation authority now exists behind Knowledge-owned Contracts and persistence without changing the canonical schema, expanding lifecycle semantics, or introducing Universe-specific behavior into the shared Platform.
+
+The next milestone is:
+
+```text
+P4-M04 — Knowledge Authorization
+```
 
 ---
 
@@ -10366,6 +10567,12 @@ Only Knowledge-owned operations mutate canonical Knowledge state.
 ---
 
 # 116. Phase 4 Milestone P4-M04 — Knowledge Authorization
+
+Current milestone status:
+
+```text
+NEXT
+```
 
 Protect mutation operations through shared Identity & Access.
 
@@ -14498,7 +14705,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M03 — Knowledge CRUD Baseline
+P4-M04 — Knowledge Authorization
 ```
 
 ---
@@ -14584,6 +14791,70 @@ dbb4a9a feat(devotional): establish deity resource type
 
 P4-M02 implementation CI
 GitHub Actions CI / Validate — PASS
+
+
+P4-M03 — Knowledge CRUD Baseline
+CLOSED
+
+Public owner operations
+CreateKnowledgeResource
+GetKnowledgeResource
+UpdateKnowledgeResource
+
+Public persistence Contracts
+KnowledgeResourceReader
+KnowledgeResourceWriter
+
+Knowledge infrastructure
+PrismaKnowledgeResourceRepository
+@ai-world/platform-knowledge/infrastructure
+
+Create lifecycle
+DRAFT
+
+Update scope
+resourceType only
+
+Immutable through P4-M03 update
+id
+universeKey
+lifecycle
+createdAt
+
+Not-found semantic
+knowledge.resource.not_found
+
+Prisma / migration change
+NONE
+
+Canonical migration count
+10
+
+Knowledge unit tests
+11 / 11 PASS
+
+Knowledge PostgreSQL integration tests
+5 / 5 PASS
+
+Devotional source change
+NONE
+
+Anime package
+NOT MATERIALIZED
+
+History package
+NOT MATERIALIZED
+
+P4-M03 architecture
+328 modules
+785 dependencies
+0 violations
+
+Implementation checkpoint
+c82a325 feat(knowledge): establish crud baseline
+
+P4-M03 implementation CI
+GitHub Actions CI / Validate — PASS
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -14592,12 +14863,14 @@ P4-M01 deliberately introduced no generic JSON payload, Universe registry, Taxon
 
 P4-M02 then proved the first real Universe-owned typed specialization without changing Knowledge, persistence, or the canonical lifecycle. It deliberately created only Devotional and kept Anime and History unmaterialized.
 
+P4-M03 then established canonical Knowledge-owned create/read/update operations and Prisma-backed persistence behind public Knowledge Contracts. It kept the existing schema and migration count unchanged, kept lifecycle at DRAFT, and limited the update operation to `resourceType`.
+
 Phase 4 remains active.
 
 The current next milestone is:
 
 ```text
-P4-M03 — Knowledge CRUD Baseline
+P4-M04 — Knowledge Authorization
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -14861,7 +15134,8 @@ KNOWLEDGE
     ACTIVE
     ✅ P4-M01 Knowledge Resource Model — CLOSED
     ✅ P4-M02 Typed Domain Resource Support — CLOSED
-    → P4-M03 Knowledge CRUD Baseline — NEXT
+    ✅ P4-M03 Knowledge CRUD Baseline — CLOSED
+    → P4-M04 Knowledge Authorization — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -15265,9 +15539,10 @@ ACTIVE
 COMPLETED IN PHASE 4
 P4-M01 — Knowledge Resource Model
 P4-M02 — Typed Domain Resource Support
+P4-M03 — Knowledge CRUD Baseline
 
 NEXT MILESTONE
-P4-M03 — Knowledge CRUD Baseline
+P4-M04 — Knowledge Authorization
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -15292,6 +15567,26 @@ Prisma unchanged
 Anime not materialized
 History not materialized
 
+P4-M03 RESULT
+CreateKnowledgeResource
+GetKnowledgeResource
+UpdateKnowledgeResource
+KnowledgeResourceReader
+KnowledgeResourceWriter
+PrismaKnowledgeResourceRepository
+resourceType-only update
+knowledge.resource.not_found
+DRAFT lifecycle retained
+Prisma schema unchanged
+No new migration
+Canonical migrations: 10
+Knowledge unit tests: 11 / 11 PASS
+Knowledge integration tests: 5 / 5 PASS
+Architecture: 328 modules / 785 dependencies / 0 violations
+Devotional source unchanged
+Anime not materialized
+History not materialized
+
 BLOCKED
 None
 
@@ -15308,6 +15603,12 @@ P4-M02 IMPLEMENTATION
 dbb4a9a feat(devotional): establish deity resource type
 
 P4-M02 IMPLEMENTATION CI
+GREEN
+
+P4-M03 IMPLEMENTATION
+c82a325 feat(knowledge): establish crud baseline
+
+P4-M03 IMPLEMENTATION CI
 GREEN
 
 DEFERRED / DEMAND-DRIVEN
@@ -16959,7 +17260,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M03 — Knowledge CRUD Baseline
+P4-M04 — Knowledge Authorization
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -16976,6 +17277,8 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active, P4-M01 and P4-M02 are closed, and P4-M03 is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active, P4-M01, P4-M02, and P4-M03 are closed, and P4-M04 is next.
 
 P4-M02 established the first Devotional typed resource only. Anime remains deferred to its later second-Universe reuse-test milestone, and History remains the later third structural reuse test.
+
+P4-M03 established canonical Knowledge create/read/update operations behind Knowledge-owned Contracts and Prisma persistence. It introduced no new migration, kept Knowledge lifecycle at DRAFT, and kept the shared Platform Universe-neutral. P4-M04 must now add authorization around those Knowledge mutation operations.
