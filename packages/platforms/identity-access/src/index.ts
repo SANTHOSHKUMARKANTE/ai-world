@@ -3,6 +3,7 @@ export type { Actor } from './actor';
 export {
   ADMINISTRATOR_ROLE_KEY,
   IDENTITY_AUTHORIZATION_MANAGE_PERMISSION_KEY,
+  KNOWLEDGE_EDITOR_ROLE_KEY,
 } from './authorization/authorization-policy';
 
 export {

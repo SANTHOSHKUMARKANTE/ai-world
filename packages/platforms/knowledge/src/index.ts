@@ -27,3 +27,18 @@ export {
   UpdateKnowledgeResource,
   type UpdateKnowledgeResourceInput,
 } from './update-knowledge-resource';
+
+export {
+  CreateKnowledgeResourceAsActor,
+  type CreateKnowledgeResourceAsActorInput,
+} from './create-knowledge-resource-as-actor';
+
+export {
+  KNOWLEDGE_RESOURCE_CREATE_PERMISSION_KEY,
+  KNOWLEDGE_RESOURCE_UPDATE_PERMISSION_KEY,
+} from './knowledge-authorization-policy';
+
+export {
+  UpdateKnowledgeResourceAsActor,
+  type UpdateKnowledgeResourceAsActorInput,
+} from './update-knowledge-resource-as-actor';

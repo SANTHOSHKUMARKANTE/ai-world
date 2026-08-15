@@ -304,6 +304,9 @@ importers:
       '@ai-world/kernel-namespace':
         specifier: workspace:*
         version: link:../../kernel/namespace
+      '@ai-world/platform-identity-access':
+        specifier: workspace:*
+        version: link:../identity-access
     devDependencies:
       '@types/node':
         specifier: 24.13.3
