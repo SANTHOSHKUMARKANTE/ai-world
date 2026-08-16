@@ -183,3 +183,16 @@ model KnowledgeResource {
 
   @@map("knowledge_resources")
 }
+
+model Asset {
+  id               String   @id @db.Uuid
+  assetType        String   @map("asset_type") @db.VarChar(32)
+  mimeType         String   @map("mime_type") @db.VarChar(255)
+  sizeBytes        Int      @map("size_bytes")
+  storageReference String   @map("storage_reference") @db.Text
+  lifecycle        String   @db.VarChar(32)
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("media_assets")
+}
