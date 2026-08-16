@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -698,6 +698,9 @@ P4-M12 — Devotional Universe v1
 CLOSED
 
 P4-M13 — Anime Reuse-Test Universe v1
+CLOSED
+
+P4-M14 — Basic Public Knowledge API
 NEXT
 ```
 
@@ -768,7 +771,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M13 — Anime Reuse-Test Universe v1
+P4-M14 — Basic Public Knowledge API
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -873,7 +876,17 @@ Devotional v1 now has a concrete Devotional-owned Universe Definition for `unive
 
 The v1 scope deliberately did not create a generic shared `UniverseDefinition` framework or Universe Registry. Taxonomy, Relationships, Source/provenance, Citation, and reusable Temporal semantics remain deferred because P4-M12 did not establish a real activation need for those shared capabilities. Devotional also gained no separate database, Search, or authorization engine. Prisma remained unchanged and canonical migration count remains 12.
 
-P4-M13 — Anime Reuse-Test Universe v1 is next. Anime is the second-Universe reuse test and should determine which Devotional-local definition patterns, if any, deserve promotion into shared reusable contracts.
+At P4-M12 closure, P4-M13 — Anime Reuse-Test Universe v1 was next. Anime was the second-Universe reuse test intended to determine which Devotional-local definition patterns, if any, deserved promotion into shared reusable contracts.
+
+P4-M13 is CLOSED. The implementation checkpoint is `c90b4a99 feat(anime): establish reuse-test universe v1`, with GitHub Actions CI run `31927100260` green for the exact implementation SHA `c90b4a99e1d66319e54278afbf2017a6c63af6b8`.
+
+Anime v1 was deliberately implemented as a bounded architecture reuse test rather than a parallel product priority. Devotional remains AI World's primary product/domain priority. The Anime package reuses the same shared `KnowledgeResource` model through `universe.anime`, `anime.character`, and `anime.series`, while keeping Anime-specific semantics inside `@ai-world/universe-anime`.
+
+The concrete Universe-definition pattern established by Devotional was successfully reused by Anime without an Anime-to-Devotional dependency and without named-Universe branches in shared Platform code. P4-M13 therefore proves the reuse pattern at the current abstraction level. A generic shared `UniverseDefinition` contract or Universe Registry was not promoted because no shared runtime consumer currently requires that abstraction.
+
+The optional `Genre` classification and `Character APPEARS_IN Series` relationship were intentionally not materialized. Taxonomy and Relationships therefore remain deferred until a real product capability needs their mechanics. Anime also gained no separate database, Search, or authorization infrastructure; Prisma remained unchanged and canonical migration count remains 12.
+
+P4-M14 — Basic Public Knowledge API is next. This returns delivery focus to shared platform capability that can directly serve the Devotional product priority.
 
 ---
 
@@ -12121,6 +12134,105 @@ The second-Universe Anime reuse test is now responsible for determining whether 
 
 # 126. Phase 4 Milestone P4-M13 — Anime Reuse-Test Universe v1
 
+Current milestone status:
+
+```text
+CLOSED
+```
+
+Implementation checkpoint:
+
+```text
+c90b4a99e1d66319e54278afbf2017a6c63af6b8
+feat(anime): establish reuse-test universe v1
+```
+
+Remote validation:
+
+```text
+GitHub Actions CI
+run 31927100260
+completed / success
+exact implementation SHA verified
+```
+
+Product-priority boundary:
+
+```text
+Devotional
+PRIMARY PRODUCT / DOMAIN PRIORITY
+
+Anime
+BOUNDED SECOND-UNIVERSE ARCHITECTURE REUSE TEST
+NOT A PARALLEL PRODUCT PRIORITY
+```
+
+Actual Anime v1 scope:
+
+```text
+Universe
+universe.anime
+
+Resource Types
+anime.character
+anime.series
+
+Typed Resources
+CharacterResource -> name
+SeriesResource    -> title
+```
+
+Both typed Anime Resources specialize the shared Knowledge Resource contract. Anime consumes shared Knowledge and does not depend on Devotional.
+
+Reuse conclusion:
+
+```text
+Devotional concrete Universe-definition pattern
+REUSED SUCCESSFULLY
+
+generic shared UniverseDefinition contract
+NOT PROMOTED
+
+Universe Registry
+NOT CREATED
+
+shared Platform named-Universe core branches
+NONE
+```
+
+The second consumer proved the concrete pattern can support a structurally different Universe without forcing a new shared runtime abstraction. Promotion remains demand-driven until an actual shared consumer or registry requires a common Contract.
+
+Deferred potential scope at P4-M13 closure:
+
+```text
+Genre / reusable classification
+NOT MATERIALIZED
+
+Character APPEARS_IN Series
+NOT MATERIALIZED
+
+Taxonomy mechanics
+NOT ACTIVATED
+
+Relationship mechanics
+NOT ACTIVATED
+
+Source / Citation / Temporal
+NOT ACTIVATED
+
+Anime-specific database / Search / authorization infrastructure
+NOT CREATED
+
+Prisma schema change
+NONE
+
+database migration
+NONE
+
+canonical migrations
+12
+```
+
 Introduce a minimal Anime Universe Definition as the second-Universe reuse test after Devotional v1 has established real shared architecture.
 
 Potential scope:
@@ -12158,6 +12270,42 @@ no Anime-specific Search infrastructure;
 
 no Anime-specific Platform core branches.
 ```
+
+P4-M13 closure outcome:
+
+```text
+same Knowledge Platform
+PROVED
+
+same Identity/Authorization ownership model
+PRESERVED — Anime adds no authorization engine
+
+same Taxonomy mechanics where activated
+NOT EXERCISED — Taxonomy remains deferred
+
+same Relationship mechanics where activated
+NOT EXERCISED — Relationships remain deferred
+
+different domain semantics
+PROVED — Character and Series remain Anime-owned
+
+Anime-specific database engine
+NOT CREATED
+
+Anime-specific Search infrastructure
+NOT CREATED
+
+Anime-specific Platform core branches
+NONE
+
+Anime-to-Devotional production dependency
+NONE
+
+generic shared UniverseDefinition abstraction
+NOT PROMOTED
+```
+
+The reuse test demonstrates that Devotional and Anime can specialize the same shared Knowledge contract while keeping their domain semantics isolated. This is sufficient for P4-M13; broader Anime product work remains outside the current priority, and Devotional remains the primary product/domain focus.
 
 ---
 
@@ -16062,7 +16210,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M13 — Anime Reuse-Test Universe v1
+P4-M14 — Basic Public Knowledge API
 ```
 
 ---
@@ -16479,6 +16627,59 @@ Database migration
 NONE
 
 Canonical migrations remain 12
+
+P4-M13 — Anime Reuse-Test Universe v1
+CLOSED
+
+Implementation checkpoint
+c90b4a99e1d66319e54278afbf2017a6c63af6b8
+feat(anime): establish reuse-test universe v1
+
+Remote CI
+31927100260 completed / success
+
+Primary product/domain priority
+Devotional
+
+Anime role
+bounded architecture reuse test
+
+Anime Universe key
+universe.anime
+
+Anime Resource Types
+anime.character
+anime.series
+
+Typed Knowledge specializations
+CharacterResource
+SeriesResource
+
+Anime unit validation
+1 test file / 4 tests passed
+
+Architecture validation
+356 modules / 896 dependencies / 0 violations
+
+Devotional concrete definition pattern
+REUSED
+
+Generic shared UniverseDefinition / Registry
+NOT PROMOTED
+
+Genre / classification
+NOT MATERIALIZED
+
+Character APPEARS_IN Series
+NOT MATERIALIZED
+
+Prisma schema change
+NONE
+
+Database migration
+NONE
+
+Canonical migrations remain 12
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -16505,6 +16706,8 @@ P4-M11 then demand-reviewed reusable temporal semantics. `KnowledgeResource.crea
 
 P4-M12 then established Devotional Universe v1 with a concrete Devotional-owned definition for `universe.devotional` and Deity, Scripture, and Temple typed Resources over shared Knowledge. The milestone intentionally kept the definition concrete instead of promoting a generic Universe framework before the Anime reuse test. Deferred Taxonomy, Relationships, Source, Citation, and Temporal semantics remained unmaterialized.
 
+P4-M13 then completed the bounded Anime second-Universe reuse test. `CharacterResource` and `SeriesResource` reused shared Knowledge while Anime remained isolated from Devotional implementation and shared Platform code remained free of named-Universe core branches. The concrete Universe-definition pattern proved reusable, but no generic shared `UniverseDefinition` or registry was promoted without a runtime consumer. Devotional remains the primary product/domain priority.
+
 Phase 4 remains active.
 
 P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAFT -> PUBLISHED -> ARCHIVED` semantics, protected publish/archive operations, conditional persistence transitions, and no generic Workflow engine. Events remained separate, and P4-M08 later deferred them after finding no real production Event consumer.
@@ -16512,7 +16715,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next milestone is:
 
 ```text
-P4-M13 — Anime Reuse-Test Universe v1
+P4-M14 — Basic Public Knowledge API
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -16786,7 +16989,8 @@ KNOWLEDGE
     ↷  P4-M10 Citations — DEFERRED (no implemented Devotional Resource requires Citation semantics distinct from Source)
     ↷  P4-M11 Temporal Baseline — DEFERRED (no implemented Devotional Resource requires reusable date/date-range semantics)
     ✅ P4-M12 Devotional Universe v1 — CLOSED
-    → P4-M13 Anime Reuse-Test Universe v1 — NEXT
+    ✅ P4-M13 Anime Reuse-Test Universe v1 — CLOSED
+    → P4-M14 Basic Public Knowledge API — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -17203,7 +17407,7 @@ P4-M10 — Citations — no implemented Devotional Resource requires Citation se
 P4-M11 — Temporal Baseline — no implemented Devotional Resource requires reusable date/date-range semantics
 
 NEXT MILESTONE
-P4-M13 — Anime Reuse-Test Universe v1
+P4-M14 — Basic Public Knowledge API
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -17378,6 +17582,21 @@ Resource Types deity / scripture / temple
 Three typed Knowledge specializations
 Generic shared UniverseDefinition framework not created
 Deferred shared capabilities not activated
+Prisma unchanged
+No migration
+Canonical migrations remain 12
+
+P4-M13 CLOSURE RESULT
+Anime Reuse-Test Universe v1 CLOSED
+Implementation c90b4a99 feat(anime): establish reuse-test universe v1
+CI 31927100260 success
+Devotional remains primary product/domain priority
+Anime remains bounded architecture reuse test
+Universe key universe.anime
+Resource Types character / series
+Shared Knowledge reuse proved
+Generic shared UniverseDefinition / Registry not promoted
+Genre and APPEARS_IN relationship not materialized
 Prisma unchanged
 No migration
 Canonical migrations remain 12
@@ -19061,7 +19280,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M13 — Anime Reuse-Test Universe v1
+P4-M14 — Basic Public Knowledge API
 ```
 
 P3-M01 established canonical Resource identifier semantics.
