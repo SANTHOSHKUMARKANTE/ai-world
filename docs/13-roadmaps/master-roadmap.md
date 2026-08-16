@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -704,6 +704,9 @@ P4-M14 — Basic Public Knowledge API
 CLOSED
 
 P4-M15 — Basic Creator Knowledge API
+CLOSED
+
+P4-M16 — Web Knowledge Experience
 NEXT
 ```
 
@@ -774,7 +777,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M15 — Basic Creator Knowledge API
+P4-M16 — Web Knowledge Experience
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -903,7 +906,21 @@ The implementation introduced no creator write endpoint, no full-text Search cap
 
 Final local validation included 5 Knowledge test files / 37 tests passed and 1 public Knowledge API integration test file / 10 tests passed. Architecture validation remained 367 modules / 943 dependencies / 0 violations; the final empty-Resource-Type repair changed no imports or dependencies.
 
-P4-M15 — Basic Creator Knowledge API is next. It will add protected creation/editing APIs while preserving Devotional as the primary product focus.
+At P4-M14 closure, P4-M15 — Basic Creator Knowledge API was next. That milestone has now established the protected Knowledge creation/editing transport boundary while preserving Devotional as the primary product focus.
+
+P4-M15 is CLOSED. The implementation checkpoint is `888523cb feat(knowledge): expose creator write API`, with GitHub Actions CI run `31930221502` green for the exact implementation SHA `888523cbf7d35e8dc4f5751d650f81384da8a6df`.
+
+P4-M15 exposed the minimal protected creator Knowledge transport surface through `POST /knowledge/resources` and `PATCH /knowledge/resources/:id`. Both operations require a valid Session, derive the acting Actor only from the validated Session, and reuse the existing owner-side `knowledge.resource.create` and `knowledge.resource.update` authorization permissions.
+
+Authorization remains before canonical Knowledge input validation. Unauthorized callers therefore receive the canonical forbidden result before Resource existence or malformed canonical input can be used for probing. After authorization succeeds, malformed canonical Resource identifiers or NamespacedKeys are translated to the controlled `knowledge.resource.invalid_input` validation failure. The final repair narrowed that translation to parser failures only so downstream repository/data-integrity `TypeError`s remain internal failures instead of being misclassified as client input errors.
+
+Devotional remains the primary product/domain focus. Integration proof used a `knowledge-editor` to create a `universe.devotional` / `devotional.deity` Resource in `DRAFT`, verified that the new draft remained hidden through the P4-M14 public API, and exercised the existing canonical edit operation by changing the Resource Type to `devotional.temple`. Production Knowledge and API code remains Universe-generic with no Devotional- or Anime-specific branches.
+
+P4-M15 deliberately adds no creator UI, no publish/archive HTTP endpoint, no domain-payload persistence for typed Universe fields, no Search, and no Taxonomy, Relationships, Source, Citation, or reusable Temporal capability. Prisma remains unchanged, no migration was created, and canonical migration count remains 12.
+
+Final local validation after the narrow parser-error repair included 5 Knowledge test files / 41 tests passed, 1 Creator Knowledge API integration test file / 10 tests passed, and architecture validation at 370 modules / 968 dependencies / 0 violations. The earlier full P4-M15 validation also kept API non-integration tests and the P4-M14 public Knowledge regression suite green.
+
+P4-M16 — Web Knowledge Experience is next. Devotional remains the primary product focus as Phase 4 moves from API capability into the first limited web Knowledge experience.
 
 ---
 
@@ -12470,6 +12487,153 @@ Expose controlled read/query APIs.
 
 # 129. Phase 4 Milestone P4-M15 — Basic Creator Knowledge API
 
+Current milestone status:
+
+```text
+CLOSED
+```
+
+Implementation checkpoint:
+
+```text
+888523cbf7d35e8dc4f5751d650f81384da8a6df
+feat(knowledge): expose creator write API
+```
+
+Remote validation:
+
+```text
+GitHub Actions CI
+run 31930221502
+completed / success
+exact implementation SHA verified
+```
+
+Primary product/domain focus:
+
+```text
+Devotional
+PRIMARY
+```
+
+Protected creator API:
+
+```text
+POST /knowledge/resources
+
+PATCH /knowledge/resources/:id
+```
+
+Authentication / authorization:
+
+```text
+Session
+REQUIRED
+
+actingActorId
+DERIVED FROM VALIDATED SESSION ONLY
+
+create Permission
+knowledge.resource.create
+
+update Permission
+knowledge.resource.update
+```
+
+Security ordering:
+
+```text
+Session validation
+↓
+Permission evaluation
+↓
+Canonical ResourceId / NamespacedKey validation
+↓
+Knowledge owner operation
+↓
+Persistence
+```
+
+Validation semantics:
+
+```text
+unauthorized malformed input
+FORBIDDEN BEFORE CANONICAL VALIDATION
+
+authorized malformed canonical input
+400 knowledge.resource.invalid_input
+
+downstream repository/data TypeError
+NOT RECLASSIFIED AS CLIENT VALIDATION
+```
+
+Devotional integration proof:
+
+```text
+knowledge-editor
+CREATES
+
+universe.devotional
+devotional.deity
+DRAFT
+
+public P4-M14 GET for created DRAFT
+HIDDEN / 404
+
+canonical edit
+devotional.deity -> devotional.temple
+```
+
+Deliberately excluded:
+
+```text
+creator UI
+NONE
+
+publish/archive HTTP endpoints
+NONE
+
+typed Universe payload persistence
+NONE
+
+named-Universe production branches
+NONE
+
+Search
+NOT ACTIVATED
+
+Taxonomy / Relationships / Source / Citation / Temporal
+NOT ACTIVATED
+```
+
+Persistence outcome:
+
+```text
+Prisma schema change
+NONE
+
+database migration
+NONE
+
+canonical migrations
+12
+```
+
+Validation evidence:
+
+```text
+Knowledge unit validation
+5 test files / 41 tests passed
+
+Creator Knowledge API integration
+1 test file / 10 tests passed
+
+Architecture validation
+370 modules / 968 dependencies / 0 violations
+```
+
+P4-M15 stops at the protected creation/editing API boundary. The creator UI remains intentionally unmaterialized.
+
 Expose protected creation/editing APIs.
 
 Creator UI may remain minimal.
@@ -16363,7 +16527,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M15 — Basic Creator Knowledge API
+P4-M16 — Web Knowledge Experience
 ```
 
 ---
@@ -16889,6 +17053,74 @@ Database migration
 NONE
 
 Canonical migrations remain 12
+
+P4-M15 — Basic Creator Knowledge API
+CLOSED
+
+Implementation checkpoint
+888523cbf7d35e8dc4f5751d650f81384da8a6df
+feat(knowledge): expose creator write API
+
+Remote CI
+31930221502 completed / success
+
+Primary product/domain focus
+Devotional
+
+Protected endpoints
+POST /knowledge/resources
+PATCH /knowledge/resources/:id
+
+Session
+REQUIRED
+
+Permissions
+knowledge.resource.create
+knowledge.resource.update
+
+Acting Actor
+derived only from validated Session
+
+Created Resource lifecycle
+DRAFT
+
+Created Devotional DRAFT public visibility
+HIDDEN
+
+Canonical validation
+after authorization
+
+Controlled invalid canonical input
+knowledge.resource.invalid_input
+
+Downstream TypeErrors
+not reclassified as client validation
+
+Knowledge validation
+5 test files / 41 tests passed
+
+Creator API integration
+1 test file / 10 tests passed
+
+Architecture validation
+370 modules / 968 dependencies / 0 violations
+
+Creator UI
+NONE
+
+Publish/archive HTTP
+NONE
+
+Named-Universe production branches
+NONE
+
+Prisma schema change
+NONE
+
+Database migration
+NONE
+
+Canonical migrations remain 12
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -16919,6 +17151,8 @@ P4-M13 then completed the bounded Anime second-Universe reuse test. `CharacterRe
 
 P4-M14 then established the first controlled public Knowledge read/query surface. Only `PUBLISHED` Resources are publicly visible; draft and archived Resources remain hidden. Devotional supplied the primary product proof while production code remained Universe-generic, and Anime appeared only as a cross-Universe isolation fixture. No creator writes, schema change, migration, Search subsystem, or deferred semantic capability was introduced.
 
+P4-M15 then established the first protected creator Knowledge transport surface. Session-authenticated creators now exercise the existing owner-side create/update authorization boundary through generic POST/PATCH endpoints, with Devotional supplying the primary product proof. Created Resources remain DRAFT and therefore hidden from the public P4-M14 surface until lifecycle publication occurs through the existing owner capability. No creator UI, publish/archive HTTP transport, named-Universe production branch, schema change, or migration was introduced.
+
 Phase 4 remains active.
 
 P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAFT -> PUBLISHED -> ARCHIVED` semantics, protected publish/archive operations, conditional persistence transitions, and no generic Workflow engine. Events remained separate, and P4-M08 later deferred them after finding no real production Event consumer.
@@ -16926,7 +17160,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next milestone is:
 
 ```text
-P4-M15 — Basic Creator Knowledge API
+P4-M16 — Web Knowledge Experience
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -17202,7 +17436,8 @@ KNOWLEDGE
     ✅ P4-M12 Devotional Universe v1 — CLOSED
     ✅ P4-M13 Anime Reuse-Test Universe v1 — CLOSED
     ✅ P4-M14 Basic Public Knowledge API — CLOSED
-    → P4-M15 Basic Creator Knowledge API — NEXT
+    ✅ P4-M15 Basic Creator Knowledge API — CLOSED
+    → P4-M16 Web Knowledge Experience — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -17619,7 +17854,7 @@ P4-M10 — Citations — no implemented Devotional Resource requires Citation se
 P4-M11 — Temporal Baseline — no implemented Devotional Resource requires reusable date/date-range semantics
 
 NEXT MILESTONE
-P4-M15 — Basic Creator Knowledge API
+P4-M16 — Web Knowledge Experience
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -17832,6 +18067,32 @@ Public API integration 1 file / 10 tests
 Architecture 367 modules / 943 dependencies / 0 violations
 No named-Universe production branches
 No creator writes
+Prisma unchanged
+No migration
+Canonical migrations remain 12
+
+P4-M15 CLOSURE RESULT
+Basic Creator Knowledge API CLOSED
+Implementation 888523cb feat(knowledge): expose creator write API
+CI 31930221502 success
+Devotional remains primary product/domain focus
+POST /knowledge/resources
+PATCH /knowledge/resources/:id
+Session required
+acting Actor derived from validated Session only
+knowledge.resource.create
+knowledge.resource.update
+authorization before canonical validation
+controlled canonical invalid-input response
+downstream TypeErrors not reclassified
+created Resources begin DRAFT
+created Devotional DRAFT remains hidden publicly
+Knowledge 5 files / 41 tests
+Creator API integration 1 file / 10 tests
+Architecture 370 modules / 968 dependencies / 0 violations
+No creator UI
+No publish/archive HTTP endpoints
+No named-Universe production branches
 Prisma unchanged
 No migration
 Canonical migrations remain 12
@@ -19515,7 +19776,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M15 — Basic Creator Knowledge API
+P4-M16 — Web Knowledge Experience
 ```
 
 P3-M01 established canonical Resource identifier semantics.
