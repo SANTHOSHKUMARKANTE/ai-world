@@ -11,8 +11,8 @@
 | Status | ACCEPTED |
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-15 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline NEXT |
+| Last Reviewed | 2026-08-16 |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -692,6 +692,9 @@ P4-M10 — Citations
 DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source
 
 P4-M11 — Temporal Baseline
+DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics
+
+P4-M12 — Devotional Universe v1
 NEXT
 ```
 
@@ -762,7 +765,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M11 — Temporal Baseline
+P4-M12 — Devotional Universe v1
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -855,7 +858,11 @@ At P4-M09 deferral, P4-M10 — Citations was next and retained the same demand-r
 
 P4-M10 performed the planned Citation demand review after P4-M09 Sources remained deferred. `DeityResource` is still the only implemented Devotional Resource and still adds only `name`; no source-backed Devotional Resource, Citation field, Citation association, locator semantics, Citation Contract, Citation persistence model, or requirement for Citation semantics distinct from Source exists in production. P4-M10 therefore remains deferred instead of materializing academic or generic Citation infrastructure speculatively. Canonical migration count remains 12.
 
-P4-M11 — Temporal Baseline is next and remains demand-driven. Reusable temporal semantics must likewise be justified by an implemented consumer rather than by possible future domain needs.
+At P4-M10 deferral, P4-M11 — Temporal Baseline was next and retained the same demand-review requirement: reusable temporal semantics still required an implemented domain consumer rather than a possible future need.
+
+P4-M11 performed the planned Temporal Baseline demand review against the implemented Devotional domain. `DeityResource` remains the only Devotional Resource and still adds only `name`; it has no birth/death, festival, observance, event, effective, start/end, year/era, or date-range semantics. `KnowledgeResource.createdAt` and `updatedAt` remain technical record timestamps and do not constitute a reusable domain temporal consumer. No shared DateRange/Temporal abstraction or Knowledge domain temporal persistence exists. P4-M11 therefore remains deferred rather than creating a universal time model prematurely. Canonical migration count remains 12.
+
+P4-M12 — Devotional Universe v1 is next.
 
 ---
 
@@ -11785,43 +11792,169 @@ REJECTED
 
 The activation gate remains open. P4-M10 should be revisited when a real Resource needs structured citation information that cannot be represented merely as its Source reference.
 
-The next milestone is:
+At P4-M10 deferral, the next milestone was:
 
 ```text
 P4-M11 — Temporal Baseline
 ```
 
-P4-M11 remains demand-driven and must begin with a demand review before reusable temporal semantics are introduced.
+P4-M11 retained the demand-driven gate and required a review before any reusable temporal semantics could be introduced.
 
 ---
 
 # 123. Phase 4 Milestone P4-M11 — Temporal Baseline
 
-Conduct a demand review before implementing reusable temporal semantics.
-
-If Devotional establishes a real requirement, begin with only the smallest shared date/date-range semantics required by that consumer.
-
-If Devotional does not require reusable temporal behavior:
+Current milestone status:
 
 ```text
-DEFER implementation
+DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics
 ```
 
-Anime may later provide a second independent pressure point during its reuse test.
+P4-M11 was demand-reviewed before introducing reusable temporal semantics.
 
-If neither Devotional nor Anime establishes the requirement, defer until the History third-Universe reuse test.
-
-History remains the strongest expected pressure around:
+The activation gate is:
 
 ```text
-dates;
-
-date ranges;
-
-uncertainty where required.
+an implemented Devotional Resource
+has a real domain temporal requirement
+that benefits from shared date/date-range semantics
 ```
 
-Avoid creating a universal time ontology prematurely.
+Current Devotional production evidence:
+
+```text
+implemented Devotional Resource types
+1
+
+implemented Resource
+DeityResource
+
+DeityResource domain-specific field
+name
+
+birth/death semantics
+NONE
+
+festival/observance date semantics
+NONE
+
+event date semantics
+NONE
+
+effective/valid date-range semantics
+NONE
+
+start/end date semantics
+NONE
+
+year/era/century semantics
+NONE
+
+real domain temporal consumer
+NONE
+```
+
+Knowledge already contains:
+
+```text
+createdAt
+updatedAt
+```
+
+Those fields are technical record timestamps. They answer when the canonical record was created or updated; they do not model when the domain subject existed, occurred, was valid, was observed, or belonged to a historical period.
+
+Therefore:
+
+```text
+TECHNICAL TIMESTAMP
+!=
+DOMAIN TEMPORAL SEMANTIC
+```
+
+P4-M11 introduces:
+
+```text
+NO DateRange value object
+
+NO Temporal abstraction
+
+NO approximate-date abstraction
+
+NO partial-date abstraction
+
+NO historical era abstraction
+
+NO uncertainty model
+
+NO calendar-system abstraction
+
+NO recurring-date abstraction
+
+NO temporal relation model
+
+NO Knowledge domain temporal fields
+
+NO Prisma schema change
+
+NO database migration
+
+NO Devotional source change
+
+NO Knowledge source change
+```
+
+Canonical migration count remains:
+
+```text
+12
+```
+
+Potential future needs such as:
+
+```text
+birth/death date
+
+festival or observance date
+
+historical period
+
+temple founding date
+
+text composition period
+
+effective date range
+
+approximate or uncertain date
+```
+
+remain intentionally undefined until an implemented Resource establishes the actual semantics required.
+
+P4-M11 demand-review conclusion:
+
+```text
+IMPLEMENTED DEVOTIONAL RESOURCE TYPES
+1
+
+REAL DOMAIN TEMPORAL CONSUMER
+NONE
+
+TECHNICAL createdAt/updatedAt
+PRESENT — NOT AN ACTIVATION SIGNAL
+
+SHARED DATE/DATE-RANGE IMPLEMENTATION
+DEFERRED
+
+SPECULATIVE TEMPORAL ABSTRACTION
+REJECTED
+```
+
+The activation gate remains open. P4-M11 should be revisited when an implemented Resource requires reusable domain date/date-range behavior.
+
+The next milestone is:
+
+```text
+P4-M12 — Devotional Universe v1
+```
 
 ---
 
@@ -15812,7 +15945,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M11 — Temporal Baseline
+P4-M12 — Devotional Universe v1
 ```
 
 ---
@@ -16169,6 +16302,23 @@ Database migration NONE
 Canonical migrations remain 12
 Devotional source change NONE
 Knowledge source change NONE
+
+P4-M11 — Temporal Baseline
+DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics
+
+Demand-review evidence
+Implemented Devotional Resource types 1
+DeityResource only
+DeityResource domain-specific field name
+Real domain temporal consumer NONE
+createdAt/updatedAt technical timestamps only
+Shared DateRange/Temporal abstraction NONE
+Knowledge domain temporal persistence NONE
+Prisma schema change NONE
+Database migration NONE
+Canonical migrations remain 12
+Devotional source change NONE
+Knowledge source change NONE
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -16191,6 +16341,8 @@ P4-M09 then demand-reviewed Source/provenance semantics against the implemented 
 
 P4-M10 then demand-reviewed Citation semantics after Sources remained deferred. With no implemented source-backed Devotional Resource and no structured Citation association requirement distinct from Source, Citation semantics remain deferred and unmaterialized.
 
+P4-M11 then demand-reviewed reusable temporal semantics. `KnowledgeResource.createdAt` and `updatedAt` remain technical timestamps, while the only implemented Devotional Resource has no domain date/date-range requirement. Shared temporal semantics therefore remain deferred and unmaterialized.
+
 Phase 4 remains active.
 
 P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAFT -> PUBLISHED -> ARCHIVED` semantics, protected publish/archive operations, conditional persistence transitions, and no generic Workflow engine. Events remained separate, and P4-M08 later deferred them after finding no real production Event consumer.
@@ -16198,7 +16350,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next milestone is:
 
 ```text
-P4-M11 — Temporal Baseline
+P4-M12 — Devotional Universe v1
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -16470,7 +16622,8 @@ KNOWLEDGE
     ↷  P4-M08 Knowledge Events — DEFERRED (no real production Event consumer)
     ↷  P4-M09 Sources — DEFERRED (no implemented Devotional source-backed Resource)
     ↷  P4-M10 Citations — DEFERRED (no implemented Devotional Resource requires Citation semantics distinct from Source)
-    → P4-M11 Temporal Baseline — NEXT
+    ↷  P4-M11 Temporal Baseline — DEFERRED (no implemented Devotional Resource requires reusable date/date-range semantics)
+    → P4-M12 Devotional Universe v1 — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -16884,9 +17037,10 @@ P4-M06 — Relationship Integration — no implemented Devotional Resource-to-Re
 P4-M08 — Knowledge Events — no real production Event consumer
 P4-M09 — Sources — no implemented Devotional source-backed Resource
 P4-M10 — Citations — no implemented Devotional Resource requires Citation semantics distinct from Source
+P4-M11 — Temporal Baseline — no implemented Devotional Resource requires reusable date/date-range semantics
 
 NEXT MILESTONE
-P4-M11 — Temporal Baseline
+P4-M12 — Devotional Universe v1
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -17035,6 +17189,18 @@ Structured Citation locator semantics none
 Citation semantics distinct from Source required no
 Citation Contract/model none
 Citation persistence none
+Prisma schema unchanged
+No migration
+Canonical migrations remain 12
+Decision: DEFERRED
+
+P4-M11 DEMAND REVIEW RESULT
+Implemented Devotional Resource types 1
+DeityResource only
+Real domain temporal consumer none
+createdAt/updatedAt technical timestamps only
+Shared DateRange/Temporal abstraction none
+Knowledge domain temporal persistence none
 Prisma schema unchanged
 No migration
 Canonical migrations remain 12
@@ -18719,7 +18885,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M11 — Temporal Baseline
+P4-M12 — Devotional Universe v1
 ```
 
 P3-M01 established canonical Resource identifier semantics.
@@ -18736,7 +18902,7 @@ P3-M06 Relationships was demand-reviewed and intentionally deferred because no i
 
 P3-M07 strengthened the concrete package boundaries that now exist. Applications and packages can no longer deep-import foreign package source, and production package source cannot consume foreign infrastructure implementations. Legitimate application composition and integration-test composition remain supported. The implementation checkpoint is `aaf6e80 feat(architecture): expand package boundary enforcement`, and its remote CI is green.
 
-Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, P4-M04, and P4-M07 are closed; P4-M05, P4-M06, P4-M08, P4-M09, and P4-M10 are deferred after demand review; and P4-M11 is next.
+Phase 3 is therefore complete with the exit outcome `MINIMAL SHARED SEMANTIC KERNEL`. Phase 4 Knowledge is active; P4-M01, P4-M02, P4-M03, P4-M04, and P4-M07 are closed; P4-M05, P4-M06, P4-M08, P4-M09, P4-M10, and P4-M11 are deferred after demand review; and P4-M12 is next.
 
 P4-M02 established the first Devotional typed resource only. Anime remains deferred to its later second-Universe reuse-test milestone, and History remains the later third structural reuse test.
 
