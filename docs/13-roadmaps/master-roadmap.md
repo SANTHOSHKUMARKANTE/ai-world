@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -707,6 +707,9 @@ P4-M15 — Basic Creator Knowledge API
 CLOSED
 
 P4-M16 — Web Knowledge Experience
+CLOSED
+
+PHASE 4 PROOF GENERALITY REVIEW
 NEXT
 ```
 
@@ -774,10 +777,10 @@ The current implementation phase is:
 Phase 4 — Knowledge Platform
 ```
 
-The next implementation milestone is:
+The next Phase 4 delivery action is:
 
 ```text
-P4-M16 — Web Knowledge Experience
+Phase 4 Proof Generality Review
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -920,7 +923,19 @@ P4-M15 deliberately adds no creator UI, no publish/archive HTTP endpoint, no dom
 
 Final local validation after the narrow parser-error repair included 5 Knowledge test files / 41 tests passed, 1 Creator Knowledge API integration test file / 10 tests passed, and architecture validation at 370 modules / 968 dependencies / 0 violations. The earlier full P4-M15 validation also kept API non-integration tests and the P4-M14 public Knowledge regression suite green.
 
-P4-M16 — Web Knowledge Experience is next. Devotional remains the primary product focus as Phase 4 moves from API capability into the first limited web Knowledge experience.
+At P4-M15 closure, P4-M16 — Web Knowledge Experience was next. That milestone has now established the first limited public Web Knowledge experience while preserving Devotional as the primary product focus.
+
+P4-M16 is CLOSED. The implementation checkpoint is `b61374d feat(web): add knowledge experience`, with GitHub Actions CI run `31933927697` green for the exact implementation SHA `b61374d744c8accf9da8300c5f196644bf9e1dc9`.
+
+P4-M16 established the first limited Web Knowledge experience at `/knowledge`. Devotional is presented first and explicitly as the primary Universe experience. Anime is presented second as the bounded reuse-test view. Both views consume the same existing public Knowledge HTTP contract through the Web API adapter: `GET /knowledge/resources?universeKey=...`.
+
+The Web continues to consume the shared API/Platform boundary rather than taking canonical ownership. The P4-M16 Web implementation adds no direct Platform or Universe package dependency, no deep import, and no new canonical domain ownership. Universe-specific presentation choices remain in the application layer.
+
+Relationships and reusable classification remain absent from the Web because those capabilities are still deferred and were not activated by a real consumer. P4-M16 does not introduce placeholder Taxonomy, Relationships, Source, Citation, reusable Temporal, Search, creator UI, or Knowledge write/lifecycle controls.
+
+Final validation evidence for the completed slice includes Web lint and typecheck green, 6 Web unit test files / 23 tests passed, Web production build green, 3 Playwright browser tests passed, and architecture validation at 375 modules / 978 dependencies / 0 violations. Prisma remains unchanged, no migration was created, and canonical migration count remains 12.
+
+P4-M16 closes the final named implementation milestone currently listed for Phase 4, but it does not by itself close Phase 4. The next delivery action is Section 131 — Phase 4 Proof Generality Review. That review must be followed by the Metadata, Workflow, and Policy decision gates and an explicit evaluation of the Phase 4 Closure Criteria before Phase 4 can be declared complete.
 
 ---
 
@@ -12642,6 +12657,145 @@ Creator UI may remain minimal.
 
 # 130. Phase 4 Milestone P4-M16 — Web Knowledge Experience
 
+Current milestone status:
+
+```text
+CLOSED
+```
+
+Implementation checkpoint:
+
+```text
+b61374d744c8accf9da8300c5f196644bf9e1dc9
+feat(web): add knowledge experience
+```
+
+Remote validation:
+
+```text
+GitHub Actions CI
+run 31933927697
+push / main
+completed / success
+exact implementation SHA verified
+```
+
+Primary product/domain focus:
+
+```text
+Devotional
+PRIMARY
+```
+
+Web route:
+
+```text
+/knowledge
+```
+
+Presented views:
+
+```text
+Devotional Resources
+PRIMARY / FIRST
+
+Anime Resources
+SECONDARY / BOUNDED REUSE-TEST
+```
+
+Shared public Knowledge contract consumed:
+
+```text
+GET /knowledge/resources?universeKey=universe.devotional
+
+GET /knowledge/resources?universeKey=universe.anime
+```
+
+Web ownership boundary:
+
+```text
+direct Platform package dependency
+NONE
+
+direct Universe package dependency
+NONE
+
+deep package import
+NONE
+
+canonical Knowledge ownership in Web
+NONE
+```
+
+Deferred capabilities:
+
+```text
+relationships
+NOT RENDERED — capability remains deferred
+
+classification / Taxonomy
+NOT RENDERED — capability remains deferred
+
+Source / Citation / reusable Temporal / Search
+NOT ACTIVATED
+```
+
+Creator/editor scope:
+
+```text
+creator UI
+NONE
+
+Knowledge write controls
+NONE
+
+publish/archive controls
+NONE
+```
+
+Persistence outcome:
+
+```text
+Prisma schema change
+NONE
+
+database migration
+NONE
+
+canonical migrations
+12
+```
+
+Validation evidence:
+
+```text
+Web lint
+PASS
+
+Web typecheck
+PASS
+
+Web unit tests
+6 files / 23 tests passed
+
+Web production build
+PASS
+
+Playwright browser validation
+3 tests passed
+
+Architecture validation
+375 modules / 978 dependencies / 0 violations
+```
+
+P4-M16 completes the final named implementation milestone currently listed inside Phase 4. Phase 4 itself remains ACTIVE until Sections 131–135 are explicitly reviewed and the Phase 4 Closure Criteria are evaluated.
+
+Next delivery action:
+
+```text
+Section 131 — Phase 4 Proof Generality Review
+```
+
 Web should display limited:
 
 ```text
@@ -16524,10 +16678,10 @@ The next phase is:
 Phase 4 — Knowledge Platform
 ```
 
-The current next milestone is:
+The current next Phase 4 delivery action is:
 
 ```text
-P4-M16 — Web Knowledge Experience
+Phase 4 Proof Generality Review
 ```
 
 ---
@@ -17121,6 +17275,63 @@ Database migration
 NONE
 
 Canonical migrations remain 12
+
+P4-M16 — Web Knowledge Experience
+CLOSED
+
+Implementation checkpoint
+b61374d744c8accf9da8300c5f196644bf9e1dc9
+feat(web): add knowledge experience
+
+Remote CI
+31933927697 completed / success
+
+Primary product/domain focus
+Devotional
+
+Web route
+/knowledge
+
+Devotional view
+PRIMARY / FIRST
+
+Anime view
+SECONDARY / REUSE-TEST
+
+Shared public Knowledge contract
+GET /knowledge/resources?universeKey=...
+
+Direct Platform/Universe package imports
+NONE
+
+Relationships Web activation
+NONE — deferred
+
+Classification/Taxonomy Web activation
+NONE — deferred
+
+Creator/write/lifecycle Web controls
+NONE
+
+Web validation
+6 unit test files / 23 tests passed
+
+Playwright
+3 tests passed
+
+Architecture validation
+375 modules / 978 dependencies / 0 violations
+
+Prisma schema change
+NONE
+
+Database migration
+NONE
+
+Canonical migrations remain 12
+
+Phase 4
+ACTIVE — pending Proof Generality Review and decision/closure gates
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -17153,14 +17364,16 @@ P4-M14 then established the first controlled public Knowledge read/query surface
 
 P4-M15 then established the first protected creator Knowledge transport surface. Session-authenticated creators now exercise the existing owner-side create/update authorization boundary through generic POST/PATCH endpoints, with Devotional supplying the primary product proof. Created Resources remain DRAFT and therefore hidden from the public P4-M14 surface until lifecycle publication occurs through the existing owner capability. No creator UI, publish/archive HTTP transport, named-Universe production branch, schema change, or migration was introduced.
 
+P4-M16 completed the first limited Web Knowledge experience and the final named implementation milestone currently listed for Phase 4. Devotional remains the primary presentation while Anime demonstrates bounded reuse of the same public Knowledge contract. Phase 4 remains active because the Proof Generality Review plus Metadata, Workflow, Policy, and Closure Criteria gates have not yet been formally evaluated.
+
 Phase 4 remains active.
 
 P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAFT -> PUBLISHED -> ARCHIVED` semantics, protected publish/archive operations, conditional persistence transitions, and no generic Workflow engine. Events remained separate, and P4-M08 later deferred them after finding no real production Event consumer.
 
-The current next milestone is:
+The current next Phase 4 delivery action is:
 
 ```text
-P4-M16 — Web Knowledge Experience
+Phase 4 Proof Generality Review
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -17437,7 +17650,8 @@ KNOWLEDGE
     ✅ P4-M13 Anime Reuse-Test Universe v1 — CLOSED
     ✅ P4-M14 Basic Public Knowledge API — CLOSED
     ✅ P4-M15 Basic Creator Knowledge API — CLOSED
-    → P4-M16 Web Knowledge Experience — NEXT
+    ✅ P4-M16 Web Knowledge Experience — CLOSED
+    → Phase 4 Proof Generality Review — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -17853,8 +18067,8 @@ P4-M09 — Sources — no implemented Devotional source-backed Resource
 P4-M10 — Citations — no implemented Devotional Resource requires Citation semantics distinct from Source
 P4-M11 — Temporal Baseline — no implemented Devotional Resource requires reusable date/date-range semantics
 
-NEXT MILESTONE
-P4-M16 — Web Knowledge Experience
+NEXT DELIVERY ACTION
+Phase 4 Proof Generality Review
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -18096,6 +18310,31 @@ No named-Universe production branches
 Prisma unchanged
 No migration
 Canonical migrations remain 12
+
+P4-M16 CLOSURE RESULT
+Web Knowledge Experience CLOSED
+Implementation b61374d feat(web): add knowledge experience
+CI 31933927697 success
+Devotional remains primary product/domain focus
+/knowledge
+Devotional Resources FIRST / PRIMARY
+Anime Resources SECONDARY / bounded reuse-test
+Shared public Knowledge GET contract reused
+No direct Platform package dependency
+No direct Universe package dependency
+No deep package import
+No canonical Knowledge ownership in Web
+No creator/write/lifecycle controls
+Relationships remain deferred
+Classification/Taxonomy remains deferred
+Web unit tests 6 files / 23 tests
+Playwright 3 tests
+Architecture 375 modules / 978 dependencies / 0 violations
+Prisma unchanged
+No migration
+Canonical migrations remain 12
+Phase 4 remains ACTIVE
+NEXT Phase 4 Proof Generality Review
 
 BLOCKED
 None
@@ -19771,12 +20010,12 @@ tag target
     → final phase documentation closure commit after green CI
 ```
 
-The current next implementation work is:
+The current next Phase 4 delivery work is:
 
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M16 — Web Knowledge Experience
+Phase 4 Proof Generality Review
 ```
 
 P3-M01 established canonical Resource identifier semantics.
