@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -710,6 +710,9 @@ P4-M16 — Web Knowledge Experience
 CLOSED
 
 PHASE 4 PROOF GENERALITY REVIEW
+CLOSED
+
+METADATA DECISION GATE
 NEXT
 ```
 
@@ -780,7 +783,7 @@ Phase 4 — Knowledge Platform
 The next Phase 4 delivery action is:
 
 ```text
-Phase 4 Proof Generality Review
+Metadata Decision Gate
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -935,7 +938,49 @@ Relationships and reusable classification remain absent from the Web because tho
 
 Final validation evidence for the completed slice includes Web lint and typecheck green, 6 Web unit test files / 23 tests passed, Web production build green, 3 Playwright browser tests passed, and architecture validation at 375 modules / 978 dependencies / 0 violations. Prisma remains unchanged, no migration was created, and canonical migration count remains 12.
 
-P4-M16 closes the final named implementation milestone currently listed for Phase 4, but it does not by itself close Phase 4. The next delivery action is Section 131 — Phase 4 Proof Generality Review. That review must be followed by the Metadata, Workflow, and Policy decision gates and an explicit evaluation of the Phase 4 Closure Criteria before Phase 4 can be declared complete.
+P4-M16 closes the final named implementation milestone currently listed for Phase 4, but it does not by itself close Phase 4. At P4-M16 closure, the next delivery action was Section 131 — Phase 4 Proof Generality Review. That review is now closed. The Metadata, Workflow, and Policy decision gates plus explicit Phase 4 Closure Criteria evaluation remain before Phase 4 can be declared complete.
+
+Phase 4 Proof Generality Review is CLOSED.
+
+Review evidence confirms that Devotional genuinely exercised the shared canonical Knowledge Resource model, typed Universe Resource extension, generic persistence/create/get/update behavior, owner-side mutation authorization, `DRAFT -> PUBLISHED -> ARCHIVED` lifecycle semantics, and published-only public read/list behavior. Devotional remained the primary product proof throughout the API and Web vertical slices.
+
+Anime then reused the same baseline without shared-core modification. The P4-M13 Anime implementation commit added only the Anime Universe package plus workspace lockfile registration; it did not modify Knowledge Platform, Kernel, API, Web, or Prisma production code. Both Devotional and Anime Universe packages have a single runtime dependency on `@ai-world/platform-knowledge`.
+
+Neither Universe required duplicate infrastructure. The repository retains one canonical `KnowledgeResource` persistence model, with no Devotional- or Anime-specific persistence model and no Universe-owned authentication, search, event, or persistence subsystem.
+
+Metadata did not become an escape hatch from typing. The canonical Knowledge Resource and Prisma model contain no generic Metadata bag, while the Devotional and Anime Resource contracts keep explicit typed fields such as `name` and `title`.
+
+Reviewed Platform and Kernel production source contains no named Devotional or Anime Resource/Universe tokens. Shared Knowledge create/public-list paths remain generic over `NamespacedKey` / `universeKey` / `resourceType`. Named Universe values occur at Universe definition and application presentation boundaries, not as Platform switches.
+
+History is therefore expected to require fewer changes to the already-proven baseline Resource/CRUD/auth/lifecycle/public-read core. This is a forward-looking architectural inference rather than a completed History proof: History may still legitimately activate currently deferred Source, Citation, Temporal, Taxonomy, or Relationship capabilities when real History requirements establish those consumers.
+
+Review conclusion:
+
+```text
+BASELINE MULTI-UNIVERSE KNOWLEDGE GENERALITY
+DEMONSTRATED
+
+DUPLICATE UNIVERSE INFRASTRUCTURE
+NONE
+
+GENERIC METADATA ESCAPE HATCH
+NOT INTRODUCED
+
+NAMED-UNIVERSE PLATFORM SWITCHES
+NONE FOUND
+
+HISTORY BASELINE REUSE EXPECTATION
+FEWER SHARED-CORE CHANGES EXPECTED
+DEFERRED SEMANTIC CAPABILITIES MAY STILL ACTIVATE
+```
+
+Phase 4 remains ACTIVE.
+
+Next delivery action:
+
+```text
+Section 132 — Metadata Decision Gate
+```
 
 ---
 
@@ -12814,6 +12859,192 @@ The Web must consume shared Platform Contracts rather than introducing Universe-
 
 # 131. Phase 4 Proof Generality Review
 
+Current review status:
+
+```text
+CLOSED
+```
+
+Review baseline:
+
+```text
+743c36d0583cbdb073146ca85ac47d8e76539cfa
+docs(roadmap): close P4-M16
+
+GitHub Actions
+31934463622
+completed / success
+```
+
+## 131.1 Shared Knowledge capabilities genuinely required by Devotional
+
+The implemented Devotional slices genuinely required and exercised:
+
+```text
+canonical KnowledgeResource identity
+universeKey + resourceType NamespacedKey addressing
+typed Universe Resource extension
+shared Knowledge persistence
+create / get / update
+owner-side mutation authorization
+DRAFT -> PUBLISHED -> ARCHIVED lifecycle
+published-only public get/list
+```
+
+The public API, creator API, and Web experience are delivery surfaces proving those shared capabilities; they are not separate canonical owners.
+
+The following proposed shared capabilities were not required by the implemented Devotional proof and therefore remained deferred:
+
+```text
+Taxonomy
+Relationships
+Knowledge Events
+Sources
+Citations
+domain Temporal semantics
+dedicated Search
+```
+
+## 131.2 Anime reuse without shared-core modification
+
+Result:
+
+```text
+REUSED WITHOUT SHARED-CORE MODIFICATION
+```
+
+The Anime v1 implementation added its own typed Universe package and workspace registration while reusing `@ai-world/platform-knowledge`. It did not require Knowledge Platform, Kernel, API, Web, or Prisma production changes.
+
+Devotional runtime dependency:
+
+```text
+@ai-world/platform-knowledge
+```
+
+Anime runtime dependency:
+
+```text
+@ai-world/platform-knowledge
+```
+
+P4-M16 later demonstrated the same reuse at the Web boundary by rendering Devotional and Anime through the same `KnowledgeUniverseSection` and the same generic public Knowledge HTTP adapter.
+
+## 131.3 Duplicate infrastructure review
+
+Result:
+
+```text
+NONE
+```
+
+There is one canonical `KnowledgeResource` persistence model.
+
+There is no:
+
+```text
+Devotional database model;
+Anime database model;
+Universe-specific authentication system;
+Universe-specific authorization engine;
+Universe-specific Search infrastructure;
+Universe-specific Event bus;
+Universe-specific persistence provider.
+```
+
+## 131.4 Metadata-as-untyped-escape-hatch review
+
+Result:
+
+```text
+NOT INTRODUCED
+```
+
+The shared `KnowledgeResource` model contains no Metadata bag.
+
+The canonical Prisma Knowledge Resource model contains no Metadata field.
+
+Typed Universe Resources keep explicit domain fields:
+
+```text
+DeityResource.name
+ScriptureResource.title
+TempleResource.name
+CharacterResource.name
+SeriesResource.title
+```
+
+The Metadata Decision Gate remains separate and follows this review. This review records evidence; it does not pre-decide Section 132.
+
+## 131.5 Named-Universe Platform switch review
+
+Result:
+
+```text
+NONE FOUND
+```
+
+Reviewed Platform and Kernel production source contains no named Devotional or Anime Universe/Resource tokens.
+
+Shared Knowledge creation and public listing remain generic over:
+
+```text
+NamespacedKey
+universeKey
+resourceType
+```
+
+Named Universe values are confined to Universe definitions and application-level presentation/integration proof where such selection belongs.
+
+## 131.6 History shared-core change expectation
+
+Review conclusion:
+
+```text
+FEWER BASELINE SHARED-CORE CHANGES EXPECTED
+```
+
+The already-proven generic Resource/typing/persistence/auth/lifecycle/public-read baseline should be reusable for History without rebuilding the Knowledge core.
+
+This is not a claim that History will require no new shared capability. History remains the later third structural reuse test and may establish real consumers for currently deferred:
+
+```text
+Sources
+Citations
+Temporal semantics
+Relationships
+Taxonomy
+```
+
+Any such capability should be activated only from concrete History or earlier real product pressure, not speculatively.
+
+## 131.7 Review conclusion
+
+```text
+PROOF GENERALITY REVIEW
+CLOSED
+
+Devotional primary product proof
+PRESERVED
+
+Anime shared-core reuse
+DEMONSTRATED
+
+Duplicate infrastructure
+NONE
+
+Metadata escape hatch
+NOT INTRODUCED
+
+Platform Universe switches
+NONE FOUND
+
+Phase 4
+ACTIVE
+
+NEXT
+Metadata Decision Gate
+```
+
 Review:
 
 ```text
@@ -16681,7 +16912,7 @@ Phase 4 — Knowledge Platform
 The current next Phase 4 delivery action is:
 
 ```text
-Phase 4 Proof Generality Review
+Metadata Decision Gate
 ```
 
 ---
@@ -17331,7 +17562,40 @@ NONE
 Canonical migrations remain 12
 
 Phase 4
-ACTIVE — pending Proof Generality Review and decision/closure gates
+ACTIVE — pending Metadata, Workflow, Policy, and Closure Criteria gates
+
+Phase 4 Proof Generality Review
+CLOSED
+
+Devotional genuinely required
+canonical Resource model
+typed Resource extension
+shared persistence / CRUD
+owner-side mutation authorization
+Knowledge lifecycle
+published-only public read/list
+
+Anime shared-core modification required
+NONE
+
+Duplicate Universe infrastructure
+NONE
+
+Generic Metadata escape hatch
+NOT INTRODUCED
+
+Named-Universe Platform/Kernel switches
+NONE FOUND
+
+History baseline expectation
+fewer shared-core changes expected
+deferred semantic capabilities may still activate
+
+Phase 4
+ACTIVE
+
+Next
+Metadata Decision Gate
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -17364,7 +17628,7 @@ P4-M14 then established the first controlled public Knowledge read/query surface
 
 P4-M15 then established the first protected creator Knowledge transport surface. Session-authenticated creators now exercise the existing owner-side create/update authorization boundary through generic POST/PATCH endpoints, with Devotional supplying the primary product proof. Created Resources remain DRAFT and therefore hidden from the public P4-M14 surface until lifecycle publication occurs through the existing owner capability. No creator UI, publish/archive HTTP transport, named-Universe production branch, schema change, or migration was introduced.
 
-P4-M16 completed the first limited Web Knowledge experience and the final named implementation milestone currently listed for Phase 4. Devotional remains the primary presentation while Anime demonstrates bounded reuse of the same public Knowledge contract. Phase 4 remains active because the Proof Generality Review plus Metadata, Workflow, Policy, and Closure Criteria gates have not yet been formally evaluated.
+P4-M16 completed the first limited Web Knowledge experience and the final named implementation milestone currently listed for Phase 4. The subsequent Proof Generality Review is now closed: Devotional remains the primary proof, Anime reused the shared baseline without shared-core modification or duplicate infrastructure, no Metadata escape hatch was introduced, and no named-Universe Platform switch was found. Phase 4 remains active because the Metadata, Workflow, Policy, and Closure Criteria gates have not yet been formally evaluated.
 
 Phase 4 remains active.
 
@@ -17373,7 +17637,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next Phase 4 delivery action is:
 
 ```text
-Phase 4 Proof Generality Review
+Metadata Decision Gate
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -17651,7 +17915,8 @@ KNOWLEDGE
     ✅ P4-M14 Basic Public Knowledge API — CLOSED
     ✅ P4-M15 Basic Creator Knowledge API — CLOSED
     ✅ P4-M16 Web Knowledge Experience — CLOSED
-    → Phase 4 Proof Generality Review — NEXT
+    ✅ Phase 4 Proof Generality Review — CLOSED
+    → Metadata Decision Gate — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -18068,7 +18333,7 @@ P4-M10 — Citations — no implemented Devotional Resource requires Citation se
 P4-M11 — Temporal Baseline — no implemented Devotional Resource requires reusable date/date-range semantics
 
 NEXT DELIVERY ACTION
-Phase 4 Proof Generality Review
+Metadata Decision Gate
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -18334,7 +18599,32 @@ Prisma unchanged
 No migration
 Canonical migrations remain 12
 Phase 4 remains ACTIVE
-NEXT Phase 4 Proof Generality Review
+NEXT Metadata Decision Gate
+
+PHASE 4 PROOF GENERALITY REVIEW RESULT
+CLOSED
+Baseline 743c36d docs(roadmap): close P4-M16
+Baseline CI 31934463622 success
+Devotional remains primary product/domain proof
+Shared Knowledge core genuinely exercised
+canonical Resource model
+typed Resource extension
+shared persistence / CRUD
+owner-side mutation authorization
+lifecycle
+published-only public read/list
+Anime reused baseline without shared-core modification
+Anime P4-M13 changed no Platform/Kernel/API/Web/Prisma production code
+Devotional runtime dependency @ai-world/platform-knowledge
+Anime runtime dependency @ai-world/platform-knowledge
+Duplicate Universe infrastructure NONE
+Universe-specific Prisma models NONE
+Generic Metadata escape hatch NOT INTRODUCED
+Named-Universe Platform/Kernel switches NONE FOUND
+History baseline reuse expectation FEWER SHARED-CORE CHANGES
+History may still activate deferred semantic capabilities
+Phase 4 remains ACTIVE
+NEXT Metadata Decision Gate
 
 BLOCKED
 None
@@ -20015,7 +20305,7 @@ The current next Phase 4 delivery work is:
 ```text
 Phase 4 — Knowledge Platform
 
-Phase 4 Proof Generality Review
+Metadata Decision Gate
 ```
 
 P3-M01 established canonical Resource identifier semantics.
