@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -716,6 +716,9 @@ METADATA DECISION GATE
 CLOSED — METADATA KERNEL DEFERRED
 
 WORKFLOW DECISION GATE
+CLOSED — WORKFLOW KERNEL DEFERRED
+
+POLICY DECISION GATE
 NEXT
 ```
 
@@ -1026,10 +1029,55 @@ CANONICAL MIGRATIONS
 
 Phase 4 remains ACTIVE.
 
+At Metadata Decision Gate closure, Section 133 — Workflow Decision Gate followed next. That gate is now closed with Workflow deferred.
+
+Section 133 — Workflow Decision Gate is CLOSED.
+
+Decision:
+
+```text
+WORKFLOW KERNEL
+DEFERRED
+```
+
+The implemented Knowledge editorial requirements do not currently justify reusable Workflow mechanics. Knowledge already owns and enforces the small canonical lifecycle `DRAFT -> PUBLISHED -> ARCHIVED`, with direct owner-side publish/archive transitions and distinct Knowledge permissions for create, update, publish, and archive.
+
+Those publication states are lifecycle semantics, not evidence of a reusable editorial process. The current implementation has no review stage, no submit-for-review operation, no reviewer assignment, no approval/rejection state, no multi-step approval, no reusable Workflow Definition, no Workflow Instance, and no approval history/process persistence.
+
+The creator HTTP surface remains intentionally limited to create/update. Publish/archive remain owner-side Knowledge lifecycle capabilities rather than a transport-level editorial workflow. No Workflow Kernel/Platform package or Workflow persistence exists.
+
+This matches the accepted ownership model: Workflow may coordinate advanced process later, but it does not own the target Knowledge Resource or its canonical mutation. Knowledge remains lifecycle/canonical owner; a future Workflow capability would own reusable process mechanics only.
+
+Workflow is not rejected permanently. Re-evaluate when a real implemented editorial process requires reusable mechanics beyond direct lifecycle transitions—for example multi-step review, explicit approval/rejection, reviewer/participant assignment, reusable transition definitions, workflow instances/history, or materially different editorial processes across contexts/Universes.
+
+Decision result:
+
+```text
+WORKFLOW DECISION GATE
+CLOSED
+
+WORKFLOW KERNEL
+DEFERRED
+
+IMPLEMENTATION CHANGE
+NONE
+
+PRISMA CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+12
+```
+
+Phase 4 remains ACTIVE.
+
 Next delivery action:
 
 ```text
-Section 133 — Workflow Decision Gate
+Section 134 — Policy Decision Gate
 ```
 
 ---
@@ -13329,6 +13377,221 @@ defer it.
 
 # 133. Workflow Decision Gate
 
+Current decision status:
+
+```text
+CLOSED
+```
+
+Decision:
+
+```text
+WORKFLOW KERNEL
+DEFERRED
+```
+
+Decision baseline:
+
+```text
+763523052b9929ce9c396db8c403521317240ce8
+docs(roadmap): close Metadata decision gate
+
+GitHub Actions
+31935914132
+completed / success
+```
+
+## 133.1 Existing lifecycle is not Workflow proof
+
+Knowledge currently owns exactly three lifecycle states:
+
+```text
+DRAFT
+PUBLISHED
+ARCHIVED
+```
+
+Implemented transitions:
+
+```text
+DRAFT -> PUBLISHED
+
+PUBLISHED -> ARCHIVED
+```
+
+These are direct canonical Resource lifecycle transitions.
+
+They do not by themselves establish reusable Workflow requirements.
+
+## 133.2 Current editorial-process evidence
+
+Current reusable editorial mechanics:
+
+```text
+submit for review
+NONE
+
+review state
+NONE
+
+reviewer assignment
+NONE
+
+approval
+NONE
+
+rejection
+NONE
+
+multi-step approval
+NONE
+
+Workflow Definition
+NONE
+
+Workflow Instance
+NONE
+
+workflow/process history
+NONE
+```
+
+The current creator API exposes create/update only. It does not expose a review/approval process.
+
+Knowledge authorization currently defines semantic actions for:
+
+```text
+create
+update
+publish
+archive
+```
+
+It does not define separate review/approve/reject actions.
+
+## 133.3 Current Workflow materialization
+
+```text
+Workflow Kernel package
+NONE
+
+Workflow Platform package
+NONE
+
+Workflow Definition persistence
+NONE
+
+Workflow Instance persistence
+NONE
+
+Approval persistence
+NONE
+
+Reviewer/assignment persistence
+NONE
+```
+
+Canonical migrations remain 12.
+
+## 133.4 Ownership boundary
+
+The accepted ownership model states:
+
+```text
+Workflow Kernel
+owns reusable Workflow mechanics
+
+Platform / Universe
+owns business Workflow meaning
+
+Workflow may coordinate advanced process later
+
+Workflow does not own target Resource state
+
+Knowledge remains owner of Knowledge canonical mutation/lifecycle
+```
+
+Therefore a future Workflow capability must coordinate process without taking ownership of the Knowledge Resource.
+
+## 133.5 Decision rationale
+
+The current editorial requirement is satisfied by direct Knowledge lifecycle semantics plus owner-side authorization.
+
+Adding Workflow now would require prematurely choosing mechanics for:
+
+```text
+Workflow Definition identity
+Workflow Instance lifecycle
+participants / reviewer assignment
+approval / rejection rules
+transition authorization
+history / audit interaction
+retry / concurrency behavior
+persistence
+configuration / versioning
+Universe-specific process variation
+```
+
+without a real consumer requiring those mechanics.
+
+Section 133 therefore follows the demand-driven architecture principle:
+
+```text
+Do not add Workflow merely because publishing states exist.
+```
+
+Decision:
+
+```text
+defer reusable Workflow.
+```
+
+## 133.6 Future activation gate
+
+Re-evaluate Workflow when an implemented product/editorial slice requires process semantics beyond direct lifecycle transitions, such as one or more of:
+
+```text
+submit-for-review
+explicit review state
+reviewer or participant assignment
+approval / rejection
+multiple approval stages
+conditional/branching process
+reusable Workflow Definitions
+durable Workflow Instances/history
+different reusable editorial processes across contexts/Universes
+```
+
+At that point, Workflow should own reusable process mechanics while Knowledge remains canonical Resource owner.
+
+## 133.7 Decision result
+
+```text
+WORKFLOW DECISION GATE
+CLOSED
+
+WORKFLOW KERNEL
+DEFERRED
+
+PRODUCTION CODE CHANGE
+NONE
+
+SCHEMA CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+12
+
+PHASE 4
+ACTIVE
+
+NEXT
+Policy Decision Gate
+```
+
 Evaluate whether editorial requirements now justify reusable Workflow.
 
 Do not add it merely because publishing states exist.
@@ -17154,7 +17417,7 @@ Phase 4 — Knowledge Platform
 The current next Phase 4 delivery action is:
 
 ```text
-Workflow Decision Gate
+Policy Decision Gate
 ```
 
 ---
@@ -17804,7 +18067,7 @@ NONE
 Canonical migrations remain 12
 
 Phase 4
-ACTIVE — pending Workflow, Policy, and Closure Criteria gates
+ACTIVE — pending Policy and Closure Criteria gates
 
 Phase 4 Proof Generality Review
 CLOSED
@@ -17880,8 +18143,64 @@ real extensible-property consumer required
 Phase 4
 ACTIVE
 
-Next
+At Metadata gate closure
+Workflow Decision Gate followed next
+
 Workflow Decision Gate
+CLOSED
+
+Workflow Kernel
+DEFERRED
+
+Knowledge lifecycle
+DRAFT -> PUBLISHED -> ARCHIVED
+
+Direct lifecycle operations
+publish / archive
+
+Knowledge permissions
+create / update / publish / archive
+
+Submit-for-review
+NONE
+
+Reviewer assignment
+NONE
+
+Approval / rejection
+NONE
+
+Workflow Definition
+NONE
+
+Workflow Instance
+NONE
+
+Workflow/approval persistence
+NONE
+
+Workflow package
+NONE
+
+Implementation change
+NONE
+
+Schema change
+NONE
+
+Migration
+NONE
+
+Canonical migrations remain 12
+
+Future activation
+real editorial process beyond direct lifecycle transitions required
+
+Phase 4
+ACTIVE
+
+Next
+Policy Decision Gate
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -17914,7 +18233,7 @@ P4-M14 then established the first controlled public Knowledge read/query surface
 
 P4-M15 then established the first protected creator Knowledge transport surface. Session-authenticated creators now exercise the existing owner-side create/update authorization boundary through generic POST/PATCH endpoints, with Devotional supplying the primary product proof. Created Resources remain DRAFT and therefore hidden from the public P4-M14 surface until lifecycle publication occurs through the existing owner capability. No creator UI, publish/archive HTTP transport, named-Universe production branch, schema change, or migration was introduced.
 
-P4-M16 completed the first limited Web Knowledge experience and the final named implementation milestone currently listed for Phase 4. The subsequent Proof Generality Review is now closed: Devotional remains the primary proof, Anime reused the shared baseline without shared-core modification or duplicate infrastructure, no Metadata escape hatch was introduced, and no named-Universe Platform switch was found. The Metadata Decision Gate is now closed with Metadata deferred. Phase 4 remains active because the Workflow, Policy, and Closure Criteria gates have not yet been formally evaluated.
+P4-M16 completed the first limited Web Knowledge experience and the final named implementation milestone currently listed for Phase 4. The subsequent Proof Generality Review is now closed: Devotional remains the primary proof, Anime reused the shared baseline without shared-core modification or duplicate infrastructure, no Metadata escape hatch was introduced, and no named-Universe Platform switch was found. The Metadata and Workflow Decision Gates are now closed with both shared capabilities deferred. Phase 4 remains active because the Policy and Closure Criteria gates have not yet been formally evaluated.
 
 Phase 4 remains active.
 
@@ -17923,7 +18242,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next Phase 4 delivery action is:
 
 ```text
-Workflow Decision Gate
+Policy Decision Gate
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -18203,7 +18522,8 @@ KNOWLEDGE
     ✅ P4-M16 Web Knowledge Experience — CLOSED
     ✅ Phase 4 Proof Generality Review — CLOSED
     ↷  Metadata Decision Gate — CLOSED (Metadata Kernel DEFERRED)
-    → Workflow Decision Gate — NEXT
+    ↷  Workflow Decision Gate — CLOSED (Workflow Kernel DEFERRED)
+    → Policy Decision Gate — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -18886,7 +19206,7 @@ Prisma unchanged
 No migration
 Canonical migrations remain 12
 Phase 4 remains ACTIVE
-NEXT Workflow Decision Gate
+AT P4-M16 CLOSURE Phase 4 Proof Generality Review followed next
 
 PHASE 4 PROOF GENERALITY REVIEW RESULT
 CLOSED
@@ -18911,7 +19231,7 @@ Named-Universe Platform/Kernel switches NONE FOUND
 History baseline reuse expectation FEWER SHARED-CORE CHANGES
 History may still activate deferred semantic capabilities
 Phase 4 remains ACTIVE
-NEXT Workflow Decision Gate
+AT REVIEW CLOSURE Metadata Decision Gate followed next
 
 METADATA DECISION GATE RESULT
 CLOSED
@@ -18933,7 +19253,32 @@ Migration NONE
 Canonical migrations remain 12
 Future activation requires a real extensible-property consumer
 Phase 4 remains ACTIVE
-NEXT Workflow Decision Gate
+AT METADATA GATE CLOSURE Workflow Decision Gate followed next
+
+WORKFLOW DECISION GATE RESULT
+CLOSED
+Workflow Kernel DEFERRED
+Baseline 76352305 docs(roadmap): close Metadata decision gate
+Baseline CI 31935914132 success
+Knowledge lifecycle DRAFT -> PUBLISHED -> ARCHIVED
+Direct owner-side publish/archive transitions
+Knowledge permissions create/update/publish/archive
+Submit-for-review NONE
+Review state NONE
+Reviewer assignment NONE
+Approval/rejection NONE
+Workflow Definition NONE
+Workflow Instance NONE
+Workflow package NONE
+Workflow/approval persistence NONE
+Current real reusable editorial Workflow consumer NONE
+Implementation change NONE
+Schema change NONE
+Migration NONE
+Canonical migrations remain 12
+Future activation requires real process beyond direct lifecycle transitions
+Phase 4 remains ACTIVE
+NEXT Policy Decision Gate
 
 BLOCKED
 None
@@ -20614,7 +20959,7 @@ The current next Phase 4 delivery work is:
 ```text
 Phase 4 — Knowledge Platform
 
-Workflow Decision Gate
+Policy Decision Gate
 ```
 
 P3-M01 established canonical Resource identifier semantics.
