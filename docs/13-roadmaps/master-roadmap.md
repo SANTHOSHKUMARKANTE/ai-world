@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -713,6 +713,9 @@ PHASE 4 PROOF GENERALITY REVIEW
 CLOSED
 
 METADATA DECISION GATE
+CLOSED — METADATA KERNEL DEFERRED
+
+WORKFLOW DECISION GATE
 NEXT
 ```
 
@@ -780,11 +783,13 @@ The current implementation phase is:
 Phase 4 — Knowledge Platform
 ```
 
-The next Phase 4 delivery action is:
+At closure of the Proof Generality Review, the next Phase 4 delivery action was:
 
 ```text
 Metadata Decision Gate
 ```
+
+Section 132 is now closed with the Metadata Kernel deferred.
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
 
@@ -976,10 +981,55 @@ DEFERRED SEMANTIC CAPABILITIES MAY STILL ACTIVATE
 
 Phase 4 remains ACTIVE.
 
+At Proof Generality Review closure, Section 132 — Metadata Decision Gate followed next. That gate is now closed with Metadata deferred.
+
+Section 132 — Metadata Decision Gate is CLOSED.
+
+Decision:
+
+```text
+METADATA KERNEL
+DEFERRED
+```
+
+The implemented Devotional and Anime variation does not currently justify a reusable Metadata Kernel/capability. Both Universes continue to preserve meaningful stable domain properties through explicit typed Resource contracts, including `DeityResource.name`, `ScriptureResource.title`, `TempleResource.name`, `CharacterResource.name`, and `SeriesResource.title`.
+
+The canonical `KnowledgeResource` contract and canonical Prisma `KnowledgeResource` persistence model contain no generic Metadata bag. No Metadata Kernel/Platform package, Metadata definition registry, or shared Metadata persistence/query/versioning mechanics currently exist.
+
+The preceding Phase 4 Proof Generality Review demonstrated that Anime reused the shared Knowledge baseline without requiring shared-core modification. Introducing Metadata now would therefore add a new definition contract, ownership surface, validation mechanics, persistence/query semantics, compatibility/versioning concerns, and likely registry mechanics without a concrete production consumer.
+
+This decision is consistent with the accepted architecture: meaningful stable domain invariants remain typed; controlled Metadata extensions are permitted when justified; Metadata must be typed, validated, owned, queryable where required, and versionable where required; and the least powerful safe variation mechanism should be preferred.
+
+Metadata is not rejected permanently. Re-evaluate this gate when a real implemented Resource/Universe needs extensible descriptive properties that cannot safely remain ordinary typed domain fields or owned configuration, and when a concrete shared consumer requires Metadata definition, validation, persistence, query, or compatibility/versioning semantics.
+
+Decision result:
+
+```text
+METADATA DECISION GATE
+CLOSED
+
+METADATA KERNEL
+DEFERRED
+
+IMPLEMENTATION CHANGE
+NONE
+
+PRISMA CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+12
+```
+
+Phase 4 remains ACTIVE.
+
 Next delivery action:
 
 ```text
-Section 132 — Metadata Decision Gate
+Section 133 — Workflow Decision Gate
 ```
 
 ---
@@ -12973,7 +13023,7 @@ CharacterResource.name
 SeriesResource.title
 ```
 
-The Metadata Decision Gate remains separate and follows this review. This review records evidence; it does not pre-decide Section 132.
+At Proof Generality Review closure, the Metadata Decision Gate remained separate and followed this review. Section 132 has now evaluated that evidence and deferred the Metadata Kernel.
 
 ## 131.5 Named-Universe Platform switch review
 
@@ -13041,8 +13091,11 @@ NONE FOUND
 Phase 4
 ACTIVE
 
-NEXT
-Metadata Decision Gate
+AT REVIEW CLOSURE
+Metadata Decision Gate followed next
+
+CURRENT RESULT
+Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED
 ```
 
 Review:
@@ -13064,6 +13117,195 @@ Would the later History Universe require fewer shared-core changes?
 ---
 
 # 132. Metadata Decision Gate
+
+Current decision status:
+
+```text
+CLOSED
+```
+
+Decision:
+
+```text
+METADATA KERNEL
+DEFERRED
+```
+
+Decision baseline:
+
+```text
+0082539c6c96aeb77ad87de267097d0ae9ceb639
+docs(roadmap): close Phase 4 generality review
+
+GitHub Actions
+31935169513
+completed / success
+```
+
+## 132.1 Real variation observed
+
+Implemented Devotional typed Resource properties:
+
+```text
+DeityResource.name
+ScriptureResource.title
+TempleResource.name
+```
+
+Implemented Anime typed Resource properties:
+
+```text
+CharacterResource.name
+SeriesResource.title
+```
+
+These are stable meaningful domain properties and are already represented by typed Universe contracts.
+
+No implemented Resource currently demonstrates a set of extensible descriptive properties that requires a shared Metadata definition/value engine.
+
+## 132.2 Current shared Knowledge model
+
+The canonical `KnowledgeResource` remains limited to:
+
+```text
+id
+universeKey
+resourceType
+lifecycle
+createdAt
+updatedAt
+```
+
+There is no generic Metadata bag in the shared Knowledge contract.
+
+The canonical Prisma `KnowledgeResource` model likewise has no Metadata field.
+
+## 132.3 Metadata capability materialization review
+
+Current reusable Metadata implementation:
+
+```text
+Metadata Kernel package
+NONE
+
+Metadata Platform package
+NONE
+
+Metadata Definition registry
+NONE
+
+Metadata value persistence
+NONE
+
+Metadata query semantics
+NONE
+
+Metadata compatibility/versioning mechanics
+NONE
+```
+
+No current API, Web, Knowledge, Devotional, or Anime production requirement depends on those mechanics.
+
+## 132.4 Architecture fit
+
+The accepted Universe Principles prefer:
+
+```text
+GENERIC KNOWLEDGE PLATFORM
++
+TYPED UNIVERSE DEFINITIONS
++
+CONTROLLED METADATA EXTENSIONS
+```
+
+They do not require Metadata to exist before real extensible-property pressure exists.
+
+Important stable fields should not be represented merely through arbitrary Metadata.
+
+Future Metadata, if activated, must remain:
+
+```text
+typed
+validated
+owned
+queryable where required
+versionable where required
+```
+
+The accepted Extension Model also requires the least powerful safe mechanism and treats `Metadata Definition` as one possible typed-definition mechanism rather than an automatically materialized universal framework.
+
+## 132.5 Decision rationale
+
+Real pressure is insufficient to justify a shared Metadata Kernel now.
+
+Implementing it at this point would require choosing mechanics for:
+
+```text
+definition identity
+definition validation
+value typing
+ownership
+registration
+persistence
+querying
+compatibility
+versioning
+migration
+```
+
+without a concrete production Resource requiring those mechanics.
+
+The existing typed Universe model is simpler, safer, and already passed the Anime reuse test without shared-core modification.
+
+Therefore Section 132 follows its explicit `If no` branch:
+
+```text
+defer it.
+```
+
+## 132.6 Future activation gate
+
+Re-evaluate Metadata only when an implemented Resource/Universe supplies a concrete consumer with both:
+
+```text
+extensible descriptive properties
+that should not become stable typed Resource fields
+
+AND
+
+shared mechanics required for
+definition / validation / persistence / query / compatibility
+```
+
+Potential future History or another Universe pressure may activate Metadata, but future possibility alone is not an activation reason.
+
+## 132.7 Decision result
+
+```text
+METADATA DECISION GATE
+CLOSED
+
+METADATA KERNEL
+DEFERRED
+
+PRODUCTION CODE CHANGE
+NONE
+
+SCHEMA CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+12
+
+PHASE 4
+ACTIVE
+
+NEXT
+Workflow Decision Gate
+```
 
 At the end of initial Knowledge proof, evaluate whether real domain variation justifies:
 
@@ -16912,7 +17154,7 @@ Phase 4 — Knowledge Platform
 The current next Phase 4 delivery action is:
 
 ```text
-Metadata Decision Gate
+Workflow Decision Gate
 ```
 
 ---
@@ -17562,7 +17804,7 @@ NONE
 Canonical migrations remain 12
 
 Phase 4
-ACTIVE — pending Metadata, Workflow, Policy, and Closure Criteria gates
+ACTIVE — pending Workflow, Policy, and Closure Criteria gates
 
 Phase 4 Proof Generality Review
 CLOSED
@@ -17594,8 +17836,52 @@ deferred semantic capabilities may still activate
 Phase 4
 ACTIVE
 
-Next
+At review closure
+Metadata Decision Gate followed next
+
 Metadata Decision Gate
+CLOSED
+
+Metadata Kernel
+DEFERRED
+
+Real implemented Metadata consumer
+NONE
+
+Stable domain properties
+remain typed in Universe Resource contracts
+
+Generic Knowledge Metadata bag
+NONE
+
+Prisma Knowledge Metadata field
+NONE
+
+Metadata Kernel/Platform package
+NONE
+
+Metadata registry/persistence/query/version mechanics
+NONE
+
+Implementation change
+NONE
+
+Schema change
+NONE
+
+Migration
+NONE
+
+Canonical migrations remain 12
+
+Future activation
+real extensible-property consumer required
+
+Phase 4
+ACTIVE
+
+Next
+Workflow Decision Gate
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -17628,7 +17914,7 @@ P4-M14 then established the first controlled public Knowledge read/query surface
 
 P4-M15 then established the first protected creator Knowledge transport surface. Session-authenticated creators now exercise the existing owner-side create/update authorization boundary through generic POST/PATCH endpoints, with Devotional supplying the primary product proof. Created Resources remain DRAFT and therefore hidden from the public P4-M14 surface until lifecycle publication occurs through the existing owner capability. No creator UI, publish/archive HTTP transport, named-Universe production branch, schema change, or migration was introduced.
 
-P4-M16 completed the first limited Web Knowledge experience and the final named implementation milestone currently listed for Phase 4. The subsequent Proof Generality Review is now closed: Devotional remains the primary proof, Anime reused the shared baseline without shared-core modification or duplicate infrastructure, no Metadata escape hatch was introduced, and no named-Universe Platform switch was found. Phase 4 remains active because the Metadata, Workflow, Policy, and Closure Criteria gates have not yet been formally evaluated.
+P4-M16 completed the first limited Web Knowledge experience and the final named implementation milestone currently listed for Phase 4. The subsequent Proof Generality Review is now closed: Devotional remains the primary proof, Anime reused the shared baseline without shared-core modification or duplicate infrastructure, no Metadata escape hatch was introduced, and no named-Universe Platform switch was found. The Metadata Decision Gate is now closed with Metadata deferred. Phase 4 remains active because the Workflow, Policy, and Closure Criteria gates have not yet been formally evaluated.
 
 Phase 4 remains active.
 
@@ -17637,7 +17923,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next Phase 4 delivery action is:
 
 ```text
-Metadata Decision Gate
+Workflow Decision Gate
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -17916,7 +18202,8 @@ KNOWLEDGE
     ✅ P4-M15 Basic Creator Knowledge API — CLOSED
     ✅ P4-M16 Web Knowledge Experience — CLOSED
     ✅ Phase 4 Proof Generality Review — CLOSED
-    → Metadata Decision Gate — NEXT
+    ↷  Metadata Decision Gate — CLOSED (Metadata Kernel DEFERRED)
+    → Workflow Decision Gate — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -18599,7 +18886,7 @@ Prisma unchanged
 No migration
 Canonical migrations remain 12
 Phase 4 remains ACTIVE
-NEXT Metadata Decision Gate
+NEXT Workflow Decision Gate
 
 PHASE 4 PROOF GENERALITY REVIEW RESULT
 CLOSED
@@ -18624,7 +18911,29 @@ Named-Universe Platform/Kernel switches NONE FOUND
 History baseline reuse expectation FEWER SHARED-CORE CHANGES
 History may still activate deferred semantic capabilities
 Phase 4 remains ACTIVE
-NEXT Metadata Decision Gate
+NEXT Workflow Decision Gate
+
+METADATA DECISION GATE RESULT
+CLOSED
+Metadata Kernel DEFERRED
+Baseline 0082539c docs(roadmap): close Phase 4 generality review
+Baseline CI 31935169513 success
+Devotional stable domain properties remain typed
+Anime stable domain properties remain typed
+Generic Knowledge Metadata bag NONE
+Prisma Knowledge Metadata field NONE
+Metadata Kernel/Platform package NONE
+Metadata Definition registry NONE
+Metadata value persistence NONE
+Metadata query/versioning mechanics NONE
+Current real shared Metadata consumer NONE
+Implementation change NONE
+Schema change NONE
+Migration NONE
+Canonical migrations remain 12
+Future activation requires a real extensible-property consumer
+Phase 4 remains ACTIVE
+NEXT Workflow Decision Gate
 
 BLOCKED
 None
@@ -20305,7 +20614,7 @@ The current next Phase 4 delivery work is:
 ```text
 Phase 4 — Knowledge Platform
 
-Metadata Decision Gate
+Workflow Decision Gate
 ```
 
 P3-M01 established canonical Resource identifier semantics.
