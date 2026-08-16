@@ -24,6 +24,7 @@
     "@ai-world/foundation-errors": "workspace:*",
     "@ai-world/foundation-observability": "workspace:*",
     "@ai-world/platform-identity-access": "workspace:*",
+    "@ai-world/platform-knowledge": "workspace:*",
     "@ai-world/platform-user": "workspace:*",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",

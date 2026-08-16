@@ -53,6 +53,9 @@ importers:
       '@ai-world/platform-identity-access':
         specifier: workspace:*
         version: link:../../packages/platforms/identity-access
+      '@ai-world/platform-knowledge':
+        specifier: workspace:*
+        version: link:../../packages/platforms/knowledge
       '@ai-world/platform-user':
         specifier: workspace:*
         version: link:../../packages/platforms/user

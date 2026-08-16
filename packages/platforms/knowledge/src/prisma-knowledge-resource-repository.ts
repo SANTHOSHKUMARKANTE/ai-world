@@ -2,7 +2,11 @@ import type { DatabaseClient } from '@ai-world/foundation-database';
 import { parseResourceId } from '@ai-world/kernel-identifiers';
 import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 
-import { isKnowledgeResourceLifecycle, type KnowledgeResource } from './knowledge-resource';
+import {
+  isKnowledgeResourceLifecycle,
+  KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+  type KnowledgeResource,
+} from './knowledge-resource';
 import type {
   KnowledgeResourceLifecycleWriter,
   TransitionKnowledgeResourceLifecycleRecordInput,
@@ -11,6 +15,11 @@ import type {
   FindKnowledgeResourceByIdInput,
   KnowledgeResourceReader,
 } from './knowledge-resource-reader';
+import type {
+  FindPublishedKnowledgeResourceByIdInput,
+  ListPublishedKnowledgeResourcesInput,
+  PublicKnowledgeResourceReader,
+} from './public-knowledge-resource-reader';
 import type {
   CreateKnowledgeResourceRecordInput,
   KnowledgeResourceWriter,
@@ -44,7 +53,11 @@ function mapPersistedKnowledgeResource(resource: PersistedKnowledgeResource): Kn
 }
 
 export class PrismaKnowledgeResourceRepository
-  implements KnowledgeResourceReader, KnowledgeResourceWriter, KnowledgeResourceLifecycleWriter
+  implements
+    KnowledgeResourceReader,
+    PublicKnowledgeResourceReader,
+    KnowledgeResourceWriter,
+    KnowledgeResourceLifecycleWriter
 {
   constructor(private readonly database: DatabaseClient) {}
 
@@ -56,6 +69,39 @@ export class PrismaKnowledgeResourceRepository
     });
 
     return resource ? mapPersistedKnowledgeResource(resource) : null;
+  }
+
+  async findPublishedById(
+    input: FindPublishedKnowledgeResourceByIdInput,
+  ): Promise<KnowledgeResource | null> {
+    const resource = await this.database.knowledgeResource.findFirst({
+      where: {
+        id: input.id,
+        lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      },
+    });
+
+    return resource ? mapPersistedKnowledgeResource(resource) : null;
+  }
+
+  async listPublished(
+    input: ListPublishedKnowledgeResourcesInput,
+  ): Promise<readonly KnowledgeResource[]> {
+    const resources = await this.database.knowledgeResource.findMany({
+      where: {
+        universeKey: input.universeKey,
+        lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+        ...(input.resourceType
+          ? {
+              resourceType: input.resourceType,
+            }
+          : {}),
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+      take: input.limit,
+    });
+
+    return resources.map(mapPersistedKnowledgeResource);
   }
 
   async create(input: CreateKnowledgeResourceRecordInput): Promise<KnowledgeResource> {

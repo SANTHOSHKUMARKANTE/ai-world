@@ -6,6 +6,11 @@ export {
 export { GetKnowledgeResource, type GetKnowledgeResourceInput } from './get-knowledge-resource';
 
 export {
+  GetPublicKnowledgeResource,
+  type GetPublicKnowledgeResourceInput,
+} from './get-public-knowledge-resource';
+
+export {
   KNOWLEDGE_RESOURCE_ARCHIVED_LIFECYCLE,
   KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE,
   KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
@@ -23,6 +28,19 @@ export type {
   KnowledgeResourceLifecycleWriter,
   TransitionKnowledgeResourceLifecycleRecordInput,
 } from './knowledge-resource-lifecycle-writer';
+
+export {
+  ListPublicKnowledgeResources,
+  PUBLIC_KNOWLEDGE_RESOURCE_DEFAULT_LIMIT,
+  PUBLIC_KNOWLEDGE_RESOURCE_MAX_LIMIT,
+  type ListPublicKnowledgeResourcesInput,
+} from './list-public-knowledge-resources';
+
+export type {
+  FindPublishedKnowledgeResourceByIdInput,
+  ListPublishedKnowledgeResourcesInput,
+  PublicKnowledgeResourceReader,
+} from './public-knowledge-resource-reader';
 
 export type {
   CreateKnowledgeResourceRecordInput,

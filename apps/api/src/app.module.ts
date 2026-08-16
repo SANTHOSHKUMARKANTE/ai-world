@@ -39,6 +39,11 @@ import {
   SystemPasswordRecoveryClock,
   SystemSessionClock,
 } from '@ai-world/platform-identity-access/infrastructure';
+import {
+  GetPublicKnowledgeResource,
+  ListPublicKnowledgeResources,
+} from '@ai-world/platform-knowledge';
+import { PrismaKnowledgeResourceRepository } from '@ai-world/platform-knowledge/infrastructure';
 import { GetUserProfile, UpdateUserProfile } from '@ai-world/platform-user';
 import {
   PrismaUserProfileRepository,
@@ -55,6 +60,7 @@ import { DatabaseService } from './database/database.service';
 import { EmailVerificationController } from './email-verification/email-verification.controller';
 import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
+import { PublicKnowledgeController } from './knowledge/public-knowledge.controller';
 import { ObservabilityModule } from './observability/observability.module';
 import { PasswordRecoveryController } from './password-recovery/password-recovery.controller';
 import { RegistrationController } from './registration/registration.controller';
@@ -139,6 +145,7 @@ export class AppModule {
         PasswordRecoveryController,
         UserProfileController,
         AuthorizationController,
+        PublicKnowledgeController,
       ],
 
       providers: [
@@ -322,6 +329,34 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): UpdateUserProfile => {
             return new UpdateUserProfile(new PrismaUserProfileRepository(database.getClient()));
+          },
+        },
+
+        {
+          provide: PrismaKnowledgeResourceRepository,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): PrismaKnowledgeResourceRepository => {
+            return new PrismaKnowledgeResourceRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: GetPublicKnowledgeResource,
+          inject: [PrismaKnowledgeResourceRepository],
+          useFactory: (
+            repository: PrismaKnowledgeResourceRepository,
+          ): GetPublicKnowledgeResource => {
+            return new GetPublicKnowledgeResource(repository);
+          },
+        },
+
+        {
+          provide: ListPublicKnowledgeResources,
+          inject: [PrismaKnowledgeResourceRepository],
+          useFactory: (
+            repository: PrismaKnowledgeResourceRepository,
+          ): ListPublicKnowledgeResources => {
+            return new ListPublicKnowledgeResources(repository);
           },
         },
 
