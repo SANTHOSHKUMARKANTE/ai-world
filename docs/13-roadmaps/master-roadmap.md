@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -719,6 +719,9 @@ WORKFLOW DECISION GATE
 CLOSED — WORKFLOW KERNEL DEFERRED
 
 POLICY DECISION GATE
+CLOSED — POLICY KERNEL DEFERRED
+
+PHASE 4 CLOSURE CRITERIA EVALUATION
 NEXT
 ```
 
@@ -1074,11 +1077,66 @@ CANONICAL MIGRATIONS
 
 Phase 4 remains ACTIVE.
 
-Next delivery action:
+At Workflow Decision Gate closure, the next delivery action was:
 
 ```text
 Section 134 — Policy Decision Gate
 ```
+
+Section 134 is now closed with the Policy Kernel deferred.
+
+Section 134 — Policy Decision Gate is CLOSED.
+
+Decision:
+
+```text
+POLICY KERNEL
+DEFERRED
+```
+
+The implemented system does not currently contain genuinely configurable cross-context business rules that justify shared Policy representation/evaluation mechanics.
+
+Current rules remain stable and correctly owned by their Domain owners. Knowledge owns its `DRAFT -> PUBLISHED -> ARCHIVED` lifecycle, the meaning of `create` / `update` / `publish` / `archive`, and the rule that only `PUBLISHED` Resources are publicly readable. Identity & Access owns authorization representation/evaluation and evaluates the Knowledge permission keys through its existing Role/Permission capability.
+
+Files named `authorization-policy.ts` are owner-local authorization vocabulary, not a reusable configurable Policy Kernel. Their existence does not justify promoting Policy into shared Kernel architecture.
+
+Neither the Devotional nor Anime Universe definition currently declares policy configuration. There is no implemented Universe/context-dependent publication requirement, source requirement, moderation rule, visibility rule, regional restriction, or AI-use rule that must be represented once and evaluated across multiple owners.
+
+No Policy Kernel/Platform package, Policy Definition/Registry/Evaluator abstraction, or Policy persistence exists. Introducing those mechanics now would require inventing representation, context, precedence, composition, evaluation, conflict, persistence, versioning, and authorization interaction semantics without a real shared consumer.
+
+Policy is not rejected permanently. Re-evaluate when a real implemented product slice needs configurable policy meaning that varies by Universe/context and requires shared evaluation across consumers—for example publication/source requirements, moderation, visibility, regional restrictions, or AI-use rules.
+
+Decision result:
+
+```text
+POLICY DECISION GATE
+CLOSED
+
+POLICY KERNEL
+DEFERRED
+
+IMPLEMENTATION CHANGE
+NONE
+
+PRISMA CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+12
+```
+
+Phase 4 remains ACTIVE.
+
+Next delivery action:
+
+```text
+Section 135 — Phase 4 Closure Criteria Evaluation
+```
+
+Section 135 must be evaluated explicitly before Phase 4 can be declared complete. This Policy decision does not close Phase 4 and does not authorize a `phase-4-complete` tag.
 
 ---
 
@@ -13588,8 +13646,11 @@ CANONICAL MIGRATIONS
 PHASE 4
 ACTIVE
 
-NEXT
-Policy Decision Gate
+AT WORKFLOW GATE CLOSURE
+Policy Decision Gate followed next
+
+CURRENT RESULT
+Policy Decision Gate CLOSED — Policy Kernel DEFERRED
 ```
 
 Evaluate whether editorial requirements now justify reusable Workflow.
@@ -13599,6 +13660,218 @@ Do not add it merely because publishing states exist.
 ---
 
 # 134. Policy Decision Gate
+
+Current decision status:
+
+```text
+CLOSED
+```
+
+Decision:
+
+```text
+POLICY KERNEL
+DEFERRED
+```
+
+Decision baseline:
+
+```text
+380ddd69e8c817a4dd19926a741caf382b07c716
+docs(roadmap): close Workflow decision gate
+
+GitHub Actions
+31936814311
+completed / success
+```
+
+## 134.1 Current owner-local rules
+
+Current stable Knowledge rules include:
+
+```text
+lifecycle
+DRAFT -> PUBLISHED -> ARCHIVED
+
+public visibility
+PUBLISHED only
+
+semantic actions
+create
+update
+publish
+archive
+```
+
+These rules have clear Knowledge ownership and do not currently vary through external policy configuration.
+
+Identity & Access owns authorization representation/evaluation. Knowledge defines the meaning of its actions and supplies permission keys; Identity & Access evaluates Actor permission assignments.
+
+The existing owner-local files named `authorization-policy.ts` contain stable Role/Permission/action vocabulary. They are not a generic Policy Kernel.
+
+## 134.2 Cross-context configurability review
+
+Current implemented configurable cross-context Policy consumers:
+
+```text
+Universe publication requirements
+NONE
+
+Universe source requirements
+NONE
+
+Universe moderation rules
+NONE
+
+Universe visibility rules
+NONE
+
+regional restrictions
+NONE
+
+Universe AI-use policies
+NONE
+```
+
+The Devotional and Anime Universe definitions currently contain only Universe identity/resource-type definition data and no policy configuration.
+
+## 134.3 Current Policy materialization
+
+```text
+Policy Kernel package
+NONE
+
+Policy Platform package
+NONE
+
+Policy Definition
+NONE
+
+Policy Registry
+NONE
+
+Policy Evaluator
+NONE
+
+Policy Rule abstraction
+NONE
+
+Policy persistence
+NONE
+```
+
+Canonical migrations remain 12.
+
+## 134.4 Ownership boundary
+
+Accepted architecture establishes:
+
+```text
+Universe
+owns domain-specific policy configuration
+
+Policy Kernel
+owns representation/evaluation mechanics where genuinely shared
+
+Defining consumer
+owns business policy meaning
+
+Identity & Access
+continues to own Authorization semantics
+```
+
+A future Policy Kernel must therefore not absorb Domain meaning or replace Identity-owned authorization.
+
+## 134.5 Decision rationale
+
+The current system has rules, but the existence of rules is not sufficient evidence for a shared Policy Kernel.
+
+The implemented rules are:
+
+```text
+stable
+owner-specific
+directly encoded by their semantic owners
+not cross-context configurable
+not reused through a shared policy representation
+```
+
+Creating Policy now would prematurely require decisions around:
+
+```text
+policy identity
+policy context
+rule representation
+composition / precedence
+conflict semantics
+evaluation result
+configuration ownership
+persistence
+versioning
+authorization interaction
+```
+
+without a concrete consumer needing those mechanics.
+
+Section 134 therefore follows its explicit fallback:
+
+```text
+keep stable rules in their Domain owners.
+```
+
+## 134.6 Future activation gate
+
+Re-evaluate Policy when an implemented product slice demonstrates both:
+
+```text
+a business rule must vary through configuration
+across Universe / context / product boundaries
+
+AND
+
+multiple consumers need shared representation/evaluation mechanics
+```
+
+Potential future examples include:
+
+```text
+publication requirements
+source requirements
+moderation
+visibility
+regional restrictions
+AI-use rules
+```
+
+Those examples are future activation candidates, not current requirements.
+
+## 134.7 Decision result
+
+```text
+POLICY DECISION GATE
+CLOSED
+
+POLICY KERNEL
+DEFERRED
+
+PRODUCTION CODE CHANGE
+NONE
+
+SCHEMA CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+12
+
+PHASE 4
+ACTIVE
+
+NEXT
+Phase 4 Closure Criteria Evaluation
+```
 
 Evaluate whether configurable cross-context rules justify Policy Kernel.
 
@@ -17417,7 +17690,7 @@ Phase 4 — Knowledge Platform
 The current next Phase 4 delivery action is:
 
 ```text
-Policy Decision Gate
+Phase 4 Closure Criteria Evaluation
 ```
 
 ---
@@ -18067,7 +18340,7 @@ NONE
 Canonical migrations remain 12
 
 Phase 4
-ACTIVE — pending Policy and Closure Criteria gates
+ACTIVE — pending explicit Closure Criteria evaluation
 
 Phase 4 Proof Generality Review
 CLOSED
@@ -18199,8 +18472,64 @@ real editorial process beyond direct lifecycle transitions required
 Phase 4
 ACTIVE
 
-Next
+At Workflow gate closure
+Policy Decision Gate followed next
+
 Policy Decision Gate
+CLOSED
+
+Policy Kernel
+DEFERRED
+
+Knowledge stable lifecycle rules
+owner-local
+
+Knowledge public visibility rule
+PUBLISHED only
+
+Knowledge semantic action permissions
+create / update / publish / archive
+
+Authorization evaluation
+Identity & Access-owned
+
+Devotional policy configuration
+NONE
+
+Anime policy configuration
+NONE
+
+Cross-context configurable Policy consumer
+NONE
+
+Policy Definition / Registry / Evaluator
+NONE
+
+Policy package
+NONE
+
+Policy persistence
+NONE
+
+Implementation change
+NONE
+
+Schema change
+NONE
+
+Migration
+NONE
+
+Canonical migrations remain 12
+
+Future activation
+real configurable cross-context rule consumer required
+
+Phase 4
+ACTIVE
+
+Next
+Phase 4 Closure Criteria Evaluation
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -18233,7 +18562,7 @@ P4-M14 then established the first controlled public Knowledge read/query surface
 
 P4-M15 then established the first protected creator Knowledge transport surface. Session-authenticated creators now exercise the existing owner-side create/update authorization boundary through generic POST/PATCH endpoints, with Devotional supplying the primary product proof. Created Resources remain DRAFT and therefore hidden from the public P4-M14 surface until lifecycle publication occurs through the existing owner capability. No creator UI, publish/archive HTTP transport, named-Universe production branch, schema change, or migration was introduced.
 
-P4-M16 completed the first limited Web Knowledge experience and the final named implementation milestone currently listed for Phase 4. The subsequent Proof Generality Review is now closed: Devotional remains the primary proof, Anime reused the shared baseline without shared-core modification or duplicate infrastructure, no Metadata escape hatch was introduced, and no named-Universe Platform switch was found. The Metadata and Workflow Decision Gates are now closed with both shared capabilities deferred. Phase 4 remains active because the Policy and Closure Criteria gates have not yet been formally evaluated.
+P4-M16 completed the first limited Web Knowledge experience and the final named implementation milestone currently listed for Phase 4. The subsequent Proof Generality Review is now closed: Devotional remains the primary proof, Anime reused the shared baseline without shared-core modification or duplicate infrastructure, no Metadata escape hatch was introduced, and no named-Universe Platform switch was found. The Metadata, Workflow, and Policy Decision Gates are now closed with all three shared capabilities deferred. Phase 4 remains active because the explicit Closure Criteria have not yet been formally evaluated.
 
 Phase 4 remains active.
 
@@ -18242,7 +18571,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next Phase 4 delivery action is:
 
 ```text
-Policy Decision Gate
+Phase 4 Closure Criteria Evaluation
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -18523,7 +18852,8 @@ KNOWLEDGE
     ✅ Phase 4 Proof Generality Review — CLOSED
     ↷  Metadata Decision Gate — CLOSED (Metadata Kernel DEFERRED)
     ↷  Workflow Decision Gate — CLOSED (Workflow Kernel DEFERRED)
-    → Policy Decision Gate — NEXT
+    ↷  Policy Decision Gate — CLOSED (Policy Kernel DEFERRED)
+    → Phase 4 Closure Criteria Evaluation — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -19278,7 +19608,29 @@ Migration NONE
 Canonical migrations remain 12
 Future activation requires real process beyond direct lifecycle transitions
 Phase 4 remains ACTIVE
-NEXT Policy Decision Gate
+AT WORKFLOW GATE CLOSURE Policy Decision Gate followed next
+
+POLICY DECISION GATE RESULT
+CLOSED
+Policy Kernel DEFERRED
+Baseline 380ddd69 docs(roadmap): close Workflow decision gate
+Baseline CI 31936814311 success
+Knowledge lifecycle/public visibility remain owner-local rules
+Knowledge permissions create/update/publish/archive remain owner-local action meaning
+Authorization evaluation remains Identity & Access-owned
+Devotional policy configuration NONE
+Anime policy configuration NONE
+Cross-context configurable Policy consumer NONE
+Policy Definition/Registry/Evaluator NONE
+Policy package NONE
+Policy persistence NONE
+Implementation change NONE
+Schema change NONE
+Migration NONE
+Canonical migrations remain 12
+Future activation requires real configurable cross-context rule pressure
+Phase 4 remains ACTIVE
+NEXT Phase 4 Closure Criteria Evaluation
 
 BLOCKED
 None
@@ -20959,7 +21311,7 @@ The current next Phase 4 delivery work is:
 ```text
 Phase 4 — Knowledge Platform
 
-Policy Decision Gate
+Phase 4 Closure Criteria Evaluation
 ```
 
 P3-M01 established canonical Resource identifier semantics.
