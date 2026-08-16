@@ -1,0 +1,33 @@
+{
+  "name": "@ai-world/foundation-storage",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Provider-neutral object storage infrastructure for AI World",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./filesystem": {
+      "types": "./dist/filesystem.d.ts",
+      "default": "./dist/filesystem.js"
+    },
+    "./s3-compatible": {
+      "types": "./dist/s3-compatible.d.ts",
+      "default": "./dist/s3-compatible.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "vitest": "4.1.10"
+  }
+}
