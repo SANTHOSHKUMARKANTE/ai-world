@@ -139,6 +139,31 @@ describe('Knowledge Resource authorization', () => {
     expect(writer.creates).toEqual([]);
   });
 
+  it('returns controlled validation after authorized creation reaches canonical validation', async () => {
+    const permissionReader = new FakePermissionEvaluationReader(true);
+    const writer = new FakeKnowledgeWriter();
+
+    const createAsActor = new CreateKnowledgeResourceAsActor(
+      new EvaluatePermission(permissionReader),
+      new CreateKnowledgeResource(writer),
+    );
+
+    await expect(
+      createAsActor.execute({
+        actingActorId: EDITOR_ACTOR_ID,
+        universeKey: 'INVALID UNIVERSE' as string,
+        resourceType: parseNamespacedKey('knowledge.authorization-resource'),
+      }),
+    ).rejects.toMatchObject({
+      code: 'knowledge.resource.invalid_input',
+      kind: 'validation',
+      publicMessage: 'The Knowledge Resource input is invalid.',
+    });
+
+    expect(permissionReader.inputs).toHaveLength(1);
+    expect(writer.creates).toEqual([]);
+  });
+
   it('allows authorized update through the canonical Knowledge owner operation', async () => {
     const existing = makeResource();
     const permissionReader = new FakePermissionEvaluationReader(true);
@@ -191,6 +216,91 @@ describe('Knowledge Resource authorization', () => {
     });
 
     expect(writer.updates).toEqual([]);
+  });
+
+  it('returns controlled validation after authorized update reaches canonical validation', async () => {
+    const permissionReader = new FakePermissionEvaluationReader(true);
+    const writer = new FakeKnowledgeWriter();
+
+    const updateAsActor = new UpdateKnowledgeResourceAsActor(
+      new EvaluatePermission(permissionReader),
+      new UpdateKnowledgeResource(writer),
+    );
+
+    await expect(
+      updateAsActor.execute({
+        actingActorId: EDITOR_ACTOR_ID,
+        id: 'not-a-resource-id',
+        resourceType: parseNamespacedKey('knowledge.authorization-resource-updated'),
+      }),
+    ).rejects.toMatchObject({
+      code: 'knowledge.resource.invalid_input',
+      kind: 'validation',
+      publicMessage: 'The Knowledge Resource input is invalid.',
+    });
+
+    expect(permissionReader.inputs).toHaveLength(1);
+    expect(writer.updates).toEqual([]);
+  });
+
+  it('does not reclassify a downstream creation TypeError as invalid client input', async () => {
+    const permissionReader = new FakePermissionEvaluationReader(true);
+    const downstreamFailure = new TypeError('simulated downstream Knowledge writer failure');
+
+    const writer: KnowledgeResourceWriter = {
+      async create() {
+        throw downstreamFailure;
+      },
+
+      async updateResourceType() {
+        return null;
+      },
+    };
+
+    const createAsActor = new CreateKnowledgeResourceAsActor(
+      new EvaluatePermission(permissionReader),
+      new CreateKnowledgeResource(writer),
+    );
+
+    await expect(
+      createAsActor.execute({
+        actingActorId: EDITOR_ACTOR_ID,
+        universeKey: parseNamespacedKey('knowledge.authorization-test'),
+        resourceType: parseNamespacedKey('knowledge.authorization-resource'),
+      }),
+    ).rejects.toBe(downstreamFailure);
+  });
+
+  it('does not reclassify a downstream update TypeError as invalid client input', async () => {
+    const permissionReader = new FakePermissionEvaluationReader(true);
+    const downstreamFailure = new TypeError('simulated downstream Knowledge writer failure');
+
+    const writer: KnowledgeResourceWriter = {
+      async create(input) {
+        return {
+          ...input,
+          createdAt,
+          updatedAt,
+        };
+      },
+
+      async updateResourceType() {
+        throw downstreamFailure;
+      },
+    };
+
+    const updateAsActor = new UpdateKnowledgeResourceAsActor(
+      new EvaluatePermission(permissionReader),
+      new UpdateKnowledgeResource(writer),
+    );
+
+    await expect(
+      updateAsActor.execute({
+        actingActorId: EDITOR_ACTOR_ID,
+        id: generateResourceId(),
+        resourceType: parseNamespacedKey('knowledge.authorization-resource-updated'),
+      }),
+    ).rejects.toBe(downstreamFailure);
   });
 
   it('preserves canonical not-found behavior after authorization succeeds', async () => {

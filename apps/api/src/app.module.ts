@@ -40,8 +40,12 @@ import {
   SystemSessionClock,
 } from '@ai-world/platform-identity-access/infrastructure';
 import {
+  CreateKnowledgeResource,
+  CreateKnowledgeResourceAsActor,
   GetPublicKnowledgeResource,
   ListPublicKnowledgeResources,
+  UpdateKnowledgeResource,
+  UpdateKnowledgeResourceAsActor,
 } from '@ai-world/platform-knowledge';
 import { PrismaKnowledgeResourceRepository } from '@ai-world/platform-knowledge/infrastructure';
 import { GetUserProfile, UpdateUserProfile } from '@ai-world/platform-user';
@@ -60,6 +64,7 @@ import { DatabaseService } from './database/database.service';
 import { EmailVerificationController } from './email-verification/email-verification.controller';
 import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
+import { CreatorKnowledgeController } from './knowledge/creator-knowledge.controller';
 import { PublicKnowledgeController } from './knowledge/public-knowledge.controller';
 import { ObservabilityModule } from './observability/observability.module';
 import { PasswordRecoveryController } from './password-recovery/password-recovery.controller';
@@ -146,6 +151,7 @@ export class AppModule {
         UserProfileController,
         AuthorizationController,
         PublicKnowledgeController,
+        CreatorKnowledgeController,
       ],
 
       providers: [
@@ -337,6 +343,44 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): PrismaKnowledgeResourceRepository => {
             return new PrismaKnowledgeResourceRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: CreateKnowledgeResource,
+          inject: [PrismaKnowledgeResourceRepository],
+          useFactory: (repository: PrismaKnowledgeResourceRepository): CreateKnowledgeResource => {
+            return new CreateKnowledgeResource(repository);
+          },
+        },
+
+        {
+          provide: CreateKnowledgeResourceAsActor,
+          inject: [EvaluatePermission, CreateKnowledgeResource],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            createKnowledgeResource: CreateKnowledgeResource,
+          ): CreateKnowledgeResourceAsActor => {
+            return new CreateKnowledgeResourceAsActor(evaluatePermission, createKnowledgeResource);
+          },
+        },
+
+        {
+          provide: UpdateKnowledgeResource,
+          inject: [PrismaKnowledgeResourceRepository],
+          useFactory: (repository: PrismaKnowledgeResourceRepository): UpdateKnowledgeResource => {
+            return new UpdateKnowledgeResource(repository);
+          },
+        },
+
+        {
+          provide: UpdateKnowledgeResourceAsActor,
+          inject: [EvaluatePermission, UpdateKnowledgeResource],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            updateKnowledgeResource: UpdateKnowledgeResource,
+          ): UpdateKnowledgeResourceAsActor => {
+            return new UpdateKnowledgeResourceAsActor(evaluatePermission, updateKnowledgeResource);
           },
         },
 

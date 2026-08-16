@@ -1,4 +1,5 @@
 import { ApplicationError } from '@ai-world/foundation-errors';
+import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 import { EvaluatePermission } from '@ai-world/platform-identity-access';
 
 import {
@@ -10,6 +11,15 @@ import type { KnowledgeResource } from './knowledge-resource';
 
 export interface CreateKnowledgeResourceAsActorInput extends CreateKnowledgeResourceInput {
   readonly actingActorId: string;
+}
+
+function invalidKnowledgeResourceInput(error: TypeError): ApplicationError {
+  return new ApplicationError({
+    code: 'knowledge.resource.invalid_input',
+    kind: 'validation',
+    message: `Knowledge Resource creation input failed canonical validation: ${error.message}`,
+    publicMessage: 'The Knowledge Resource input is invalid.',
+  });
 }
 
 export class CreateKnowledgeResourceAsActor {
@@ -34,9 +44,23 @@ export class CreateKnowledgeResourceAsActor {
       });
     }
 
+    let universeKey: ReturnType<typeof parseNamespacedKey>;
+    let resourceType: ReturnType<typeof parseNamespacedKey>;
+
+    try {
+      universeKey = parseNamespacedKey(input.universeKey);
+      resourceType = parseNamespacedKey(input.resourceType);
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw invalidKnowledgeResourceInput(error);
+      }
+
+      throw error;
+    }
+
     return this.createKnowledgeResource.execute({
-      universeKey: input.universeKey,
-      resourceType: input.resourceType,
+      universeKey,
+      resourceType,
     });
   }
 }

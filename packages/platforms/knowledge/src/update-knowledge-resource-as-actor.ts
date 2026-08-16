@@ -1,4 +1,6 @@
 import { ApplicationError } from '@ai-world/foundation-errors';
+import { parseResourceId } from '@ai-world/kernel-identifiers';
+import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 import { EvaluatePermission } from '@ai-world/platform-identity-access';
 
 import { KNOWLEDGE_RESOURCE_UPDATE_PERMISSION_KEY } from './knowledge-authorization-policy';
@@ -10,6 +12,15 @@ import {
 
 export interface UpdateKnowledgeResourceAsActorInput extends UpdateKnowledgeResourceInput {
   readonly actingActorId: string;
+}
+
+function invalidKnowledgeResourceInput(error: TypeError): ApplicationError {
+  return new ApplicationError({
+    code: 'knowledge.resource.invalid_input',
+    kind: 'validation',
+    message: `Knowledge Resource update input failed canonical validation: ${error.message}`,
+    publicMessage: 'The Knowledge Resource input is invalid.',
+  });
 }
 
 export class UpdateKnowledgeResourceAsActor {
@@ -34,9 +45,23 @@ export class UpdateKnowledgeResourceAsActor {
       });
     }
 
+    let id: ReturnType<typeof parseResourceId>;
+    let resourceType: ReturnType<typeof parseNamespacedKey>;
+
+    try {
+      id = parseResourceId(input.id);
+      resourceType = parseNamespacedKey(input.resourceType);
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw invalidKnowledgeResourceInput(error);
+      }
+
+      throw error;
+    }
+
     return this.updateKnowledgeResource.execute({
-      id: input.id,
-      resourceType: input.resourceType,
+      id,
+      resourceType,
     });
   }
 }
