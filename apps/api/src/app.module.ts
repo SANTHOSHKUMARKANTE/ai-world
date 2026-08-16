@@ -41,8 +41,16 @@ import {
   SystemPasswordRecoveryClock,
   SystemSessionClock,
 } from '@ai-world/platform-identity-access/infrastructure';
-import { DeliverAsset, UploadAsset, UploadAssetAsActor } from '@ai-world/platform-media';
-import { PrismaAssetRepository } from '@ai-world/platform-media/infrastructure';
+import {
+  DeliverAsset,
+  GenerateImageThumbnail,
+  UploadAsset,
+  UploadAssetAsActor,
+} from '@ai-world/platform-media';
+import {
+  PrismaAssetRepository,
+  SharpImageThumbnailProcessor,
+} from '@ai-world/platform-media/infrastructure';
 import {
   CreateKnowledgeResource,
   CreateKnowledgeResourceAsActor,
@@ -380,6 +388,18 @@ export class AppModule {
           inject: [PrismaAssetRepository],
           useFactory: (repository: PrismaAssetRepository): DeliverAsset => {
             return new DeliverAsset(repository, storageObjectStore);
+          },
+        },
+
+        {
+          provide: GenerateImageThumbnail,
+          inject: [PrismaAssetRepository],
+          useFactory: (repository: PrismaAssetRepository): GenerateImageThumbnail => {
+            return new GenerateImageThumbnail(
+              repository,
+              storageObjectStore,
+              new SharpImageThumbnailProcessor(),
+            );
           },
         },
 

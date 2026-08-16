@@ -20,6 +20,19 @@ export type { AssetWriter, CreateAssetRecordInput } from './asset-writer';
 
 export { DeliverAsset, type DeliverAssetInput, type DeliveredAsset } from './deliver-asset';
 
+export {
+  GenerateImageThumbnail,
+  MEDIA_IMAGE_THUMBNAIL_MAX_EDGE_PIXELS,
+  type GenerateImageThumbnailInput,
+  type GeneratedImageThumbnail,
+} from './generate-image-thumbnail';
+
+export type {
+  CreateImageThumbnailInput,
+  ImageThumbnailProcessor,
+  ProcessedImageThumbnail,
+} from './image-thumbnail-processor';
+
 export { MEDIA_ASSET_UPLOAD_PERMISSION_KEY } from './media-authorization-policy';
 
 export {

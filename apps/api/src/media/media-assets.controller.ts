@@ -2,6 +2,7 @@ import { ApplicationError } from '@ai-world/foundation-errors';
 import { ValidateSession } from '@ai-world/platform-identity-access';
 import {
   DeliverAsset,
+  GenerateImageThumbnail,
   MEDIA_UPLOAD_MAX_BYTES,
   UploadAssetAsActor,
   type Asset,
@@ -62,6 +63,7 @@ function toResponse(asset: Asset): MediaAssetUploadResponse {
 export class MediaAssetsController {
   public constructor(
     private readonly deliverAsset: DeliverAsset,
+    private readonly generateImageThumbnail: GenerateImageThumbnail,
     private readonly validateSession: ValidateSession,
     private readonly uploadAssetAsActor: UploadAssetAsActor,
     private readonly sessionCookie: SessionCookie,
@@ -84,6 +86,16 @@ export class MediaAssetsController {
     return new StreamableFile(Buffer.from(delivery.content), {
       type: delivery.technicalMetadata.mimeType,
       length: delivery.content.byteLength,
+    });
+  }
+
+  @Get(':id/thumbnail')
+  public async deliverImageThumbnail(@Param('id') id: string): Promise<StreamableFile> {
+    const thumbnail = await this.generateImageThumbnail.execute({ id });
+
+    return new StreamableFile(Buffer.from(thumbnail.content), {
+      type: thumbnail.mimeType,
+      length: thumbnail.content.byteLength,
     });
   }
 

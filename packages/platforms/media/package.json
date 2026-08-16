@@ -28,11 +28,12 @@
     "vitest": "4.1.10"
   },
   "dependencies": {
-    "@ai-world/kernel-identifiers": "workspace:*",
     "@ai-world/foundation-database": "workspace:*",
     "@ai-world/foundation-errors": "workspace:*",
     "@ai-world/foundation-storage": "workspace:*",
+    "@ai-world/kernel-identifiers": "workspace:*",
     "@ai-world/kernel-namespace": "workspace:*",
-    "@ai-world/platform-identity-access": "workspace:*"
+    "@ai-world/platform-identity-access": "workspace:*",
+    "sharp": "0.35.3"
   }
 }
