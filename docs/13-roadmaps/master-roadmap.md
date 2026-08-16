@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform ACTIVE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -701,6 +701,9 @@ P4-M13 — Anime Reuse-Test Universe v1
 CLOSED
 
 P4-M14 — Basic Public Knowledge API
+CLOSED
+
+P4-M15 — Basic Creator Knowledge API
 NEXT
 ```
 
@@ -771,7 +774,7 @@ Phase 4 — Knowledge Platform
 The next implementation milestone is:
 
 ```text
-P4-M14 — Basic Public Knowledge API
+P4-M15 — Basic Creator Knowledge API
 ```
 
 P4-M01 established the smallest canonical Knowledge Resource model required by the multi-Universe architecture and remains unchanged.
@@ -886,7 +889,21 @@ The concrete Universe-definition pattern established by Devotional was successfu
 
 The optional `Genre` classification and `Character APPEARS_IN Series` relationship were intentionally not materialized. Taxonomy and Relationships therefore remain deferred until a real product capability needs their mechanics. Anime also gained no separate database, Search, or authorization infrastructure; Prisma remained unchanged and canonical migration count remains 12.
 
-P4-M14 — Basic Public Knowledge API is next. This returns delivery focus to shared platform capability that can directly serve the Devotional product priority.
+At P4-M13 closure, P4-M14 — Basic Public Knowledge API was next. That milestone returned delivery focus to shared platform capability that could directly serve the Devotional product priority.
+
+P4-M14 is CLOSED. The implementation checkpoint is `c7f21161 feat(knowledge): expose public read API`, with GitHub Actions CI run `31928964366` green for the exact implementation SHA `c7f21161e896cd3daa838aa14fca71907313b7a8`.
+
+P4-M14 established the first controlled public Knowledge read surface through `GET /knowledge/resources/:id` and `GET /knowledge/resources`. Public access requires no session, but visibility is intentionally restricted to `PUBLISHED` Knowledge Resources. `DRAFT` and `ARCHIVED` Resources remain hidden from public reads, with individual hidden Resources indistinguishable from missing Resources.
+
+The public query requires a canonical `universeKey`, supports an optional canonical `resourceType`, uses a default limit of 20 and maximum limit of 50, and returns stable ordering by `createdAt DESC, id ASC`. The HTTP response exposes only canonical public Knowledge metadata (`id`, `universeKey`, `resourceType`, `createdAt`, `updatedAt`) and does not expose lifecycle.
+
+Devotional remains the primary product/domain focus. Integration proof used published Devotional Deity and Scripture Resources, verified that draft Temple and archived Deity Resources remain hidden, and used a published Anime Resource only to prove cross-Universe query isolation. Production Knowledge and API code remains Universe-generic with no Devotional- or Anime-specific branches.
+
+The implementation introduced no creator write endpoint, no full-text Search capability, no domain-payload persistence, no Taxonomy, Relationships, Source, Citation, or reusable Temporal semantics, and no new database schema or migration. Canonical migration count remains 12.
+
+Final local validation included 5 Knowledge test files / 37 tests passed and 1 public Knowledge API integration test file / 10 tests passed. Architecture validation remained 367 modules / 943 dependencies / 0 violations; the final empty-Resource-Type repair changed no imports or dependencies.
+
+P4-M15 — Basic Creator Knowledge API is next. It will add protected creation/editing APIs while preserving Devotional as the primary product focus.
 
 ---
 
@@ -12311,6 +12328,142 @@ The reuse test demonstrates that Devotional and Anime can specialize the same sh
 
 # 128. Phase 4 Milestone P4-M14 — Basic Public Knowledge API
 
+Current milestone status:
+
+```text
+CLOSED
+```
+
+Implementation checkpoint:
+
+```text
+c7f21161e896cd3daa838aa14fca71907313b7a8
+feat(knowledge): expose public read API
+```
+
+Remote validation:
+
+```text
+GitHub Actions CI
+run 31928964366
+completed / success
+exact implementation SHA verified
+```
+
+Primary product/domain focus:
+
+```text
+Devotional
+PRIMARY
+
+Anime
+reuse/isolation proof only
+```
+
+Actual public API:
+
+```text
+GET /knowledge/resources/:id
+
+GET /knowledge/resources
+    universeKey REQUIRED
+    resourceType OPTIONAL
+    limit OPTIONAL
+```
+
+Controlled public visibility:
+
+```text
+PUBLISHED
+PUBLIC
+
+DRAFT
+HIDDEN
+
+ARCHIVED
+HIDDEN
+```
+
+Public query bounds:
+
+```text
+default limit
+20
+
+maximum limit
+50
+
+stable order
+createdAt DESC
+id ASC
+```
+
+Public response surface:
+
+```text
+id
+universeKey
+resourceType
+createdAt
+updatedAt
+
+lifecycle
+NOT EXPOSED
+```
+
+Devotional integration proof:
+
+```text
+published devotional.deity
+VISIBLE
+
+published devotional.scripture
+VISIBLE
+
+draft devotional.temple
+HIDDEN
+
+archived devotional.deity
+HIDDEN
+
+published anime.character during Devotional query
+EXCLUDED
+```
+
+Architecture / persistence outcome:
+
+```text
+named-Universe production branches
+NONE
+
+creator write endpoints
+NONE
+
+Prisma schema change
+NONE
+
+database migration
+NONE
+
+canonical migrations
+12
+```
+
+Validation evidence:
+
+```text
+Knowledge unit validation
+5 test files / 37 tests passed
+
+Public Knowledge API integration
+1 test file / 10 tests passed
+
+Architecture validation
+367 modules / 943 dependencies / 0 violations
+```
+
+P4-M14 deliberately stops at public read/query. Protected creation/editing remains P4-M15.
+
 Expose controlled read/query APIs.
 
 ---
@@ -16210,7 +16363,7 @@ Phase 4 — Knowledge Platform
 The current next milestone is:
 
 ```text
-P4-M14 — Basic Public Knowledge API
+P4-M15 — Basic Creator Knowledge API
 ```
 
 ---
@@ -16680,6 +16833,62 @@ Database migration
 NONE
 
 Canonical migrations remain 12
+
+P4-M14 — Basic Public Knowledge API
+CLOSED
+
+Implementation checkpoint
+c7f21161e896cd3daa838aa14fca71907313b7a8
+feat(knowledge): expose public read API
+
+Remote CI
+31928964366 completed / success
+
+Primary product/domain focus
+Devotional
+
+Public endpoints
+GET /knowledge/resources/:id
+GET /knowledge/resources
+
+Visibility
+PUBLISHED only
+
+DRAFT / ARCHIVED
+HIDDEN
+
+Query scope
+universeKey required
+resourceType optional
+default limit 20
+max limit 50
+
+Public response
+id / universeKey / resourceType / createdAt / updatedAt
+lifecycle not exposed
+
+Knowledge validation
+5 test files / 37 tests passed
+
+Public API integration
+1 test file / 10 tests passed
+
+Architecture validation
+367 modules / 943 dependencies / 0 violations
+
+Named-Universe production branches
+NONE
+
+Creator write endpoints
+NONE
+
+Prisma schema change
+NONE
+
+Database migration
+NONE
+
+Canonical migrations remain 12
 ```
 
 The four P4-M01 unit tests prove the initial lifecycle vocabulary. The PostgreSQL integration proof establishes durable ResourceId/NamespacedKey-backed persistence and duplicate identifier rejection.
@@ -16708,6 +16917,8 @@ P4-M12 then established Devotional Universe v1 with a concrete Devotional-owned 
 
 P4-M13 then completed the bounded Anime second-Universe reuse test. `CharacterResource` and `SeriesResource` reused shared Knowledge while Anime remained isolated from Devotional implementation and shared Platform code remained free of named-Universe core branches. The concrete Universe-definition pattern proved reusable, but no generic shared `UniverseDefinition` or registry was promoted without a runtime consumer. Devotional remains the primary product/domain priority.
 
+P4-M14 then established the first controlled public Knowledge read/query surface. Only `PUBLISHED` Resources are publicly visible; draft and archived Resources remain hidden. Devotional supplied the primary product proof while production code remained Universe-generic, and Anime appeared only as a cross-Universe isolation fixture. No creator writes, schema change, migration, Search subsystem, or deferred semantic capability was introduced.
+
 Phase 4 remains active.
 
 P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAFT -> PUBLISHED -> ARCHIVED` semantics, protected publish/archive operations, conditional persistence transitions, and no generic Workflow engine. Events remained separate, and P4-M08 later deferred them after finding no real production Event consumer.
@@ -16715,7 +16926,7 @@ P4-M07 closed the first real Knowledge publication lifecycle with explicit `DRAF
 The current next milestone is:
 
 ```text
-P4-M14 — Basic Public Knowledge API
+P4-M15 — Basic Creator Knowledge API
 ```
 
 Phase 4 eventual completion evidence is expected to demonstrate Devotional and the later Anime reuse-test Universe operating through one shared Knowledge Platform. History remains the later third structural reuse test after Devotional and Anime have exercised enough shared capabilities for reuse to be measured.
@@ -16990,7 +17201,8 @@ KNOWLEDGE
     ↷  P4-M11 Temporal Baseline — DEFERRED (no implemented Devotional Resource requires reusable date/date-range semantics)
     ✅ P4-M12 Devotional Universe v1 — CLOSED
     ✅ P4-M13 Anime Reuse-Test Universe v1 — CLOSED
-    → P4-M14 Basic Public Knowledge API — NEXT
+    ✅ P4-M14 Basic Public Knowledge API — CLOSED
+    → P4-M15 Basic Creator Knowledge API — NEXT
     Canonical Knowledge
     Typed domain resources
     Devotional v1
@@ -17407,7 +17619,7 @@ P4-M10 — Citations — no implemented Devotional Resource requires Citation se
 P4-M11 — Temporal Baseline — no implemented Devotional Resource requires reusable date/date-range semantics
 
 NEXT MILESTONE
-P4-M14 — Basic Public Knowledge API
+P4-M15 — Basic Creator Knowledge API
 
 UNIVERSE IMPLEMENTATION / REUSE ORDER
 Devotional
@@ -17597,6 +17809,29 @@ Resource Types character / series
 Shared Knowledge reuse proved
 Generic shared UniverseDefinition / Registry not promoted
 Genre and APPEARS_IN relationship not materialized
+Prisma unchanged
+No migration
+Canonical migrations remain 12
+
+P4-M14 CLOSURE RESULT
+Basic Public Knowledge API CLOSED
+Implementation c7f21161 feat(knowledge): expose public read API
+CI 31928964366 success
+Devotional remains primary product/domain focus
+GET /knowledge/resources/:id
+GET /knowledge/resources
+PUBLISHED-only public visibility
+DRAFT / ARCHIVED hidden
+universeKey required
+resourceType optional
+default limit 20
+max limit 50
+lifecycle not exposed
+Knowledge 5 files / 37 tests
+Public API integration 1 file / 10 tests
+Architecture 367 modules / 943 dependencies / 0 violations
+No named-Universe production branches
+No creator writes
 Prisma unchanged
 No migration
 Canonical migrations remain 12
@@ -19280,7 +19515,7 @@ The current next implementation work is:
 ```text
 Phase 4 — Knowledge Platform
 
-P4-M14 — Basic Public Knowledge API
+P4-M15 — Basic Creator Knowledge API
 ```
 
 P3-M01 established canonical Resource identifier semantics.
