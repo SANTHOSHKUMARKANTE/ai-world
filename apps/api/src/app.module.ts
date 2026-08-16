@@ -41,7 +41,7 @@ import {
   SystemPasswordRecoveryClock,
   SystemSessionClock,
 } from '@ai-world/platform-identity-access/infrastructure';
-import { UploadAsset, UploadAssetAsActor } from '@ai-world/platform-media';
+import { DeliverAsset, UploadAsset, UploadAssetAsActor } from '@ai-world/platform-media';
 import { PrismaAssetRepository } from '@ai-world/platform-media/infrastructure';
 import {
   CreateKnowledgeResource,
@@ -372,6 +372,14 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): PrismaAssetRepository => {
             return new PrismaAssetRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: DeliverAsset,
+          inject: [PrismaAssetRepository],
+          useFactory: (repository: PrismaAssetRepository): DeliverAsset => {
+            return new DeliverAsset(repository, storageObjectStore);
           },
         },
 

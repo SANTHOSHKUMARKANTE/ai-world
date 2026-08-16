@@ -162,7 +162,13 @@ describe('Media Upload API', () => {
   }
 
   async function currentAssetCount(): Promise<number> {
-    return database.asset.count();
+    return database.asset.count({
+      where: {
+        storageReference: {
+          startsWith: 'media/assets/',
+        },
+      },
+    });
   }
 
   beforeAll(async () => {

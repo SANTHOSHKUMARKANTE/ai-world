@@ -2,6 +2,7 @@ import type { DatabaseClient } from '@ai-world/foundation-database';
 import { parseResourceId } from '@ai-world/kernel-identifiers';
 
 import { isAssetLifecycle, isAssetType, type Asset } from './asset';
+import type { AssetReader, FindAssetByIdInput } from './asset-reader';
 import type { AssetWriter, CreateAssetRecordInput } from './asset-writer';
 
 interface PersistedAsset {
@@ -38,8 +39,18 @@ function mapPersistedAsset(asset: PersistedAsset): Asset {
   };
 }
 
-export class PrismaAssetRepository implements AssetWriter {
+export class PrismaAssetRepository implements AssetReader, AssetWriter {
   constructor(private readonly database: DatabaseClient) {}
+
+  async findById(input: FindAssetByIdInput): Promise<Asset | null> {
+    const asset = await this.database.asset.findUnique({
+      where: {
+        id: input.id,
+      },
+    });
+
+    return asset ? mapPersistedAsset(asset) : null;
+  }
 
   async create(input: CreateAssetRecordInput): Promise<Asset> {
     const asset = await this.database.asset.create({

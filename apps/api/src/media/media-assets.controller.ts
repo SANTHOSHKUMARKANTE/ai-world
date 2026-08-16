@@ -1,10 +1,18 @@
 import { ApplicationError } from '@ai-world/foundation-errors';
 import { ValidateSession } from '@ai-world/platform-identity-access';
-import { MEDIA_UPLOAD_MAX_BYTES, UploadAssetAsActor, type Asset } from '@ai-world/platform-media';
+import {
+  DeliverAsset,
+  MEDIA_UPLOAD_MAX_BYTES,
+  UploadAssetAsActor,
+  type Asset,
+} from '@ai-world/platform-media';
 import {
   Controller,
+  Get,
   Headers,
+  Param,
   Post,
+  StreamableFile,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -50,10 +58,10 @@ function toResponse(asset: Asset): MediaAssetUploadResponse {
   };
 }
 
-@UseGuards(MediaUploadPreauthorizationGuard)
 @Controller('media/assets')
 export class MediaAssetsController {
   public constructor(
+    private readonly deliverAsset: DeliverAsset,
     private readonly validateSession: ValidateSession,
     private readonly uploadAssetAsActor: UploadAssetAsActor,
     private readonly sessionCookie: SessionCookie,
@@ -69,7 +77,18 @@ export class MediaAssetsController {
     return session.actorId;
   }
 
+  @Get(':id/content')
+  public async deliverAssetContent(@Param('id') id: string): Promise<StreamableFile> {
+    const delivery = await this.deliverAsset.execute({ id });
+
+    return new StreamableFile(Buffer.from(delivery.content), {
+      type: delivery.technicalMetadata.mimeType,
+      length: delivery.content.byteLength,
+    });
+  }
+
   @Post()
+  @UseGuards(MediaUploadPreauthorizationGuard)
   @UseInterceptors(
     FileInterceptor('file', {
       limits: {

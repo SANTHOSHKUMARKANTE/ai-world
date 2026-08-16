@@ -14,7 +14,11 @@ export {
   type AssetType,
 } from './asset';
 
+export type { AssetReader, FindAssetByIdInput } from './asset-reader';
+
 export type { AssetWriter, CreateAssetRecordInput } from './asset-writer';
+
+export { DeliverAsset, type DeliverAssetInput, type DeliveredAsset } from './deliver-asset';
 
 export { MEDIA_ASSET_UPLOAD_PERMISSION_KEY } from './media-authorization-policy';
 
