@@ -9,6 +9,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./infrastructure": {
+      "types": "./dist/infrastructure.d.ts",
+      "default": "./dist/infrastructure.js"
     }
   },
   "scripts": {
@@ -20,11 +24,15 @@
     "test:integration": "vitest run integration"
   },
   "devDependencies": {
-    "@ai-world/foundation-database": "workspace:*",
     "@types/node": "24.13.3",
     "vitest": "4.1.10"
   },
   "dependencies": {
-    "@ai-world/kernel-identifiers": "workspace:*"
+    "@ai-world/kernel-identifiers": "workspace:*",
+    "@ai-world/foundation-database": "workspace:*",
+    "@ai-world/foundation-errors": "workspace:*",
+    "@ai-world/foundation-storage": "workspace:*",
+    "@ai-world/kernel-namespace": "workspace:*",
+    "@ai-world/platform-identity-access": "workspace:*"
   }
 }

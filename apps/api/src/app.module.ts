@@ -1,4 +1,6 @@
 import type { EmailDelivery } from '@ai-world/foundation-email';
+import type { StorageObjectStore } from '@ai-world/foundation-storage';
+import { FilesystemStorageAdapter } from '@ai-world/foundation-storage/filesystem';
 import { SmtpEmailDelivery, type SmtpEmailDeliveryOptions } from '@ai-world/foundation-email/smtp';
 import { type LogLevel } from '@ai-world/foundation-observability';
 import { PrismaAuditRecorder } from '@ai-world/kernel-audit/infrastructure';
@@ -39,6 +41,8 @@ import {
   SystemPasswordRecoveryClock,
   SystemSessionClock,
 } from '@ai-world/platform-identity-access/infrastructure';
+import { UploadAsset, UploadAssetAsActor } from '@ai-world/platform-media';
+import { PrismaAssetRepository } from '@ai-world/platform-media/infrastructure';
 import {
   CreateKnowledgeResource,
   CreateKnowledgeResourceAsActor,
@@ -65,6 +69,8 @@ import { EmailVerificationController } from './email-verification/email-verifica
 import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
 import { CreatorKnowledgeController } from './knowledge/creator-knowledge.controller';
+import { MediaAssetsController } from './media/media-assets.controller';
+import { MediaUploadPreauthorizationGuard } from './media/media-upload-preauthorization.guard';
 import { PublicKnowledgeController } from './knowledge/public-knowledge.controller';
 import { ObservabilityModule } from './observability/observability.module';
 import { PasswordRecoveryController } from './password-recovery/password-recovery.controller';
@@ -82,6 +88,16 @@ export interface AppModuleOptions {
   readonly databaseUrl: string;
   readonly environment: string;
   readonly logLevel: LogLevel;
+
+  /**
+   * Development/runtime filesystem root for Storage Foundation.
+   */
+  readonly storageRootDirectory?: string;
+
+  /**
+   * Test/composition override for provider-neutral Storage.
+   */
+  readonly storageObjectStore?: StorageObjectStore;
 
   /**
    * Production/runtime configuration.
@@ -106,6 +122,16 @@ const DEFAULT_LOCAL_EMAIL_OPTIONS: AppEmailOptions = {
   from: 'AI World <noreply@ai-world.local>',
 };
 
+function createStorageObjectStore(options: AppModuleOptions): StorageObjectStore {
+  if (options.storageObjectStore) {
+    return options.storageObjectStore;
+  }
+
+  return new FilesystemStorageAdapter({
+    rootDirectory: options.storageRootDirectory ?? './uploads',
+  });
+}
+
 function createEmailDelivery(options: AppModuleOptions): EmailDelivery {
   if (options.emailDelivery) {
     return options.emailDelivery;
@@ -123,6 +149,7 @@ function createEmailDelivery(options: AppModuleOptions): EmailDelivery {
 export class AppModule {
   static register(options: AppModuleOptions): DynamicModule {
     const emailDelivery = createEmailDelivery(options);
+    const storageObjectStore = createStorageObjectStore(options);
 
     return {
       module: AppModule,
@@ -152,9 +179,11 @@ export class AppModule {
         AuthorizationController,
         PublicKnowledgeController,
         CreatorKnowledgeController,
+        MediaAssetsController,
       ],
 
       providers: [
+        MediaUploadPreauthorizationGuard,
         AppService,
 
         {
@@ -335,6 +364,33 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): UpdateUserProfile => {
             return new UpdateUserProfile(new PrismaUserProfileRepository(database.getClient()));
+          },
+        },
+
+        {
+          provide: PrismaAssetRepository,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): PrismaAssetRepository => {
+            return new PrismaAssetRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: UploadAsset,
+          inject: [PrismaAssetRepository],
+          useFactory: (repository: PrismaAssetRepository): UploadAsset => {
+            return new UploadAsset(repository, storageObjectStore);
+          },
+        },
+
+        {
+          provide: UploadAssetAsActor,
+          inject: [EvaluatePermission, UploadAsset],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            uploadAsset: UploadAsset,
+          ): UploadAssetAsActor => {
+            return new UploadAssetAsActor(evaluatePermission, uploadAsset);
           },
         },
 

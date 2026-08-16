@@ -19,6 +19,7 @@ coverage/
 
 # Runtime files
 *.log
+apps/api/uploads/
 
 # OS files
 .DS_Store

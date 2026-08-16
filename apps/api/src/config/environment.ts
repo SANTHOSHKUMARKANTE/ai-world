@@ -12,6 +12,8 @@ const apiEnvironmentSchema = z
 
     LOG_LEVEL: z.enum(logLevels).default('info'),
 
+    MEDIA_STORAGE_ROOT: z.string().trim().min(1).default('./uploads'),
+
     EMAIL_SMTP_HOST: z.string().trim().min(1).default('127.0.0.1'),
 
     EMAIL_SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(1025),
@@ -42,6 +44,7 @@ const apiEnvironmentSchema = z
       PORT,
       DATABASE_URL,
       LOG_LEVEL,
+      MEDIA_STORAGE_ROOT,
       EMAIL_SMTP_HOST,
       EMAIL_SMTP_PORT,
       EMAIL_SMTP_SECURE,
@@ -53,6 +56,7 @@ const apiEnvironmentSchema = z
       port: PORT,
       databaseUrl: DATABASE_URL,
       logLevel: LOG_LEVEL,
+      mediaStorageRootDirectory: MEDIA_STORAGE_ROOT,
       email: {
         smtp: {
           host: EMAIL_SMTP_HOST,

@@ -47,6 +47,9 @@ importers:
       '@ai-world/foundation-observability':
         specifier: workspace:*
         version: link:../../packages/foundations/observability
+      '@ai-world/foundation-storage':
+        specifier: workspace:*
+        version: link:../../packages/foundations/storage
       '@ai-world/kernel-audit':
         specifier: workspace:*
         version: link:../../packages/kernel/audit
@@ -56,6 +59,9 @@ importers:
       '@ai-world/platform-knowledge':
         specifier: workspace:*
         version: link:../../packages/platforms/knowledge
+      '@ai-world/platform-media':
+        specifier: workspace:*
+        version: link:../../packages/platforms/media
       '@ai-world/platform-user':
         specifier: workspace:*
         version: link:../../packages/platforms/user
@@ -329,13 +335,25 @@ importers:
 
   packages/platforms/media:
     dependencies:
-      '@ai-world/kernel-identifiers':
-        specifier: workspace:*
-        version: link:../../kernel/identifiers
-    devDependencies:
       '@ai-world/foundation-database':
         specifier: workspace:*
         version: link:../../foundations/database
+      '@ai-world/foundation-errors':
+        specifier: workspace:*
+        version: link:../../foundations/errors
+      '@ai-world/foundation-storage':
+        specifier: workspace:*
+        version: link:../../foundations/storage
+      '@ai-world/kernel-identifiers':
+        specifier: workspace:*
+        version: link:../../kernel/identifiers
+      '@ai-world/kernel-namespace':
+        specifier: workspace:*
+        version: link:../../kernel/namespace
+      '@ai-world/platform-identity-access':
+        specifier: workspace:*
+        version: link:../identity-access
+    devDependencies:
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3

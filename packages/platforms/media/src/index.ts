@@ -13,3 +13,20 @@ export {
   type AssetTechnicalMetadata,
   type AssetType,
 } from './asset';
+
+export type { AssetWriter, CreateAssetRecordInput } from './asset-writer';
+
+export { MEDIA_ASSET_UPLOAD_PERMISSION_KEY } from './media-authorization-policy';
+
+export {
+  MEDIA_UPLOAD_JPEG_MIME_TYPE,
+  MEDIA_UPLOAD_MAX_BYTES,
+  MEDIA_UPLOAD_PNG_MIME_TYPE,
+  validateMediaUpload,
+  type SupportedMediaUploadMimeType,
+  type ValidatedMediaUpload,
+} from './media-upload-policy';
+
+export { UploadAsset, type UploadAssetInput } from './upload-asset';
+
+export { UploadAssetAsActor, type UploadAssetAsActorInput } from './upload-asset-as-actor';
