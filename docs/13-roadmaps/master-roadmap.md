@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform ACTIVE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform ACTIVE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -738,6 +738,9 @@ P5-M03 — Upload
 CLOSED
 
 P5-M04 — Delivery
+CLOSED
+
+P5-M05 — Image Processing
 NEXT
 ```
 
@@ -14636,6 +14639,214 @@ Support controlled delivery for initial Assets.
 
 ---
 
+## P5-M04 CLOSURE RECORD
+
+Milestone status:
+
+```text
+CLOSED
+```
+
+Implementation checkpoint:
+
+```text
+291636bed48c45a18ae30aa5ec7254b028774737
+feat(media): implement controlled asset delivery
+```
+
+Verified remote CI:
+
+```text
+GitHub Actions run
+31948583211
+
+CI
+#77
+
+branch
+main
+
+commit
+291636bed48c45a18ae30aa5ec7254b028774737
+
+status
+completed
+
+conclusion
+success
+```
+
+Implemented controlled initial Asset delivery:
+
+```text
+HTTP
+GET /media/assets/:id/content
+
+Access
+public initial delivery
+
+Deliverable lifecycle
+ACTIVE
+
+Initial deliverable Asset Type
+IMAGE
+
+Media lookup
+AssetReader
+→ PrismaAssetRepository.findById
+
+Storage read
+StorageObjectStore.readObject(storageReference)
+
+Transport
+StreamableFile
+
+Content-Type
+canonical Asset technicalMetadata.mimeType
+
+Content-Length
+delivered byte length
+
+Storage integrity
+delivered byte length must equal canonical technicalMetadata.sizeBytes
+
+Public Storage exposure
+storageReference is not returned
+```
+
+Delivery behavior:
+
+```text
+valid ACTIVE IMAGE Asset
+→ 200
+→ bytes delivered
+
+unknown Asset
+→ 404
+→ media.asset.delivery.not_found
+
+ARCHIVED Asset
+→ 404
+
+non-image Asset
+→ 404 for the initial delivery baseline
+
+malformed Resource ID
+→ 400
+→ media.asset.delivery.invalid_asset_id
+
+stored bytes conflict with canonical sizeBytes
+→ safe 500
+→ bytes are not delivered
+```
+
+Upload authorization remains isolated to upload:
+
+```text
+POST /media/assets
+→ MediaUploadPreauthorizationGuard
+→ Session required
+→ media.asset.upload required
+
+GET /media/assets/:id/content
+→ not protected by the upload Permission
+```
+
+Validated implementation evidence:
+
+```text
+Canonical migrations
+14
+
+Media unit tests
+17 passed
+
+Media persistence integration tests
+2 passed
+
+API unit tests
+12 passed
+
+API integration tests
+104 passed
+
+Media Delivery API integration tests
+6 passed
+
+Media Upload API regression tests
+7 passed
+
+Architecture validation
+420 modules
+1115 dependencies
+0 dependency violations
+```
+
+The P5-M04 candidate also corrected Media API integration-test isolation without changing production semantics:
+
+```text
+P5-M03 upload fixture accounting
+scoped to canonical media/assets/ references
+
+P5-M04 delivery fixtures
+use test/media-delivery/ references
+```
+
+P5-M04 deliberately does not materialize:
+
+```text
+private Asset visibility semantics
+private-delivery policy
+signed access
+signed URLs
+CDN integration
+S3 presigning
+image transformations
+Sharp
+thumbnails
+Media Variants
+Queue / Worker
+new Permission
+new migration
+Knowledge → Asset references
+Phase 5 completion tag
+```
+
+Ownership remains:
+
+```text
+Media Platform
+    owns
+Asset lookup semantics
+Asset lifecycle gate
+Asset Type delivery gate
+delivery error semantics
+delivery response semantics
+
+Storage Foundation
+    owns
+Storage Object read mechanics
+provider-specific storage implementation
+
+API Application
+    owns
+HTTP route
+StreamableFile transport
+HTTP response headers
+```
+
+P5-M04 is therefore:
+
+```text
+CLOSED
+```
+
+Next:
+
+```text
+P5-M05 — Image Processing
+```
+
 # 144. Phase 5 Milestone P5-M05 — Image Processing
 
 Introduce:
@@ -19541,7 +19752,8 @@ MEDIA
     ✅ P5-M01 Asset Model — CLOSED
     ✅ P5-M02 Storage Foundation — CLOSED
     ✅ P5-M03 Upload — CLOSED
-    → P5-M04 Delivery — NEXT
+    ✅ P5-M04 Delivery — CLOSED
+    → P5-M05 Image Processing — NEXT
     Assets
     Storage
     Upload
@@ -21727,6 +21939,43 @@ CANONICAL MIGRATIONS
 14
 
 P5-M04 — Delivery
+NEXT
+```
+
+No Phase 5 completion tag is authorized at this milestone.
+
+## PHASE 5 CURRENT STATE AFTER P5-M04
+
+The authoritative current delivery state after the green P5-M04 implementation checkpoint is:
+
+```text
+PHASE 5 — Media Platform
+ACTIVE
+
+P5-M01 — Asset Model
+CLOSED
+
+P5-M02 — Storage Foundation
+CLOSED
+
+P5-M03 — Upload
+CLOSED
+
+P5-M04 — Delivery
+CLOSED
+
+IMPLEMENTATION
+291636bed48c45a18ae30aa5ec7254b028774737
+
+REMOTE CI
+31948583211
+CI #77
+SUCCESS
+
+CANONICAL MIGRATIONS
+14
+
+P5-M05 — Image Processing
 NEXT
 ```
 
