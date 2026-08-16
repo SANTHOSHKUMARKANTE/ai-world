@@ -1,8 +1,6 @@
 import type { KnowledgeResource } from '@ai-world/platform-knowledge';
 
-export const DEVOTIONAL_UNIVERSE_KEY = 'universe.devotional' as const;
-
-export const DEVOTIONAL_DEITY_RESOURCE_TYPE = 'devotional.deity' as const;
+import { DEVOTIONAL_DEITY_RESOURCE_TYPE, DEVOTIONAL_UNIVERSE_KEY } from './universe-definition';
 
 export interface DeityResource extends KnowledgeResource {
   readonly universeKey: typeof DEVOTIONAL_UNIVERSE_KEY;
