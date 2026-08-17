@@ -1,7 +1,14 @@
 import { ApplicationError } from '@ai-world/foundation-errors';
+import type { StorageObjectStore } from '@ai-world/foundation-storage';
 import { EvaluatePermission } from '@ai-world/platform-identity-access';
 
 import type { Asset } from './asset';
+import {
+  MEDIA_ASSET_AUDIT_RESOURCE_TYPE,
+  MEDIA_ASSET_CREATED_AUDIT_RESULT,
+  MEDIA_ASSET_UPLOAD_AUDIT_ACTION,
+} from './media-audit-policy';
+import type { MediaAssetUploadTransaction } from './media-asset-upload-transaction';
 import { MEDIA_ASSET_UPLOAD_PERMISSION_KEY } from './media-authorization-policy';
 import { UploadAsset, type UploadAssetInput } from './upload-asset';
 
@@ -12,7 +19,8 @@ export interface UploadAssetAsActorInput extends UploadAssetInput {
 export class UploadAssetAsActor {
   constructor(
     private readonly evaluatePermission: EvaluatePermission,
-    private readonly uploadAsset: UploadAsset,
+    private readonly transaction: MediaAssetUploadTransaction,
+    private readonly storage: StorageObjectStore,
   ) {}
 
   async authorize(actingActorId: string): Promise<void> {
@@ -35,9 +43,43 @@ export class UploadAssetAsActor {
   async execute(input: UploadAssetAsActorInput): Promise<Asset> {
     await this.authorize(input.actingActorId);
 
-    return this.uploadAsset.execute({
-      content: input.content,
-      mimeType: input.mimeType,
-    });
+    let uploadedAsset: Asset | undefined;
+
+    try {
+      return await this.transaction.execute(async ({ assetWriter, auditRecorder }) => {
+        const uploadAsset = new UploadAsset(assetWriter, this.storage);
+
+        const asset = await uploadAsset.execute({
+          content: input.content,
+          mimeType: input.mimeType,
+        });
+
+        uploadedAsset = asset;
+
+        await auditRecorder.record({
+          actorId: input.actingActorId,
+          action: MEDIA_ASSET_UPLOAD_AUDIT_ACTION,
+          resource: {
+            type: MEDIA_ASSET_AUDIT_RESOURCE_TYPE,
+            id: asset.id,
+          },
+          result: MEDIA_ASSET_CREATED_AUDIT_RESULT,
+          context: {
+            assetType: asset.assetType,
+            mimeType: asset.technicalMetadata.mimeType,
+            sizeBytes: asset.technicalMetadata.sizeBytes,
+            lifecycle: asset.lifecycle,
+          },
+        });
+
+        return asset;
+      });
+    } catch (error) {
+      if (uploadedAsset) {
+        await this.storage.deleteObject(uploadedAsset.storageReference).catch(() => undefined);
+      }
+
+      throw error;
+    }
   }
 }

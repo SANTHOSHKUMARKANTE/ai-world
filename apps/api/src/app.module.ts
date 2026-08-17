@@ -45,11 +45,11 @@ import {
   DeliverAsset,
   GenerateImageThumbnail,
   ResolveAssetReference,
-  UploadAsset,
   UploadAssetAsActor,
 } from '@ai-world/platform-media';
 import {
   PrismaAssetRepository,
+  PrismaMediaAssetUploadTransaction,
   SharpImageThumbnailProcessor,
 } from '@ai-world/platform-media/infrastructure';
 import {
@@ -416,21 +416,20 @@ export class AppModule {
         },
 
         {
-          provide: UploadAsset,
-          inject: [PrismaAssetRepository],
-          useFactory: (repository: PrismaAssetRepository): UploadAsset => {
-            return new UploadAsset(repository, storageObjectStore);
-          },
-        },
-
-        {
           provide: UploadAssetAsActor,
-          inject: [EvaluatePermission, UploadAsset],
+          inject: [EvaluatePermission, DatabaseService],
           useFactory: (
             evaluatePermission: EvaluatePermission,
-            uploadAsset: UploadAsset,
+            database: DatabaseService,
           ): UploadAssetAsActor => {
-            return new UploadAssetAsActor(evaluatePermission, uploadAsset);
+            return new UploadAssetAsActor(
+              evaluatePermission,
+              new PrismaMediaAssetUploadTransaction(
+                database.getClient(),
+                (transaction) => new PrismaAuditRecorder(transaction),
+              ),
+              storageObjectStore,
+            );
           },
         },
 

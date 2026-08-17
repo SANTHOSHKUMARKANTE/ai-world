@@ -1,4 +1,4 @@
-import type { DatabaseClient } from '@ai-world/foundation-database';
+import type { DatabaseClient, DatabaseTransactionClient } from '@ai-world/foundation-database';
 import { parseResourceId } from '@ai-world/kernel-identifiers';
 
 import { isAssetLifecycle, isAssetType, type Asset } from './asset';
@@ -40,7 +40,7 @@ function mapPersistedAsset(asset: PersistedAsset): Asset {
 }
 
 export class PrismaAssetRepository implements AssetReader, AssetWriter {
-  constructor(private readonly database: DatabaseClient) {}
+  constructor(private readonly database: DatabaseClient | DatabaseTransactionClient) {}
 
   async findById(input: FindAssetByIdInput): Promise<Asset | null> {
     const asset = await this.database.asset.findUnique({

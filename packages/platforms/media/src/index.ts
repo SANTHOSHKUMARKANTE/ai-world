@@ -18,6 +18,11 @@ export type { AssetReader, FindAssetByIdInput } from './asset-reader';
 
 export type { AssetWriter, CreateAssetRecordInput } from './asset-writer';
 
+export type {
+  MediaAssetUploadTransaction,
+  MediaAssetUploadTransactionResources,
+} from './media-asset-upload-transaction';
+
 export { DeliverAsset, type DeliverAssetInput, type DeliveredAsset } from './deliver-asset';
 
 export {

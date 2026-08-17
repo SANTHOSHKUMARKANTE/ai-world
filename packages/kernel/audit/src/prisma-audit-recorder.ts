@@ -1,4 +1,4 @@
-import type { DatabaseClient } from '@ai-world/foundation-database';
+import type { DatabaseClient, DatabaseTransactionClient } from '@ai-world/foundation-database';
 import { generateResourceId } from '@ai-world/kernel-identifiers';
 
 import type { AuditClock } from './audit-clock';
@@ -9,7 +9,7 @@ import { SystemAuditClock } from './system-audit-clock';
 
 export class PrismaAuditRecorder implements AuditRecorder {
   constructor(
-    private readonly database: DatabaseClient,
+    private readonly database: DatabaseClient | DatabaseTransactionClient,
     private readonly clock: AuditClock = new SystemAuditClock(),
   ) {}
 

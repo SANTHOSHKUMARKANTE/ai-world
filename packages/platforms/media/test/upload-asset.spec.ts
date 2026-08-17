@@ -1,4 +1,5 @@
 import type { StorageObjectStore } from '@ai-world/foundation-storage';
+import type { AuditRecorder, RecordAuditInput } from '@ai-world/kernel-audit';
 import { EvaluatePermission } from '@ai-world/platform-identity-access';
 import { describe, expect, it } from 'vitest';
 
@@ -10,6 +11,7 @@ import {
   UploadAsset,
   UploadAssetAsActor,
   type Asset,
+  type MediaAssetUploadTransaction,
   type AssetWriter,
   type CreateAssetRecordInput,
 } from '../src';
@@ -41,6 +43,20 @@ class RecordingStorage implements StorageObjectStore {
   }
 }
 
+class RecordingAuditRecorder implements AuditRecorder {
+  readonly records: RecordAuditInput[] = [];
+
+  async record(input: RecordAuditInput): Promise<void> {
+    this.records.push(input);
+  }
+}
+
+class FailingAuditRecorder implements AuditRecorder {
+  async record(): Promise<void> {
+    throw new Error('Audit persistence failed.');
+  }
+}
+
 class RecordingAssetWriter implements AssetWriter {
   readonly creates: CreateAssetRecordInput[] = [];
 
@@ -60,6 +76,22 @@ class RecordingAssetWriter implements AssetWriter {
       createdAt: now,
       updatedAt: now,
     };
+  }
+}
+
+class RecordingMediaAssetUploadTransaction implements MediaAssetUploadTransaction {
+  constructor(
+    private readonly assetWriter: AssetWriter,
+    private readonly auditRecorder: AuditRecorder,
+  ) {}
+
+  execute<TResult>(
+    operation: Parameters<MediaAssetUploadTransaction['execute']>[0],
+  ): Promise<TResult> {
+    return operation({
+      assetWriter: this.assetWriter,
+      auditRecorder: this.auditRecorder,
+    }) as Promise<TResult>;
   }
 }
 
@@ -163,14 +195,82 @@ describe('UploadAsset', () => {
 });
 
 describe('UploadAssetAsActor', () => {
-  it('checks authorization before canonical upload validation', async () => {
+  it('records the successful ACTIVE Asset creation through the shared Audit Kernel', async () => {
     const storage = new RecordingStorage();
     const writer = new RecordingAssetWriter();
-    const upload = new UploadAsset(writer, storage);
+    const audit = new RecordingAuditRecorder();
+    const actingActorId = 'b3b3482c-a885-4d70-9fd7-67659891c322';
+    const evaluatePermission = new EvaluatePermission({
+      hasPermission: async () => true,
+    });
+    const uploadAsActor = new UploadAssetAsActor(
+      evaluatePermission,
+      new RecordingMediaAssetUploadTransaction(writer, audit),
+      storage,
+    );
+
+    const asset = await uploadAsActor.execute({
+      actingActorId,
+      content: PNG_BYTES,
+      mimeType: MEDIA_UPLOAD_PNG_MIME_TYPE,
+    });
+
+    expect(audit.records).toEqual([
+      {
+        actorId: actingActorId,
+        action: 'media.asset.upload',
+        resource: {
+          type: 'media.asset',
+          id: asset.id,
+        },
+        result: 'media.asset.created',
+        context: {
+          assetType: 'IMAGE',
+          mimeType: 'image/png',
+          sizeBytes: PNG_BYTES.byteLength,
+          lifecycle: 'ACTIVE',
+        },
+      },
+    ]);
+    expect(audit.records[0]?.context).not.toHaveProperty('storageReference');
+  });
+
+  it('removes stored bytes when required Audit persistence fails after Asset creation', async () => {
+    const storage = new RecordingStorage();
+    const writer = new RecordingAssetWriter();
+    const evaluatePermission = new EvaluatePermission({
+      hasPermission: async () => true,
+    });
+    const uploadAsActor = new UploadAssetAsActor(
+      evaluatePermission,
+      new RecordingMediaAssetUploadTransaction(writer, new FailingAuditRecorder()),
+      storage,
+    );
+
+    await expect(
+      uploadAsActor.execute({
+        actingActorId: '726c5b37-8cad-4e42-b302-59f383bc1b7c',
+        content: PNG_BYTES,
+        mimeType: MEDIA_UPLOAD_PNG_MIME_TYPE,
+      }),
+    ).rejects.toThrow('Audit persistence failed.');
+
+    expect(storage.writes).toHaveLength(1);
+    expect(storage.deletes).toEqual([storage.writes[0]?.reference]);
+  });
+
+  it('checks authorization before canonical upload validation and records no lifecycle Audit', async () => {
+    const storage = new RecordingStorage();
+    const writer = new RecordingAssetWriter();
+    const audit = new RecordingAuditRecorder();
     const evaluatePermission = new EvaluatePermission({
       hasPermission: async () => false,
     });
-    const uploadAsActor = new UploadAssetAsActor(evaluatePermission, upload);
+    const uploadAsActor = new UploadAssetAsActor(
+      evaluatePermission,
+      new RecordingMediaAssetUploadTransaction(writer, audit),
+      storage,
+    );
 
     await expect(
       uploadAsActor.execute({
@@ -185,5 +285,6 @@ describe('UploadAssetAsActor', () => {
 
     expect(storage.writes).toHaveLength(0);
     expect(writer.creates).toHaveLength(0);
+    expect(audit.records).toHaveLength(0);
   });
 });

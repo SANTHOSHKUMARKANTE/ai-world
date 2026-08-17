@@ -347,6 +347,9 @@ importers:
       '@ai-world/foundation-storage':
         specifier: workspace:*
         version: link:../../foundations/storage
+      '@ai-world/kernel-audit':
+        specifier: workspace:*
+        version: link:../../kernel/audit
       '@ai-world/kernel-identifiers':
         specifier: workspace:*
         version: link:../../kernel/identifiers

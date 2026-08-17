@@ -63,6 +63,15 @@ describe('Media Upload API', () => {
 
   async function cleanupFixtures(): Promise<void> {
     if (createdAssetIds.size > 0) {
+      await database.auditRecord.deleteMany({
+        where: {
+          resourceId: {
+            in: [...createdAssetIds],
+          },
+          resourceType: 'media.asset',
+        },
+      });
+
       await database.asset.deleteMany({
         where: {
           id: {
@@ -351,6 +360,24 @@ describe('Media Upload API', () => {
     expect(persisted.sizeBytes).toBe(VALID_PNG.byteLength);
     expect(persisted.lifecycle).toBe('ACTIVE');
     expect(persisted.storageReference).toBe(`media/assets/${id}/original`);
+
+    const auditRecord = await database.auditRecord.findFirstOrThrow({
+      where: {
+        actorId: actor.actorId,
+        action: 'media.asset.upload',
+        resourceType: 'media.asset',
+        resourceId: id,
+        result: 'media.asset.created',
+      },
+    });
+
+    expect(auditRecord.context).toEqual({
+      assetType: 'IMAGE',
+      mimeType: 'image/png',
+      sizeBytes: VALID_PNG.byteLength,
+      lifecycle: 'ACTIVE',
+    });
+    expect(JSON.stringify(auditRecord.context)).not.toContain('storageReference');
 
     const stored = await readFile(join(storageRoot, 'media', 'assets', id, 'original'));
 
