@@ -47,3 +47,10 @@ export {
 export { UploadAsset, type UploadAssetInput } from './upload-asset';
 
 export { UploadAssetAsActor, type UploadAssetAsActorInput } from './upload-asset-as-actor';
+
+export {
+  ResolveAssetReference,
+  type MediaAssetReference,
+  type MediaAssetReferenceResolver,
+  type ResolveMediaAssetReferenceInput,
+} from './media-asset-reference';

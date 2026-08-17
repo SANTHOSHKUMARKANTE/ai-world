@@ -44,6 +44,7 @@ import {
 import {
   DeliverAsset,
   GenerateImageThumbnail,
+  ResolveAssetReference,
   UploadAsset,
   UploadAssetAsActor,
 } from '@ai-world/platform-media';
@@ -55,7 +56,10 @@ import {
   CreateKnowledgeResource,
   CreateKnowledgeResourceAsActor,
   GetPublicKnowledgeResource,
+  ListPublicKnowledgeResourceAssets,
   ListPublicKnowledgeResources,
+  SetKnowledgeResourceAssets,
+  SetKnowledgeResourceAssetsAsActor,
   UpdateKnowledgeResource,
   UpdateKnowledgeResourceAsActor,
 } from '@ai-world/platform-knowledge';
@@ -384,6 +388,14 @@ export class AppModule {
         },
 
         {
+          provide: ResolveAssetReference,
+          inject: [PrismaAssetRepository],
+          useFactory: (repository: PrismaAssetRepository): ResolveAssetReference => {
+            return new ResolveAssetReference(repository);
+          },
+        },
+
+        {
           provide: DeliverAsset,
           inject: [PrismaAssetRepository],
           useFactory: (repository: PrismaAssetRepository): DeliverAsset => {
@@ -427,6 +439,31 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): PrismaKnowledgeResourceRepository => {
             return new PrismaKnowledgeResourceRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: SetKnowledgeResourceAssets,
+          inject: [PrismaKnowledgeResourceRepository, ResolveAssetReference],
+          useFactory: (
+            repository: PrismaKnowledgeResourceRepository,
+            resolveAssetReference: ResolveAssetReference,
+          ): SetKnowledgeResourceAssets => {
+            return new SetKnowledgeResourceAssets(repository, repository, resolveAssetReference);
+          },
+        },
+
+        {
+          provide: SetKnowledgeResourceAssetsAsActor,
+          inject: [EvaluatePermission, SetKnowledgeResourceAssets],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            setKnowledgeResourceAssets: SetKnowledgeResourceAssets,
+          ): SetKnowledgeResourceAssetsAsActor => {
+            return new SetKnowledgeResourceAssetsAsActor(
+              evaluatePermission,
+              setKnowledgeResourceAssets,
+            );
           },
         },
 
@@ -485,6 +522,16 @@ export class AppModule {
             repository: PrismaKnowledgeResourceRepository,
           ): ListPublicKnowledgeResources => {
             return new ListPublicKnowledgeResources(repository);
+          },
+        },
+
+        {
+          provide: ListPublicKnowledgeResourceAssets,
+          inject: [PrismaKnowledgeResourceRepository],
+          useFactory: (
+            repository: PrismaKnowledgeResourceRepository,
+          ): ListPublicKnowledgeResourceAssets => {
+            return new ListPublicKnowledgeResourceAssets(repository, repository);
           },
         },
 

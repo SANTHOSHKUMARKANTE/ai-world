@@ -1,5 +1,6 @@
 import {
   GetPublicKnowledgeResource,
+  ListPublicKnowledgeResourceAssets,
   ListPublicKnowledgeResources,
   type KnowledgeResource,
 } from '@ai-world/platform-knowledge';
@@ -19,6 +20,10 @@ export interface PublicKnowledgeResourceListResponse {
   readonly items: readonly PublicKnowledgeResourceResponse[];
 }
 
+export interface PublicKnowledgeResourceAssetsResponse {
+  readonly assetIds: readonly string[];
+}
+
 function toPublicKnowledgeResourceResponse(
   resource: KnowledgeResource,
 ): PublicKnowledgeResourceResponse {
@@ -36,6 +41,7 @@ export class PublicKnowledgeController {
   public constructor(
     private readonly getPublicKnowledgeResource: GetPublicKnowledgeResource,
     private readonly listPublicKnowledgeResources: ListPublicKnowledgeResources,
+    private readonly listPublicKnowledgeResourceAssets: ListPublicKnowledgeResourceAssets,
   ) {}
 
   @Get()
@@ -48,6 +54,14 @@ export class PublicKnowledgeController {
     return {
       items: resources.map(toPublicKnowledgeResourceResponse),
     };
+  }
+
+  @Get(':id/assets')
+  public async listResourceAssets(
+    @Param('id') id: string,
+  ): Promise<PublicKnowledgeResourceAssetsResponse> {
+    const assetIds = await this.listPublicKnowledgeResourceAssets.execute({ id });
+    return { assetIds };
   }
 
   @Get(':id')

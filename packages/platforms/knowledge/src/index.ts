@@ -89,3 +89,24 @@ export {
   PublishKnowledgeResourceAsActor,
   type PublishKnowledgeResourceAsActorInput,
 } from './publish-knowledge-resource-as-actor';
+
+export type {
+  KnowledgeResourceAssetReferenceStore,
+  ListKnowledgeResourceAssetIdsInput,
+  ReplaceKnowledgeResourceAssetIdsInput,
+} from './knowledge-resource-asset-reference-store';
+
+export {
+  ListPublicKnowledgeResourceAssets,
+  type ListPublicKnowledgeResourceAssetsInput,
+} from './list-public-knowledge-resource-assets';
+
+export {
+  SetKnowledgeResourceAssets,
+  type SetKnowledgeResourceAssetsInput,
+} from './set-knowledge-resource-assets';
+
+export {
+  SetKnowledgeResourceAssetsAsActor,
+  type SetKnowledgeResourceAssetsAsActorInput,
+} from './set-knowledge-resource-assets-as-actor';

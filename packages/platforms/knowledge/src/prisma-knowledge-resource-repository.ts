@@ -1,5 +1,5 @@
 import type { DatabaseClient } from '@ai-world/foundation-database';
-import { parseResourceId } from '@ai-world/kernel-identifiers';
+import { parseResourceId, type ResourceId } from '@ai-world/kernel-identifiers';
 import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 
 import {
@@ -7,6 +7,11 @@ import {
   KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
   type KnowledgeResource,
 } from './knowledge-resource';
+import type {
+  KnowledgeResourceAssetReferenceStore,
+  ListKnowledgeResourceAssetIdsInput,
+  ReplaceKnowledgeResourceAssetIdsInput,
+} from './knowledge-resource-asset-reference-store';
 import type {
   KnowledgeResourceLifecycleWriter,
   TransitionKnowledgeResourceLifecycleRecordInput,
@@ -57,7 +62,8 @@ export class PrismaKnowledgeResourceRepository
     KnowledgeResourceReader,
     PublicKnowledgeResourceReader,
     KnowledgeResourceWriter,
-    KnowledgeResourceLifecycleWriter
+    KnowledgeResourceLifecycleWriter,
+    KnowledgeResourceAssetReferenceStore
 {
   constructor(private readonly database: DatabaseClient) {}
 
@@ -154,5 +160,46 @@ export class PrismaKnowledgeResourceRepository
     }
 
     return this.findById({ id: input.id });
+  }
+
+  async listAssetIds(input: ListKnowledgeResourceAssetIdsInput): Promise<readonly ResourceId[]> {
+    const references = await this.database.knowledgeResourceAssetReference.findMany({
+      where: {
+        knowledgeResourceId: input.knowledgeResourceId,
+      },
+      select: {
+        assetId: true,
+      },
+      orderBy: {
+        assetId: 'asc',
+      },
+    });
+
+    return references.map(({ assetId }) => parseResourceId(assetId));
+  }
+
+  async replaceAssetIds(
+    input: ReplaceKnowledgeResourceAssetIdsInput,
+  ): Promise<readonly ResourceId[]> {
+    await this.database.$transaction(async (transaction) => {
+      await transaction.knowledgeResourceAssetReference.deleteMany({
+        where: {
+          knowledgeResourceId: input.knowledgeResourceId,
+        },
+      });
+
+      if (input.assetIds.length > 0) {
+        await transaction.knowledgeResourceAssetReference.createMany({
+          data: input.assetIds.map((assetId) => ({
+            knowledgeResourceId: input.knowledgeResourceId,
+            assetId,
+          })),
+        });
+      }
+    });
+
+    return this.listAssetIds({
+      knowledgeResourceId: input.knowledgeResourceId,
+    });
   }
 }

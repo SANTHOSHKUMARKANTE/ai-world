@@ -14,6 +14,12 @@ const updateCreatorKnowledgeRequestSchema = z
   })
   .strict();
 
+const setCreatorKnowledgeAssetsRequestSchema = z
+  .object({
+    assetIds: z.array(z.string()),
+  })
+  .strict();
+
 export interface CreateCreatorKnowledgeRequest {
   readonly universeKey: string;
   readonly resourceType: string;
@@ -21,6 +27,10 @@ export interface CreateCreatorKnowledgeRequest {
 
 export interface UpdateCreatorKnowledgeRequest {
   readonly resourceType: string;
+}
+
+export interface SetCreatorKnowledgeAssetsRequest {
+  readonly assetIds: readonly string[];
 }
 
 function invalidCreatorKnowledgeRequest(operation: string): ApplicationError {
@@ -49,5 +59,15 @@ export function parseUpdateCreatorKnowledgeRequest(input: unknown): UpdateCreato
     throw invalidCreatorKnowledgeRequest('update');
   }
 
+  return result.data;
+}
+
+export function parseSetCreatorKnowledgeAssetsRequest(
+  input: unknown,
+): SetCreatorKnowledgeAssetsRequest {
+  const result = setCreatorKnowledgeAssetsRequestSchema.safeParse(input);
+  if (!result.success) {
+    throw invalidCreatorKnowledgeRequest('Asset-reference replacement');
+  }
   return result.data;
 }

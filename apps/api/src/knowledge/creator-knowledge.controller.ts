@@ -1,15 +1,17 @@
 import { ValidateSession } from '@ai-world/platform-identity-access';
 import {
   CreateKnowledgeResourceAsActor,
+  SetKnowledgeResourceAssetsAsActor,
   type KnowledgeResource,
   UpdateKnowledgeResourceAsActor,
 } from '@ai-world/platform-knowledge';
-import { Body, Controller, Headers, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Headers, Param, Patch, Post, Put } from '@nestjs/common';
 
 import { requireSessionToken } from '../session/require-session-token';
 import { SessionCookie } from '../session/session-cookie';
 import {
   parseCreateCreatorKnowledgeRequest,
+  parseSetCreatorKnowledgeAssetsRequest,
   parseUpdateCreatorKnowledgeRequest,
 } from './creator-knowledge-request';
 
@@ -20,6 +22,10 @@ export interface CreatorKnowledgeResourceResponse {
   readonly lifecycle: KnowledgeResource['lifecycle'];
   readonly createdAt: string;
   readonly updatedAt: string;
+}
+
+export interface CreatorKnowledgeResourceAssetsResponse {
+  readonly assetIds: readonly string[];
 }
 
 function toCreatorKnowledgeResourceResponse(
@@ -41,6 +47,7 @@ export class CreatorKnowledgeController {
     private readonly validateSession: ValidateSession,
     private readonly createKnowledgeResourceAsActor: CreateKnowledgeResourceAsActor,
     private readonly updateKnowledgeResourceAsActor: UpdateKnowledgeResourceAsActor,
+    private readonly setKnowledgeResourceAssetsAsActor: SetKnowledgeResourceAssetsAsActor,
     private readonly sessionCookie: SessionCookie,
   ) {}
 
@@ -69,6 +76,22 @@ export class CreatorKnowledgeController {
     });
 
     return toCreatorKnowledgeResourceResponse(resource);
+  }
+
+  @Put(':id/assets')
+  public async setResourceAssets(
+    @Headers('cookie') cookieHeader: string | undefined,
+    @Param('id') id: string,
+    @Body() body: unknown,
+  ): Promise<CreatorKnowledgeResourceAssetsResponse> {
+    const actingActorId = await this.requireActingActorId(cookieHeader);
+    const request = parseSetCreatorKnowledgeAssetsRequest(body);
+    const assetIds = await this.setKnowledgeResourceAssetsAsActor.execute({
+      actingActorId,
+      id,
+      assetIds: request.assetIds,
+    });
+    return { assetIds };
   }
 
   @Patch(':id')
