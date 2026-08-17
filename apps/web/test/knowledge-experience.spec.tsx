@@ -138,6 +138,114 @@ describe('Web Knowledge experience', () => {
     );
   });
 
+  it('renders Anime Character and Series imagery through the existing shared Media presentation', async () => {
+    const characterResourceId = '99999999-9999-4999-8999-999999999999';
+    const seriesResourceId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaab';
+    const characterAssetId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbc';
+    const seriesAssetId = 'cccccccc-cccc-4ccc-8ccc-cccccccccccd';
+
+    const fetchMock = vi.fn(async (input: unknown) => {
+      const url = String(input);
+
+      if (url === '/api/knowledge/resources?universeKey=universe.anime') {
+        return knowledgeListResponse([
+          {
+            id: characterResourceId,
+            universeKey: 'universe.anime',
+            resourceType: 'anime.character',
+            createdAt: '2026-08-17T05:00:00.000Z',
+            updatedAt: '2026-08-17T05:10:00.000Z',
+          },
+          {
+            id: seriesResourceId,
+            universeKey: 'universe.anime',
+            resourceType: 'anime.series',
+            createdAt: '2026-08-17T04:00:00.000Z',
+            updatedAt: '2026-08-17T04:10:00.000Z',
+          },
+        ]);
+      }
+
+      if (url === `/api/knowledge/resources/${characterResourceId}/assets`) {
+        return knowledgeAssetsResponse([characterAssetId]);
+      }
+
+      if (url === `/api/knowledge/resources/${seriesResourceId}/assets`) {
+        return knowledgeAssetsResponse([seriesAssetId]);
+      }
+
+      throw new Error(`Unexpected Anime Media request: ${url}`);
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <KnowledgeUniverseSection
+        title="Anime Resources"
+        description="Anime Character and Series Media reuse proof."
+        universeKey="universe.anime"
+        imageResourceTypes={['anime.character', 'anime.series']}
+        imageSectionLabel="Anime imagery"
+      />,
+    );
+
+    const anime = screen.getByRole('region', {
+      name: 'Anime Resources',
+    });
+
+    await within(anime).findByText('Character');
+    await within(anime).findByText('Series');
+
+    const characterImagery = await within(anime).findByRole('region', {
+      name: 'Anime imagery for anime.character',
+    });
+    const seriesImagery = await within(anime).findByRole('region', {
+      name: 'Anime imagery for anime.series',
+    });
+
+    const characterImage = within(characterImagery).getByRole('img', {
+      name: 'Anime imagery for this published resource',
+    });
+    const seriesImage = within(seriesImagery).getByRole('img', {
+      name: 'Anime imagery for this published resource',
+    });
+
+    expect(
+      new URL(characterImage.getAttribute('src') ?? '', 'http://localhost:3000').pathname,
+    ).toBe(`/api/media/assets/${characterAssetId}/thumbnail`);
+    expect(new URL(seriesImage.getAttribute('src') ?? '', 'http://localhost:3000').pathname).toBe(
+      `/api/media/assets/${seriesAssetId}/thumbnail`,
+    );
+
+    expect(
+      within(characterImagery)
+        .getByRole('link', {
+          name: 'Open full-size anime imagery',
+        })
+        .getAttribute('href'),
+    ).toBe(`/api/media/assets/${characterAssetId}/content`);
+    expect(
+      within(seriesImagery)
+        .getByRole('link', {
+          name: 'Open full-size anime imagery',
+        })
+        .getAttribute('href'),
+    ).toBe(`/api/media/assets/${seriesAssetId}/content`);
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      `/api/knowledge/resources/${characterResourceId}/assets`,
+      expect.objectContaining({
+        credentials: 'same-origin',
+      }),
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      `/api/knowledge/resources/${seriesResourceId}/assets`,
+      expect.objectContaining({
+        credentials: 'same-origin',
+      }),
+    );
+  });
+
   it('renders Devotional temple imagery through Knowledge Asset IDs and shared Media routes', async () => {
     const templeResourceId = '44444444-4444-4444-8444-444444444444';
     const deityResourceId = '55555555-5555-4555-8555-555555555555';

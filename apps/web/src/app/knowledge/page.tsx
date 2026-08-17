@@ -42,8 +42,10 @@ export default function KnowledgePage() {
 
           <KnowledgeUniverseSection
             title="Anime Resources"
-            description="A bounded second-Universe reuse view using the same public Knowledge contract without separate infrastructure."
+            description="The second-Universe reuse proof now exercises shared Media through published Character and Series imagery without Anime-specific media infrastructure."
             universeKey="universe.anime"
+            imageResourceTypes={['anime.character', 'anime.series']}
+            imageSectionLabel="Anime imagery"
           />
         </div>
       </div>
