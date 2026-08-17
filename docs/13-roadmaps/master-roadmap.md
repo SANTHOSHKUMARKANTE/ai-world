@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-17 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform NEXT; P6-M01 Search Contract NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -759,9 +759,12 @@ PHASE 5 CLOSURE CRITERIA EVALUATION
 CLOSED — 9/9 SATISFIED
 
 PHASE 6 — Discovery Platform
-NEXT
+ACTIVE
 
 P6-M01 — Search Contract
+CLOSED
+
+P6-M02 — Knowledge Search
 NEXT
 ```
 
@@ -16042,6 +16045,160 @@ pagination;
 result normalization.
 ```
 
+## P6-M01 CLOSURE RECORD
+
+P6-M01 is closed against the green implementation checkpoint:
+
+```text
+IMPLEMENTATION COMMIT
+f60756093f9c7ea36d23fc1bea73da0e1e5754f1
+
+SUBJECT
+feat(discovery): establish search contract
+
+PARENT
+c5d17918cb454003ad1ad1e1aa9579af995d172a
+docs(roadmap): close Phase 5
+
+GITHUB ACTIONS
+CI run 32031713898
+CI #89
+completed — success
+```
+
+P6-M01 establishes the first canonical Discovery-owned package:
+
+```text
+@ai-world/platform-discovery
+```
+
+Canonical Search request semantics:
+
+```text
+SearchRequest
+    query: string
+
+    scope:
+        global
+        OR
+        universe + NamespacedKey
+
+    filter:
+        resourceTypes: readonly NamespacedKey[]
+
+    pagination:
+        offset
+        limit
+```
+
+Canonical normalized result semantics:
+
+```text
+SearchResult
+    resourceId: ResourceId
+    resourceType: NamespacedKey
+    universeKey?: NamespacedKey
+
+SearchResultPage
+    items
+    pagination
+```
+
+The executable public abstraction is:
+
+```text
+SearchContract
+    search(SearchRequest)
+        ↓
+    SearchResultPage
+```
+
+Discovery owns these Search semantics. Search does not become the source of truth for canonical Resources.
+
+P6-M01 production dependencies remain exactly:
+
+```text
+@ai-world/kernel-identifiers
+
+@ai-world/kernel-namespace
+```
+
+P6-M01 introduces no dependency on Knowledge, Media, Database/Prisma, a Search provider, or a named Universe.
+
+P6-M02 is the first milestone that will search canonical Knowledge Resources through a Discovery-owned implementation. The accepted initial technology remains PostgreSQL Search.
+
+The following remain outside P6-M01:
+
+```text
+Knowledge Search implementation
+    → P6-M02
+
+real Universe-scoped behavior
+    → P6-M03
+
+real cross-Universe/global behavior
+    → P6-M04
+
+filter execution and Taxonomy pressure
+    → P6-M05
+
+ranking / score
+    → P6-M06
+
+Search projection / index architecture
+    → P6-M07 review
+
+dedicated Search provider
+    → Dedicated Search Gate
+
+semantic / vector Search
+    → Semantic Search Gate
+
+API route
+    → later integration pressure
+
+Web Search UI
+    → Phase 6 Web Integration
+```
+
+No schema or migration change was required. Canonical migration count remains 15.
+
+Validation evidence for the approved implementation candidate:
+
+```text
+Discovery lint
+PASS
+
+Discovery typecheck
+PASS
+
+Discovery unit tests
+2 / 2 passed
+
+Discovery build
+PASS
+
+Root lint regression
+18 / 18 tasks
+
+Root typecheck regression
+32 / 32 tasks
+
+Root unit regression
+28 / 28 tasks
+267 tests passed
+
+Architecture validation
+19 / 19 build tasks
+451 modules
+1252 dependencies
+0 violations
+```
+
+P6-M01 is CLOSED.
+
+P6-M02 — Knowledge Search is NEXT.
+
 ---
 
 # 156. Phase 6 Milestone P6-M02 — Knowledge Search
@@ -23259,6 +23416,50 @@ Phase 5 now provides one shared Media Platform with Media-owned Assets, provider
 Events remain deferred because no real business Event consumer exists.
 
 No Phase 5 completion tag is created by this documentation closure. The tag decision occurs only after this closure commit is pushed and its CI is green.
+
+## PHASE 6 CURRENT STATE AFTER P6-M01
+
+```text
+PHASE 5 — Media Platform
+COMPLETE
+
+phase-5-complete
+ESTABLISHED
+
+PHASE 6 — Discovery Platform
+ACTIVE
+
+P6-M01 — Search Contract
+CLOSED
+
+IMPLEMENTATION COMMIT
+f60756093f9c7ea36d23fc1bea73da0e1e5754f1
+
+IMPLEMENTATION CI
+32031713898
+CI #89
+SUCCESS
+
+DISCOVERY PACKAGE
+@ai-world/platform-discovery
+
+SEARCH CONTRACT
+query
+scope
+filter
+pagination
+normalized Resource result
+
+CANONICAL MIGRATIONS
+15
+
+P6-M02 — Knowledge Search
+NEXT
+```
+
+P6-M01 established Discovery-owned Search semantics without prematurely implementing Knowledge Search, PostgreSQL execution, ranking, indexing, a dedicated Search provider, or API/Web delivery.
+
+P6-M02 is the next implementation milestone and gives the Search Contract its first real canonical Knowledge consumer.
 
 
 # 411. Phase Completion Git Tags
