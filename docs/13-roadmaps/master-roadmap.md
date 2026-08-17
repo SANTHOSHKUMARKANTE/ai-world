@@ -11,8 +11,8 @@
 | Status | ACCEPTED |
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
-| Last Reviewed | 2026-08-16 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform ACTIVE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events NEXT |
+| Last Reviewed | 2026-08-17 |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform NEXT; P6-M01 Search Contract NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -726,7 +726,7 @@ PHASE 4 CLOSURE CRITERIA EVALUATION
 CLOSED — 15/15 SATISFIED
 
 PHASE 5 — Media Platform
-ACTIVE
+COMPLETE
 
 P5-M01 — Asset Model
 CLOSED
@@ -753,6 +753,15 @@ P5-M08 — Anime Media Proof
 CLOSED
 
 P5-M09 — Media Audit/Events
+CLOSED
+
+PHASE 5 CLOSURE CRITERIA EVALUATION
+CLOSED — 9/9 SATISFIED
+
+PHASE 6 — Discovery Platform
+NEXT
+
+P6-M01 — Search Contract
 NEXT
 ```
 
@@ -15656,6 +15665,193 @@ P5-M09 — Media Audit/Events is the next Phase 5 milestone.
 
 Important Asset lifecycle actions should publish/record required Events/Audit.
 
+## P5-M09 CLOSURE RECORD
+
+P5-M09 is closed against the green implementation checkpoint:
+
+```text
+IMPLEMENTATION COMMIT
+de49c4c179b8a467a0ca6dd474c54fbfc63c5e3f
+
+SUBJECT
+feat(media): audit asset uploads
+
+GITHUB ACTIONS
+CI run 32024393772
+CI #87
+completed — success
+```
+
+The implemented lifecycle pressure is the one real Media Asset mutation that currently exists:
+
+```text
+authenticated and authorized Actor
+    ↓
+image upload
+    ↓
+Storage write
+    ↓
+Media Asset persistence
+    ↓
+ACTIVE lifecycle
+```
+
+P5-M09 records that successful accountability fact through the existing shared Audit Kernel rather than creating a Media-specific audit subsystem.
+
+Canonical Audit semantics:
+
+```text
+action
+media.asset.upload
+
+resource type
+media.asset
+
+result
+media.asset.created
+
+actor
+authenticated acting Actor
+
+resource id
+canonical created Asset ResourceId
+
+context
+assetType
+mimeType
+sizeBytes
+lifecycle
+```
+
+`storageReference` is deliberately excluded from Audit context.
+
+The required Audit record and Asset persistence share one database transaction:
+
+```text
+Storage write
+    ↓
+MediaAssetUploadTransaction
+    ↓
+single Prisma transaction
+    ├── Asset persistence
+    └── Audit persistence
+    ↓
+commit
+```
+
+If required Audit persistence or the database transaction fails:
+
+```text
+Asset database mutation
+ROLLBACK
+
+Audit database mutation
+ROLLBACK
+
+stored object
+best-effort compensation delete
+
+request
+FAIL
+```
+
+This prevents a failed upload response from leaving a committed Asset whose required accountability record is missing.
+
+Ownership remains bounded:
+
+```text
+Media
+    owns Asset lifecycle business meaning
+    owns media.asset.* Audit vocabulary
+    owns upload transaction orchestration
+
+Audit Kernel
+    owns AuditRecord semantics
+    owns AuditRecorder Contract
+    owns PrismaAuditRecorder infrastructure
+
+Database Foundation
+    owns Prisma client and transaction capability
+
+API Application
+    composes Media transaction infrastructure
+    with PrismaAuditRecorder
+```
+
+Validation evidence for the final P5-M09 candidate:
+
+```text
+Kernel Audit tests
+11 / 11 passed
+
+Kernel Audit typecheck
+PASS
+
+Media lint
+PASS
+
+Media typecheck
+PASS
+
+Media unit tests
+32 / 32 passed
+
+Media transaction integration
+3 / 3 passed
+
+API lint
+PASS
+
+API typecheck
+PASS
+
+Media Upload API integration
+7 / 7 passed
+
+Authorization Audit regression
+12 / 12 passed
+
+Full API integration
+119 / 119 passed
+
+Architecture validation
+448 modules
+1245 dependencies
+0 violations
+```
+
+No schema or migration change was required. Canonical migration count remains 15.
+
+Events remain deliberately deferred.
+
+The implemented upload lifecycle creates a real accountability requirement, so durable Audit is justified. It still does not create a real independent post-operation consumer requiring business Event publication, producer/consumer decoupling, eventual consistency, or durable Event delivery.
+
+P5-M09 therefore introduces:
+
+```text
+NO Events Kernel
+
+NO EventBus
+
+NO Event publisher/subscriber mechanism
+
+NO Outbox
+
+NO Queue / Worker
+
+NO Kafka / Redis
+
+NO archive Asset API
+
+NO delete Asset API
+
+NO speculative ARCHIVED / DELETED lifecycle mutation
+```
+
+P3-M03 Events remains deferred until a concrete producer/consumer boundary requires it.
+
+P5-M09 is CLOSED.
+
 ---
 
 # 151. Phase 5 Rights Scope
@@ -15697,6 +15893,118 @@ Devotional and Anime reuse the same Media Platform;
 
 no Universe-specific storage exists.
 ```
+
+## PHASE 5 CLOSURE CRITERIA EVALUATION
+
+Phase 5 closure criteria are evaluated against the implemented repository after the green P5-M09 checkpoint.
+
+```text
+1. Media owns Assets
+SATISFIED
+P5-M01 established the canonical Media-owned Asset model and persistence boundary.
+
+2. Storage does not own Asset semantics
+SATISFIED
+P5-M02 keeps Storage limited to provider-neutral storage-object mechanics.
+
+3. filesystem development storage works
+SATISFIED
+P5-M02 established the filesystem Storage adapter used by development and integration flows.
+
+4. production-compatible S3 boundary exists
+SATISFIED
+P5-M02 established the narrow S3-compatible Storage adapter boundary without vendor coupling.
+
+5. image upload works
+SATISFIED
+P5-M03 established authenticated, authorized PNG/JPEG upload with content validation and compensation.
+
+6. basic processing works
+SATISFIED
+P5-M05 established real Sharp-based image thumbnail processing without premature Queue/Worker infrastructure.
+
+7. Knowledge references Assets safely
+SATISFIED
+P5-M06 established canonical Knowledge → Asset references while keeping storage internals Media-owned.
+
+8. Devotional and Anime reuse the same Media Platform
+SATISFIED
+P5-M07 and P5-M08 proved the same Knowledge → Asset → Media delivery/thumbnail path across both Universes.
+
+9. no Universe-specific storage exists
+SATISFIED
+Neither Devotional nor Anime owns a storage adapter, storageReference contract, image processor, or Media infrastructure.
+```
+
+Closure result:
+
+```text
+PHASE 5 — Media Platform
+COMPLETE
+
+CLOSURE CRITERIA
+9 / 9 SATISFIED
+
+P5-M01 — Asset Model
+CLOSED
+
+P5-M02 — Storage Foundation
+CLOSED
+
+P5-M03 — Upload
+CLOSED
+
+P5-M04 — Delivery
+CLOSED
+
+P5-M05 — Image Processing
+CLOSED
+
+P5-M06 — Knowledge Integration
+CLOSED
+
+P5-M07 — Devotional Media Proof
+CLOSED
+
+P5-M08 — Anime Media Proof
+CLOSED
+
+P5-M09 — Media Audit/Events
+CLOSED
+
+CANONICAL MIGRATIONS
+15
+
+PHASE 6 — Discovery Platform
+NEXT
+
+P6-M01 — Search Contract
+NEXT
+```
+
+The following remain intentionally deferred until real demand requires them:
+
+```text
+business Events / Event Kernel;
+
+Queue / Worker processing;
+
+persisted image variants;
+
+CDN or signed delivery;
+
+Asset role / hero / cover semantics;
+
+gallery ordering;
+
+visual media relationship semantics;
+
+advanced licensing / rights workflows.
+```
+
+These deferrals do not block Phase 5 closure because none is part of the accepted Phase 5 closure criteria and none has a current concrete consumer requiring materialization.
+
+The `phase-5-complete` tag is not created by this roadmap update. It may be created only after this Phase 5 closure commit itself passes remote CI.
 
 ---
 
@@ -20478,7 +20786,7 @@ MEDIA
     ✅ P5-M06 Knowledge Integration — CLOSED
     ✅ P5-M07 Devotional Media Proof — CLOSED
     ✅ P5-M08 Anime Media Proof — CLOSED
-    → P5-M09 Media Audit/Events — NEXT
+    ✅ P5-M09 Media Audit/Events — CLOSED
     Assets
     Storage
     Upload
@@ -22887,6 +23195,70 @@ P5-M08 proved shared Media reuse through both existing Anime Resource types, `an
 The optional visual-media-relationship idea remains deferred because the milestone produced no real relationship consumer that justifies activating that abstraction.
 
 No Phase 5 completion tag is authorized at this milestone.
+
+## PHASE 5 CLOSURE STATE AFTER P5-M09
+
+```text
+PHASE 5 — Media Platform
+COMPLETE
+
+P5-M01 — Asset Model
+CLOSED
+
+P5-M02 — Storage Foundation
+CLOSED
+
+P5-M03 — Upload
+CLOSED
+
+P5-M04 — Delivery
+CLOSED
+
+P5-M05 — Image Processing
+CLOSED
+
+P5-M06 — Knowledge Integration
+CLOSED
+
+P5-M07 — Devotional Media Proof
+CLOSED
+
+P5-M08 — Anime Media Proof
+CLOSED
+
+P5-M09 — Media Audit/Events
+CLOSED
+
+IMPLEMENTATION CHECKPOINT
+de49c4c179b8a467a0ca6dd474c54fbfc63c5e3f
+feat(media): audit asset uploads
+
+IMPLEMENTATION CI
+32024393772
+CI #87
+SUCCESS
+
+PHASE 5 CLOSURE CRITERIA
+9 / 9 SATISFIED
+
+CANONICAL MIGRATIONS
+15
+
+PHASE 6 — Discovery Platform
+NEXT
+
+P6-M01 — Search Contract
+NEXT
+
+phase-5-complete
+PENDING CLOSURE-COMMIT CI
+```
+
+Phase 5 now provides one shared Media Platform with Media-owned Assets, provider-neutral Storage mechanics, authenticated upload, controlled delivery, synchronous basic image processing, safe Knowledge references, Devotional and Anime reuse proof, and durable required Audit for the implemented Asset creation lifecycle.
+
+Events remain deferred because no real business Event consumer exists.
+
+No Phase 5 completion tag is created by this documentation closure. The tag decision occurs only after this closure commit is pushed and its CI is green.
 
 
 # 411. Phase Completion Git Tags
