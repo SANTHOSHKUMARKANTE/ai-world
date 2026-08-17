@@ -25,6 +25,20 @@ function knowledgeListResponse(items: readonly KnowledgeFixture[]): Response {
   );
 }
 
+function knowledgeAssetsResponse(assetIds: readonly string[]): Response {
+  return new Response(
+    JSON.stringify({
+      assetIds,
+    }),
+    {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+}
+
 function renderKnowledgeExperience() {
   return render(
     <>
@@ -124,6 +138,152 @@ describe('Web Knowledge experience', () => {
     );
   });
 
+  it('renders Devotional temple imagery through Knowledge Asset IDs and shared Media routes', async () => {
+    const templeResourceId = '44444444-4444-4444-8444-444444444444';
+    const deityResourceId = '55555555-5555-4555-8555-555555555555';
+    const assetId = '66666666-6666-4666-8666-666666666666';
+
+    const fetchMock = vi.fn(async (input: unknown) => {
+      const url = String(input);
+
+      if (url === '/api/knowledge/resources?universeKey=universe.devotional') {
+        return knowledgeListResponse([
+          {
+            id: templeResourceId,
+            universeKey: 'universe.devotional',
+            resourceType: 'devotional.temple',
+            createdAt: '2026-08-16T05:00:00.000Z',
+            updatedAt: '2026-08-16T05:10:00.000Z',
+          },
+          {
+            id: deityResourceId,
+            universeKey: 'universe.devotional',
+            resourceType: 'devotional.deity',
+            createdAt: '2026-08-16T04:00:00.000Z',
+            updatedAt: '2026-08-16T04:10:00.000Z',
+          },
+        ]);
+      }
+
+      if (url === `/api/knowledge/resources/${templeResourceId}/assets`) {
+        return knowledgeAssetsResponse([assetId]);
+      }
+
+      throw new Error(`Unexpected Devotional Media request: ${url}`);
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <KnowledgeUniverseSection
+        title="Devotional Resources"
+        description="Primary Devotional Media proof."
+        universeKey="universe.devotional"
+        priority="primary"
+        imageResourceTypes={['devotional.temple']}
+        imageSectionLabel="Temple imagery"
+      />,
+    );
+
+    const devotional = screen.getByRole('region', {
+      name: 'Devotional Resources',
+    });
+
+    await within(devotional).findByText('Temple');
+    await within(devotional).findByText('Deity');
+
+    const imagery = await within(devotional).findByRole('region', {
+      name: 'Temple imagery for devotional.temple',
+    });
+    const image = within(imagery).getByRole('img', {
+      name: 'Temple imagery for this published resource',
+    });
+    const fullImageLink = within(imagery).getByRole('link', {
+      name: 'Open full-size temple imagery',
+    });
+
+    expect(new URL(image.getAttribute('src') ?? '', 'http://localhost:3000').pathname).toBe(
+      `/api/media/assets/${assetId}/thumbnail`,
+    );
+    expect(fullImageLink.getAttribute('href')).toBe(`/api/media/assets/${assetId}/content`);
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      `/api/knowledge/resources/${templeResourceId}/assets`,
+      expect.objectContaining({
+        credentials: 'same-origin',
+      }),
+    );
+
+    expect(fetchMock).not.toHaveBeenCalledWith(
+      `/api/knowledge/resources/${deityResourceId}/assets`,
+      expect.anything(),
+    );
+  });
+
+  it('isolates Devotional imagery reference failure from the published Knowledge card', async () => {
+    const templeResourceId = '77777777-7777-4777-8777-777777777777';
+
+    const fetchMock = vi.fn(async (input: unknown) => {
+      const url = String(input);
+
+      if (url === '/api/knowledge/resources?universeKey=universe.devotional') {
+        return knowledgeListResponse([
+          {
+            id: templeResourceId,
+            universeKey: 'universe.devotional',
+            resourceType: 'devotional.temple',
+            createdAt: '2026-08-16T05:00:00.000Z',
+            updatedAt: '2026-08-16T05:10:00.000Z',
+          },
+        ]);
+      }
+
+      if (url === `/api/knowledge/resources/${templeResourceId}/assets`) {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: 'web.fixture.media_unavailable',
+              message: 'Media unavailable.',
+              status: 503,
+            },
+          }),
+          {
+            status: 503,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      }
+
+      throw new Error(`Unexpected failure-isolation request: ${url}`);
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <KnowledgeUniverseSection
+        title="Devotional Resources"
+        description="Primary Devotional Media proof."
+        universeKey="universe.devotional"
+        priority="primary"
+        imageResourceTypes={['devotional.temple']}
+        imageSectionLabel="Temple imagery"
+      />,
+    );
+
+    const devotional = screen.getByRole('region', {
+      name: 'Devotional Resources',
+    });
+
+    await within(devotional).findByText('Temple');
+
+    expect(within(devotional).getByText('devotional.temple')).toBeTruthy();
+    expect(
+      await within(devotional).findByText('Temple imagery is temporarily unavailable.'),
+    ).toBeTruthy();
+  });
+
   it('shows a bounded empty state without inventing domain content', async () => {
     const fetchMock = vi.fn(async () => {
       return knowledgeListResponse([]);
@@ -165,7 +325,7 @@ describe('Web Knowledge experience', () => {
 
       return knowledgeListResponse([
         {
-          id: '44444444-4444-4444-8444-444444444444',
+          id: '88888888-8888-4888-8888-888888888888',
           universeKey: 'universe.anime',
           resourceType: 'anime.character',
           createdAt: '2026-08-16T02:00:00.000Z',

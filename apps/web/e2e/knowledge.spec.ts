@@ -9,10 +9,14 @@ interface PublicKnowledgeFixture {
 }
 
 test.describe('Web Knowledge experience', () => {
-  test('renders Devotional as primary and Anime through the shared public Knowledge contract', async ({
+  test('renders Devotional temple imagery through shared Knowledge and Media contracts while Anime remains separate', async ({
     page,
   }) => {
+    const templeResourceId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const templeAssetId = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
     const requestedUniverses: string[] = [];
+    const requestedAssetReferenceResourceIds: string[] = [];
+    const requestedThumbnailAssetIds: string[] = [];
 
     await page.route('**/api/session', async (route) => {
       await route.fulfill({
@@ -26,6 +30,39 @@ test.describe('Web Knowledge experience', () => {
             requestId: 'web-knowledge-anonymous-session-001',
           },
         }),
+      });
+    });
+
+    await page.route('**/api/knowledge/resources/*/assets', async (route) => {
+      const url = new URL(route.request().url());
+      const match = url.pathname.match(/\/api\/knowledge\/resources\/([^/]+)\/assets$/);
+      const resourceId = match?.[1] ?? '';
+
+      requestedAssetReferenceResourceIds.push(resourceId);
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          assetIds: resourceId === templeResourceId ? [templeAssetId] : [],
+        }),
+      });
+    });
+
+    await page.route('**/api/media/assets/*/thumbnail', async (route) => {
+      const url = new URL(route.request().url());
+      const match = url.pathname.match(/\/api\/media\/assets\/([^/]+)\/thumbnail$/);
+      const assetId = match?.[1] ?? '';
+
+      requestedThumbnailAssetIds.push(assetId);
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'image/png',
+        body: Buffer.from(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+          'base64',
+        ),
       });
     });
 
@@ -54,9 +91,9 @@ test.describe('Web Knowledge experience', () => {
         universeKey === 'universe.devotional'
           ? [
               {
-                id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+                id: templeResourceId,
                 universeKey: 'universe.devotional',
-                resourceType: 'devotional.deity',
+                resourceType: 'devotional.temple',
                 createdAt: '2026-08-16T05:00:00.000Z',
                 updatedAt: '2026-08-16T05:10:00.000Z',
               },
@@ -105,10 +142,11 @@ test.describe('Web Knowledge experience', () => {
 
     await expect(
       devotional.getByRole('heading', {
-        name: 'Deity',
+        name: 'Temple',
         exact: true,
       }),
     ).toBeVisible();
+
     await expect(
       anime.getByRole('heading', {
         name: 'Series',
@@ -116,11 +154,31 @@ test.describe('Web Knowledge experience', () => {
       }),
     ).toBeVisible();
 
-    await expect(devotional.getByText('devotional.deity')).toBeVisible();
-    await expect(anime.getByText('anime.series')).toBeVisible();
+    const templeImage = devotional.getByRole('img', {
+      name: 'Temple imagery for this published resource',
+    });
+    const fullImageLink = devotional.getByRole('link', {
+      name: 'Open full-size temple imagery',
+    });
+
+    await expect(templeImage).toBeVisible();
+    const templeImageSrc = await templeImage.getAttribute('src');
+
+    expect(new URL(templeImageSrc ?? '', page.url()).pathname).toBe(
+      `/api/media/assets/${templeAssetId}/thumbnail`,
+    );
+    await expect(fullImageLink).toHaveAttribute(
+      'href',
+      `/api/media/assets/${templeAssetId}/content`,
+    );
 
     expect(requestedUniverses).toEqual(
       expect.arrayContaining(['universe.devotional', 'universe.anime']),
     );
+    expect(requestedAssetReferenceResourceIds.length).toBeGreaterThan(0);
+    expect([...new Set(requestedAssetReferenceResourceIds)]).toEqual([templeResourceId]);
+
+    expect(requestedThumbnailAssetIds.length).toBeGreaterThan(0);
+    expect([...new Set(requestedThumbnailAssetIds)]).toEqual([templeAssetId]);
   });
 });

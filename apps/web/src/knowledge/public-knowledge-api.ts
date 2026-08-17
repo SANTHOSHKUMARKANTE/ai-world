@@ -12,6 +12,10 @@ interface PublicKnowledgeResourceListResponse {
   readonly items: readonly PublicKnowledgeResource[];
 }
 
+interface PublicKnowledgeResourceAssetsResponse {
+  readonly assetIds: readonly string[];
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
@@ -42,6 +46,16 @@ function isPublicKnowledgeResourceListResponse(
   return value.items.every(isPublicKnowledgeResource);
 }
 
+function isPublicKnowledgeResourceAssetsResponse(
+  value: unknown,
+): value is PublicKnowledgeResourceAssetsResponse {
+  if (!isRecord(value) || !Array.isArray(value.assetIds)) {
+    return false;
+  }
+
+  return value.assetIds.every((assetId) => typeof assetId === 'string');
+}
+
 export async function listPublicKnowledgeResources(
   universeKey: string,
 ): Promise<readonly PublicKnowledgeResource[]> {
@@ -58,4 +72,22 @@ export async function listPublicKnowledgeResources(
   }
 
   return payload.items;
+}
+
+export async function listPublicKnowledgeResourceAssetIds(
+  resourceId: string,
+): Promise<readonly string[]> {
+  const response = await apiRequest(
+    `/knowledge/resources/${encodeURIComponent(resourceId)}/assets`,
+  );
+
+  const payload: unknown = await response.json();
+
+  if (!isPublicKnowledgeResourceAssetsResponse(payload)) {
+    throw new Error(
+      'Public Knowledge Asset-reference response did not match the expected Web contract.',
+    );
+  }
+
+  return payload.assetIds;
 }

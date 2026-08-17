@@ -33,9 +33,11 @@ export default function KnowledgePage() {
         <div className="grid gap-6">
           <KnowledgeUniverseSection
             title="Devotional Resources"
-            description="The primary AI World domain experience, showing published devotional Knowledge through the shared public API."
+            description="The primary AI World domain experience, now proving shared Media through published temple imagery without Devotional-specific storage or processing."
             universeKey="universe.devotional"
             priority="primary"
+            imageResourceTypes={['devotional.temple']}
+            imageSectionLabel="Temple imagery"
           />
 
           <KnowledgeUniverseSection

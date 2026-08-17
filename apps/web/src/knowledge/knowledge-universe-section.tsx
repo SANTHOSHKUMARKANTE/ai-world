@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import { PublishedResourceImageGallery } from './published-resource-image-gallery';
 import { listPublicKnowledgeResources, type PublicKnowledgeResource } from './public-knowledge-api';
 
 type KnowledgeSectionState =
@@ -21,6 +22,8 @@ export interface KnowledgeUniverseSectionProps {
   readonly description: string;
   readonly universeKey: string;
   readonly priority?: 'primary' | 'secondary';
+  readonly imageResourceTypes?: readonly string[];
+  readonly imageSectionLabel?: string;
 }
 
 function formatResourceType(resourceType: string): string {
@@ -46,6 +49,8 @@ export function KnowledgeUniverseSection({
   description,
   universeKey,
   priority = 'secondary',
+  imageResourceTypes = [],
+  imageSectionLabel = 'Published imagery',
 }: KnowledgeUniverseSectionProps) {
   const [state, setState] = useState<KnowledgeSectionState>({
     status: 'loading',
@@ -140,6 +145,14 @@ export function KnowledgeUniverseSection({
                   <dd className="text-slate-600">{formatUpdatedAt(resource.updatedAt)}</dd>
                 </div>
               </dl>
+
+              {imageResourceTypes.includes(resource.resourceType) ? (
+                <PublishedResourceImageGallery
+                  resourceId={resource.id}
+                  resourceType={resource.resourceType}
+                  label={imageSectionLabel}
+                />
+              ) : null}
             </li>
           ))}
         </ul>
