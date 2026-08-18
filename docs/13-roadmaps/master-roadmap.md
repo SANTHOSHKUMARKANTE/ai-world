@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -774,6 +774,9 @@ P6-M04 — Cross-Universe Search
 CLOSED
 
 P6-M05 — Filters
+CLOSED
+
+P6-M06 — Basic Ranking
 NEXT
 ```
 
@@ -16980,6 +16983,258 @@ Taxonomy.
 
 Add others only as needed.
 
+## P6-M05 CLOSURE RECORD
+
+P6-M05 is closed against the green implementation checkpoint:
+
+```text
+IMPLEMENTATION COMMIT
+fb19a3f6981d0c2038729ed3cc500a612b17f346
+
+SUBJECT
+feat(discovery): enable resource type filters
+
+PARENT
+f61d9a85fa4761298a46e66600ade467662ddf0f
+docs(roadmap): close P6-M04
+
+GITHUB ACTIONS
+CI run 32114069955
+CI #97
+completed — success
+```
+
+P6-M05 closes with the minimum filter behavior justified by the repository that exists at this checkpoint.
+
+The accepted milestone wording is:
+
+```text
+Initial filters may include:
+
+Universe;
+Resource Type;
+Taxonomy.
+
+Add others only as needed.
+```
+
+The implemented filter surface is:
+
+```text
+Universe
+    represented by the existing SearchScope
+    scope.kind = universe
+    universeKey = requested Universe
+
+Resource Type
+    represented by the existing SearchFilter.resourceTypes
+    exact canonical ANY-OF constraint when non-empty
+
+Taxonomy
+    DEFERRED
+```
+
+No duplicate Universe filter field is introduced because Universe restriction already belongs to Search scope.
+
+The existing P6-M01 Search contract remains unchanged:
+
+```text
+SearchRequest
+    query
+    scope
+    filter
+    pagination
+
+SearchFilter
+    resourceTypes
+```
+
+Resource Type filter semantics are:
+
+```text
+resourceTypes = []
+    neutral
+    no Resource Type restriction
+
+resourceTypes = [A]
+    resourceType must equal A
+
+resourceTypes = [A, B, ...]
+    resourceType must equal any requested value
+```
+
+The Resource Type filter is composed with the existing Search conditions:
+
+```text
+query match
+AND
+PUBLISHED lifecycle
+AND
+Universe predicate when scope.kind = universe
+AND
+Resource Type predicate when resourceTypes is non-empty
+```
+
+Global Search therefore supports Resource Type filtering across Universes while Universe-scoped Search supports the same filter within the requested Universe.
+
+The implementation preserves:
+
+```text
+PUBLISHED-only public visibility
+
+global Search
+
+Universe-scoped Search
+
+case-insensitive Resource Type substring query matching
+
+blank-query empty result page
+
+offset/limit pagination
+
+deterministic pre-ranking ordering
+    createdAt DESC
+    id ASC
+
+normalized Search result
+    resourceId
+    resourceType
+    universeKey
+```
+
+Taxonomy filtering is intentionally not implemented.
+
+At this checkpoint:
+
+```text
+P3-M05 — Taxonomy
+DEFERRED
+
+P4-M05 — Taxonomy Integration
+DEFERRED
+```
+
+and the repository still has no:
+
+```text
+Taxonomy Kernel package
+
+Taxonomy persistence model
+
+Knowledge Resource taxonomy relation
+
+implemented Devotional classification consumer
+```
+
+Creating taxonomy infrastructure only to satisfy a possible P6-M05 filter would violate the project's demand-driven architecture rule.
+
+Taxonomy therefore remains evidence-driven and may be materialized only when a real classification consumer establishes reusable semantics.
+
+The P6-M05 implementation commit changes exactly:
+
+```text
+apps/api/test/discovery-universe-scope.integration.spec.ts
+
+packages/platforms/discovery/src/prisma-knowledge-search.ts
+
+packages/platforms/discovery/test/prisma-knowledge-search.integration.spec.ts
+
+packages/platforms/discovery/test/prisma-knowledge-search.spec.ts
+```
+
+Implementation diff size:
+
+```text
+4 files changed
+187 insertions
+15 deletions
+```
+
+The approved local P6-M05 validation included:
+
+```text
+Targeted Discovery unit proof
+4 / 4 passed
+
+Targeted Discovery PostgreSQL integration
+3 / 3 passed
+
+Real Devotional + Anime API proof
+3 / 3 passed
+
+Root lint regression
+18 / 18 tasks
+
+Root typecheck regression
+35 / 35 tasks
+
+Root unit regression
+31 / 31 tasks
+271 tests passed
+
+Root integration regression
+23 / 23 tasks
+
+API integration suite
+14 files
+122 tests passed
+
+Root build
+19 / 19 tasks
+
+Architecture validation
+463 modules
+1284 dependencies
+0 violations
+```
+
+No package manifest or lockfile changes are introduced.
+
+No schema or migration is introduced.
+
+Canonical migration count remains:
+
+```text
+15
+```
+
+P6-M05 introduces no:
+
+```text
+Taxonomy model
+Taxonomy filter execution
+new Universe filter field
+new Search contract
+ranking / score
+AI ranking
+Search projection
+Search index
+dedicated Search engine
+semantic/vector Search
+API Search route
+Web Search UI
+named-Universe Discovery runtime dependency
+schema change
+migration
+```
+
+Ranking remains a distinct next capability:
+
+```text
+P6-M06 — Basic Ranking
+```
+
+The indexing/projection decision remains:
+
+```text
+P6-M07 — Indexing Architecture Review
+```
+
+P6-M05 is CLOSED.
+
+P6-M06 — Basic Ranking is NEXT.
+
+
 ---
 
 # 160. Phase 6 Milestone P6-M06 — Basic Ranking
@@ -24424,6 +24679,88 @@ NEXT
 P6-M04 proves that the shared Discovery Search implementation can broaden from a single requested Universe to global Search across canonical published Knowledge from both existing real Universes without introducing named-Universe runtime branches or weakening lifecycle visibility.
 
 P6-M05 is the next implementation milestone and may add the roadmap-defined Search filters while preserving the P6-M04 global and Universe-scoped behavior.
+
+
+## PHASE 6 CURRENT STATE AFTER P6-M05
+
+```text
+PHASE 5 — Media Platform
+COMPLETE
+
+phase-5-complete
+ESTABLISHED
+
+PHASE 6 — Discovery Platform
+ACTIVE
+
+P6-M01 — Search Contract
+CLOSED
+
+P6-M02 — Knowledge Search
+CLOSED
+
+P6-M03 — Universe-Scoped Search
+CLOSED
+
+P6-M04 — Cross-Universe Search
+CLOSED
+
+P6-M05 — Filters
+CLOSED
+
+IMPLEMENTATION COMMIT
+fb19a3f6981d0c2038729ed3cc500a612b17f346
+
+IMPLEMENTATION CI
+32114069955
+CI #97
+SUCCESS
+
+UNIVERSE FILTERING
+EXISTING SEARCH SCOPE
+PRESERVED
+
+RESOURCE TYPE FILTERING
+IMPLEMENTED
+EXACT ANY-OF
+
+EMPTY RESOURCE TYPE FILTER
+NEUTRAL
+
+TAXONOMY FILTERING
+DEFERRED
+
+TAXONOMY KERNEL
+NOT MATERIALIZED
+
+KNOWLEDGE TAXONOMY INTEGRATION
+NOT MATERIALIZED
+
+PUBLIC VISIBILITY
+PUBLISHED ONLY
+
+GLOBAL SEARCH
+PRESERVED
+
+UNIVERSE-SCOPED SEARCH
+PRESERVED
+
+RANKING
+DEFERRED TO P6-M06
+
+PROJECTION / INDEX REVIEW
+DEFERRED TO P6-M07
+
+CANONICAL MIGRATIONS
+15
+
+P6-M06 — Basic Ranking
+NEXT
+```
+
+P6-M05 proves that the existing Search contract can execute practical Resource Type filtering without contract expansion, duplicate Universe-filter semantics, taxonomy speculation, ranking, or Search-index infrastructure.
+
+P6-M06 is the next implementation milestone and must introduce understandable PostgreSQL ranking while preserving the established Search visibility, scope, filter, and pagination behavior.
 
 
 # 411. Phase Completion Git Tags
