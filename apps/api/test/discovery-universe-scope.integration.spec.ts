@@ -252,4 +252,49 @@ describe('Discovery Search across Devotional and Anime Universes', () => {
       limit: 100,
     });
   });
+  it('filters global Search by a real Resource Type without adding named-Universe Discovery logic', async () => {
+    const devotionalResourceId = await createKnowledgeResource({
+      universeKey: DEVOTIONAL_UNIVERSE_KEY,
+      resourceType: DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-02-02T00:00:00.000Z'),
+    });
+
+    await createKnowledgeResource({
+      universeKey: ANIME_UNIVERSE_KEY,
+      resourceType: ANIME_CHARACTER_RESOURCE_TYPE,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-02-01T00:00:00.000Z'),
+    });
+
+    const search = new PrismaKnowledgeSearch(database);
+
+    await expect(
+      search.search({
+        query: '.',
+        scope: {
+          kind: 'global',
+        },
+        filter: {
+          resourceTypes: [DEVOTIONAL_TEMPLE_RESOURCE_TYPE],
+        },
+        pagination: {
+          offset: 0,
+          limit: 20,
+        },
+      }),
+    ).resolves.toEqual({
+      items: [
+        {
+          resourceId: devotionalResourceId,
+          resourceType: DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
+          universeKey: DEVOTIONAL_UNIVERSE_KEY,
+        },
+      ],
+      pagination: {
+        offset: 0,
+        limit: 20,
+      },
+    });
+  });
 });

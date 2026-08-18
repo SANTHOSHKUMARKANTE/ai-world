@@ -6,10 +6,6 @@ import { KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE } from '@ai-world/platform-knowl
 import type { SearchContract, SearchRequest, SearchResultPage } from './search-contract';
 
 function assertSupportedKnowledgeSearchRequest(input: SearchRequest): void {
-  if (input.filter.resourceTypes.length !== 0) {
-    throw new TypeError('Discovery filter execution is deferred until P6-M05 Filters.');
-  }
-
   if (!Number.isInteger(input.pagination.offset) || input.pagination.offset < 0) {
     throw new TypeError('Search pagination offset must be a non-negative integer.');
   }
@@ -45,6 +41,11 @@ export class PrismaKnowledgeSearch implements SearchContract {
         resourceType: {
           contains: query,
           mode: 'insensitive',
+          ...(input.filter.resourceTypes.length === 0
+            ? {}
+            : {
+                in: [...input.filter.resourceTypes],
+              }),
         },
       },
       select: {

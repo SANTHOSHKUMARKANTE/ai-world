@@ -76,21 +76,44 @@ describe('PrismaKnowledgeSearch capability boundary', () => {
     });
   });
 
-  it('rejects Resource Type filter execution until P6-M05', async () => {
+  it('executes exact Resource Type filters as an any-of constraint alongside Universe scope', async () => {
     const { database, findMany } = createDatabaseStub();
     const search = new PrismaKnowledgeSearch(database);
+    const templeType = parseNamespacedKey('search.temple');
+    const deityType = parseNamespacedKey('search.deity');
+    const request = createUniverseRequest({
+      query: '.',
+      filter: {
+        resourceTypes: [templeType, deityType],
+      },
+    });
 
-    await expect(
-      search.search(
-        createUniverseRequest({
-          filter: {
-            resourceTypes: [parseNamespacedKey('search.temple')],
-          },
-        }),
-      ),
-    ).rejects.toThrow('P6-M05');
+    findMany.mockResolvedValue([]);
 
-    expect(findMany).not.toHaveBeenCalled();
+    await expect(search.search(request)).resolves.toEqual({
+      items: [],
+      pagination: request.pagination,
+    });
+
+    expect(findMany).toHaveBeenCalledWith({
+      where: {
+        universeKey: parseNamespacedKey('search.test-universe'),
+        lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+        resourceType: {
+          contains: '.',
+          mode: 'insensitive',
+          in: [templeType, deityType],
+        },
+      },
+      select: {
+        id: true,
+        universeKey: true,
+        resourceType: true,
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+      skip: 0,
+      take: 20,
+    });
   });
 
   it('returns no results for a blank query without turning it into a broad listing', async () => {

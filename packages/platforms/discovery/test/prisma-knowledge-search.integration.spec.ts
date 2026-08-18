@@ -203,4 +203,107 @@ describe('PrismaKnowledgeSearch', () => {
       },
     });
   });
+  it('composes global and Universe scope with exact Resource Type any-of filters', async () => {
+    const alphaUniverseKey = parseNamespacedKey('search.test-filter-alpha');
+    const betaUniverseKey = parseNamespacedKey('search.test-filter-beta');
+    const templeType = parseNamespacedKey('search.temple');
+    const deityType = parseNamespacedKey('search.deity');
+
+    const alphaTempleId = await createKnowledgeResource({
+      universeKey: alphaUniverseKey,
+      resourceType: templeType,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-01-03T00:00:00.000Z'),
+    });
+
+    const alphaDeityId = await createKnowledgeResource({
+      universeKey: alphaUniverseKey,
+      resourceType: deityType,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-01-04T00:00:00.000Z'),
+    });
+
+    const betaTempleId = await createKnowledgeResource({
+      universeKey: betaUniverseKey,
+      resourceType: templeType,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-01-02T00:00:00.000Z'),
+    });
+
+    await createKnowledgeResource({
+      universeKey: alphaUniverseKey,
+      resourceType: templeType,
+      lifecycle: KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE,
+      createdAt: new Date('2026-01-05T00:00:00.000Z'),
+    });
+
+    const search = new PrismaKnowledgeSearch(database);
+
+    await expect(
+      search.search({
+        query: '.',
+        scope: {
+          kind: 'global',
+        },
+        filter: {
+          resourceTypes: [templeType],
+        },
+        pagination: {
+          offset: 0,
+          limit: 20,
+        },
+      }),
+    ).resolves.toEqual({
+      items: [
+        {
+          resourceId: alphaTempleId,
+          resourceType: templeType,
+          universeKey: alphaUniverseKey,
+        },
+        {
+          resourceId: betaTempleId,
+          resourceType: templeType,
+          universeKey: betaUniverseKey,
+        },
+      ],
+      pagination: {
+        offset: 0,
+        limit: 20,
+      },
+    });
+
+    await expect(
+      search.search({
+        query: '.',
+        scope: {
+          kind: 'universe',
+          universeKey: alphaUniverseKey,
+        },
+        filter: {
+          resourceTypes: [templeType, deityType],
+        },
+        pagination: {
+          offset: 0,
+          limit: 20,
+        },
+      }),
+    ).resolves.toEqual({
+      items: [
+        {
+          resourceId: alphaDeityId,
+          resourceType: deityType,
+          universeKey: alphaUniverseKey,
+        },
+        {
+          resourceId: alphaTempleId,
+          resourceType: templeType,
+          universeKey: alphaUniverseKey,
+        },
+      ],
+      pagination: {
+        offset: 0,
+        limit: 20,
+      },
+    });
+  });
 });
