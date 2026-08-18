@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -780,6 +780,9 @@ P6-M06 — Basic Ranking
 CLOSED
 
 P6-M07 — Indexing Architecture Review
+CLOSED
+
+PHASE 6 WEB INTEGRATION
 NEXT
 ```
 
@@ -17638,6 +17641,224 @@ If a dedicated Search projection becomes valuable:
 Discovery owns it.
 ```
 
+## P6-M07 CLOSURE RECORD
+
+P6-M07 is closed against the green architecture-decision checkpoint:
+
+```text
+DECISION COMMIT
+371a83bb3725ed51599c81d39140036f487e74e0
+
+SUBJECT
+docs(architecture): record P6-M07 indexing review
+
+PARENT
+4ab921f6296cb137b5a610d5c90d3d79f277e3f9
+docs(roadmap): close P6-M06
+
+GITHUB ACTIONS
+CI run 32126421684
+CI #102
+attempt 1
+completed — success
+```
+
+The accepted decision artifact is:
+
+```text
+docs/14-decisions/adr/p6-m07-indexing-architecture-review.md
+```
+
+P6-M07 reviewed the architecture actually implemented by Discovery rather than manufacturing a separate Search index merely because future scale might eventually require one.
+
+The current Search implementation continues to query canonical Knowledge relational state directly in PostgreSQL.
+
+The review outcome is:
+
+```text
+DIRECT POSTGRESQL OVER CANONICAL KNOWLEDGE
+REMAINS THE CURRENT BASELINE
+
+SEPARATE SEARCH PROJECTION
+NOT REQUIRED NOW
+
+SEPARATE SEARCH INDEX MODEL
+NOT REQUIRED NOW
+
+DEDICATED SEARCH ENGINE
+DEFERRED
+
+SEARCH SYNCHRONIZATION PIPELINE
+NOT REQUIRED NOW
+
+SEMANTIC / VECTOR SEARCH
+DEFERRED
+
+FUTURE PROJECTION OWNER IF REQUIRED
+DISCOVERY
+```
+
+This decision is evidence-bounded.
+
+It does not claim that direct PostgreSQL queries are proven sufficient for every future production scale or every future Search feature.
+
+The accepted decision explicitly records that production-scale Search latency has not yet been characterized.
+
+The current repository still has no:
+
+```text
+SearchProjection model
+
+SearchIndex model
+
+Search-specific PostgreSQL migration
+
+Search-specific tsvector persistence
+
+pg_trgm extension
+
+Knowledge-to-Discovery indexing Event pipeline
+
+Search rebuild worker
+
+dedicated Search provider
+
+vector store
+
+embedding persistence
+
+Search score in the public Search result contract
+```
+
+Canonical Knowledge remains owned by the Knowledge Platform.
+
+Discovery owns Search semantics.
+
+If a derived Search projection later becomes justified:
+
+```text
+Discovery owns the projection.
+
+Knowledge remains canonical.
+
+The projection remains derived.
+
+The projection must be rebuildable.
+
+The projection must not become a second canonical Knowledge source.
+```
+
+The roadmap-defined Dedicated Search Gate remains evidence-driven.
+
+Before specialized Search infrastructure is introduced, representative evidence should be collected for:
+
+```text
+latency
+
+result quality
+
+faceting complexity
+
+scale
+
+language analysis
+```
+
+P6-M07 intentionally does not invent production SLO thresholds or claim measurements that do not exist.
+
+The Phase 6 closure criteria still require the project to ensure that PostgreSQL Search is measured before specialized infrastructure is introduced.
+
+That closure evidence remains separate from this architecture decision.
+
+The Semantic Search Gate remains:
+
+```text
+DEFERRED
+```
+
+until a real product requirement demonstrates value.
+
+Recommendations remain outside the required P6-M07 architecture change:
+
+```text
+basic related Resources
+may later use relationships / taxonomy
+
+personalized recommendations
+remain later scope
+```
+
+P6-M07 changes no runtime behavior.
+
+It introduces no:
+
+```text
+production code
+
+Search contract change
+
+schema change
+
+migration
+
+package dependency
+
+lockfile change
+
+Search projection
+
+Search index
+
+dedicated Search engine
+
+AI ranking
+
+semantic/vector infrastructure
+
+named-Universe Discovery branch
+```
+
+Canonical migration count remains:
+
+```text
+15
+```
+
+P6-M07 is CLOSED.
+
+There are no further numbered P6 milestones after P6-M07 in the current roadmap.
+
+The next concrete Phase 6 implementation surface is:
+
+```text
+# 165. Phase 6 Web Integration
+```
+
+The remaining Phase 6 work after this closure is tracked by the roadmap sections:
+
+```text
+# 162. Dedicated Search Gate
+measurement evidence before specialized infrastructure
+
+# 163. Semantic Search Gate
+DEFERRED unless real product value appears
+
+# 164. Recommendations
+basic related-resource capability is optional;
+personalized recommendations remain later scope
+
+# 165. Phase 6 Web Integration
+PENDING
+
+# 166. Phase 6 Security
+PENDING final verification / completion
+
+# 167. Phase 6 Closure Criteria
+PENDING evaluation
+```
+
+Phase 6 remains ACTIVE.
+
 ---
 
 # 162. Dedicated Search Gate
@@ -25258,6 +25479,94 @@ P6-M06 proves that the shared Discovery platform can rank canonical published Kn
 The failed first implementation CI also exposed and corrected an API integration-test isolation weakness without changing production Search semantics.
 
 P6-M07 is the next milestone and must review whether direct PostgreSQL queries over canonical relational state remain adequate before any Search projection or index architecture is introduced.
+
+
+## PHASE 6 CURRENT STATE AFTER P6-M07
+
+```text
+PHASE 6 — Discovery Platform
+ACTIVE
+
+P6-M01 — Search Contract
+CLOSED
+
+P6-M02 — Knowledge Search
+CLOSED
+
+P6-M03 — Universe-Scoped Search
+CLOSED
+
+P6-M04 — Cross-Universe Search
+CLOSED
+
+P6-M05 — Filters
+CLOSED
+
+P6-M06 — Basic Ranking
+CLOSED
+
+P6-M07 — Indexing Architecture Review
+CLOSED
+
+P6-M07 DECISION COMMIT
+371a83bb3725ed51599c81d39140036f487e74e0
+
+P6-M07 DECISION SUBJECT
+docs(architecture): record P6-M07 indexing review
+
+P6-M07 CI
+32126421684
+CI #102
+SUCCESS
+
+CURRENT SEARCH STORAGE
+CANONICAL KNOWLEDGE RELATIONAL STATE
+
+CURRENT SEARCH EXECUTION
+DIRECT POSTGRESQL
+
+SEPARATE SEARCH PROJECTION
+NOT REQUIRED NOW
+
+SEPARATE SEARCH INDEX MODEL
+NOT REQUIRED NOW
+
+DEDICATED SEARCH ENGINE
+DEFERRED
+
+SEMANTIC / VECTOR SEARCH
+DEFERRED
+
+FUTURE PROJECTION OWNER IF REQUIRED
+DISCOVERY
+
+CANONICAL KNOWLEDGE OWNER
+KNOWLEDGE PLATFORM
+
+CANONICAL MIGRATIONS
+15
+
+NUMBERED P6 MILESTONES REMAINING
+0
+
+PHASE 6 WEB INTEGRATION
+NEXT
+
+PHASE 6 SECURITY
+PENDING
+
+POSTGRESQL SEARCH MEASUREMENT CLOSURE EVIDENCE
+PENDING
+
+PHASE 6 CLOSURE CRITERIA EVALUATION
+PENDING
+```
+
+P6-M07 closes the numbered Discovery-platform milestone sequence without introducing speculative Search infrastructure.
+
+Phase 6 remains active because post-milestone Web Integration, Security, measurement evidence, and final closure evaluation remain.
+
+The next concrete implementation surface is Phase 6 Web Integration.
 
 
 # 411. Phase Completion Git Tags
