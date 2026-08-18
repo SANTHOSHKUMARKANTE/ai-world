@@ -3,24 +3,9 @@ import { parseResourceId } from '@ai-world/kernel-identifiers';
 import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 import { KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE } from '@ai-world/platform-knowledge';
 
-import type {
-  SearchContract,
-  SearchRequest,
-  SearchResultPage,
-  UniverseSearchScope,
-} from './search-contract';
+import type { SearchContract, SearchRequest, SearchResultPage } from './search-contract';
 
-interface SupportedKnowledgeSearchRequest extends SearchRequest {
-  readonly scope: UniverseSearchScope;
-}
-
-function assertSupportedKnowledgeSearchRequest(
-  input: SearchRequest,
-): asserts input is SupportedKnowledgeSearchRequest {
-  if (input.scope.kind !== 'universe') {
-    throw new TypeError('Global Knowledge Search is deferred until P6-M04 Cross-Universe Search.');
-  }
-
+function assertSupportedKnowledgeSearchRequest(input: SearchRequest): void {
   if (input.filter.resourceTypes.length !== 0) {
     throw new TypeError('Discovery filter execution is deferred until P6-M05 Filters.');
   }
@@ -51,7 +36,11 @@ export class PrismaKnowledgeSearch implements SearchContract {
 
     const resources = await this.database.knowledgeResource.findMany({
       where: {
-        universeKey: input.scope.universeKey,
+        ...(input.scope.kind === 'universe'
+          ? {
+              universeKey: input.scope.universeKey,
+            }
+          : {}),
         lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
         resourceType: {
           contains: query,

@@ -2,7 +2,11 @@ import { randomUUID } from 'node:crypto';
 
 import { createDatabaseClient, type DatabaseClient } from '@ai-world/foundation-database';
 import { PrismaKnowledgeSearch } from '@ai-world/platform-discovery/infrastructure';
-import { KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE } from '@ai-world/platform-knowledge';
+import {
+  KNOWLEDGE_RESOURCE_ARCHIVED_LIFECYCLE,
+  KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE,
+  KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+} from '@ai-world/platform-knowledge';
 import { ANIME_CHARACTER_RESOURCE_TYPE, ANIME_UNIVERSE_KEY } from '@ai-world/universe-anime';
 import {
   DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
@@ -16,7 +20,7 @@ if (!databaseUrl) {
   throw new Error('DATABASE_URL is required for Discovery Universe-scope integration tests.');
 }
 
-describe('P6-M03 Universe-scoped Discovery Search', () => {
+describe('Discovery Search across Devotional and Anime Universes', () => {
   let database: DatabaseClient;
   const resourceIds = new Set<string>();
 
@@ -36,9 +40,11 @@ describe('P6-M03 Universe-scoped Discovery Search', () => {
     resourceIds.clear();
   }
 
-  async function createPublishedResource(input: {
+  async function createKnowledgeResource(input: {
     readonly universeKey: string;
     readonly resourceType: string;
+    readonly lifecycle: string;
+    readonly createdAt?: Date;
   }): Promise<string> {
     const id = randomUUID();
 
@@ -47,7 +53,12 @@ describe('P6-M03 Universe-scoped Discovery Search', () => {
         id,
         universeKey: input.universeKey,
         resourceType: input.resourceType,
-        lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+        lifecycle: input.lifecycle,
+        ...(input.createdAt === undefined
+          ? {}
+          : {
+              createdAt: input.createdAt,
+            }),
       },
     });
 
@@ -70,14 +81,16 @@ describe('P6-M03 Universe-scoped Discovery Search', () => {
   });
 
   it('reuses the same generic Search implementation for Devotional-only and Anime-only results', async () => {
-    const devotionalResourceId = await createPublishedResource({
+    const devotionalResourceId = await createKnowledgeResource({
       universeKey: DEVOTIONAL_UNIVERSE_KEY,
       resourceType: DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
     });
 
-    const animeResourceId = await createPublishedResource({
+    const animeResourceId = await createKnowledgeResource({
       universeKey: ANIME_UNIVERSE_KEY,
       resourceType: ANIME_CHARACTER_RESOURCE_TYPE,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
     });
 
     const search = new PrismaKnowledgeSearch(database);
@@ -150,6 +163,93 @@ describe('P6-M03 Universe-scoped Discovery Search', () => {
       resourceId: devotionalResourceId,
       resourceType: DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
       universeKey: DEVOTIONAL_UNIVERSE_KEY,
+    });
+  });
+
+  it('globally searches published Knowledge across both real Universes without broadening lifecycle visibility', async () => {
+    const devotionalPublishedId = await createKnowledgeResource({
+      universeKey: DEVOTIONAL_UNIVERSE_KEY,
+      resourceType: DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-01-02T00:00:00.000Z'),
+    });
+
+    const animePublishedId = await createKnowledgeResource({
+      universeKey: ANIME_UNIVERSE_KEY,
+      resourceType: ANIME_CHARACTER_RESOURCE_TYPE,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+    });
+
+    const devotionalDraftId = await createKnowledgeResource({
+      universeKey: DEVOTIONAL_UNIVERSE_KEY,
+      resourceType: DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
+      lifecycle: KNOWLEDGE_RESOURCE_INITIAL_LIFECYCLE,
+    });
+
+    const animeArchivedId = await createKnowledgeResource({
+      universeKey: ANIME_UNIVERSE_KEY,
+      resourceType: ANIME_CHARACTER_RESOURCE_TYPE,
+      lifecycle: KNOWLEDGE_RESOURCE_ARCHIVED_LIFECYCLE,
+    });
+
+    const search = new PrismaKnowledgeSearch(database);
+
+    const globalResults = await search.search({
+      query: 'A',
+      scope: {
+        kind: 'global',
+      },
+      filter: {
+        resourceTypes: [],
+      },
+      pagination: {
+        offset: 0,
+        limit: 100,
+      },
+    });
+
+    expect(globalResults.items).toEqual(
+      expect.arrayContaining([
+        {
+          resourceId: devotionalPublishedId,
+          resourceType: DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
+          universeKey: DEVOTIONAL_UNIVERSE_KEY,
+        },
+        {
+          resourceId: animePublishedId,
+          resourceType: ANIME_CHARACTER_RESOURCE_TYPE,
+          universeKey: ANIME_UNIVERSE_KEY,
+        },
+      ]),
+    );
+
+    expect(globalResults.items).not.toContainEqual({
+      resourceId: devotionalDraftId,
+      resourceType: DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
+      universeKey: DEVOTIONAL_UNIVERSE_KEY,
+    });
+
+    expect(globalResults.items).not.toContainEqual({
+      resourceId: animeArchivedId,
+      resourceType: ANIME_CHARACTER_RESOURCE_TYPE,
+      universeKey: ANIME_UNIVERSE_KEY,
+    });
+
+    const devotionalIndex = globalResults.items.findIndex(
+      (item) => item.resourceId === devotionalPublishedId,
+    );
+    const animeIndex = globalResults.items.findIndex(
+      (item) => item.resourceId === animePublishedId,
+    );
+
+    expect(devotionalIndex).toBeGreaterThanOrEqual(0);
+    expect(animeIndex).toBeGreaterThanOrEqual(0);
+    expect(devotionalIndex).toBeLessThan(animeIndex);
+
+    expect(globalResults.pagination).toEqual({
+      offset: 0,
+      limit: 100,
     });
   });
 });

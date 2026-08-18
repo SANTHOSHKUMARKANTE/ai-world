@@ -1,5 +1,6 @@
 import type { DatabaseClient } from '@ai-world/foundation-database';
 import { parseNamespacedKey } from '@ai-world/kernel-namespace';
+import { KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE } from '@ai-world/platform-knowledge';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PrismaKnowledgeSearch } from '../src/prisma-knowledge-search';
@@ -40,21 +41,39 @@ function createUniverseRequest(overrides: Partial<SearchRequest> = {}): SearchRe
 }
 
 describe('PrismaKnowledgeSearch capability boundary', () => {
-  it('rejects global Search until P6-M04', async () => {
+  it('executes global Search without adding a Universe predicate', async () => {
     const { database, findMany } = createDatabaseStub();
     const search = new PrismaKnowledgeSearch(database);
+    const request = createUniverseRequest({
+      scope: {
+        kind: 'global',
+      },
+    });
 
-    await expect(
-      search.search(
-        createUniverseRequest({
-          scope: {
-            kind: 'global',
-          },
-        }),
-      ),
-    ).rejects.toThrow('P6-M04');
+    findMany.mockResolvedValue([]);
 
-    expect(findMany).not.toHaveBeenCalled();
+    await expect(search.search(request)).resolves.toEqual({
+      items: [],
+      pagination: request.pagination,
+    });
+
+    expect(findMany).toHaveBeenCalledWith({
+      where: {
+        lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+        resourceType: {
+          contains: 'temple',
+          mode: 'insensitive',
+        },
+      },
+      select: {
+        id: true,
+        universeKey: true,
+        resourceType: true,
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+      skip: 0,
+      take: 20,
+    });
   });
 
   it('rejects Resource Type filter execution until P6-M05', async () => {
