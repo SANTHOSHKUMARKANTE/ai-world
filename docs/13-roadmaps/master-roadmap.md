@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform ACTIVE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -799,6 +799,21 @@ PHASE 6 FINAL CLOSURE DOCUMENTATION
 CLOSED
 
 PHASE 7 — AI / Creator Platform
+ACTIVE
+
+PHASE 7 PROVIDER DECISION
+CLOSED
+
+INITIAL PROVIDER
+OPENAI API
+
+CONCRETE MODEL
+NOT SELECTED YET
+
+PROVIDER SDK
+NOT INSTALLED
+
+P7-M01 — AI Provider Port
 NEXT
 ```
 
@@ -18795,6 +18810,154 @@ select ONE initial AI Provider
 based on current capabilities.
 
 This decision may create an ADR.
+
+---
+
+## PHASE 7 PROVIDER DECISION CLOSURE RECORD
+
+The Phase 7 Provider Decision is closed against the exact green Provider Decision checkpoint:
+
+```text
+IMPLEMENTATION COMMIT
+de8ef05596eff8022910b7df362c6dbe0cef5cac
+
+SUBJECT
+docs(ai): select initial AI provider
+
+PARENT
+ab75238ecab17b6251479fed871f654e955ed21a
+docs(roadmap): close Phase 6
+
+GITHUB ACTIONS
+CI run 32155970530
+CI #112
+attempt 2
+event push
+branch main
+completed — success
+```
+
+Accepted Provider selection:
+
+```text
+PHASE 7 PROVIDER DECISION
+CLOSED
+
+INITIAL PROVIDER
+OPENAI API
+
+PREFERRED P7-M02 PROVIDER API SURFACE
+Responses API
+
+CONCRETE MODEL
+NOT SELECTED YET
+
+PROVIDER SDK
+NOT INSTALLED
+
+MULTI-PROVIDER
+NOT JUSTIFIED
+```
+
+The decision establishes the Provider only.
+
+P7-M01 remains Provider-neutral and must introduce only the smallest AI World-owned Provider Contract required by the next real capability.
+
+The Provider Decision does not introduce:
+
+```text
+OpenAI SDK dependency
+
+Anthropic SDK dependency
+
+Gemini SDK dependency
+
+Provider Adapter
+
+concrete model selection
+
+API credential
+
+AI database schema
+
+Generation persistence
+
+AI API endpoint
+
+AI Web UI
+
+Agent framework
+
+MCP runtime
+
+embeddings
+
+Vector Database
+
+Queue / Worker
+
+second Provider
+```
+
+Ownership remains:
+
+```text
+AI World
+owns
+Provider Contract
+
+future OpenAI Adapter
+implements
+Provider Contract
+
+future OpenAI SDK
+private to
+OpenAI Adapter
+```
+
+Provider-specific request/response SDK types must not become canonical AI World Domain, Knowledge, Media, Discovery, Universe, API transport, or Generation types.
+
+The existing Phase 7 gates remain unchanged:
+
+```text
+P7-M01 — AI Provider Port
+NEXT
+
+P7-M02 — Initial Provider Adapter
+AFTER P7-M01
+
+concrete OpenAI model selection
+P7-M02
+
+second Provider
+ONLY AFTER MULTI-PROVIDER GATE EVIDENCE
+```
+
+Canonical migrations remain:
+
+```text
+15
+```
+
+This roadmap closure changes documentation state only.
+
+It introduces no runtime, package dependency, lockfile, schema, migration, CI, Knowledge, Media, Discovery, Identity, or Universe behavior change.
+
+Phase 7 delivery position after this closure is:
+
+```text
+PHASE 7 — AI / Creator Platform
+ACTIVE
+
+PHASE 7 PROVIDER DECISION
+CLOSED
+
+INITIAL PROVIDER
+OPENAI API
+
+P7-M01 — AI Provider Port
+NEXT
+```
 
 ---
 
