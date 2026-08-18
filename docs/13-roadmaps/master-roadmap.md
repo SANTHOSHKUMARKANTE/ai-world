@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -783,6 +783,9 @@ P6-M07 — Indexing Architecture Review
 CLOSED
 
 PHASE 6 WEB INTEGRATION
+CLOSED
+
+PHASE 6 SECURITY REVIEW
 NEXT
 ```
 
@@ -17913,6 +17916,219 @@ filters;
 Resource navigation.
 ```
 
+## PHASE 6 WEB INTEGRATION CLOSURE RECORD
+
+Phase 6 Web Integration is closed against the green implementation checkpoint:
+
+```text
+IMPLEMENTATION COMMIT
+80d496f491607b0a15f2b5602780852c061ba8f2
+
+SUBJECT
+feat(discovery): add web search experience
+
+PARENT
+3386d02d78494733fe9b090e5f144770a2217b31
+docs(roadmap): close P6-M07
+
+GITHUB ACTIONS
+CI run 32131161796
+CI #104
+attempt 1
+completed — success
+```
+
+The delivered public Search transport is:
+
+```text
+GET /discovery/search
+```
+
+The API composes the existing Discovery-owned Search contract through:
+
+```text
+SearchContract
+        ↓
+PrismaKnowledgeSearch
+```
+
+No duplicate Search implementation is introduced at the API boundary.
+
+The public Search transport supports:
+
+```text
+query
+
+global scope by default
+
+optional Universe scope
+
+exact multi-value Resource Type ANY-OF filters
+
+offset pagination
+
+bounded limit pagination
+```
+
+The public Web Search experience is available at:
+
+```text
+/search
+```
+
+It provides:
+
+```text
+global Search UI
+
+Devotional Universe Search
+
+Anime Universe Search
+
+Resource Type filters
+
+ranked Search result presentation
+
+Resource navigation
+```
+
+Search-result navigation uses:
+
+```text
+/knowledge/resources/[id]
+```
+
+and reuses the existing public Knowledge Resource endpoint.
+
+Search therefore does not introduce a second canonical Knowledge read model.
+
+The implementation proves the public HTTP boundary against real PostgreSQL with:
+
+```text
+PUBLISHED Devotional Resource
+VISIBLE
+
+PUBLISHED Anime Resource
+VISIBLE
+
+DRAFT Devotional Resource
+HIDDEN
+
+ARCHIVED Anime Resource
+HIDDEN
+```
+
+The same HTTP endpoint proves:
+
+```text
+global cross-Universe Search
+
+Universe scope
+
+Resource Type ANY-OF filters
+
+pagination transport
+
+invalid transport rejection
+```
+
+The browser flow proves:
+
+```text
+/search
+        ↓
+global Search
+        ↓
+Universe scope
+        ↓
+Resource Type filtering
+        ↓
+Search results
+        ↓
+/knowledge/resources/[id]
+```
+
+The validated implementation changed exactly:
+
+```text
+15 files
+
+830 insertions
+
+5 deletions
+```
+
+The runtime dependency classification changed only as required for the real API composition:
+
+```text
+@ai-world/platform-discovery
+
+API devDependency
+        ↓
+API runtime dependency
+```
+
+No new third-party Search dependency was introduced.
+
+The implementation introduced no:
+
+```text
+Search contract change
+
+Search ranking change
+
+Search score
+
+Search projection
+
+Search index
+
+schema change
+
+migration
+
+AI ranking
+
+semantic/vector Search
+
+dedicated Search engine
+
+named-Universe backend Search branch
+```
+
+Canonical migration count remains:
+
+```text
+15
+```
+
+Phase 6 remains ACTIVE.
+
+The next required workstream is:
+
+```text
+# 166. Phase 6 Security
+SECURITY REVIEW NEXT
+```
+
+The Security review must verify the now-public Search transport against:
+
+```text
+Resource visibility
+
+Universe scope
+
+Authorization/privacy rules
+
+hidden Resource non-leakage
+```
+
+PostgreSQL Search measurement closure evidence remains pending.
+
+Final Phase 6 closure-criteria evaluation remains pending.
+
+No `phase-6-complete` tag is created by this checkpoint.
+
 ---
 
 # 166. Phase 6 Security
@@ -25567,6 +25783,85 @@ P6-M07 closes the numbered Discovery-platform milestone sequence without introdu
 Phase 6 remains active because post-milestone Web Integration, Security, measurement evidence, and final closure evaluation remain.
 
 The next concrete implementation surface is Phase 6 Web Integration.
+
+
+## PHASE 6 CURRENT STATE AFTER WEB INTEGRATION
+
+```text
+PHASE 6 — Discovery Platform
+ACTIVE
+
+NUMBERED P6 MILESTONES REMAINING
+0
+
+PHASE 6 WEB INTEGRATION
+CLOSED
+
+WEB INTEGRATION IMPLEMENTATION COMMIT
+80d496f491607b0a15f2b5602780852c061ba8f2
+
+WEB INTEGRATION IMPLEMENTATION SUBJECT
+feat(discovery): add web search experience
+
+WEB INTEGRATION CI
+32131161796
+CI #104
+SUCCESS
+
+PUBLIC SEARCH HTTP TRANSPORT
+GET /discovery/search
+
+GLOBAL SEARCH WEB UI
+/search
+
+UNIVERSE SEARCH
+DEVOTIONAL + ANIME
+
+RESOURCE TYPE FILTERS
+ENABLED
+
+RESOURCE NAVIGATION
+/knowledge/resources/[id]
+
+PUBLIC SEARCH VISIBILITY
+PUBLISHED ONLY
+
+CANONICAL KNOWLEDGE OWNER
+KNOWLEDGE PLATFORM
+
+SEARCH OWNER
+DISCOVERY PLATFORM
+
+SEARCH PROJECTION
+NOT REQUIRED NOW
+
+DEDICATED SEARCH ENGINE
+DEFERRED
+
+SEMANTIC / VECTOR SEARCH
+DEFERRED
+
+CANONICAL MIGRATIONS
+15
+
+PHASE 6 SECURITY REVIEW
+NEXT
+
+POSTGRESQL SEARCH MEASUREMENT CLOSURE EVIDENCE
+PENDING
+
+PHASE 6 CLOSURE CRITERIA EVALUATION
+PENDING
+
+PHASE 6 COMPLETION TAG
+NOT CREATED
+```
+
+The Web Integration workstream closes the public Discovery transport and browser-consumer gap without changing Search ownership or canonical Knowledge ownership.
+
+Phase 6 remains active.
+
+The next workstream is the Phase 6 Security review.
 
 
 # 411. Phase Completion Git Tags
