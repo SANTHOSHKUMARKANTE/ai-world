@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "test": "vitest run --exclude \"test/**/*.integration.spec.ts\" --exclude \"test/**/*.mailpit.spec.ts\"",
-    "test:integration": "vitest run integration --exclude \"test/**/*.mailpit.spec.ts\"",
+    "test:integration": "vitest run integration --no-file-parallelism --exclude \"test/**/*.mailpit.spec.ts\"",
     "test:integration:mailpit": "vitest run test/email-verification-mailpit.mailpit.spec.ts test/password-recovery-mailpit.mailpit.spec.ts",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json"
