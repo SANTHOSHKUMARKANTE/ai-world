@@ -56,6 +56,20 @@ function isPublicKnowledgeResourceAssetsResponse(
   return value.assetIds.every((assetId) => typeof assetId === 'string');
 }
 
+export async function getPublicKnowledgeResource(
+  resourceId: string,
+): Promise<PublicKnowledgeResource> {
+  const response = await apiRequest(`/knowledge/resources/${encodeURIComponent(resourceId)}`);
+
+  const payload: unknown = await response.json();
+
+  if (!isPublicKnowledgeResource(payload)) {
+    throw new Error('Public Knowledge resource response did not match the expected Web contract.');
+  }
+
+  return payload;
+}
+
 export async function listPublicKnowledgeResources(
   universeKey: string,
 ): Promise<readonly PublicKnowledgeResource[]> {

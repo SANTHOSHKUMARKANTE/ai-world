@@ -53,6 +53,9 @@ importers:
       '@ai-world/kernel-audit':
         specifier: workspace:*
         version: link:../../packages/kernel/audit
+      '@ai-world/platform-discovery':
+        specifier: workspace:*
+        version: link:../../packages/platforms/discovery
       '@ai-world/platform-identity-access':
         specifier: workspace:*
         version: link:../../packages/platforms/identity-access
@@ -93,9 +96,6 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@ai-world/platform-discovery':
-        specifier: workspace:*
-        version: link:../../packages/platforms/discovery
       '@ai-world/universe-anime':
         specifier: workspace:*
         version: link:../../packages/universes/anime

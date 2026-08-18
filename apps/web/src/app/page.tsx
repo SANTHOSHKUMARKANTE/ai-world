@@ -14,6 +14,10 @@ export default function Home() {
         <Link href="/knowledge">Explore Knowledge</Link>
       </p>
 
+      <p>
+        <Link href="/search">Search Knowledge</Link>
+      </p>
+
       <SessionSummary />
 
       <AccountNavigation />

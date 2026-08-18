@@ -63,6 +63,8 @@ import {
   UpdateKnowledgeResource,
   UpdateKnowledgeResourceAsActor,
 } from '@ai-world/platform-knowledge';
+import type { SearchContract } from '@ai-world/platform-discovery';
+import { PrismaKnowledgeSearch } from '@ai-world/platform-discovery/infrastructure';
 import { PrismaKnowledgeResourceRepository } from '@ai-world/platform-knowledge/infrastructure';
 import { GetUserProfile, UpdateUserProfile } from '@ai-world/platform-user';
 import {
@@ -77,6 +79,10 @@ import { PasswordAuthenticationController } from './authentication/password-auth
 import { AuthorizationController } from './authorization/authorization.controller';
 import { DatabaseModule } from './database/database.module';
 import { DatabaseService } from './database/database.service';
+import {
+  PUBLIC_DISCOVERY_SEARCH,
+  PublicDiscoverySearchController,
+} from './discovery/public-discovery-search.controller';
 import { EmailVerificationController } from './email-verification/email-verification.controller';
 import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
@@ -190,6 +196,7 @@ export class AppModule {
         UserProfileController,
         AuthorizationController,
         PublicKnowledgeController,
+        PublicDiscoverySearchController,
         CreatorKnowledgeController,
         MediaAssetsController,
       ],
@@ -430,6 +437,14 @@ export class AppModule {
               ),
               storageObjectStore,
             );
+          },
+        },
+
+        {
+          provide: PUBLIC_DISCOVERY_SEARCH,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): SearchContract => {
+            return new PrismaKnowledgeSearch(database.getClient());
           },
         },
 
