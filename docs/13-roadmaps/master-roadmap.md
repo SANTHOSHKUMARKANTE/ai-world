@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -777,6 +777,9 @@ P6-M05 — Filters
 CLOSED
 
 P6-M06 — Basic Ranking
+CLOSED
+
+P6-M07 — Indexing Architecture Review
 NEXT
 ```
 
@@ -17243,6 +17246,382 @@ Use understandable PostgreSQL ranking.
 
 Do not introduce AI ranking immediately.
 
+## P6-M06 CLOSURE RECORD
+
+P6-M06 is closed against the final green checkpoint:
+
+```text
+FINAL CHECKPOINT
+54b12ce60d8948f01609f69770cf0d90f3b8f1e7
+
+SUBJECT
+test(api): serialize integration tests
+
+PARENT
+5c0b6303a5f53261534e31900a4683fe28703cd4
+feat(discovery): add basic search ranking
+
+GITHUB ACTIONS
+CI run 32122735772
+CI #100
+attempt 1
+completed — success
+```
+
+The ranking implementation itself was introduced by:
+
+```text
+IMPLEMENTATION COMMIT
+5c0b6303a5f53261534e31900a4683fe28703cd4
+
+SUBJECT
+feat(discovery): add basic search ranking
+
+PARENT
+7d57b28c854bade2bbe2b900c98bdc83e09507f5
+docs(roadmap): close P6-M05
+```
+
+The implementation push initially produced:
+
+```text
+CI run 32119370009
+CI #99
+completed — failure
+```
+
+That failure did not identify a production Search ranking defect.
+
+It exposed API integration-test file concurrency against one shared PostgreSQL database:
+
+```text
+public-knowledge.integration.spec.ts
+and
+discovery-universe-scope.integration.spec.ts
+
+ran concurrently
+
+both created PUBLISHED real-Universe Knowledge fixtures
+
+broad Universe queries could observe the other file's fixtures
+```
+
+The follow-up commit:
+
+```text
+54b12ce60d8948f01609f69770cf0d90f3b8f1e7
+test(api): serialize integration tests
+```
+
+changes only the API integration-test execution policy:
+
+```text
+vitest run integration
+    --no-file-parallelism
+```
+
+so database-backed API integration files sharing mutable PostgreSQL state execute file-by-file.
+
+No P6-M06 production Search behavior was changed by that repair.
+
+The accepted P6-M06 milestone wording is:
+
+```text
+Use understandable PostgreSQL ranking.
+
+Do not introduce AI ranking immediately.
+```
+
+P6-M06 implements a Discovery-owned PostgreSQL lexical ranking over the existing canonical Knowledge Resource Type Search surface.
+
+Eligibility remains:
+
+```text
+trimmed query is non-blank
+
+AND
+
+case-insensitive Resource Type substring match
+
+AND
+
+PUBLISHED lifecycle
+
+AND
+
+requested Universe when scope.kind = universe
+
+AND
+
+exact Resource Type ANY-OF filter when resourceTypes is non-empty
+```
+
+Eligible rows are ordered in PostgreSQL by understandable ranking tiers:
+
+```text
+0
+case-insensitive exact complete Resource Type key
+
+1
+case-insensitive exact terminal NamespacedKey segment
+
+2
+case-insensitive terminal NamespacedKey segment prefix
+
+3
+case-insensitive complete Resource Type key prefix
+
+4
+remaining case-insensitive substring matches
+```
+
+Deterministic tie-breaking remains:
+
+```text
+createdAt DESC
+
+id ASC
+```
+
+Pagination is applied by PostgreSQL after ranking:
+
+```text
+OFFSET
+
+LIMIT
+```
+
+The Search contract remains unchanged.
+
+Search results still expose only:
+
+```text
+resourceId
+
+resourceType
+
+universeKey
+```
+
+No numeric relevance score is added to the public Search result contract.
+
+The runtime uses Prisma's parameterized tagged `$queryRaw` interface with fixed SQL structure.
+
+It does not use:
+
+```text
+$queryRawUnsafe
+
+dynamic SQL concatenation
+
+AI ranking
+
+semantic/vector ranking
+
+embeddings
+
+full-text ranking
+
+trigram similarity
+
+dedicated Search engine
+```
+
+The implementation preserves:
+
+```text
+PUBLISHED-only public visibility
+
+global Search
+
+Universe-scoped Search
+
+Resource Type exact ANY-OF filters
+
+empty Resource Type filter as neutral
+
+blank-query empty result page
+
+pagination validation
+
+normalized Search results
+
+no named-Universe branch inside Discovery
+```
+
+The real-Universe API proof demonstrates that generic ranking can change ordering across Devotional and Anime without named-Universe ranking logic.
+
+For the query:
+
+```text
+A
+```
+
+the lexical ranking places:
+
+```text
+anime.character
+```
+
+ahead of:
+
+```text
+devotional.temple
+```
+
+despite the Anime fixture being older, proving relevance outranks recency.
+
+The Discovery PostgreSQL integration proof also demonstrates:
+
+```text
+terminal exact match
+    outranks
+terminal-prefix match
+    outranks
+complete-key prefix match
+    outranks
+generic substring match
+```
+
+while pagination is applied over that ranked order.
+
+The implementation commit changes exactly:
+
+```text
+apps/api/test/discovery-universe-scope.integration.spec.ts
+packages/platforms/discovery/src/prisma-knowledge-search.ts
+packages/platforms/discovery/test/prisma-knowledge-search.integration.spec.ts
+packages/platforms/discovery/test/prisma-knowledge-search.spec.ts
+```
+
+Implementation diff size:
+
+```text
+4 files changed, 237 insertions(+), 82 deletions(-)
+```
+
+The API integration-test isolation repair changes exactly:
+
+```text
+apps/api/package.json
+```
+
+Repair diff size:
+
+```text
+1 file changed, 1 insertion(+), 1 deletion(-)
+```
+
+The approved local P6-M06 implementation validation included:
+
+```text
+Targeted Discovery unit proof
+4 / 4 passed
+
+Targeted Discovery PostgreSQL integration
+4 / 4 passed
+
+Real Devotional + Anime API proof
+3 / 3 passed
+
+Root lint regression
+18 / 18 tasks
+
+Root typecheck regression
+35 / 35 tasks
+
+Root unit regression
+31 / 31 tasks
+271 tests passed
+
+Root integration regression
+23 / 23 tasks
+
+API integration suite
+14 files
+122 tests passed
+
+Root build
+19 / 19 tasks
+
+Architecture validation
+463 modules
+1284 dependencies
+0 violations
+```
+
+The approved CI-repair validation additionally proved:
+
+```text
+Serialized API integration run 1
+14 / 14 files
+122 / 122 tests
+
+Serialized API integration run 2
+14 / 14 files
+122 / 122 tests
+
+Root integration regression
+23 / 23 tasks
+191 integration tests passed
+
+Canonical migrations
+15
+```
+
+The final green GitHub Actions checkpoint validates the repaired repository through the repository CI workflow.
+
+No schema or migration is introduced.
+
+Canonical migration count remains:
+
+```text
+15
+```
+
+P6-M06 introduces no:
+
+```text
+Search score contract
+
+Ranking Strategy registry
+
+named-Universe ranking branch
+
+Taxonomy materialization
+
+Search projection
+
+Search index
+
+PostgreSQL extension
+
+dedicated Search engine
+
+semantic/vector Search
+
+AI ranking
+
+API Search route
+
+Web Search UI
+
+schema change
+
+migration
+```
+
+The indexing/projection decision remains a distinct next milestone:
+
+```text
+P6-M07 — Indexing Architecture Review
+```
+
+P6-M06 is CLOSED.
+
+P6-M07 — Indexing Architecture Review is NEXT.
+
+
 ---
 
 # 161. Phase 6 Milestone P6-M07 — Indexing Architecture Review
@@ -24761,6 +25140,124 @@ NEXT
 P6-M05 proves that the existing Search contract can execute practical Resource Type filtering without contract expansion, duplicate Universe-filter semantics, taxonomy speculation, ranking, or Search-index infrastructure.
 
 P6-M06 is the next implementation milestone and must introduce understandable PostgreSQL ranking while preserving the established Search visibility, scope, filter, and pagination behavior.
+
+
+## PHASE 6 CURRENT STATE AFTER P6-M06
+
+```text
+PHASE 5 — Media Platform
+COMPLETE
+
+phase-5-complete
+ESTABLISHED
+
+PHASE 6 — Discovery Platform
+ACTIVE
+
+P6-M01 — Search Contract
+CLOSED
+
+P6-M02 — Knowledge Search
+CLOSED
+
+P6-M03 — Universe-Scoped Search
+CLOSED
+
+P6-M04 — Cross-Universe Search
+CLOSED
+
+P6-M05 — Filters
+CLOSED
+
+P6-M06 — Basic Ranking
+CLOSED
+
+RANKING IMPLEMENTATION COMMIT
+5c0b6303a5f53261534e31900a4683fe28703cd4
+
+RANKING IMPLEMENTATION SUBJECT
+feat(discovery): add basic search ranking
+
+INITIAL IMPLEMENTATION CI
+32119370009
+CI #99
+FAILURE — API INTEGRATION TEST FILE CONCURRENCY
+
+FINAL GREEN CHECKPOINT
+54b12ce60d8948f01609f69770cf0d90f3b8f1e7
+
+FINAL CHECKPOINT SUBJECT
+test(api): serialize integration tests
+
+FINAL CHECKPOINT CI
+32122735772
+CI #100
+SUCCESS
+
+RANKING OWNER
+DISCOVERY
+
+RANKING EXECUTION
+POSTGRESQL
+
+RANKING INPUT
+CANONICAL KNOWLEDGE RESOURCE TYPE
+
+RANKING TIERS
+EXACT COMPLETE KEY
+TERMINAL SEGMENT EXACT
+TERMINAL SEGMENT PREFIX
+COMPLETE KEY PREFIX
+OTHER SUBSTRING
+
+TIE BREAK
+createdAt DESC
+id ASC
+
+PAGINATION
+AFTER RANKING
+OFFSET / LIMIT
+
+SEARCH RESULT SCORE
+NOT EXPOSED
+
+PUBLIC VISIBILITY
+PUBLISHED ONLY
+
+GLOBAL SEARCH
+PRESERVED
+
+UNIVERSE-SCOPED SEARCH
+PRESERVED
+
+RESOURCE TYPE FILTERING
+PRESERVED
+EXACT ANY-OF
+
+NAMED-UNIVERSE DISCOVERY COUPLING
+NONE
+
+AI / VECTOR RANKING
+NOT INTRODUCED
+
+SEARCH PROJECTION
+NOT INTRODUCED
+
+SEARCH INDEX
+NOT INTRODUCED
+
+CANONICAL MIGRATIONS
+15
+
+P6-M07 — Indexing Architecture Review
+NEXT
+```
+
+P6-M06 proves that the shared Discovery platform can rank canonical published Knowledge in PostgreSQL using understandable lexical relevance while preserving scope, visibility, filters, deterministic pagination, and cross-Universe reuse.
+
+The failed first implementation CI also exposed and corrected an API integration-test isolation weakness without changing production Search semantics.
+
+P6-M07 is the next milestone and must review whether direct PostgreSQL queries over canonical relational state remain adequate before any Search projection or index architecture is introduced.
 
 
 # 411. Phase Completion Git Tags
