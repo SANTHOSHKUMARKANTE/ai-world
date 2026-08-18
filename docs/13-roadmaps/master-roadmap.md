@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform ACTIVE; P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -786,6 +786,9 @@ PHASE 6 WEB INTEGRATION
 CLOSED
 
 PHASE 6 SECURITY REVIEW
+CLOSED
+
+POSTGRESQL SEARCH MEASUREMENT EVIDENCE
 NEXT
 ```
 
@@ -18145,6 +18148,89 @@ Authorization/privacy rules.
 
 Search may not expose hidden Resources.
 
+## PHASE 6 SECURITY CLOSURE RECORD
+
+Phase 6 Security is closed against the green dedicated public-boundary proof:
+
+```text
+SECURITY PROOF COMMIT
+76eb84794553257a3db284e94a2c89a0be9be4e4
+
+SUBJECT
+test(discovery): prove public search security
+
+PARENT
+822c2a8ff65808353242df26ef6473a4f6e8e44a
+docs(roadmap): close Phase 6 Web Integration
+
+GITHUB ACTIONS
+CI run 32134953115
+CI #106
+attempt 1
+completed - success
+```
+
+The Security review required no production security architecture change.
+
+Canonical Knowledge currently has no implemented owner-specific visibility, private/public flag, audience model, ACL, or per-Resource privacy policy. Phase 6 therefore does not invent those semantics solely for Search.
+
+The existing public visibility rule remains:
+
+```text
+PUBLISHED
+PUBLICLY SEARCHABLE / READABLE
+
+INITIAL
+HIDDEN
+
+DRAFT
+HIDDEN
+
+ARCHIVED
+HIDDEN
+```
+
+The dedicated public-boundary proof verifies:
+
+```text
+anonymous global Search exposes only PUBLISHED Resources
+
+Search result data is minimized to resourceId, resourceType, universeKey
+
+Universe scope cannot fall back to global
+
+cross-Universe Resource Type filters cannot bypass Universe scope
+
+unknown canonical Universe scope returns no results
+
+hidden Resource IDs remain unavailable through public Resource navigation
+
+SQL-like Search input is treated literally
+
+caller-controlled includeHidden=true is rejected
+```
+
+Authorization remains correctly separated: creator mutations use Identity & Access permission evaluation, while public Search/public Knowledge reads use the PUBLISHED lifecycle visibility boundary.
+
+No new Search guard, Search permission key, Policy Kernel, privacy schema, ACL model, Search projection, Search index, migration, or third-party dependency was introduced.
+
+Canonical migrations remain 15.
+
+Phase 6 remains ACTIVE.
+
+The next required workstream is:
+
+```text
+POSTGRESQL SEARCH MEASUREMENT EVIDENCE
+NEXT
+```
+
+That workstream must measure the existing direct PostgreSQL Search implementation before any specialized Search infrastructure is considered. Measurement must be evidence-scoped and must not be represented as production-scale latency unless production-scale workload evidence exists.
+
+Final Phase 6 closure-criteria evaluation remains pending.
+
+No `phase-6-complete` tag is created by this checkpoint.
+
 ---
 
 # 167. Phase 6 Closure Criteria
@@ -25862,6 +25948,73 @@ The Web Integration workstream closes the public Discovery transport and browser
 Phase 6 remains active.
 
 The next workstream is the Phase 6 Security review.
+
+
+## PHASE 6 CURRENT STATE AFTER SECURITY REVIEW
+
+```text
+PHASE 6 - Discovery Platform
+ACTIVE
+
+NUMBERED P6 MILESTONES REMAINING
+0
+
+PHASE 6 WEB INTEGRATION
+CLOSED
+
+PHASE 6 SECURITY REVIEW
+CLOSED
+
+SECURITY PROOF COMMIT
+76eb84794553257a3db284e94a2c89a0be9be4e4
+
+SECURITY PROOF CI
+32134953115
+CI #106
+SUCCESS
+
+PUBLIC SEARCH VISIBILITY
+PUBLISHED ONLY
+
+INITIAL
+HIDDEN
+
+DRAFT
+HIDDEN
+
+ARCHIVED
+HIDDEN
+
+UNIVERSE SCOPE
+ENFORCED
+
+HIDDEN RESOURCE DIRECT NAVIGATION
+BLOCKED
+
+CALLER-CONTROLLED HIDDEN VISIBILITY
+REJECTED
+
+NEW SECURITY ARCHITECTURE
+NOT REQUIRED
+
+CANONICAL MIGRATIONS
+15
+
+POSTGRESQL SEARCH MEASUREMENT EVIDENCE
+NEXT
+
+PHASE 6 CLOSURE CRITERIA EVALUATION
+PENDING
+
+PHASE 6 COMPLETION TAG
+NOT CREATED
+```
+
+The Security workstream closes through explicit public-boundary evidence without inventing privacy semantics not present in canonical Knowledge.
+
+Phase 6 remains active.
+
+The next workstream is PostgreSQL Search measurement evidence.
 
 
 # 411. Phase Completion Git Tags
