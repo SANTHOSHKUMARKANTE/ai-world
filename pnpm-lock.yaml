@@ -93,6 +93,15 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
+      '@ai-world/platform-discovery':
+        specifier: workspace:*
+        version: link:../../packages/platforms/discovery
+      '@ai-world/universe-anime':
+        specifier: workspace:*
+        version: link:../../packages/universes/anime
+      '@ai-world/universe-devotional':
+        specifier: workspace:*
+        version: link:../../packages/universes/devotional
       '@nestjs/cli':
         specifier: ^11.0.0
         version: 11.0.24(@types/node@24.13.3)(esbuild@0.28.2)(prettier@3.9.6)
