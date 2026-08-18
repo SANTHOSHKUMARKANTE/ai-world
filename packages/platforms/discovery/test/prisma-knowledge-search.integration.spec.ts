@@ -144,7 +144,7 @@ describe('PrismaKnowledgeSearch', () => {
     });
   });
 
-  it('applies deterministic offset/limit pagination without introducing ranking', async () => {
+  it('applies deterministic offset/limit pagination after ranking ties', async () => {
     const universeKey = parseNamespacedKey('search.test-pagination');
     const resourceType = parseNamespacedKey('search.temple');
 
@@ -203,6 +203,123 @@ describe('PrismaKnowledgeSearch', () => {
       },
     });
   });
+
+  it('ranks understandable Resource Type matches before recency and paginates the ranked order', async () => {
+    const universeKey = parseNamespacedKey('search.test-ranking');
+    const terminalExactType = parseNamespacedKey('search.temple');
+    const terminalPrefixType = parseNamespacedKey('search.temple-guide');
+    const fullKeyPrefixType = parseNamespacedKey('temple.archive');
+    const genericSubstringType = parseNamespacedKey('search.sacred-temple');
+
+    const terminalExactId = await createKnowledgeResource({
+      universeKey,
+      resourceType: terminalExactType,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+    });
+
+    const terminalPrefixId = await createKnowledgeResource({
+      universeKey,
+      resourceType: terminalPrefixType,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-01-02T00:00:00.000Z'),
+    });
+
+    const fullKeyPrefixId = await createKnowledgeResource({
+      universeKey,
+      resourceType: fullKeyPrefixType,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-01-03T00:00:00.000Z'),
+    });
+
+    const genericSubstringId = await createKnowledgeResource({
+      universeKey,
+      resourceType: genericSubstringType,
+      lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      createdAt: new Date('2026-01-04T00:00:00.000Z'),
+    });
+
+    const search = new PrismaKnowledgeSearch(database);
+
+    await expect(
+      search.search({
+        query: 'TEMPLE',
+        scope: {
+          kind: 'universe',
+          universeKey,
+        },
+        filter: {
+          resourceTypes: [],
+        },
+        pagination: {
+          offset: 0,
+          limit: 20,
+        },
+      }),
+    ).resolves.toEqual({
+      items: [
+        {
+          resourceId: terminalExactId,
+          resourceType: terminalExactType,
+          universeKey,
+        },
+        {
+          resourceId: terminalPrefixId,
+          resourceType: terminalPrefixType,
+          universeKey,
+        },
+        {
+          resourceId: fullKeyPrefixId,
+          resourceType: fullKeyPrefixType,
+          universeKey,
+        },
+        {
+          resourceId: genericSubstringId,
+          resourceType: genericSubstringType,
+          universeKey,
+        },
+      ],
+      pagination: {
+        offset: 0,
+        limit: 20,
+      },
+    });
+
+    await expect(
+      search.search({
+        query: 'temple',
+        scope: {
+          kind: 'universe',
+          universeKey,
+        },
+        filter: {
+          resourceTypes: [],
+        },
+        pagination: {
+          offset: 1,
+          limit: 2,
+        },
+      }),
+    ).resolves.toEqual({
+      items: [
+        {
+          resourceId: terminalPrefixId,
+          resourceType: terminalPrefixType,
+          universeKey,
+        },
+        {
+          resourceId: fullKeyPrefixId,
+          resourceType: fullKeyPrefixType,
+          universeKey,
+        },
+      ],
+      pagination: {
+        offset: 1,
+        limit: 2,
+      },
+    });
+  });
+
   it('composes global and Universe scope with exact Resource Type any-of filters', async () => {
     const alphaUniverseKey = parseNamespacedKey('search.test-filter-alpha');
     const betaUniverseKey = parseNamespacedKey('search.test-filter-beta');

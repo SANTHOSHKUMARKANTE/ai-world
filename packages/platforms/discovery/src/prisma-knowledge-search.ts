@@ -5,6 +5,12 @@ import { KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE } from '@ai-world/platform-knowl
 
 import type { SearchContract, SearchRequest, SearchResultPage } from './search-contract';
 
+interface KnowledgeSearchRow {
+  readonly id: string;
+  readonly universeKey: string;
+  readonly resourceType: string;
+}
+
 function assertSupportedKnowledgeSearchRequest(input: SearchRequest): void {
   if (!Number.isInteger(input.pagination.offset) || input.pagination.offset < 0) {
     throw new TypeError('Search pagination offset must be a non-negative integer.');
@@ -30,33 +36,36 @@ export class PrismaKnowledgeSearch implements SearchContract {
       };
     }
 
-    const resources = await this.database.knowledgeResource.findMany({
-      where: {
-        ...(input.scope.kind === 'universe'
-          ? {
-              universeKey: input.scope.universeKey,
-            }
-          : {}),
-        lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
-        resourceType: {
-          contains: query,
-          mode: 'insensitive',
-          ...(input.filter.resourceTypes.length === 0
-            ? {}
-            : {
-                in: [...input.filter.resourceTypes],
-              }),
-        },
-      },
-      select: {
-        id: true,
-        universeKey: true,
-        resourceType: true,
-      },
-      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
-      skip: input.pagination.offset,
-      take: input.pagination.limit,
-    });
+    const universeKey = input.scope.kind === 'universe' ? input.scope.universeKey : null;
+    const resourceTypeFilter = input.filter.resourceTypes.join(',');
+
+    const resources = await this.database.$queryRaw<KnowledgeSearchRow[]>`
+      SELECT
+        id,
+        universe_key AS "universeKey",
+        resource_type AS "resourceType"
+      FROM knowledge_resources
+      WHERE
+        (${universeKey}::text IS NULL OR universe_key = ${universeKey})
+        AND lifecycle = ${KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE}
+        AND strpos(lower(resource_type), lower(${query})) > 0
+        AND (
+          ${input.filter.resourceTypes.length}::int = 0
+          OR resource_type = ANY(string_to_array(${resourceTypeFilter}, ','))
+        )
+      ORDER BY
+        CASE
+          WHEN lower(resource_type) = lower(${query}) THEN 0
+          WHEN lower(split_part(resource_type, '.', -1)) = lower(${query}) THEN 1
+          WHEN starts_with(lower(split_part(resource_type, '.', -1)), lower(${query})) THEN 2
+          WHEN starts_with(lower(resource_type), lower(${query})) THEN 3
+          ELSE 4
+        END ASC,
+        created_at DESC,
+        id ASC
+      OFFSET ${input.pagination.offset}
+      LIMIT ${input.pagination.limit}
+    `;
 
     return {
       items: resources.map((resource) => ({

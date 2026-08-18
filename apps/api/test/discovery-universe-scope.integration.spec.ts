@@ -166,7 +166,7 @@ describe('Discovery Search across Devotional and Anime Universes', () => {
     });
   });
 
-  it('globally searches published Knowledge across both real Universes without broadening lifecycle visibility', async () => {
+  it('globally ranks published Knowledge across both real Universes without broadening lifecycle visibility', async () => {
     const devotionalPublishedId = await createKnowledgeResource({
       universeKey: DEVOTIONAL_UNIVERSE_KEY,
       resourceType: DEVOTIONAL_TEMPLE_RESOURCE_TYPE,
@@ -245,7 +245,7 @@ describe('Discovery Search across Devotional and Anime Universes', () => {
 
     expect(devotionalIndex).toBeGreaterThanOrEqual(0);
     expect(animeIndex).toBeGreaterThanOrEqual(0);
-    expect(devotionalIndex).toBeLessThan(animeIndex);
+    expect(animeIndex).toBeLessThan(devotionalIndex);
 
     expect(globalResults.pagination).toEqual({
       offset: 0,

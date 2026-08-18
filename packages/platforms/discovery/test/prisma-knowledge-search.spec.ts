@@ -8,17 +8,33 @@ import type { SearchRequest } from '../src/search-contract';
 
 function createDatabaseStub(): {
   readonly database: DatabaseClient;
-  readonly findMany: ReturnType<typeof vi.fn>;
+  readonly queryRaw: ReturnType<typeof vi.fn>;
 } {
-  const findMany = vi.fn();
+  const queryRaw = vi.fn();
 
   return {
     database: {
-      knowledgeResource: {
-        findMany,
-      },
+      $queryRaw: queryRaw,
     } as unknown as DatabaseClient,
-    findMany,
+    queryRaw,
+  };
+}
+
+function readRawQueryCall(queryRaw: ReturnType<typeof vi.fn>): {
+  readonly sql: string;
+  readonly values: readonly unknown[];
+} {
+  const call = queryRaw.mock.calls.at(0);
+
+  if (!call) {
+    throw new Error('Expected a PostgreSQL query call.');
+  }
+
+  const [template, ...values] = call;
+
+  return {
+    sql: (template as TemplateStringsArray).join(' ? ').replace(/\s+/g, ' ').trim(),
+    values,
   };
 }
 
@@ -41,8 +57,8 @@ function createUniverseRequest(overrides: Partial<SearchRequest> = {}): SearchRe
 }
 
 describe('PrismaKnowledgeSearch capability boundary', () => {
-  it('executes global Search without adding a Universe predicate', async () => {
-    const { database, findMany } = createDatabaseStub();
+  it('executes parameterized global PostgreSQL Search with understandable ranking', async () => {
+    const { database, queryRaw } = createDatabaseStub();
     const search = new PrismaKnowledgeSearch(database);
     const request = createUniverseRequest({
       scope: {
@@ -50,35 +66,49 @@ describe('PrismaKnowledgeSearch capability boundary', () => {
       },
     });
 
-    findMany.mockResolvedValue([]);
+    queryRaw.mockResolvedValue([]);
 
     await expect(search.search(request)).resolves.toEqual({
       items: [],
       pagination: request.pagination,
     });
 
-    expect(findMany).toHaveBeenCalledWith({
-      where: {
-        lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
-        resourceType: {
-          contains: 'temple',
-          mode: 'insensitive',
-        },
-      },
-      select: {
-        id: true,
-        universeKey: true,
-        resourceType: true,
-      },
-      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
-      skip: 0,
-      take: 20,
-    });
+    expect(queryRaw).toHaveBeenCalledTimes(1);
+
+    const { sql, values } = readRawQueryCall(queryRaw);
+
+    expect(sql).toContain('FROM knowledge_resources');
+    expect(sql).toContain('strpos(lower(resource_type), lower( ? )) > 0');
+    expect(sql).toContain("resource_type = ANY(string_to_array( ? , ','))");
+    expect(sql).toContain('WHEN lower(resource_type) = lower( ? ) THEN 0');
+    expect(sql).toContain("WHEN lower(split_part(resource_type, '.', -1)) = lower( ? ) THEN 1");
+    expect(sql).toContain(
+      "WHEN starts_with(lower(split_part(resource_type, '.', -1)), lower( ? )) THEN 2",
+    );
+    expect(sql).toContain('WHEN starts_with(lower(resource_type), lower( ? )) THEN 3');
+    expect(sql).toContain('created_at DESC');
+    expect(sql).toContain('id ASC');
+
+    expect(values).toEqual([
+      null,
+      null,
+      KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      'temple',
+      0,
+      '',
+      'temple',
+      'temple',
+      'temple',
+      'temple',
+      0,
+      20,
+    ]);
   });
 
-  it('executes exact Resource Type filters as an any-of constraint alongside Universe scope', async () => {
-    const { database, findMany } = createDatabaseStub();
+  it('parameterizes exact Resource Type filters alongside Universe scope', async () => {
+    const { database, queryRaw } = createDatabaseStub();
     const search = new PrismaKnowledgeSearch(database);
+    const universeKey = parseNamespacedKey('search.test-universe');
     const templeType = parseNamespacedKey('search.temple');
     const deityType = parseNamespacedKey('search.deity');
     const request = createUniverseRequest({
@@ -88,36 +118,35 @@ describe('PrismaKnowledgeSearch capability boundary', () => {
       },
     });
 
-    findMany.mockResolvedValue([]);
+    queryRaw.mockResolvedValue([]);
 
     await expect(search.search(request)).resolves.toEqual({
       items: [],
       pagination: request.pagination,
     });
 
-    expect(findMany).toHaveBeenCalledWith({
-      where: {
-        universeKey: parseNamespacedKey('search.test-universe'),
-        lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
-        resourceType: {
-          contains: '.',
-          mode: 'insensitive',
-          in: [templeType, deityType],
-        },
-      },
-      select: {
-        id: true,
-        universeKey: true,
-        resourceType: true,
-      },
-      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
-      skip: 0,
-      take: 20,
-    });
+    const { sql, values } = readRawQueryCall(queryRaw);
+
+    expect(sql).toContain('universe_key = ?');
+    expect(sql).toContain("resource_type = ANY(string_to_array( ? , ','))");
+    expect(values).toEqual([
+      universeKey,
+      universeKey,
+      KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+      '.',
+      2,
+      'search.temple,search.deity',
+      '.',
+      '.',
+      '.',
+      '.',
+      0,
+      20,
+    ]);
   });
 
   it('returns no results for a blank query without turning it into a broad listing', async () => {
-    const { database, findMany } = createDatabaseStub();
+    const { database, queryRaw } = createDatabaseStub();
     const search = new PrismaKnowledgeSearch(database);
     const request = createUniverseRequest({
       query: '   ',
@@ -128,11 +157,11 @@ describe('PrismaKnowledgeSearch capability boundary', () => {
       pagination: request.pagination,
     });
 
-    expect(findMany).not.toHaveBeenCalled();
+    expect(queryRaw).not.toHaveBeenCalled();
   });
 
   it('rejects invalid pagination before querying PostgreSQL', async () => {
-    const { database, findMany } = createDatabaseStub();
+    const { database, queryRaw } = createDatabaseStub();
     const search = new PrismaKnowledgeSearch(database);
 
     await expect(
@@ -146,6 +175,6 @@ describe('PrismaKnowledgeSearch capability boundary', () => {
       ),
     ).rejects.toThrow('offset');
 
-    expect(findMany).not.toHaveBeenCalled();
+    expect(queryRaw).not.toHaveBeenCalled();
   });
 });
