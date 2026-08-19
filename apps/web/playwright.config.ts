@@ -8,6 +8,7 @@ const apiOrigin = 'http://127.0.0.1:3001';
 const localDatabaseUrl = 'postgresql://ai_world:ai_world@127.0.0.1:55432/ai_world';
 
 const isCI = Boolean(process.env.CI);
+const useSystemChrome = process.env.PLAYWRIGHT_USE_SYSTEM_CHROME === 'true';
 
 function resolveDatabaseUrl(): string {
   const configuredDatabaseUrl = process.env.DATABASE_URL;
@@ -57,6 +58,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        ...(useSystemChrome ? { channel: 'chrome' } : {}),
       },
     },
   ],

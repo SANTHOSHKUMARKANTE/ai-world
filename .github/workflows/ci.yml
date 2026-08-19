@@ -78,10 +78,9 @@ jobs:
       - name: Run database integration tests
         run: pnpm run test:integration
 
-      - name: Install Playwright Chromium
-        run: pnpm --filter @ai-world/web exec playwright install --with-deps chromium
-
       - name: Run browser E2E tests
+        env:
+          PLAYWRIGHT_USE_SYSTEM_CHROME: 'true'
         run: pnpm run test:e2e
 
       - name: Build
