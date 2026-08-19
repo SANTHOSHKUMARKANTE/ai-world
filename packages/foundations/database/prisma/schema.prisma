@@ -19,6 +19,7 @@ model Actor {
   sessions           Session[]
   user               User?
   roleAssignments    ActorRole[]
+  generations        Generation[]
 
   @@map("identity_actors")
 }
@@ -211,4 +212,42 @@ model KnowledgeResourceAssetReference {
   @@id([knowledgeResourceId, assetId])
   @@index([assetId])
   @@map("knowledge_resource_asset_references")
+}
+
+model Generation {
+  id        String   @id @db.Uuid
+  actorId   String   @map("actor_id") @db.Uuid
+  status    String   @db.VarChar(32)
+  provider  String   @db.VarChar(64)
+  model     String?  @db.VarChar(128)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  actor   Actor              @relation(fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  request GenerationRequest?
+  result  GenerationResult?
+
+  @@index([actorId])
+  @@map("ai_generations")
+}
+
+model GenerationRequest {
+  generationId String   @id @map("generation_id") @db.Uuid
+  input        String   @db.Text
+  instructions String?  @db.Text
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  generation Generation @relation(fields: [generationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("ai_generation_requests")
+}
+
+model GenerationResult {
+  generationId String   @id @map("generation_id") @db.Uuid
+  text         String   @db.Text
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  generation Generation @relation(fields: [generationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("ai_generation_results")
 }
