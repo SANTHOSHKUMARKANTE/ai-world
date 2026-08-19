@@ -41,7 +41,7 @@
     },
     "test:e2e": {
       "cache": false,
-      "passThroughEnv": ["DATABASE_URL"]
+      "passThroughEnv": ["DATABASE_URL", "PLAYWRIGHT_USE_SYSTEM_CHROME"]
     }
   }
 }
