@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform ACTIVE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform ACTIVE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -832,6 +832,9 @@ P7-M05 — Authorized AI Context
 CLOSED
 
 P7-M06 — AI Provenance
+CLOSED
+
+P7-M07 — Safety Baseline
 NEXT
 ```
 
@@ -20180,6 +20183,258 @@ when;
 
 who requested it.
 ```
+
+---
+
+## P7-M06 CLOSURE RECORD
+
+P7-M06 — AI Provenance is CLOSED.
+
+The canonical implementation commit is:
+
+```text
+a7dd142693fb7425f30b2a4915d4e4e4ffdb03a3
+feat(ai): implement generation provenance
+```
+
+Its exact successful GitHub Actions implementation CI is:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32339994138
+
+CI NUMBER
+#127
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+WORKFLOW DURATION
+3m 0s
+(180 seconds)
+
+VALIDATE JOB DURATION
+2m 57s
+(177 seconds)
+
+BROWSER E2E DURATION
+27s
+(27 seconds)
+
+BUILD DURATION
+11s
+(11 seconds)
+
+ARCHITECTURE DURATION
+9s
+(9 seconds)
+```
+
+P7-M06 closes the minimum Generation-owned provenance model needed to answer:
+
+```text
+which Provider
+
+which model
+
+which task
+
+which source context
+
+when
+
+who requested it
+```
+
+The existing Generation remains canonical for:
+
+```text
+requesting Actor
+→ Generation.actorId
+
+Provider
+→ Generation.provider
+
+actual model when known
+→ Generation.model
+
+Generation time
+→ Generation.createdAt
+```
+
+P7-M06 adds the missing Generation-owned evidence:
+
+```text
+Generation
+  ↓
+GenerationProvenance
+  task
+  sourceContext?
+  createdAt
+```
+
+The persistence table is:
+
+```text
+ai_generation_provenance
+```
+
+with a one-to-one Generation relationship and:
+
+```text
+ON DELETE CASCADE
+ON UPDATE CASCADE
+```
+
+The authorized source-context snapshot contains only stable identifiers already obtained through the P7-M05 authorized-context boundary:
+
+```text
+Universe key
+
+Knowledge Resource ID
+
+Knowledge Resource type
+
+Knowledge Resource Universe
+```
+
+P7-M06 deliberately does not duplicate the User display name.
+
+Requester identity remains represented by:
+
+```text
+Generation.actorId
+```
+
+Provenance is created atomically with the REQUESTED Generation and GenerationRequest before Provider execution.
+
+Therefore both Provider success and Provider failure retain:
+
+```text
+requester
+
+Provider
+
+task
+
+source context
+
+timestamp
+```
+
+and successful completion additionally records the actual returned model through the existing Generation lifecycle.
+
+Default task identifiers established by P7-M06 are:
+
+```text
+ai.text-generation
+
+ai.authorized-text-generation
+```
+
+while callers may supply a more specific task identifier when the real use case knows one.
+
+The implementation commit contains exactly:
+
+```text
+packages/foundations/database/prisma/migrations/20260820113000_ai_generation_provenance/migration.sql
+packages/foundations/database/prisma/schema.prisma
+packages/platforms/ai-creator/src/generate-text-with-authorized-context.ts
+packages/platforms/ai-creator/src/generate-text.ts
+packages/platforms/ai-creator/src/generation-writer.ts
+packages/platforms/ai-creator/src/generation.ts
+packages/platforms/ai-creator/src/index.ts
+packages/platforms/ai-creator/src/prisma-generation-repository.ts
+packages/platforms/ai-creator/test/generate-text-with-authorized-context.spec.ts
+packages/platforms/ai-creator/test/generation-provenance.integration.spec.ts
+```
+
+P7-M06 adds exactly one migration.
+
+Canonical migration count is now:
+
+```text
+17
+```
+
+Validated real PostgreSQL behavior includes:
+
+```text
+REQUESTED Generation provenance exists before Provider execution
+
+task and authorized source-context snapshot persist before Provider execution
+
+successful Provider result retains provenance and records actual model
+
+Provider failure retains provenance with model null and no GenerationResult
+
+existing authorized-context generation remains compatible
+
+existing text-generation lifecycle remains compatible
+
+existing Generation model persistence remains compatible
+```
+
+No `package.json` or `pnpm-lock.yaml` dependency change was required.
+
+P7-M06 intentionally does not introduce:
+
+```text
+P7-M07 safety-policy implementation
+
+generic input-validation framework
+
+tool restriction framework
+
+output-schema validation framework
+
+sensitive-data policy framework
+
+failure-control framework expansion
+
+P7-M08 canonical acceptance flow
+
+NestJS generation endpoint
+
+Web generation UI
+
+RAG
+
+embeddings or vector database
+
+tools
+
+agents or MCP
+
+queue/worker infrastructure
+
+retry framework
+
+token/usage/cost accounting
+```
+
+Those concerns remain governed by later Phase 7 milestones.
+
+P7-M07 — Safety Baseline is NEXT.
+
+P7-M07 remains blocked until this roadmap-only closure commit itself completes exact green CI.
+
+This closure changes governance documentation only.
 
 ---
 
