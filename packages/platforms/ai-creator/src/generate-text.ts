@@ -3,7 +3,13 @@ import type { PermissionEvaluationReader } from '@ai-world/platform-identity-acc
 
 import { AiGenerationSafety } from './ai-generation-safety';
 import type { AiProviderPort } from './ai-provider-port';
-import type { Generation, GenerationSourceContext } from './generation';
+import {
+  GENERATION_INVALID_OUTPUT_FAILURE_KIND,
+  GENERATION_PROVIDER_ERROR_FAILURE_KIND,
+  type Generation,
+  type GenerationFailureKind,
+  type GenerationSourceContext,
+} from './generation';
 import type { GenerationWriter } from './generation-writer';
 
 export const AI_TEXT_GENERATION_TASK = 'ai.text-generation' as const;
@@ -19,10 +25,24 @@ export interface GenerateTextInput {
 export interface GenerateTextConfig {
   readonly provider: string;
   readonly permissions: PermissionEvaluationReader;
+  readonly nowMilliseconds?: () => number;
+}
+
+export const AI_PROVIDER_LATENCY_MAX_MS = 2_147_483_647;
+
+function providerLatencyMilliseconds(startedAt: number, finishedAt: number): number {
+  const elapsed = Math.round(finishedAt - startedAt);
+
+  if (!Number.isFinite(elapsed)) {
+    return AI_PROVIDER_LATENCY_MAX_MS;
+  }
+
+  return Math.min(AI_PROVIDER_LATENCY_MAX_MS, Math.max(0, elapsed));
 }
 
 export class GenerateText {
   private readonly safety: AiGenerationSafety;
+  private readonly nowMilliseconds: () => number;
 
   constructor(
     private readonly provider: AiProviderPort,
@@ -30,11 +50,19 @@ export class GenerateText {
     private readonly config: GenerateTextConfig,
   ) {
     this.safety = new AiGenerationSafety(config.permissions);
+    this.nowMilliseconds = config.nowMilliseconds ?? Date.now;
   }
 
-  private async failGeneration(generationId: ResourceId, error: unknown): Promise<never> {
+  private async failGeneration(
+    generationId: ResourceId,
+    error: unknown,
+    providerLatencyMs: number,
+    failureKind: GenerationFailureKind,
+  ): Promise<never> {
     const failedGeneration = await this.writer.markFailed({
       id: generationId,
+      providerLatencyMs,
+      failureKind,
     });
 
     if (!failedGeneration) {
@@ -74,24 +102,47 @@ export class GenerateText {
       ...(input.instructions === undefined ? {} : { instructions: input.instructions }),
     });
 
+    const providerStartedAt = this.nowMilliseconds();
     let providerResult: unknown;
 
     try {
       providerResult = await this.provider.generateText(providerRequest);
     } catch (error) {
-      return this.failGeneration(generationId, error);
+      const providerLatencyMs = providerLatencyMilliseconds(
+        providerStartedAt,
+        this.nowMilliseconds(),
+      );
+
+      return this.failGeneration(
+        generationId,
+        error,
+        providerLatencyMs,
+        GENERATION_PROVIDER_ERROR_FAILURE_KIND,
+      );
     }
+
+    const providerLatencyMs = providerLatencyMilliseconds(
+      providerStartedAt,
+      this.nowMilliseconds(),
+    );
 
     try {
       this.safety.assertProviderResult(providerResult);
     } catch (error) {
-      return this.failGeneration(generationId, error);
+      return this.failGeneration(
+        generationId,
+        error,
+        providerLatencyMs,
+        GENERATION_INVALID_OUTPUT_FAILURE_KIND,
+      );
     }
 
     const succeededGeneration = await this.writer.markSucceeded({
       id: generationId,
       model: providerResult.model,
       text: providerResult.text,
+      providerLatencyMs,
+      ...(providerResult.usage === undefined ? {} : { usage: providerResult.usage }),
     });
 
     if (!succeededGeneration) {

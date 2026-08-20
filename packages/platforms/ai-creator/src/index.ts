@@ -2,26 +2,31 @@ export type {
   AiProviderPort,
   AiProviderTextRequest,
   AiProviderTextResult,
+  AiProviderTextUsage,
 } from './ai-provider-port';
 
 export {
   GENERATION_FAILED_STATUS,
   GENERATION_INITIAL_STATUS,
+  GENERATION_INVALID_OUTPUT_FAILURE_KIND,
+  GENERATION_PROVIDER_ERROR_FAILURE_KIND,
   GENERATION_SUCCEEDED_STATUS,
   isGenerationStatus,
 } from './generation';
 
 export type {
   Generation,
+  GenerationFailureKind,
   GenerationKnowledgeSourceContext,
   GenerationProvenance,
   GenerationRequest,
   GenerationResult,
   GenerationSourceContext,
   GenerationStatus,
+  GenerationUsage,
 } from './generation';
 
-export { AI_TEXT_GENERATION_TASK, GenerateText } from './generate-text';
+export { AI_PROVIDER_LATENCY_MAX_MS, AI_TEXT_GENERATION_TASK, GenerateText } from './generate-text';
 export type { GenerateTextConfig, GenerateTextInput } from './generate-text';
 
 export type {
@@ -59,6 +64,7 @@ export {
   AI_TEXT_SOURCE_CONTEXT_MAX_RESOURCES,
   AI_TEXT_TASK_MAX_LENGTH,
   AI_TEXT_TOOL_ACCESS,
+  AI_USAGE_TOKEN_MAX,
   AiGenerationSafety,
   AiGenerationSafetyError,
 } from './ai-generation-safety';

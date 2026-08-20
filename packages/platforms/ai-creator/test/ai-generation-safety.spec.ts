@@ -10,6 +10,7 @@ import {
   AI_TEXT_OUTPUT_MAX_LENGTH,
   AI_TEXT_SOURCE_CONTEXT_MAX_RESOURCES,
   AI_TEXT_TOOL_ACCESS,
+  AI_USAGE_TOKEN_MAX,
   AiGenerationSafety,
   AiGenerationSafetyError,
 } from '../src';
@@ -183,6 +184,11 @@ describe('AiGenerationSafety', () => {
       safety.assertProviderResult({
         text: 'Valid.',
         model: 'model.actual',
+        usage: {
+          inputTokens: 10,
+          outputTokens: 5,
+          totalTokens: 15,
+        },
       }),
     ).not.toThrow();
 
@@ -193,6 +199,24 @@ describe('AiGenerationSafety', () => {
       { text: 'x'.repeat(AI_TEXT_OUTPUT_MAX_LENGTH + 1), model: 'model.actual' },
       { text: 'Valid.', model: 'm'.repeat(AI_TEXT_MODEL_MAX_LENGTH + 1) },
       { text: 'Valid.', model: '' },
+      {
+        text: 'Valid.',
+        model: 'model.actual',
+        usage: {
+          inputTokens: -1,
+          outputTokens: 1,
+          totalTokens: 1,
+        },
+      },
+      {
+        text: 'Valid.',
+        model: 'model.actual',
+        usage: {
+          inputTokens: AI_USAGE_TOKEN_MAX + 1,
+          outputTokens: 1,
+          totalTokens: AI_USAGE_TOKEN_MAX + 1,
+        },
+      },
     ]) {
       expect(() => safety.assertProviderResult(result)).toThrow(AiGenerationSafetyError);
     }

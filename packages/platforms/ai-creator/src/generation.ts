@@ -10,6 +10,12 @@ export type GenerationStatus =
   | typeof GENERATION_SUCCEEDED_STATUS
   | typeof GENERATION_FAILED_STATUS;
 
+export const GENERATION_PROVIDER_ERROR_FAILURE_KIND = 'PROVIDER_ERROR' as const;
+export const GENERATION_INVALID_OUTPUT_FAILURE_KIND = 'INVALID_OUTPUT' as const;
+
+export type GenerationFailureKind =
+  typeof GENERATION_PROVIDER_ERROR_FAILURE_KIND | typeof GENERATION_INVALID_OUTPUT_FAILURE_KIND;
+
 export interface GenerationRequest {
   readonly input: string;
   readonly instructions?: string;
@@ -38,6 +44,15 @@ export interface GenerationProvenance {
   readonly createdAt: Date;
 }
 
+export interface GenerationUsage {
+  readonly providerLatencyMs: number;
+  readonly inputTokens: number | null;
+  readonly outputTokens: number | null;
+  readonly totalTokens: number | null;
+  readonly failureKind: GenerationFailureKind | null;
+  readonly createdAt: Date;
+}
+
 export interface Generation {
   readonly id: ResourceId;
   readonly actorId: ResourceId;
@@ -47,6 +62,7 @@ export interface Generation {
   readonly request: GenerationRequest;
   readonly result: GenerationResult | null;
   readonly provenance?: GenerationProvenance | null;
+  readonly usage?: GenerationUsage | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }

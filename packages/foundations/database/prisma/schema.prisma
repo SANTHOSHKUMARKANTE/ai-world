@@ -227,6 +227,7 @@ model Generation {
   request    GenerationRequest?
   result     GenerationResult?
   provenance GenerationProvenance?
+  usage      GenerationUsage?
 
   @@index([actorId])
   @@map("ai_generations")
@@ -262,4 +263,18 @@ model GenerationProvenance {
   generation Generation @relation(fields: [generationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("ai_generation_provenance")
+}
+
+model GenerationUsage {
+  generationId      String   @id @map("generation_id") @db.Uuid
+  providerLatencyMs Int      @map("provider_latency_ms")
+  inputTokens       Int?     @map("input_tokens")
+  outputTokens      Int?     @map("output_tokens")
+  totalTokens       Int?     @map("total_tokens")
+  failureKind       String?  @map("failure_kind") @db.VarChar(32)
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  generation Generation @relation(fields: [generationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("ai_generation_usage")
 }

@@ -19,9 +19,16 @@ interface OpenAiResponseRequest {
   readonly store: false;
 }
 
+interface OpenAiResponseUsage {
+  readonly input_tokens: number;
+  readonly output_tokens: number;
+  readonly total_tokens: number;
+}
+
 interface OpenAiResponseResult {
   readonly output_text: string;
   readonly model: string;
+  readonly usage?: OpenAiResponseUsage | null;
 }
 
 type CreateOpenAiResponse = (request: OpenAiResponseRequest) => Promise<OpenAiResponseResult>;
@@ -42,6 +49,15 @@ export class OpenAiProviderAdapter implements AiProviderPort {
     return {
       text: response.output_text,
       model: response.model,
+      ...(response.usage == null
+        ? {}
+        : {
+            usage: {
+              inputTokens: response.usage.input_tokens,
+              outputTokens: response.usage.output_tokens,
+              totalTokens: response.usage.total_tokens,
+            },
+          }),
     };
   }
 }

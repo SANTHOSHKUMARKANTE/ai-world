@@ -8,6 +8,11 @@ function createTestProvider(): AiProviderPort {
       return Promise.resolve({
         text: request.input,
         model: 'test-model',
+        usage: {
+          inputTokens: 12,
+          outputTokens: 3,
+          totalTokens: 15,
+        },
       });
     },
   };
@@ -25,6 +30,11 @@ describe('AiProviderPort', () => {
     expect(result).toEqual({
       text: 'Canonical Knowledge remains owned by Knowledge.',
       model: 'test-model',
+      usage: {
+        inputTokens: 12,
+        outputTokens: 3,
+        totalTokens: 15,
+      },
     });
   });
 
@@ -38,6 +48,11 @@ describe('AiProviderPort', () => {
     ).resolves.toEqual({
       text: 'Generate text without Provider-specific request types.',
       model: 'test-model',
+      usage: {
+        inputTokens: 12,
+        outputTokens: 3,
+        totalTokens: 15,
+      },
     });
   });
 });

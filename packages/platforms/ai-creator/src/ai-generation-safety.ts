@@ -13,6 +13,7 @@ export const AI_TEXT_OUTPUT_MAX_LENGTH = 50_000;
 export const AI_TEXT_MODEL_MAX_LENGTH = 128;
 export const AI_TEXT_TASK_MAX_LENGTH = 128;
 export const AI_TEXT_SOURCE_CONTEXT_MAX_RESOURCES = 10;
+export const AI_USAGE_TOKEN_MAX = 2_147_483_647;
 
 export const AI_TEXT_TOOL_ACCESS = 'DISABLED' as const;
 
@@ -168,6 +169,7 @@ export class AiGenerationSafety {
     const candidate = result as {
       readonly text?: unknown;
       readonly model?: unknown;
+      readonly usage?: unknown;
     };
 
     if (
@@ -184,6 +186,29 @@ export class AiGenerationSafety {
       candidate.model.length > AI_TEXT_MODEL_MAX_LENGTH
     ) {
       fail('INVALID_OUTPUT', 'AI Provider returned an invalid model identifier.');
+    }
+
+    if (candidate.usage !== undefined) {
+      if (typeof candidate.usage !== 'object' || candidate.usage === null) {
+        fail('INVALID_OUTPUT', 'AI Provider returned invalid usage metadata.');
+      }
+
+      const usage = candidate.usage as {
+        readonly inputTokens?: unknown;
+        readonly outputTokens?: unknown;
+        readonly totalTokens?: unknown;
+      };
+
+      for (const value of [usage.inputTokens, usage.outputTokens, usage.totalTokens]) {
+        if (
+          typeof value !== 'number' ||
+          !Number.isSafeInteger(value) ||
+          value < 0 ||
+          value > AI_USAGE_TOKEN_MAX
+        ) {
+          fail('INVALID_OUTPUT', 'AI Provider returned invalid token usage.');
+        }
+      }
     }
   }
 }

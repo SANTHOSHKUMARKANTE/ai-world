@@ -16,6 +16,11 @@ describe('OpenAiProviderAdapter', () => {
       return {
         output_text: 'A concise AI World draft.',
         model: 'gpt-5.6-terra',
+        usage: {
+          input_tokens: 21,
+          output_tokens: 7,
+          total_tokens: 28,
+        },
       };
     });
 
@@ -36,6 +41,11 @@ describe('OpenAiProviderAdapter', () => {
     expect(result).toEqual({
       text: 'A concise AI World draft.',
       model: 'gpt-5.6-terra',
+      usage: {
+        inputTokens: 21,
+        outputTokens: 7,
+        totalTokens: 28,
+      },
     });
   });
 

@@ -8,6 +8,7 @@ import {
   GENERATION_SUCCEEDED_STATUS,
   isGenerationStatus,
   type Generation,
+  type GenerationFailureKind,
   type GenerationSourceContext,
 } from './generation';
 import type {
@@ -35,6 +36,15 @@ interface PersistedGenerationProvenance {
   readonly createdAt: Date;
 }
 
+interface PersistedGenerationUsage {
+  readonly providerLatencyMs: number;
+  readonly inputTokens: number | null;
+  readonly outputTokens: number | null;
+  readonly totalTokens: number | null;
+  readonly failureKind: string | null;
+  readonly createdAt: Date;
+}
+
 interface PersistedGeneration {
   readonly id: string;
   readonly actorId: string;
@@ -44,6 +54,7 @@ interface PersistedGeneration {
   readonly request: PersistedGenerationRequest | null;
   readonly result: PersistedGenerationResult | null;
   readonly provenance: PersistedGenerationProvenance | null;
+  readonly usage: PersistedGenerationUsage | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -97,6 +108,14 @@ function serializeSourceContext(context: GenerationSourceContext) {
   };
 }
 
+function mapFailureKind(value: string | null): GenerationFailureKind | null {
+  if (value === null || value === 'PROVIDER_ERROR' || value === 'INVALID_OUTPUT') {
+    return value;
+  }
+
+  throw new TypeError(`Persisted Generation usage has unsupported failure kind: ${value}`);
+}
+
 function mapPersistedGeneration(generation: PersistedGeneration): Generation {
   if (!isGenerationStatus(generation.status)) {
     throw new TypeError(`Persisted Generation has unsupported status: ${generation.status}`);
@@ -132,6 +151,16 @@ function mapPersistedGeneration(generation: PersistedGeneration): Generation {
           createdAt: generation.provenance.createdAt,
         }
       : null,
+    usage: generation.usage
+      ? {
+          providerLatencyMs: generation.usage.providerLatencyMs,
+          inputTokens: generation.usage.inputTokens,
+          outputTokens: generation.usage.outputTokens,
+          totalTokens: generation.usage.totalTokens,
+          failureKind: mapFailureKind(generation.usage.failureKind),
+          createdAt: generation.usage.createdAt,
+        }
+      : null,
     createdAt: generation.createdAt,
     updatedAt: generation.updatedAt,
   };
@@ -141,6 +170,7 @@ const generationInclude = {
   request: true,
   result: true,
   provenance: true,
+  usage: true,
 } as const;
 
 export class PrismaGenerationRepository implements GenerationWriter, GenerationReader {
@@ -209,6 +239,20 @@ export class PrismaGenerationRepository implements GenerationWriter, GenerationR
         },
       });
 
+      await transaction.generationUsage.create({
+        data: {
+          generationId: input.id,
+          providerLatencyMs: input.providerLatencyMs,
+          ...(input.usage === undefined
+            ? {}
+            : {
+                inputTokens: input.usage.inputTokens,
+                outputTokens: input.usage.outputTokens,
+                totalTokens: input.usage.totalTokens,
+              }),
+        },
+      });
+
       return transaction.generation.findUnique({
         where: {
           id: input.id,
@@ -235,6 +279,14 @@ export class PrismaGenerationRepository implements GenerationWriter, GenerationR
       if (transition.count !== 1) {
         return null;
       }
+
+      await transaction.generationUsage.create({
+        data: {
+          generationId: input.id,
+          providerLatencyMs: input.providerLatencyMs,
+          failureKind: input.failureKind,
+        },
+      });
 
       return transaction.generation.findUnique({
         where: {
