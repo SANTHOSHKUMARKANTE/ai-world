@@ -10,6 +10,7 @@ import {
   type AiProviderPort,
 } from '../src';
 import { PrismaGenerationRepository } from '../src/infrastructure';
+import { allowAiGenerationPermission } from './support/allow-ai-generation-permission';
 
 function requireDatabaseUrl(): string {
   const databaseUrl = process.env.DATABASE_URL;
@@ -111,6 +112,7 @@ describe('Text generation vertical slice', () => {
 
     const generateText = new GenerateText(provider, repository, {
       provider: 'provider.test',
+      permissions: allowAiGenerationPermission,
     });
 
     const generation = await generateText.execute({
@@ -164,6 +166,7 @@ describe('Text generation vertical slice', () => {
 
     const generateText = new GenerateText(provider, repository, {
       provider: 'provider.test',
+      permissions: allowAiGenerationPermission,
     });
 
     await expect(

@@ -294,6 +294,9 @@ importers:
       '@ai-world/kernel-namespace':
         specifier: workspace:*
         version: link:../../kernel/namespace
+      '@ai-world/platform-identity-access':
+        specifier: workspace:*
+        version: link:../identity-access
       '@ai-world/platform-discovery':
         specifier: workspace:*
         version: link:../discovery

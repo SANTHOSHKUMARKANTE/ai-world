@@ -5,6 +5,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { GenerateText, type AiProviderPort, type GenerationSourceContext } from '../src';
 import { PrismaGenerationRepository } from '../src/infrastructure';
+import { allowAiGenerationPermission } from './support/allow-ai-generation-permission';
 
 function requireDatabaseUrl(): string {
   const databaseUrl = process.env.DATABASE_URL;
@@ -122,6 +123,7 @@ describe('Generation provenance', () => {
 
     const generateText = new GenerateText(provider, new PrismaGenerationRepository(database), {
       provider: 'provider.test',
+      permissions: allowAiGenerationPermission,
     });
 
     const generation = await generateText.execute({
@@ -187,6 +189,7 @@ describe('Generation provenance', () => {
 
     const generateText = new GenerateText(provider, new PrismaGenerationRepository(database), {
       provider: 'provider.test',
+      permissions: allowAiGenerationPermission,
     });
 
     await expect(

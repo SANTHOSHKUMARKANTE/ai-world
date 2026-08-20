@@ -49,3 +49,21 @@ export {
 } from './generate-text-with-authorized-context';
 
 export type { GenerateTextWithAuthorizedContextInput } from './generate-text-with-authorized-context';
+
+export {
+  AI_GENERATE_PERMISSION_KEY,
+  AI_TEXT_INPUT_MAX_LENGTH,
+  AI_TEXT_INSTRUCTIONS_MAX_LENGTH,
+  AI_TEXT_MODEL_MAX_LENGTH,
+  AI_TEXT_OUTPUT_MAX_LENGTH,
+  AI_TEXT_SOURCE_CONTEXT_MAX_RESOURCES,
+  AI_TEXT_TASK_MAX_LENGTH,
+  AI_TEXT_TOOL_ACCESS,
+  AiGenerationSafety,
+  AiGenerationSafetyError,
+} from './ai-generation-safety';
+
+export type {
+  AiGenerationSafetyErrorCode,
+  AiGenerationSafetyRequest,
+} from './ai-generation-safety';

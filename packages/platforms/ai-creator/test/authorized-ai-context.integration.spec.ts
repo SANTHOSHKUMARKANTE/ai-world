@@ -12,6 +12,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { GenerateText, GenerateTextWithAuthorizedContext, type AiProviderPort } from '../src';
 import { PlatformAuthorizedAiContext, PrismaGenerationRepository } from '../src/infrastructure';
+import { allowAiGenerationPermission } from './support/allow-ai-generation-permission';
 
 function requireDatabaseUrl(): string {
   const databaseUrl = process.env.DATABASE_URL;
@@ -170,6 +171,7 @@ describe('Authorized AI context vertical slice', () => {
 
     const generateText = new GenerateText(provider, new PrismaGenerationRepository(database), {
       provider: 'provider.test',
+      permissions: allowAiGenerationPermission,
     });
 
     const useCase = new GenerateTextWithAuthorizedContext(authorizedContext, generateText);
