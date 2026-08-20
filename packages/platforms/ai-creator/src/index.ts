@@ -17,3 +17,13 @@ export type {
   GenerationResult,
   GenerationStatus,
 } from './generation';
+
+export { GenerateText } from './generate-text';
+export type { GenerateTextConfig, GenerateTextInput } from './generate-text';
+
+export type {
+  CreateRequestedGenerationInput,
+  GenerationWriter,
+  MarkGenerationFailedInput,
+  MarkGenerationSucceededInput,
+} from './generation-writer';

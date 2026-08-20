@@ -285,6 +285,9 @@ importers:
 
   packages/platforms/ai-creator:
     dependencies:
+      '@ai-world/foundation-database':
+        specifier: workspace:*
+        version: link:../../foundations/database
       '@ai-world/kernel-identifiers':
         specifier: workspace:*
         version: link:../../kernel/identifiers
@@ -292,9 +295,6 @@ importers:
         specifier: 7.5.0
         version: 7.5.0(zod@4.4.3)
     devDependencies:
-      '@ai-world/foundation-database':
-        specifier: workspace:*
-        version: link:../../foundations/database
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3
