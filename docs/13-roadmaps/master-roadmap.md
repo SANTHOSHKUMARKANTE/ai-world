@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform ACTIVE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform ACTIVE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -835,6 +835,9 @@ P7-M06 — AI Provenance
 CLOSED
 
 P7-M07 — Safety Baseline
+CLOSED
+
+P7-M08 — Canonical Acceptance Flow
 NEXT
 ```
 
@@ -20455,6 +20458,349 @@ sensitive-data handling;
 
 failure controls.
 ```
+
+---
+
+## P7-M07 CLOSURE RECORD
+
+P7-M07 — Safety Baseline is CLOSED.
+
+The canonical implementation commit is:
+
+```text
+7fb7ac5308fbe776c6abb7c66b1ac171e650ea5d
+feat(ai): implement safety baseline
+```
+
+Its exact successful GitHub Actions implementation CI is:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32365848716
+
+CI NUMBER
+#129
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+WORKFLOW DURATION
+3m 4s
+(184 seconds)
+
+VALIDATE JOB DURATION
+3m 1s
+(181 seconds)
+
+BROWSER E2E DURATION
+23s
+(23 seconds)
+
+BUILD DURATION
+11s
+(11 seconds)
+
+ARCHITECTURE DURATION
+9s
+(9 seconds)
+```
+
+P7-M07 establishes a mandatory text-generation safety boundary inside the existing GenerateText path:
+
+```text
+Actor
+  ↓
+GenerateText
+  ↓
+bounded input / task / source-context validation
+  ↓
+credential-like sensitive-data rejection
+  ↓
+Identity PermissionEvaluationReader
+  ai.generate
+  ↓
+REQUESTED Generation + provenance
+  ↓
+allowlisted text-only Provider request
+  ↓
+AiProviderPort
+  ↓
+runtime text/model output validation
+  ↓
+SUCCEEDED
+```
+
+The safety boundary is not an optional wrapper.
+
+Every GenerateText execution requires:
+
+```text
+GenerateTextConfig.permissions
+```
+
+and evaluates the existing public Identity contract:
+
+```text
+PermissionEvaluationReader.hasPermission
+```
+
+using:
+
+```text
+ai.generate
+```
+
+P7-M07 adds the `ai.generate` permission and grants it conservatively to the existing:
+
+```text
+administrator
+```
+
+role.
+
+The permission migration is:
+
+```text
+20260820164000_ai_generation_permission
+```
+
+No Prisma schema change was required.
+
+Canonical migration count is now:
+
+```text
+18
+```
+
+Input validation establishes bounded text-generation limits:
+
+```text
+AI input
+non-blank
+max 20,000 characters
+no NUL characters
+
+instructions
+max 10,000 characters
+
+task
+namespaced identifier
+max 128 characters
+
+authorized source context
+max 10 Knowledge Resources
+no duplicate Resource IDs
+no cross-Universe Resource entries
+```
+
+Tool access remains structurally:
+
+```text
+DISABLED
+```
+
+The Provider Port still exposes no tool execution surface.
+
+Provider requests are rebuilt from an allowlist containing only:
+
+```text
+input
+
+instructions
+```
+
+so unexpected runtime properties are not forwarded to the Provider.
+
+Sensitive-data handling rejects credential-like material before Generation persistence and before Provider transfer.
+
+The first safety baseline covers:
+
+```text
+private-key material
+
+Bearer credentials
+
+OpenAI-style secret-key patterns
+
+AWS access-key identifiers
+
+explicit password / secret / API-key / access-token assignments
+```
+
+The safety error does not echo the detected credential value.
+
+P7-M07 does not claim a universal PII or DLP platform.
+
+Provider output is validated at runtime.
+
+The text-generation output contract requires:
+
+```text
+generated text
+non-empty
+max 50,000 characters
+
+model identifier
+non-empty
+max 128 characters
+```
+
+The model limit intentionally matches the canonical persistence constraint:
+
+```text
+Generation.model
+VARCHAR(128)
+```
+
+Provider exceptions and invalid Provider output use the existing failure-control path:
+
+```text
+REQUESTED
+  ↓
+FAILED
+```
+
+Invalid Provider output therefore does not fabricate:
+
+```text
+model
+
+GenerationResult
+```
+
+while existing provenance remains retained.
+
+Requests rejected before Provider execution do not create a Generation.
+
+Validated rejection paths include:
+
+```text
+invalid input
+
+permission denied
+
+credential-like sensitive data
+```
+
+Validated real PostgreSQL behavior includes:
+
+```text
+Administrator with ai.generate can execute generation
+
+Actor without ai.generate is denied before persistence and Provider execution
+
+credential-like input is denied before persistence and Provider transfer
+
+Provider output with invalid text transitions Generation to FAILED
+
+Provider model identifier longer than 128 characters is rejected as INVALID_OUTPUT
+before persistence of an invalid model and transitions Generation to FAILED
+
+failed output validation retains Generation provenance
+
+existing P7-M04 text generation remains compatible
+
+existing P7-M05 authorized-context generation remains compatible
+
+existing P7-M06 provenance remains compatible
+```
+
+The implementation commit contains exactly:
+
+```text
+packages/foundations/database/prisma/migrations/20260820164000_ai_generation_permission/migration.sql
+packages/platforms/ai-creator/package.json
+packages/platforms/ai-creator/src/ai-generation-safety.ts
+packages/platforms/ai-creator/src/generate-text.ts
+packages/platforms/ai-creator/src/index.ts
+packages/platforms/ai-creator/test/ai-generation-safety.integration.spec.ts
+packages/platforms/ai-creator/test/ai-generation-safety.spec.ts
+packages/platforms/ai-creator/test/authorized-ai-context.integration.spec.ts
+packages/platforms/ai-creator/test/generate-text.spec.ts
+packages/platforms/ai-creator/test/generation-provenance.integration.spec.ts
+packages/platforms/ai-creator/test/support/allow-ai-generation-permission.ts
+packages/platforms/ai-creator/test/text-generation.integration.spec.ts
+pnpm-lock.yaml
+```
+
+The only new AI Creator workspace dependency is:
+
+```text
+@ai-world/platform-identity-access
+```
+
+OpenAI SDK remains exactly:
+
+```text
+7.5.0
+```
+
+P7-M07 intentionally does not introduce:
+
+```text
+P7-M08 Creator review / canonical acceptance
+
+canonical Knowledge/Media/CMS mutation
+
+AI Tool execution
+
+RAG
+
+embeddings or vector database
+
+agents or MCP
+
+queue/worker infrastructure
+
+retry framework
+
+token/usage/cost accounting
+
+a universal PII/DLP platform
+
+NestJS generation endpoint
+
+Web generation UI
+```
+
+P7-M08 — Canonical Acceptance Flow is NEXT.
+
+P7-M08 must prove:
+
+```text
+AI generates candidate
+        ↓
+Creator reviews
+        ↓
+Knowledge/Media/CMS owner accepts
+        ↓
+canonical Resource changes
+```
+
+The AI Source-of-Truth rule remains unchanged:
+
+```text
+Generation Result is not canonical Knowledge merely because a model produced it.
+```
+
+P7-M08 remains blocked until this roadmap-only closure commit itself completes exact green CI.
+
+This closure changes governance documentation only.
 
 ---
 
