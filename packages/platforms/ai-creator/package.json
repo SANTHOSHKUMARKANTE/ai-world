@@ -34,6 +34,10 @@
   "dependencies": {
     "@ai-world/foundation-database": "workspace:*",
     "@ai-world/kernel-identifiers": "workspace:*",
+    "@ai-world/kernel-namespace": "workspace:*",
+    "@ai-world/platform-discovery": "workspace:*",
+    "@ai-world/platform-knowledge": "workspace:*",
+    "@ai-world/platform-user": "workspace:*",
     "openai": "7.5.0"
   }
 }

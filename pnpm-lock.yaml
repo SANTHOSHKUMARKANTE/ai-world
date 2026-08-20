@@ -291,6 +291,18 @@ importers:
       '@ai-world/kernel-identifiers':
         specifier: workspace:*
         version: link:../../kernel/identifiers
+      '@ai-world/kernel-namespace':
+        specifier: workspace:*
+        version: link:../../kernel/namespace
+      '@ai-world/platform-discovery':
+        specifier: workspace:*
+        version: link:../discovery
+      '@ai-world/platform-knowledge':
+        specifier: workspace:*
+        version: link:../knowledge
+      '@ai-world/platform-user':
+        specifier: workspace:*
+        version: link:../user
       openai:
         specifier: 7.5.0
         version: 7.5.0(zod@4.4.3)

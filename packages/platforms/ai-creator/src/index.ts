@@ -27,3 +27,19 @@ export type {
   MarkGenerationFailedInput,
   MarkGenerationSucceededInput,
 } from './generation-writer';
+
+export {
+  AUTHORIZED_AI_CONTEXT_DEFAULT_LIMIT,
+  AUTHORIZED_AI_CONTEXT_MAX_LIMIT,
+} from './authorized-ai-context';
+
+export type {
+  AuthorizedAiContext,
+  AuthorizedAiContextPort,
+  AuthorizedAiKnowledgeResourceContext,
+  ResolveAuthorizedAiContextInput,
+} from './authorized-ai-context';
+
+export { GenerateTextWithAuthorizedContext } from './generate-text-with-authorized-context';
+
+export type { GenerateTextWithAuthorizedContextInput } from './generate-text-with-authorized-context';
