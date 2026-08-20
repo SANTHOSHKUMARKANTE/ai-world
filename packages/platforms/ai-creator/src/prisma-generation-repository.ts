@@ -16,6 +16,7 @@ import type {
   MarkGenerationFailedInput,
   MarkGenerationSucceededInput,
 } from './generation-writer';
+import type { FindGenerationByIdInput, GenerationReader } from './generation-reader';
 
 interface PersistedGenerationRequest {
   readonly input: string;
@@ -142,8 +143,19 @@ const generationInclude = {
   provenance: true,
 } as const;
 
-export class PrismaGenerationRepository implements GenerationWriter {
+export class PrismaGenerationRepository implements GenerationWriter, GenerationReader {
   constructor(private readonly database: DatabaseClient) {}
+
+  async findById(input: FindGenerationByIdInput): Promise<Generation | null> {
+    const generation = await this.database.generation.findUnique({
+      where: {
+        id: input.id,
+      },
+      include: generationInclude,
+    });
+
+    return generation ? mapPersistedGeneration(generation) : null;
+  }
 
   async createRequested(input: CreateRequestedGenerationInput): Promise<Generation> {
     const generation = await this.database.generation.create({

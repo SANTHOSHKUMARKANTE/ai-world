@@ -67,3 +67,19 @@ export type {
   AiGenerationSafetyErrorCode,
   AiGenerationSafetyRequest,
 } from './ai-generation-safety';
+
+export type { FindGenerationByIdInput, GenerationReader } from './generation-reader';
+
+export {
+  GenerationCanonicalAcceptanceError,
+  KNOWLEDGE_CANONICAL_OWNER,
+  ReviewAndAcceptGenerationAsKnowledgeResource,
+} from './review-and-accept-generation-as-knowledge-resource';
+
+export type {
+  GenerationCanonicalAcceptanceErrorCode,
+  KnowledgeCanonicalAcceptanceInput,
+  KnowledgeCanonicalAcceptanceOwner,
+  ReviewAndAcceptGenerationAsKnowledgeResourceInput,
+  ReviewAndAcceptGenerationAsKnowledgeResourceResult,
+} from './review-and-accept-generation-as-knowledge-resource';
