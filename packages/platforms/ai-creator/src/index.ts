@@ -83,3 +83,17 @@ export type {
   ReviewAndAcceptGenerationAsKnowledgeResourceInput,
   ReviewAndAcceptGenerationAsKnowledgeResourceResult,
 } from './review-and-accept-generation-as-knowledge-resource';
+
+export {
+  AI_CREATOR_KNOWLEDGE_RESOURCE_CANDIDATE_INSTRUCTIONS,
+  AI_CREATOR_KNOWLEDGE_RESOURCE_CANDIDATE_TASK,
+  AiCreatorAssistanceError,
+  SuggestKnowledgeResourceCandidate,
+} from './suggest-knowledge-resource-candidate';
+
+export type {
+  AiCreatorAssistanceErrorCode,
+  KnowledgeResourceCandidate,
+  SuggestKnowledgeResourceCandidateInput,
+  SuggestKnowledgeResourceCandidateResult,
+} from './suggest-knowledge-resource-candidate';
