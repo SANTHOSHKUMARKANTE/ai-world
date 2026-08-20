@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform ACTIVE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform ACTIVE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -844,6 +844,9 @@ P7-M09 — AI Creator Assistance
 CLOSED
 
 P7-M10 — AI Tool Baseline
+CLOSED
+
+P7-M11 — AI Usage Tracking
 NEXT
 ```
 
@@ -21437,6 +21440,315 @@ Fetch Resource.
 ```
 
 Do not build autonomous Agent framework.
+
+---
+
+## P7-M10 CLOSURE RECORD
+
+P7-M10 — AI Tool Baseline is CLOSED.
+
+The canonical implementation commit is:
+
+```text
+efa881a5572a68ba1c7833b89fedc3c7125b9580
+feat(ai): implement search knowledge tool
+```
+
+Its exact successful GitHub Actions implementation CI is:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32391739498
+
+CI NUMBER
+#135
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+WORKFLOW DURATION
+3m 14s
+(194 seconds)
+
+VALIDATE JOB DURATION
+3m 11s
+(191 seconds)
+
+BROWSER E2E DURATION
+29s
+(29 seconds)
+
+BUILD DURATION
+11s
+(11 seconds)
+
+ARCHITECTURE DURATION
+9s
+(9 seconds)
+```
+
+P7-M10 proves the minimum real typed Tool vertical slice:
+
+```text
+Application code explicitly invokes
+SearchKnowledgeTool
+        ↓
+typed bounded input
+        ↓
+AuthorizedAiContextPort
+        ↓
+actor-bound + Universe-scoped
+        ↓
+Discovery SearchContract
+        ↓
+PUBLISHED Knowledge only
+        ↓
+public Knowledge re-verification
+        ↓
+typed READ_ONLY Tool result
+```
+
+The reusable Tool contract introduced by P7-M10 is deliberately small:
+
+```text
+AiTool<TName, TInput, TResult>
+
+readonly name
+
+execute(input): Promise<TResult>
+```
+
+The first concrete Tool is:
+
+```text
+SearchKnowledgeTool
+
+name
+ai.search-knowledge
+
+effect
+READ_ONLY
+```
+
+Its input remains explicit and typed:
+
+```text
+actorId
+
+universeKey
+
+query
+
+resourceTypes?
+
+limit?
+```
+
+The Search Knowledge Tool bounds are:
+
+```text
+query
+nonblank
+no NUL
+maximum 500 characters
+
+resourceTypes
+maximum 10
+no duplicates
+
+limit
+integer 1 through 10
+default 5
+```
+
+The Tool result is typed as:
+
+```text
+toolName
+
+effect
+
+items[]
+    resourceId
+    resourceType
+    universeKey
+```
+
+The Tool fails closed on invalid input and invalid authorized results with:
+
+```text
+INVALID_INPUT
+
+INVALID_AUTHORIZED_RESULT
+```
+
+P7-M10 deliberately reuses existing governed read boundaries:
+
+```text
+SearchKnowledgeTool
+        ↓
+AuthorizedAiContextPort
+        ↓
+PlatformAuthorizedAiContext
+        ↓
+UserProfileReader for requesting Actor
+        ↓
+Universe-scoped SearchContract
+        ↓
+PublicKnowledgeResourceReader
+        ↓
+PUBLISHED same-Universe Knowledge
+```
+
+This preserves the existing P7-M05 authorization behavior rather than introducing a direct database/search bypass.
+
+Validated real PostgreSQL behavior proves:
+
+```text
+the requesting Actor must resolve to its self User
+
+Search Knowledge is Universe-scoped
+
+only PUBLISHED Knowledge reaches the Tool result
+
+DRAFT Knowledge is excluded
+
+other-Universe Knowledge is excluded
+
+resource-type filtering and the explicit limit are honored
+
+the Tool creates no Generation for the executing Actor
+
+missing-self-User execution fails closed before exposing Knowledge results
+```
+
+P7-M07 Provider/model Tool access remains unchanged:
+
+```text
+AI_TEXT_TOOL_ACCESS
+DISABLED
+```
+
+Therefore P7-M10 does not permit the model or Provider to decide when to invoke Tools.
+
+Tool execution is explicit and deterministic application behavior.
+
+The implementation commit contains exactly:
+
+```text
+packages/platforms/ai-creator/src/ai-tool.ts
+packages/platforms/ai-creator/src/index.ts
+packages/platforms/ai-creator/src/search-knowledge-tool.ts
+packages/platforms/ai-creator/test/search-knowledge-tool.integration.spec.ts
+packages/platforms/ai-creator/test/search-knowledge-tool.spec.ts
+```
+
+P7-M10 adds:
+
+```text
+no migration
+
+no Prisma schema change
+
+no package.json dependency change
+
+no pnpm-lock.yaml change
+```
+
+Canonical migration count remains:
+
+```text
+18
+```
+
+P7-M10 intentionally does not introduce:
+
+```text
+Fetch Resource Tool
+
+OpenAI function/tool calling
+
+model-directed Tool execution
+
+dynamic Tool registry
+
+Tool router
+
+planner or orchestration loop
+
+autonomous Agent framework
+
+RAG
+
+embeddings or vector database
+
+write-capable Tools
+
+Generation creation from SearchKnowledgeTool
+
+canonical Knowledge mutation
+
+queue / worker / retry infrastructure
+
+P7-M11 usage / latency / failure / cost tracking
+
+NestJS Tool endpoint
+
+Web Tool UI
+```
+
+The Phase 7 Queue Gate is evaluated for this milestone as:
+
+```text
+NOT TRIGGERED
+```
+
+P7-M10 introduces a synchronous bounded read-only Tool and does not create a new long-running Generation or reliable-retry requirement.
+
+Therefore P7-M10 does not introduce:
+
+```text
+Queue Foundation
+
+apps/worker
+```
+
+Queue Selection likewise requires no implementation decision here, and Kafka remains deferred.
+
+P7-M11 — AI Usage Tracking is NEXT.
+
+Its roadmap scope remains:
+
+```text
+Track at least enough operational data for:
+
+usage;
+
+latency;
+
+failure;
+
+cost estimation.
+```
+
+P7-M11 remains blocked until this roadmap-only P7-M10 closure commit itself completes exact green CI.
+
+This closure changes governance documentation only.
 
 ---
 
