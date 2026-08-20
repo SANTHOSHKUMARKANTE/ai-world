@@ -13,12 +13,15 @@ export {
 
 export type {
   Generation,
+  GenerationKnowledgeSourceContext,
+  GenerationProvenance,
   GenerationRequest,
   GenerationResult,
+  GenerationSourceContext,
   GenerationStatus,
 } from './generation';
 
-export { GenerateText } from './generate-text';
+export { AI_TEXT_GENERATION_TASK, GenerateText } from './generate-text';
 export type { GenerateTextConfig, GenerateTextInput } from './generate-text';
 
 export type {
@@ -40,6 +43,9 @@ export type {
   ResolveAuthorizedAiContextInput,
 } from './authorized-ai-context';
 
-export { GenerateTextWithAuthorizedContext } from './generate-text-with-authorized-context';
+export {
+  AI_AUTHORIZED_TEXT_GENERATION_TASK,
+  GenerateTextWithAuthorizedContext,
+} from './generate-text-with-authorized-context';
 
 export type { GenerateTextWithAuthorizedContextInput } from './generate-text-with-authorized-context';

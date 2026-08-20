@@ -1,11 +1,13 @@
 import type { ResourceId } from '@ai-world/kernel-identifiers';
 
-import type { Generation } from './generation';
+import type { Generation, GenerationSourceContext } from './generation';
 
 export interface CreateRequestedGenerationInput {
   readonly id: ResourceId;
   readonly actorId: ResourceId;
   readonly provider: string;
+  readonly task: string;
+  readonly sourceContext?: GenerationSourceContext;
   readonly input: string;
   readonly instructions?: string;
 }

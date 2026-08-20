@@ -1,4 +1,5 @@
 import type { ResourceId } from '@ai-world/kernel-identifiers';
+import type { NamespacedKey } from '@ai-world/kernel-namespace';
 
 export const GENERATION_INITIAL_STATUS = 'REQUESTED' as const;
 export const GENERATION_SUCCEEDED_STATUS = 'SUCCEEDED' as const;
@@ -20,6 +21,23 @@ export interface GenerationResult {
   readonly createdAt: Date;
 }
 
+export interface GenerationKnowledgeSourceContext {
+  readonly id: ResourceId;
+  readonly resourceType: NamespacedKey;
+  readonly universeKey: NamespacedKey;
+}
+
+export interface GenerationSourceContext {
+  readonly universeKey: NamespacedKey;
+  readonly knowledgeResources: readonly GenerationKnowledgeSourceContext[];
+}
+
+export interface GenerationProvenance {
+  readonly task: string;
+  readonly sourceContext: GenerationSourceContext | null;
+  readonly createdAt: Date;
+}
+
 export interface Generation {
   readonly id: ResourceId;
   readonly actorId: ResourceId;
@@ -28,6 +46,7 @@ export interface Generation {
   readonly model: string | null;
   readonly request: GenerationRequest;
   readonly result: GenerationResult | null;
+  readonly provenance?: GenerationProvenance | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }

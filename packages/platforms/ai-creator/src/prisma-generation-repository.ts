@@ -1,5 +1,6 @@
 import type { DatabaseClient } from '@ai-world/foundation-database';
 import { parseResourceId } from '@ai-world/kernel-identifiers';
+import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 
 import {
   GENERATION_FAILED_STATUS,
@@ -7,6 +8,7 @@ import {
   GENERATION_SUCCEEDED_STATUS,
   isGenerationStatus,
   type Generation,
+  type GenerationSourceContext,
 } from './generation';
 import type {
   CreateRequestedGenerationInput,
@@ -26,6 +28,12 @@ interface PersistedGenerationResult {
   readonly createdAt: Date;
 }
 
+interface PersistedGenerationProvenance {
+  readonly task: string;
+  readonly sourceContext: unknown;
+  readonly createdAt: Date;
+}
+
 interface PersistedGeneration {
   readonly id: string;
   readonly actorId: string;
@@ -34,8 +42,58 @@ interface PersistedGeneration {
   readonly model: string | null;
   readonly request: PersistedGenerationRequest | null;
   readonly result: PersistedGenerationResult | null;
+  readonly provenance: PersistedGenerationProvenance | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function mapSourceContext(value: unknown): GenerationSourceContext | null {
+  if (value === null) {
+    return null;
+  }
+
+  if (!isRecord(value) || typeof value.universeKey !== 'string') {
+    throw new TypeError('Persisted Generation provenance has invalid source context.');
+  }
+
+  if (!Array.isArray(value.knowledgeResources)) {
+    throw new TypeError('Persisted Generation provenance has invalid Knowledge sources.');
+  }
+
+  return {
+    universeKey: parseNamespacedKey(value.universeKey),
+    knowledgeResources: value.knowledgeResources.map((resource) => {
+      if (
+        !isRecord(resource) ||
+        typeof resource.id !== 'string' ||
+        typeof resource.resourceType !== 'string' ||
+        typeof resource.universeKey !== 'string'
+      ) {
+        throw new TypeError('Persisted Generation provenance has an invalid Knowledge source.');
+      }
+
+      return {
+        id: parseResourceId(resource.id),
+        resourceType: parseNamespacedKey(resource.resourceType),
+        universeKey: parseNamespacedKey(resource.universeKey),
+      };
+    }),
+  };
+}
+
+function serializeSourceContext(context: GenerationSourceContext) {
+  return {
+    universeKey: context.universeKey,
+    knowledgeResources: context.knowledgeResources.map((resource) => ({
+      id: resource.id,
+      resourceType: resource.resourceType,
+      universeKey: resource.universeKey,
+    })),
+  };
 }
 
 function mapPersistedGeneration(generation: PersistedGeneration): Generation {
@@ -66,10 +124,23 @@ function mapPersistedGeneration(generation: PersistedGeneration): Generation {
           createdAt: generation.result.createdAt,
         }
       : null,
+    provenance: generation.provenance
+      ? {
+          task: generation.provenance.task,
+          sourceContext: mapSourceContext(generation.provenance.sourceContext),
+          createdAt: generation.provenance.createdAt,
+        }
+      : null,
     createdAt: generation.createdAt,
     updatedAt: generation.updatedAt,
   };
 }
+
+const generationInclude = {
+  request: true,
+  result: true,
+  provenance: true,
+} as const;
 
 export class PrismaGenerationRepository implements GenerationWriter {
   constructor(private readonly database: DatabaseClient) {}
@@ -87,11 +158,16 @@ export class PrismaGenerationRepository implements GenerationWriter {
             ...(input.instructions === undefined ? {} : { instructions: input.instructions }),
           },
         },
+        provenance: {
+          create: {
+            task: input.task,
+            ...(input.sourceContext === undefined
+              ? {}
+              : { sourceContext: serializeSourceContext(input.sourceContext) }),
+          },
+        },
       },
-      include: {
-        request: true,
-        result: true,
-      },
+      include: generationInclude,
     });
 
     return mapPersistedGeneration(generation);
@@ -125,10 +201,7 @@ export class PrismaGenerationRepository implements GenerationWriter {
         where: {
           id: input.id,
         },
-        include: {
-          request: true,
-          result: true,
-        },
+        include: generationInclude,
       });
     });
 
@@ -155,10 +228,7 @@ export class PrismaGenerationRepository implements GenerationWriter {
         where: {
           id: input.id,
         },
-        include: {
-          request: true,
-          result: true,
-        },
+        include: generationInclude,
       });
     });
 

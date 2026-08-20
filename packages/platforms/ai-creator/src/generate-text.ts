@@ -1,13 +1,17 @@
 import { generateResourceId, type ResourceId } from '@ai-world/kernel-identifiers';
 
 import type { AiProviderPort, AiProviderTextRequest } from './ai-provider-port';
-import type { Generation } from './generation';
+import type { Generation, GenerationSourceContext } from './generation';
 import type { GenerationWriter } from './generation-writer';
+
+export const AI_TEXT_GENERATION_TASK = 'ai.text-generation' as const;
 
 export interface GenerateTextInput {
   readonly actorId: ResourceId;
   readonly input: string;
   readonly instructions?: string;
+  readonly task?: string;
+  readonly sourceContext?: GenerationSourceContext;
 }
 
 export interface GenerateTextConfig {
@@ -28,6 +32,8 @@ export class GenerateText {
       id: generationId,
       actorId: input.actorId,
       provider: this.config.provider,
+      task: input.task ?? AI_TEXT_GENERATION_TASK,
+      ...(input.sourceContext === undefined ? {} : { sourceContext: input.sourceContext }),
       input: input.input,
       ...(input.instructions === undefined ? {} : { instructions: input.instructions }),
     });

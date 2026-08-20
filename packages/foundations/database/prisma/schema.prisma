@@ -223,9 +223,10 @@ model Generation {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  actor   Actor              @relation(fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  request GenerationRequest?
-  result  GenerationResult?
+  actor      Actor                 @relation(fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  request    GenerationRequest?
+  result     GenerationResult?
+  provenance GenerationProvenance?
 
   @@index([actorId])
   @@map("ai_generations")
@@ -250,4 +251,15 @@ model GenerationResult {
   generation Generation @relation(fields: [generationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("ai_generation_results")
+}
+
+model GenerationProvenance {
+  generationId  String   @id @map("generation_id") @db.Uuid
+  task          String   @db.VarChar(128)
+  sourceContext Json?    @map("source_context") @db.JsonB
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  generation Generation @relation(fields: [generationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("ai_generation_provenance")
 }

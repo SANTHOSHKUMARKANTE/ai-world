@@ -3,6 +3,7 @@ import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 import { describe, expect, it } from 'vitest';
 
 import {
+  AI_AUTHORIZED_TEXT_GENERATION_TASK,
   GenerateTextWithAuthorizedContext,
   type AuthorizedAiContextPort,
   type GenerateTextInput,
@@ -10,7 +11,7 @@ import {
 } from '../src';
 
 describe('GenerateTextWithAuthorizedContext', () => {
-  it('resolves authorized context before generation and appends it to instructions', async () => {
+  it('resolves authorized context before generation and appends provenance-safe source context', async () => {
     const actorId = generateResourceId();
     const resourceId = generateResourceId();
     const universeKey = parseNamespacedKey('context.test-alpha');
@@ -99,6 +100,17 @@ describe('GenerateTextWithAuthorizedContext', () => {
         'Published Knowledge resources:',
         `- ${resourceType} | ${resourceId}`,
       ].join('\n'),
+      task: AI_AUTHORIZED_TEXT_GENERATION_TASK,
+      sourceContext: {
+        universeKey,
+        knowledgeResources: [
+          {
+            id: resourceId,
+            resourceType,
+            universeKey,
+          },
+        ],
+      },
     });
   });
 
@@ -146,5 +158,10 @@ describe('GenerateTextWithAuthorizedContext', () => {
         '- none',
       ].join('\n'),
     );
+    expect(generationInput?.task).toBe(AI_AUTHORIZED_TEXT_GENERATION_TASK);
+    expect(generationInput?.sourceContext).toEqual({
+      universeKey,
+      knowledgeResources: [],
+    });
   });
 });
