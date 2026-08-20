@@ -97,3 +97,23 @@ export type {
   SuggestKnowledgeResourceCandidateInput,
   SuggestKnowledgeResourceCandidateResult,
 } from './suggest-knowledge-resource-candidate';
+
+export type { AiTool } from './ai-tool';
+
+export {
+  AI_SEARCH_KNOWLEDGE_TOOL_DEFAULT_LIMIT,
+  AI_SEARCH_KNOWLEDGE_TOOL_EFFECT,
+  AI_SEARCH_KNOWLEDGE_TOOL_MAX_LIMIT,
+  AI_SEARCH_KNOWLEDGE_TOOL_MAX_RESOURCE_TYPES,
+  AI_SEARCH_KNOWLEDGE_TOOL_NAME,
+  AI_SEARCH_KNOWLEDGE_TOOL_QUERY_MAX_LENGTH,
+  SearchKnowledgeTool,
+  SearchKnowledgeToolError,
+} from './search-knowledge-tool';
+
+export type {
+  SearchKnowledgeToolErrorCode,
+  SearchKnowledgeToolInput,
+  SearchKnowledgeToolItem,
+  SearchKnowledgeToolResult,
+} from './search-knowledge-tool';
