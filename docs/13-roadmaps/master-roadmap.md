@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform ACTIVE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M04 Text Generation NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform ACTIVE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -821,6 +821,9 @@ CLOSED
 
 P7-M03 — Generation Model
 CLOSED
+
+P7-M03 CI REVALIDATION
+CLOSED — CI reliability repaired and exact green push CI re-established
 
 P7-M04 — Text Generation
 NEXT
@@ -19509,6 +19512,150 @@ CANONICAL GENERATION MIGRATIONS
 P7-M04 — Text Generation
 NEXT
 ```
+
+---
+
+## P7-M03 CI REVALIDATION RECORD
+
+P7-M03 remains CLOSED.
+
+The original roadmap closure commit is:
+
+```text
+2b62137681606eb36242f4cf65f6b852a989d0bb
+docs(roadmap): close P7-M03 generation model
+```
+
+Its first CI path exposed a GitHub-hosted Playwright provisioning reliability problem rather than a P7-M03 implementation defect.
+
+The CI reliability repair sequence was intentionally isolated from P7-M04:
+
+```text
+1.
+54e2becfb18a5fd4ced1e9f8817f05f88eaf113c
+ci: use preinstalled Chrome for browser tests
+
+removed Playwright browser/apt provisioning from GitHub CI
+and selected the preinstalled Google Chrome channel.
+
+2.
+df9e9342c46f8fcab5f199b2eaac36769a62f028
+ci: pass system Chrome flag through Turbo
+
+passed PLAYWRIGHT_USE_SYSTEM_CHROME through Turborepo strict environment handling.
+```
+
+The final repair is revalidated against the exact successful GitHub Actions push run:
+
+```text
+COMMIT
+df9e9342c46f8fcab5f199b2eaac36769a62f028
+
+WORKFLOW
+CI
+
+RUN ID
+32278323216
+
+CI NUMBER
+#121
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+WORKFLOW DURATION
+3m 12s
+(192 seconds)
+
+VALIDATE JOB DURATION
+3m 8s
+(188 seconds)
+
+BROWSER E2E DURATION
+25s
+(25 seconds)
+```
+
+The repaired CI path proves:
+
+```text
+Install Playwright Chromium
+ABSENT
+
+playwright install
+ABSENT
+
+--with-deps / apt browser provisioning
+ABSENT
+
+PLAYWRIGHT_USE_SYSTEM_CHROME
+PASSED THROUGH TURBO
+
+Playwright
+channel = chrome
+
+Run browser E2E tests
+SUCCESS
+
+Build
+SUCCESS
+
+Check architecture
+SUCCESS
+```
+
+P7-M03 canonical implementation remains unchanged:
+
+```text
+f21d0219ea2f6fa7203be11a2fd7adc02c58790e
+feat(ai): establish generation model
+```
+
+This checkpoint changes governance documentation only.
+
+It does not change:
+
+```text
+Generation
+GenerationRequest
+GenerationResult
+
+Prisma schema or migrations
+
+AI Provider Port
+
+OpenAI Provider Adapter
+
+API
+
+Web product behavior
+
+Knowledge
+
+Discovery
+
+Media
+
+Identity
+
+dependencies
+
+lockfile
+```
+
+P7-M04 remains the next milestone and is unblocked only after this CI-revalidation checkpoint commit itself completes green CI.
 
 ---
 
