@@ -1,6 +1,20 @@
 import type { EmailDelivery } from '@ai-world/foundation-email';
 import type { StorageObjectStore } from '@ai-world/foundation-storage';
 import { FilesystemStorageAdapter } from '@ai-world/foundation-storage/filesystem';
+import {
+  AuthorizeCompositionEditing,
+  CreatePage,
+  CreateTextBlock,
+  GetBlock,
+  GetPage,
+  GetPageComposition,
+  SetPageComposition,
+} from '@ai-world/platform-composition';
+import {
+  PrismaBlockRepository,
+  PrismaPageCompositionRepository,
+  PrismaPageRepository,
+} from '@ai-world/platform-composition/infrastructure';
 import { SmtpEmailDelivery, type SmtpEmailDeliveryOptions } from '@ai-world/foundation-email/smtp';
 import { type LogLevel } from '@ai-world/foundation-observability';
 import { PrismaAuditRecorder } from '@ai-world/kernel-audit/infrastructure';
@@ -77,6 +91,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PasswordAuthenticationController } from './authentication/password-authentication.controller';
 import { AuthorizationController } from './authorization/authorization.controller';
+import { CreatorCompositionController } from './composition/creator-composition.controller';
 import { DatabaseModule } from './database/database.module';
 import { DatabaseService } from './database/database.service';
 import {
@@ -199,6 +214,7 @@ export class AppModule {
         PublicDiscoverySearchController,
         CreatorKnowledgeController,
         MediaAssetsController,
+        CreatorCompositionController,
       ],
 
       providers: [
@@ -292,6 +308,107 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): EvaluatePermission => {
             return new EvaluatePermission(new PrismaAuthorizationRepository(database.getClient()));
+          },
+        },
+
+        {
+          provide: AuthorizeCompositionEditing,
+          inject: [EvaluatePermission],
+          useFactory: (evaluatePermission: EvaluatePermission): AuthorizeCompositionEditing => {
+            return new AuthorizeCompositionEditing(evaluatePermission);
+          },
+        },
+
+        {
+          provide: PrismaPageRepository,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): PrismaPageRepository => {
+            return new PrismaPageRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: PrismaBlockRepository,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): PrismaBlockRepository => {
+            return new PrismaBlockRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: PrismaPageCompositionRepository,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): PrismaPageCompositionRepository => {
+            return new PrismaPageCompositionRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: CreatePage,
+          inject: [PrismaPageRepository],
+          useFactory: (repository: PrismaPageRepository): CreatePage => {
+            return new CreatePage(repository);
+          },
+        },
+
+        {
+          provide: GetPage,
+          inject: [PrismaPageRepository],
+          useFactory: (repository: PrismaPageRepository): GetPage => {
+            return new GetPage(repository);
+          },
+        },
+
+        {
+          provide: CreateTextBlock,
+          inject: [PrismaBlockRepository],
+          useFactory: (repository: PrismaBlockRepository): CreateTextBlock => {
+            return new CreateTextBlock(repository);
+          },
+        },
+
+        {
+          provide: GetBlock,
+          inject: [PrismaBlockRepository],
+          useFactory: (repository: PrismaBlockRepository): GetBlock => {
+            return new GetBlock(repository);
+          },
+        },
+
+        {
+          provide: SetPageComposition,
+          inject: [
+            PrismaPageRepository,
+            PrismaBlockRepository,
+            PrismaKnowledgeResourceRepository,
+            ResolveAssetReference,
+            PrismaPageCompositionRepository,
+          ],
+          useFactory: (
+            pages: PrismaPageRepository,
+            blocks: PrismaBlockRepository,
+            knowledgeResources: PrismaKnowledgeResourceRepository,
+            mediaAssets: ResolveAssetReference,
+            compositions: PrismaPageCompositionRepository,
+          ): SetPageComposition => {
+            return new SetPageComposition(
+              pages,
+              blocks,
+              knowledgeResources,
+              mediaAssets,
+              compositions,
+            );
+          },
+        },
+
+        {
+          provide: GetPageComposition,
+          inject: [PrismaPageRepository, PrismaPageCompositionRepository],
+          useFactory: (
+            pages: PrismaPageRepository,
+            compositions: PrismaPageCompositionRepository,
+          ): GetPageComposition => {
+            return new GetPageComposition(pages, compositions);
           },
         },
 

@@ -19,10 +19,13 @@
   "dependencies": {
     "@ai-world/foundation-configuration": "workspace:*",
     "@ai-world/kernel-audit": "workspace:*",
+    "@ai-world/kernel-identifiers": "workspace:*",
+    "@ai-world/kernel-namespace": "workspace:*",
     "@ai-world/foundation-database": "workspace:*",
     "@ai-world/foundation-email": "workspace:*",
     "@ai-world/foundation-errors": "workspace:*",
     "@ai-world/foundation-observability": "workspace:*",
+    "@ai-world/platform-composition": "workspace:*",
     "@ai-world/platform-identity-access": "workspace:*",
     "@ai-world/platform-knowledge": "workspace:*",
     "@ai-world/platform-user": "workspace:*",

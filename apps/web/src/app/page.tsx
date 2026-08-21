@@ -18,6 +18,10 @@ export default function Home() {
         <Link href="/search">Search Knowledge</Link>
       </p>
 
+      <p>
+        <Link href="/creator">Open Creator workspace</Link>
+      </p>
+
       <SessionSummary />
 
       <AccountNavigation />

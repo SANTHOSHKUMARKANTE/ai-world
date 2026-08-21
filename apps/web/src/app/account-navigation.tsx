@@ -21,7 +21,7 @@ export function AccountNavigation() {
     case 'authenticated':
       return (
         <nav aria-label="Account">
-          <Link href="/account">Account</Link>{' '}
+          <Link href="/creator">Creator</Link> <Link href="/account">Account</Link>{' '}
           <button
             type="button"
             onClick={() => {

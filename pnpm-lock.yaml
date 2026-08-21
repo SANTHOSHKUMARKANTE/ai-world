@@ -53,6 +53,15 @@ importers:
       '@ai-world/kernel-audit':
         specifier: workspace:*
         version: link:../../packages/kernel/audit
+      '@ai-world/kernel-identifiers':
+        specifier: workspace:*
+        version: link:../../packages/kernel/identifiers
+      '@ai-world/kernel-namespace':
+        specifier: workspace:*
+        version: link:../../packages/kernel/namespace
+      '@ai-world/platform-composition':
+        specifier: workspace:*
+        version: link:../../packages/platforms/composition
       '@ai-world/platform-discovery':
         specifier: workspace:*
         version: link:../../packages/platforms/discovery
@@ -322,12 +331,18 @@ importers:
       '@ai-world/foundation-database':
         specifier: workspace:*
         version: link:../../foundations/database
+      '@ai-world/foundation-errors':
+        specifier: workspace:*
+        version: link:../../foundations/errors
       '@ai-world/kernel-identifiers':
         specifier: workspace:*
         version: link:../../kernel/identifiers
       '@ai-world/kernel-namespace':
         specifier: workspace:*
         version: link:../../kernel/namespace
+      '@ai-world/platform-identity-access':
+        specifier: workspace:*
+        version: link:../identity-access
       '@ai-world/platform-knowledge':
         specifier: workspace:*
         version: link:../knowledge

@@ -7,6 +7,13 @@ export {
 } from './block';
 export type { Block, BlockType, TextBlock, TextBlockContent } from './block';
 
+export {
+  AuthorizeCompositionEditing,
+  type AuthorizeCompositionEditingInput,
+} from './authorize-composition-editing';
+
+export { COMPOSITION_EDIT_PERMISSION_KEY } from './composition-authorization-policy';
+
 export type { BlockReader, FindBlockByIdInput } from './block-reader';
 
 export type { BlockWriter, CreateTextBlockRecordInput } from './block-writer';
