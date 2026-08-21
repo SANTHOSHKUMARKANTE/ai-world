@@ -18,7 +18,6 @@ describe('Page persistence', () => {
   let database: DatabaseClient;
   let repository: PrismaPageRepository;
   let createPage: CreatePage;
-  let getPage: GetPage;
 
   const universeKeys = ['universe.page-model-devotional', 'universe.page-model-anime'];
 
@@ -29,7 +28,6 @@ describe('Page persistence', () => {
 
     repository = new PrismaPageRepository(database);
     createPage = new CreatePage(repository);
-    getPage = new GetPage(repository);
   });
 
   async function cleanup(): Promise<void> {
@@ -48,33 +46,41 @@ describe('Page persistence', () => {
   });
 
   it('persists and reloads a canonical Universe-scoped DRAFT Page', async () => {
-    const knowledgeCountBefore = await database.knowledgeResource.count();
-    const assetCountBefore = await database.asset.count();
+    await database.$transaction(
+      async (transaction) => {
+        const transactionRepository = new PrismaPageRepository(transaction);
+        const transactionCreatePage = new CreatePage(transactionRepository);
+        const transactionGetPage = new GetPage(transactionRepository);
+        const knowledgeCountBefore = await transaction.knowledgeResource.count();
+        const assetCountBefore = await transaction.asset.count();
 
-    const created = await createPage.execute({
-      universeKey: 'universe.page-model-devotional',
-      route: { path: '/home' },
-      presentation: { title: 'Devotional Home' },
-    });
+        const created = await transactionCreatePage.execute({
+          universeKey: 'universe.page-model-devotional',
+          route: { path: '/home' },
+          presentation: { title: 'Devotional Home' },
+        });
 
-    expect(created).toMatchObject({
-      universeKey: 'universe.page-model-devotional',
-      route: { path: '/home' },
-      presentation: { title: 'Devotional Home' },
-      lifecycle: 'DRAFT',
-    });
+        expect(created).toMatchObject({
+          universeKey: 'universe.page-model-devotional',
+          route: { path: '/home' },
+          presentation: { title: 'Devotional Home' },
+          lifecycle: 'DRAFT',
+        });
 
-    const byId = await getPage.execute({ id: created.id });
-    expect(byId).toEqual(created);
+        const byId = await transactionGetPage.execute({ id: created.id });
+        expect(byId).toEqual(created);
 
-    const byRoute = await repository.findByRoute({
-      universeKey: 'universe.page-model-devotional',
-      routePath: '/home',
-    });
-    expect(byRoute).toEqual(created);
+        const byRoute = await transactionRepository.findByRoute({
+          universeKey: 'universe.page-model-devotional',
+          routePath: '/home',
+        });
+        expect(byRoute).toEqual(created);
 
-    expect(await database.knowledgeResource.count()).toBe(knowledgeCountBefore);
-    expect(await database.asset.count()).toBe(assetCountBefore);
+        expect(await transaction.knowledgeResource.count()).toBe(knowledgeCountBefore);
+        expect(await transaction.asset.count()).toBe(assetCountBefore);
+      },
+      { isolationLevel: 'RepeatableRead' },
+    );
   });
 
   it('makes route identity unique inside a Universe while allowing reuse across Universes', async () => {

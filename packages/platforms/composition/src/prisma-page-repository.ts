@@ -6,6 +6,8 @@ import { isPageLifecycle, parsePagePresentationTitle, parsePageRoutePath, type P
 import type { FindPageByIdInput, FindPageByRouteInput, PageReader } from './page-reader';
 import type { CreatePageRecordInput, PageWriter } from './page-writer';
 
+type PageDatabaseClient = Pick<DatabaseClient, 'compositionPage'>;
+
 interface PersistedPage {
   readonly id: string;
   readonly universeKey: string;
@@ -37,7 +39,7 @@ function mapPersistedPage(page: PersistedPage): Page {
 }
 
 export class PrismaPageRepository implements PageReader, PageWriter {
-  constructor(private readonly database: DatabaseClient) {}
+  constructor(private readonly database: PageDatabaseClient) {}
 
   async findById(input: FindPageByIdInput): Promise<Page | null> {
     const page = await this.database.compositionPage.findUnique({
