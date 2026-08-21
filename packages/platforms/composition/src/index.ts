@@ -1,5 +1,24 @@
+export {
+  TEXT_BLOCK_CONTENT_MAX_LENGTH,
+  TEXT_BLOCK_TYPE,
+  isBlockType,
+  isTextBlockContent,
+  parseTextBlockContent,
+} from './block';
+export type { Block, BlockType, TextBlock, TextBlockContent } from './block';
+
+export type { BlockReader, FindBlockByIdInput } from './block-reader';
+
+export type { BlockWriter, CreateTextBlockRecordInput } from './block-writer';
+
+export { CreateTextBlock } from './create-text-block';
+export type { CreateTextBlockInput } from './create-text-block';
+
 export { CreatePage } from './create-page';
 export type { CreatePageInput } from './create-page';
+
+export { GetBlock } from './get-block';
+export type { GetBlockInput } from './get-block';
 
 export { GetPage } from './get-page';
 export type { GetPageInput } from './get-page';
