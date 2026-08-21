@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -880,6 +880,9 @@ P8-M03 — Layout / Composition
 CLOSED
 
 P8-M04 — Creator Editing UI
+CLOSED
+
+P8-M05 — Preview
 NEXT
 ```
 
@@ -24074,6 +24077,279 @@ Pages;
 
 taxonomy/relationships where appropriate.
 ```
+
+---
+
+## P8-M04 CREATOR EDITING UI CLOSURE RECORD
+
+P8-M04 — Creator Editing UI is CLOSED.
+
+The accepted implementation baseline is:
+
+```text
+d0c0280ebd511726823ace019b55df67a131cb9f
+feat(creator): add structured editing workspace
+```
+
+Parent:
+
+```text
+6d4ca37954436f3d79690e437c056e96fe2f3954
+docs(roadmap): close P8-M03
+```
+
+The implementation commit contains the validated 19-file P8-M04 candidate.
+
+Its exact successful GitHub Actions CI is:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32506415086
+
+CI NUMBER
+#154
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+VALIDATE JOB
+96847469761
+```
+
+Canonical ownership remains distributed across the existing owners:
+
+```text
+Composition / CMS Platform
+    Page semantics
+    Block semantics
+    Page composition semantics
+    composition editing authorization
+
+Knowledge Platform
+    canonical Knowledge Resource creation and validation
+
+Media Platform
+    canonical Asset upload, storage, lifecycle, and validation
+
+Identity & Access Platform
+    Session validation
+    Role and Permission evaluation
+
+Web Application
+    authenticated creator delivery and owner-contract orchestration
+
+API Application
+    authenticated REST delivery and runtime composition wiring
+```
+
+The closed Creator Editing UI is intentionally structured around current public
+owner contracts:
+
+```text
+/creator
+    authenticated Creator workspace
+
+Active Universe
+    shared scope for new Page, Block, and Knowledge records
+
+Page editor
+    create a canonical DRAFT Page
+    load an existing Page and its ordered composition
+
+Knowledge editor
+    create a canonical Knowledge DRAFT through the Knowledge API
+
+Media editor
+    upload a canonical PNG or JPEG Asset through the Media API
+
+Block editor
+    create an independent reusable Text Block
+
+Composition editor
+    add typed Block, Knowledge Resource, and Media Asset references
+    reorder references
+    remove references
+    persist and reload exact Page composition order
+```
+
+The Web Application does not import Prisma or mutate canonical persistence.
+Its mutation flow remains:
+
+```text
+Web
+    → API
+    → canonical owning Platform operation
+```
+
+The Composition delivery surface added for this milestone is:
+
+```text
+POST /composition/pages
+
+GET /composition/pages/:id
+
+POST /composition/blocks/text
+
+GET /composition/blocks/:id
+
+PUT /composition/pages/:id/composition
+
+GET /composition/pages/:id/composition
+```
+
+Transport request parsing is strict and separate from canonical Domain
+validation. Responses expose explicit delivery DTOs rather than Prisma types.
+The Web boundary validates unknown JSON before accepting it as creator state.
+
+P8-M04 introduced the owner-defined Permission:
+
+```text
+composition.edit
+```
+
+The initial grant is intentionally narrow:
+
+```text
+administrator
+    composition.edit
+```
+
+Every new Composition creator route requires:
+
+```text
+valid opaque Session cookie;
+
+resolved acting Actor;
+
+successful composition.edit Permission evaluation.
+```
+
+Authorization executes before transport and canonical input validation, so an
+unauthorized Actor cannot use creator routes as an input-validation oracle.
+Knowledge creation and Media upload continue to enforce their own owner-defined
+Permissions independently.
+
+P8-M04 introduced one append-only migration:
+
+```text
+20260821233000_composition_edit_authorization
+```
+
+Canonical migration count is now:
+
+```text
+24
+```
+
+The focused authorization and PostgreSQL/API proof verifies:
+
+```text
+an Actor with composition.edit is allowed;
+
+an Actor without composition.edit is denied;
+
+a Session is required before Composition creation;
+
+authorization denial precedes malformed-request validation;
+
+an Administrator can create and reload a Page and Text Block;
+
+ordered Block, Knowledge, and Media references persist and reload;
+
+malformed creator requests return safe validation semantics;
+
+cross-Universe references are rejected without partial persistence.
+```
+
+The Web and Chromium proof verifies:
+
+```text
+anonymous visitors receive an authenticated-entry state;
+
+Page and Block creation use the API boundary;
+
+Knowledge creation uses the existing Knowledge owner route;
+
+Media upload uses the existing Media owner route;
+
+typed references can be added and reordered;
+
+the exact ordered Page composition is submitted through the Composition API.
+```
+
+The roadmap phrase `taxonomy/relationships where appropriate` was evaluated
+against current implemented demand.
+
+Taxonomy and Relationships remain deferred because P8-M04 introduces no real
+classification consumer and no canonical Resource-to-Resource relationship
+consumer. Ordered Page composition is represented by the Composition-owned
+typed relational model closed in P8-M03; it is not a reason to introduce generic
+Kernel Taxonomy or Relationship semantics.
+
+P8-M04 deliberately does NOT implement:
+
+```text
+Preview;
+
+publication commands or lifecycle transitions;
+
+Page update semantics beyond the existing public owner contract;
+
+Block update semantics beyond the existing public owner contract;
+
+taxonomy management UI;
+
+relationship management UI;
+
+arbitrary rich-text or JSON layout editing;
+
+nested or responsive layout semantics;
+
+Workflow Kernel;
+
+Policy Kernel;
+
+Localization;
+
+Versioning.
+```
+
+The Phase 8 ownership rule remains unchanged:
+
+```text
+CMS may edit Knowledge through Knowledge Contracts.
+
+CMS does not become Knowledge owner.
+```
+
+Phase 8 remains ACTIVE.
+
+The next real capability is:
+
+```text
+P8-M05 — Preview
+NEXT
+```
+
+P8-M05 must provide controlled draft preview over the current Page, Block, and
+typed Page composition contracts. It must not pre-design P8-M06 Publishing or
+activate Workflow, Policy, Localization, or Versioning without their accepted
+demand gates.
 
 ---
 
