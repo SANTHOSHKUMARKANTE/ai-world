@@ -41,6 +41,32 @@ export interface CreatorPageComposition {
   readonly items: readonly CreatorCompositionItem[];
 }
 
+export interface CreatorPagePreview {
+  readonly page: CreatorPage;
+  readonly items: readonly CreatorPagePreviewItem[];
+}
+
+export type CreatorPagePreviewItem =
+  | {
+      readonly position: number;
+      readonly kind: 'BLOCK';
+      readonly id: string;
+      readonly blockType: string;
+      readonly text: string;
+    }
+  | {
+      readonly position: number;
+      readonly kind: 'KNOWLEDGE_RESOURCE';
+      readonly id: string;
+      readonly resourceType: string;
+      readonly lifecycle: string;
+    }
+  | {
+      readonly position: number;
+      readonly kind: 'MEDIA_ASSET';
+      readonly id: string;
+    };
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
@@ -149,6 +175,57 @@ function readPageComposition(value: unknown): CreatorPageComposition {
   return { pageId: value.pageId, items };
 }
 
+function readPagePreview(value: unknown): CreatorPagePreview {
+  if (!isRecord(value) || !isRecord(value.page) || !Array.isArray(value.items)) {
+    throw new Error('Creator Preview API response did not match the expected contract.');
+  }
+
+  const page = readPage(value.page);
+  const items = value.items.map((item): CreatorPagePreviewItem => {
+    if (
+      !isRecord(item) ||
+      typeof item.position !== 'number' ||
+      !isCompositionItemKind(item.kind) ||
+      !isString(item.id)
+    ) {
+      throw new Error('Creator Preview item did not match the expected contract.');
+    }
+
+    switch (item.kind) {
+      case 'BLOCK':
+        if (!isString(item.blockType) || !isString(item.text)) {
+          throw new Error('Creator Preview Block did not match the expected contract.');
+        }
+        return {
+          position: item.position,
+          kind: item.kind,
+          id: item.id,
+          blockType: item.blockType,
+          text: item.text,
+        };
+      case 'KNOWLEDGE_RESOURCE':
+        if (!isString(item.resourceType) || !isString(item.lifecycle)) {
+          throw new Error('Creator Preview Knowledge item did not match the expected contract.');
+        }
+        return {
+          position: item.position,
+          kind: item.kind,
+          id: item.id,
+          resourceType: item.resourceType,
+          lifecycle: item.lifecycle,
+        };
+      case 'MEDIA_ASSET':
+        return {
+          position: item.position,
+          kind: item.kind,
+          id: item.id,
+        };
+    }
+  });
+
+  return { page, items };
+}
+
 async function readJson(response: Response): Promise<unknown> {
   return response.json() as Promise<unknown>;
 }
@@ -205,6 +282,11 @@ export async function createCreatorTextBlock(input: {
 export async function getCreatorPageComposition(id: string): Promise<CreatorPageComposition> {
   const response = await apiRequest(`/composition/pages/${encodeURIComponent(id)}/composition`);
   return readPageComposition(await readJson(response));
+}
+
+export async function getCreatorPagePreview(id: string): Promise<CreatorPagePreview> {
+  const response = await apiRequest(`/composition/pages/${encodeURIComponent(id)}/preview`);
+  return readPagePreview(await readJson(response));
 }
 
 export async function replaceCreatorPageComposition(

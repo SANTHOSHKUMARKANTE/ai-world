@@ -3,11 +3,13 @@ import type { StorageObjectStore } from '@ai-world/foundation-storage';
 import { FilesystemStorageAdapter } from '@ai-world/foundation-storage/filesystem';
 import {
   AuthorizeCompositionEditing,
+  AuthorizeCompositionPreview,
   CreatePage,
   CreateTextBlock,
   GetBlock,
   GetPage,
   GetPageComposition,
+  GetPagePreview,
   SetPageComposition,
 } from '@ai-world/platform-composition';
 import {
@@ -320,6 +322,14 @@ export class AppModule {
         },
 
         {
+          provide: AuthorizeCompositionPreview,
+          inject: [EvaluatePermission],
+          useFactory: (evaluatePermission: EvaluatePermission): AuthorizeCompositionPreview => {
+            return new AuthorizeCompositionPreview(evaluatePermission);
+          },
+        },
+
+        {
           provide: PrismaPageRepository,
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): PrismaPageRepository => {
@@ -409,6 +419,26 @@ export class AppModule {
             compositions: PrismaPageCompositionRepository,
           ): GetPageComposition => {
             return new GetPageComposition(pages, compositions);
+          },
+        },
+
+        {
+          provide: GetPagePreview,
+          inject: [
+            PrismaPageRepository,
+            PrismaBlockRepository,
+            PrismaKnowledgeResourceRepository,
+            ResolveAssetReference,
+            PrismaPageCompositionRepository,
+          ],
+          useFactory: (
+            pages: PrismaPageRepository,
+            blocks: PrismaBlockRepository,
+            knowledgeResources: PrismaKnowledgeResourceRepository,
+            mediaAssets: ResolveAssetReference,
+            compositions: PrismaPageCompositionRepository,
+          ): GetPagePreview => {
+            return new GetPagePreview(pages, blocks, knowledgeResources, mediaAssets, compositions);
           },
         },
 

@@ -462,6 +462,20 @@ function AuthenticatedCreatorWorkspace() {
           </button>
         </div>
 
+        {pageId.trim() ? (
+          <div className="mt-4 flex flex-col gap-2 rounded-xl border border-amber-400/25 bg-amber-400/10 p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-amber-100/80">
+              Preview reads the last saved composition. Save changes before opening it.
+            </p>
+            <Link
+              className={`${secondaryButtonClassName} shrink-0 text-center`}
+              href={`/creator/preview/${encodeURIComponent(pageId.trim())}`}
+            >
+              Open saved draft preview
+            </Link>
+          </div>
+        ) : null}
+
         {library.length > 0 ? (
           <section aria-labelledby="creator-library-title" className="mt-6">
             <h3 id="creator-library-title" className="text-sm font-semibold text-slate-300">

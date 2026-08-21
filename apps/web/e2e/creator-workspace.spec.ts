@@ -132,4 +132,76 @@ test.describe('Creator workspace', () => {
       ],
     });
   });
+
+  test('renders a controlled saved draft preview in typed composition order', async ({ page }) => {
+    test.setTimeout(60_000);
+
+    const pageId = '11111111-1111-4111-8111-111111111111';
+    const assetId = '44444444-4444-4444-8444-444444444444';
+
+    await page.route('**/api/session', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          actorId: 'preview-e2e-actor',
+          expiresAt: '2026-08-22T12:00:00.000Z',
+        }),
+      });
+    });
+
+    await page.route(`**/api/composition/pages/${pageId}/preview`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          page: {
+            id: pageId,
+            universeKey: 'universe.devotional',
+            routePath: '/preview-e2e',
+            title: 'Controlled preview E2E',
+            lifecycle: 'DRAFT',
+          },
+          items: [
+            {
+              position: 0,
+              kind: 'BLOCK',
+              id: '22222222-2222-4222-8222-222222222222',
+              blockType: 'composition.block.text',
+              text: 'First saved preview item.',
+            },
+            {
+              position: 1,
+              kind: 'KNOWLEDGE_RESOURCE',
+              id: '33333333-3333-4333-8333-333333333333',
+              resourceType: 'devotional.deity',
+              lifecycle: 'DRAFT',
+            },
+            { position: 2, kind: 'MEDIA_ASSET', id: assetId },
+          ],
+        }),
+      });
+    });
+
+    await page.route(`**/api/media/assets/${assetId}/content`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'image/png',
+        body: Buffer.from(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+          'base64',
+        ),
+      });
+    });
+
+    await page.goto(`/creator/preview/${pageId}`);
+    await expect(page.getByRole('heading', { name: 'Controlled preview E2E' })).toBeVisible();
+    await expect(page.getByText('Draft preview', { exact: true })).toBeVisible();
+
+    const items = page.getByRole('list', { name: 'Saved draft preview' }).getByRole('listitem');
+    await expect(items).toHaveCount(3);
+    await expect(items.nth(0)).toContainText('First saved preview item.');
+    await expect(items.nth(1)).toContainText('devotional.deity');
+    await expect(items.nth(2).getByRole('img')).toBeVisible();
+  });
 });

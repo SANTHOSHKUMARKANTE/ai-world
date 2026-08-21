@@ -158,6 +158,23 @@ describe('Creator Composition API', () => {
     await expect(database.compositionPage.count()).resolves.toBe(pageCountBefore);
   });
 
+  it('controls draft preview before identifier validation', async () => {
+    await request(app.getHttpServer())
+      .get('/composition/pages/not-a-resource-id/preview')
+      .expect(401);
+
+    const actor = await signIn('ordinary-preview');
+    const response = await request(app.getHttpServer())
+      .get('/composition/pages/not-a-resource-id/preview')
+      .set('Cookie', actor.cookiePair)
+      .expect(403);
+
+    expect(response.body.error).toMatchObject({
+      code: 'composition.preview.authorization.forbidden',
+      message: 'You do not have permission to preview draft composition.',
+    });
+  });
+
   it('allows an Administrator to create and reload an ordered multi-owner Page composition', async () => {
     const administrator = await signInAdministrator('administrator');
     const pageResponse = await request(app.getHttpServer())
@@ -258,6 +275,103 @@ describe('Creator Composition API', () => {
       .set('Cookie', administrator.cookiePair)
       .expect(200)
       .expect(saved.body);
+  });
+
+  it('allows an Administrator to resolve a saved draft preview through owner contracts', async () => {
+    const administrator = await signInAdministrator('preview-administrator');
+    const pageResponse = await request(app.getHttpServer())
+      .post('/composition/pages')
+      .set('Cookie', administrator.cookiePair)
+      .send({
+        universeKey: 'universe.devotional',
+        routePath: `/preview-${randomUUID()}`,
+        title: 'Controlled draft preview',
+      })
+      .expect(201);
+    const pageId = pageResponse.body.id as string;
+    pageIds.add(pageId);
+
+    const blockResponse = await request(app.getHttpServer())
+      .post('/composition/blocks/text')
+      .set('Cookie', administrator.cookiePair)
+      .send({ universeKey: 'universe.devotional', text: 'Resolved preview text.' })
+      .expect(201);
+    const blockId = blockResponse.body.id as string;
+    blockIds.add(blockId);
+
+    const knowledgeId = randomUUID();
+    knowledgeIds.add(knowledgeId);
+    await database.knowledgeResource.create({
+      data: {
+        id: knowledgeId,
+        universeKey: 'universe.devotional',
+        resourceType: 'devotional.deity',
+        lifecycle: 'DRAFT',
+      },
+    });
+
+    const assetId = randomUUID();
+    assetIds.add(assetId);
+    await database.asset.create({
+      data: {
+        id: assetId,
+        assetType: 'IMAGE',
+        mimeType: 'image/png',
+        sizeBytes: 1,
+        storageReference: `${runMarker}/${assetId}.png`,
+        lifecycle: 'ACTIVE',
+      },
+    });
+
+    await request(app.getHttpServer())
+      .put(`/composition/pages/${pageId}/composition`)
+      .set('Cookie', administrator.cookiePair)
+      .send({
+        items: [
+          { kind: 'BLOCK', id: blockId },
+          { kind: 'KNOWLEDGE_RESOURCE', id: knowledgeId },
+          { kind: 'MEDIA_ASSET', id: assetId },
+        ],
+      })
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .get(`/composition/pages/${pageId}/preview`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body).toEqual({
+          page: {
+            id: pageId,
+            universeKey: 'universe.devotional',
+            routePath: pageResponse.body.routePath,
+            title: 'Controlled draft preview',
+            lifecycle: 'DRAFT',
+          },
+          items: [
+            {
+              position: 0,
+              kind: 'BLOCK',
+              id: blockId,
+              blockType: 'composition.block.text',
+              text: 'Resolved preview text.',
+            },
+            {
+              position: 1,
+              kind: 'KNOWLEDGE_RESOURCE',
+              id: knowledgeId,
+              resourceType: 'devotional.deity',
+              lifecycle: 'DRAFT',
+            },
+            { position: 2, kind: 'MEDIA_ASSET', id: assetId },
+          ],
+        });
+      });
+
+    await request(app.getHttpServer())
+      .get(`/composition/pages/${randomUUID()}/preview`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(404);
   });
 
   it('returns safe validation semantics for authenticated malformed requests', async () => {

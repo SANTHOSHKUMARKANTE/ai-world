@@ -12,7 +12,15 @@ export {
   type AuthorizeCompositionEditingInput,
 } from './authorize-composition-editing';
 
-export { COMPOSITION_EDIT_PERMISSION_KEY } from './composition-authorization-policy';
+export {
+  AuthorizeCompositionPreview,
+  type AuthorizeCompositionPreviewInput,
+} from './authorize-composition-preview';
+
+export {
+  COMPOSITION_EDIT_PERMISSION_KEY,
+  COMPOSITION_PREVIEW_PERMISSION_KEY,
+} from './composition-authorization-policy';
 
 export type { BlockReader, FindBlockByIdInput } from './block-reader';
 
@@ -33,6 +41,9 @@ export type { GetPageInput } from './get-page';
 export { GetPageComposition } from './get-page-composition';
 export type { GetPageCompositionInput } from './get-page-composition';
 
+export { GetPagePreview } from './get-page-preview';
+export type { GetPagePreviewInput } from './get-page-preview';
+
 export {
   PAGE_ARCHIVED_LIFECYCLE,
   PAGE_INITIAL_LIFECYCLE,
@@ -51,6 +62,15 @@ export type { Page, PageLifecycle, PagePresentationMetadata, PageRouteMetadata }
 export type { FindPageByIdInput, FindPageByRouteInput, PageReader } from './page-reader';
 
 export type { CreatePageRecordInput, PageWriter } from './page-writer';
+
+export type {
+  PagePreview,
+  PagePreviewBlockItem,
+  PagePreviewItem,
+  PagePreviewKnowledgeItem,
+  PagePreviewMediaItem,
+  PagePreviewPage,
+} from './page-preview';
 
 export {
   PAGE_COMPOSITION_BLOCK_ITEM_KIND,

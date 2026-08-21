@@ -3,15 +3,18 @@ import { parseResourceId } from '@ai-world/kernel-identifiers';
 import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 import {
   AuthorizeCompositionEditing,
+  AuthorizeCompositionPreview,
   CreatePage,
   CreateTextBlock,
   GetBlock,
   GetPage,
   GetPageComposition,
+  GetPagePreview,
   SetPageComposition,
   type Block,
   type Page,
   type PageComposition,
+  type PagePreview,
 } from '@ai-world/platform-composition';
 import { ValidateSession } from '@ai-world/platform-identity-access';
 import { Body, Controller, Get, Headers, Param, Post, Put } from '@nestjs/common';
@@ -52,6 +55,37 @@ export interface CreatorPageCompositionResponse {
   }[];
 }
 
+export interface CreatorPagePreviewResponse {
+  readonly page: {
+    readonly id: string;
+    readonly universeKey: string;
+    readonly routePath: string;
+    readonly title: string;
+    readonly lifecycle: PagePreview['page']['lifecycle'];
+  };
+  readonly items: readonly (
+    | {
+        readonly position: number;
+        readonly kind: 'BLOCK';
+        readonly id: string;
+        readonly blockType: string;
+        readonly text: string;
+      }
+    | {
+        readonly position: number;
+        readonly kind: 'KNOWLEDGE_RESOURCE';
+        readonly id: string;
+        readonly resourceType: string;
+        readonly lifecycle: string;
+      }
+    | {
+        readonly position: number;
+        readonly kind: 'MEDIA_ASSET';
+        readonly id: string;
+      }
+  )[];
+}
+
 function invalidCanonicalInput(error: TypeError): ApplicationError {
   return new ApplicationError({
     code: 'composition.creator.invalid_input',
@@ -61,11 +95,13 @@ function invalidCanonicalInput(error: TypeError): ApplicationError {
   });
 }
 
-function missingResource(resource: 'Page' | 'Block' | 'Page composition'): ApplicationError {
+function missingResource(
+  resource: 'Page' | 'Block' | 'Page composition' | 'Page preview',
+): ApplicationError {
   return new ApplicationError({
     code: 'composition.creator.not_found',
     kind: 'not_found',
-    message: `${resource} was not found for creator editing.`,
+    message: `${resource} was not found for creator Composition access.`,
     publicMessage: 'The requested Composition resource was not found.',
   });
 }
@@ -115,17 +151,57 @@ function toCompositionResponse(composition: PageComposition): CreatorPageComposi
   };
 }
 
+function toPreviewResponse(preview: PagePreview): CreatorPagePreviewResponse {
+  return {
+    page: {
+      id: preview.page.id,
+      universeKey: preview.page.universeKey,
+      routePath: preview.page.route.path,
+      title: preview.page.presentation.title,
+      lifecycle: preview.page.lifecycle,
+    },
+    items: preview.items.map((item) => {
+      switch (item.kind) {
+        case 'BLOCK':
+          return {
+            position: item.position,
+            kind: item.kind,
+            id: item.id,
+            blockType: item.blockType,
+            text: item.text,
+          };
+        case 'KNOWLEDGE_RESOURCE':
+          return {
+            position: item.position,
+            kind: item.kind,
+            id: item.id,
+            resourceType: item.resourceType,
+            lifecycle: item.lifecycle,
+          };
+        case 'MEDIA_ASSET':
+          return {
+            position: item.position,
+            kind: item.kind,
+            id: item.id,
+          };
+      }
+    }),
+  };
+}
+
 @Controller('composition')
 export class CreatorCompositionController {
   constructor(
     private readonly validateSession: ValidateSession,
     private readonly authorizeCompositionEditing: AuthorizeCompositionEditing,
+    private readonly authorizeCompositionPreview: AuthorizeCompositionPreview,
     private readonly createPage: CreatePage,
     private readonly getPage: GetPage,
     private readonly createTextBlock: CreateTextBlock,
     private readonly getBlock: GetBlock,
     private readonly setPageComposition: SetPageComposition,
     private readonly getPageComposition: GetPageComposition,
+    private readonly getPagePreview: GetPagePreview,
     private readonly sessionCookie: SessionCookie,
   ) {}
 
@@ -133,6 +209,12 @@ export class CreatorCompositionController {
     const token = requireSessionToken(this.sessionCookie, cookieHeader);
     const session = await this.validateSession.execute({ token });
     await this.authorizeCompositionEditing.execute({ actingActorId: session.actorId });
+  }
+
+  private async requirePreviewAccess(cookieHeader: string | undefined): Promise<void> {
+    const token = requireSessionToken(this.sessionCookie, cookieHeader);
+    const session = await this.validateSession.execute({ token });
+    await this.authorizeCompositionPreview.execute({ actingActorId: session.actorId });
   }
 
   @Post('pages')
@@ -224,5 +306,20 @@ export class CreatorCompositionController {
       throw missingResource('Page composition');
     }
     return toCompositionResponse(composition);
+  }
+
+  @Get('pages/:id/preview')
+  async getCreatorPagePreview(
+    @Headers('cookie') cookieHeader: string | undefined,
+    @Param('id') id: string,
+  ): Promise<CreatorPagePreviewResponse> {
+    await this.requirePreviewAccess(cookieHeader);
+    const preview = await executeCanonical(() =>
+      this.getPagePreview.execute({ pageId: parseResourceId(id) }),
+    );
+    if (!preview) {
+      throw missingResource('Page preview');
+    }
+    return toPreviewResponse(preview);
   }
 }

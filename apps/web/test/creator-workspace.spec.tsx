@@ -114,6 +114,9 @@ describe('Creator workspace', () => {
       expect(screen.getByRole('status').textContent).toContain('created as a DRAFT');
     });
     expect((screen.getByLabelText('Active Page ID') as HTMLInputElement).value).toBe(pageId);
+    expect(
+      screen.getByRole('link', { name: 'Open saved draft preview' }).getAttribute('href'),
+    ).toBe(`/creator/preview/${pageId}`);
 
     fireEvent.change(screen.getByLabelText('Text content'), {
       target: { value: 'A structured creator Block.' },
