@@ -23,6 +23,9 @@ export type { GetBlockInput } from './get-block';
 export { GetPage } from './get-page';
 export type { GetPageInput } from './get-page';
 
+export { GetPageComposition } from './get-page-composition';
+export type { GetPageCompositionInput } from './get-page-composition';
+
 export {
   PAGE_ARCHIVED_LIFECYCLE,
   PAGE_INITIAL_LIFECYCLE,
@@ -41,3 +44,32 @@ export type { Page, PageLifecycle, PagePresentationMetadata, PageRouteMetadata }
 export type { FindPageByIdInput, FindPageByRouteInput, PageReader } from './page-reader';
 
 export type { CreatePageRecordInput, PageWriter } from './page-writer';
+
+export {
+  PAGE_COMPOSITION_BLOCK_ITEM_KIND,
+  PAGE_COMPOSITION_KNOWLEDGE_ITEM_KIND,
+  PAGE_COMPOSITION_MEDIA_ITEM_KIND,
+  isPageCompositionItemKind,
+  isPageCompositionPosition,
+} from './page-composition';
+export type {
+  PageComposition,
+  PageCompositionBlockReference,
+  PageCompositionItem,
+  PageCompositionItemKind,
+  PageCompositionKnowledgeReference,
+  PageCompositionMediaReference,
+  PageCompositionReference,
+} from './page-composition';
+
+export type {
+  ListPageCompositionItemsInput,
+  PageCompositionStore,
+  ReplacePageCompositionItemsInput,
+} from './page-composition-store';
+
+export { SetPageComposition } from './set-page-composition';
+export type {
+  PageCompositionReferenceInput,
+  SetPageCompositionInput,
+} from './set-page-composition';

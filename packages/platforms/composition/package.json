@@ -30,6 +30,8 @@
   "dependencies": {
     "@ai-world/foundation-database": "workspace:*",
     "@ai-world/kernel-identifiers": "workspace:*",
-    "@ai-world/kernel-namespace": "workspace:*"
+    "@ai-world/kernel-namespace": "workspace:*",
+    "@ai-world/platform-knowledge": "workspace:*",
+    "@ai-world/platform-media": "workspace:*"
   }
 }

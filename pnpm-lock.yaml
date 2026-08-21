@@ -294,12 +294,12 @@ importers:
       '@ai-world/kernel-namespace':
         specifier: workspace:*
         version: link:../../kernel/namespace
-      '@ai-world/platform-identity-access':
-        specifier: workspace:*
-        version: link:../identity-access
       '@ai-world/platform-discovery':
         specifier: workspace:*
         version: link:../discovery
+      '@ai-world/platform-identity-access':
+        specifier: workspace:*
+        version: link:../identity-access
       '@ai-world/platform-knowledge':
         specifier: workspace:*
         version: link:../knowledge
@@ -328,6 +328,12 @@ importers:
       '@ai-world/kernel-namespace':
         specifier: workspace:*
         version: link:../../kernel/namespace
+      '@ai-world/platform-knowledge':
+        specifier: workspace:*
+        version: link:../knowledge
+      '@ai-world/platform-media':
+        specifier: workspace:*
+        version: link:../media
     devDependencies:
       '@types/node':
         specifier: 24.13.3

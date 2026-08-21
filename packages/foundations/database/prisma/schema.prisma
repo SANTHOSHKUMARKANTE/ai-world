@@ -182,7 +182,8 @@ model KnowledgeResource {
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  assetReferences KnowledgeResourceAssetReference[]
+  assetReferences      KnowledgeResourceAssetReference[]
+  compositionPageItems CompositionPageItem[]
 
   @@map("knowledge_resources")
 }
@@ -198,6 +199,7 @@ model Asset {
   updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   knowledgeResourceReferences KnowledgeResourceAssetReference[]
+  compositionPageItems        CompositionPageItem[]
 
   @@map("media_assets")
 }
@@ -288,6 +290,8 @@ model CompositionPage {
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
+  compositionItems CompositionPageItem[]
+
   @@unique([universeKey, routePath])
   @@map("composition_pages")
 }
@@ -300,6 +304,28 @@ model CompositionBlock {
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
+  compositionPageItems CompositionPageItem[]
+
   @@index([universeKey])
   @@map("composition_blocks")
+}
+
+model CompositionPageItem {
+  pageId              String  @map("page_id") @db.Uuid
+  position            Int
+  itemKind            String  @map("item_kind") @db.VarChar(32)
+  blockId             String? @map("block_id") @db.Uuid
+  knowledgeResourceId String? @map("knowledge_resource_id") @db.Uuid
+  assetId             String? @map("asset_id") @db.Uuid
+
+  page              CompositionPage    @relation(fields: [pageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  block             CompositionBlock?  @relation(fields: [blockId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  knowledgeResource KnowledgeResource? @relation(fields: [knowledgeResourceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  asset             Asset?             @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@id([pageId, position])
+  @@index([blockId])
+  @@index([knowledgeResourceId])
+  @@index([assetId])
+  @@map("composition_page_items")
 }
