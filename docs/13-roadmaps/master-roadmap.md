@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform COMPLETE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate CLOSED — LOCALIZATION KERNEL DEFERRED — FRONTEND LOCALIZATION TECHNOLOGY DEFERRED — Versioning Gate CLOSED — VERSIONING KERNEL DEFERRED — Phase 8 Closure Criteria Evaluation CLOSED — 7/7 SATISFIED — tagged `phase-8-complete` — Phase 9 Engagement Platform COMPLETE — P9-M01 Favorites CLOSED — P9-M02 Collections CLOSED — P9-M03 Activity History DEFERRED — P9-M04 Progress DEFERRED — P9-M05 Notifications DEFERRED — P9-M06 Personalization DEFERRED — Recommendation Gate CLOSED — PERSONALIZED RECOMMENDATION INFRASTRUCTURE DEFERRED — Community Features DEFERRED — Phase 9 Closure Criteria Evaluation CLOSED — 5/5 SATISFIED — Phase 10 Production Operations ACTIVE — P10-M01 Environment Architecture CLOSED — P10-M02 Production Infrastructure Provider NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform COMPLETE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate CLOSED — LOCALIZATION KERNEL DEFERRED — FRONTEND LOCALIZATION TECHNOLOGY DEFERRED — Versioning Gate CLOSED — VERSIONING KERNEL DEFERRED — Phase 8 Closure Criteria Evaluation CLOSED — 7/7 SATISFIED — tagged `phase-8-complete` — Phase 9 Engagement Platform COMPLETE — P9-M01 Favorites CLOSED — P9-M02 Collections CLOSED — P9-M03 Activity History DEFERRED — P9-M04 Progress DEFERRED — P9-M05 Notifications DEFERRED — P9-M06 Personalization DEFERRED — Recommendation Gate CLOSED — PERSONALIZED RECOMMENDATION INFRASTRUCTURE DEFERRED — Community Features DEFERRED — Phase 9 Closure Criteria Evaluation CLOSED — 5/5 SATISFIED — Phase 10 Production Operations ACTIVE — P10-M01 Environment Architecture CLOSED — P10-M02 Production Infrastructure Provider CLOSED — PRIMARY CLOUD DigitalOcean — HOSTING DigitalOcean App Platform — MANAGED POSTGRESQL DigitalOcean Managed PostgreSQL — OBJECT STORAGE DigitalOcean Spaces Standard Storage — TRANSACTIONAL EMAIL Postmark via SMTP — OBSERVABILITY Better Stack Telemetry + Uptime — INITIAL REGION BLR / BLR1 Bangalore — P10-M03 Infrastructure as Code NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -31104,6 +31104,187 @@ observability services.
 ```
 
 Use ADRs where choices materially affect architecture.
+
+## P10-M02 FINAL CLOSURE RECORD
+
+P10-M02 — Production Infrastructure Provider is CLOSED.
+
+Accepted decision:
+
+```text
+e29d3ec69fa2f0e1ba3c330aa1accf542b95ea0e
+docs(operations): select production infrastructure providers
+```
+
+Accepted ADR:
+
+```text
+docs/14-decisions/adr/p10-m02-production-infrastructure-provider.md
+```
+
+The exact decision commit was accepted after its `push/main` CI gate was reported
+green.
+
+The initial production provider stack is:
+
+```text
+PRIMARY CLOUD
+DigitalOcean
+
+HOSTING
+DigitalOcean App Platform
+
+MANAGED CANONICAL POSTGRESQL
+DigitalOcean Managed PostgreSQL
+
+OBJECT STORAGE
+DigitalOcean Spaces Standard Storage
+
+TRANSACTIONAL EMAIL
+Postmark via SMTP
+
+OBSERVABILITY
+Better Stack Telemetry + Uptime
+
+INITIAL PRIMARY REGION
+BLR / BLR1 — Bangalore
+
+RUNTIME SECRET DELIVERY
+DigitalOcean App Platform encrypted SECRET runtime environment variables
+```
+
+The provider decision preserves AI World-owned boundaries:
+
+```text
+PostgreSQL / DATABASE_URL / Prisma
+
+StorageObjectStore
+S3CompatibleStorageAdapter
+
+EmailDelivery
+SMTP
+
+structured application logs
+future AI World-owned metrics/tracing instrumentation
+```
+
+Provider-specific SDK types are not canonical AI World Domain, Platform,
+Universe, API transport, Media, Knowledge, Discovery, or persistence contracts.
+
+P10-M02 selects providers only.
+
+It creates no:
+
+```text
+DigitalOcean production resource
+DigitalOcean staging resource
+provider account
+database
+Spaces bucket
+Postmark server/domain
+Better Stack telemetry source
+DNS record
+custom domain
+API token
+database credential
+Spaces key
+Postmark credential
+Better Stack credential
+provider SDK
+Terraform file
+Pulumi file
+deployment workflow
+migration workflow
+backup implementation
+disaster-recovery implementation
+metrics instrumentation
+OpenTelemetry tracing
+alert rule
+runbook
+autoscaling policy
+final production sizing
+multi-region topology
+```
+
+Important retained gates:
+
+```text
+P10-M03 owns Infrastructure as Code
+
+P10-M04 owns controlled deployment and environment promotion
+
+P10-M05 owns Metrics
+
+P10-M06 keeps distributed tracing conditional on demonstrated runtime value
+
+P10-M07 owns Alerting
+
+P10-M08 must establish object-storage protection because Spaces availability
+does not itself constitute AI World backup
+
+P10-M10 must review runtime Secret handling during production security hardening
+
+P10-M11 owns measured performance and later sizing evidence
+
+P10-M13 owns final cost visibility
+```
+
+The accepted initial topology direction is:
+
+```text
+GitHub
+  |
+  v
+DigitalOcean App Platform
+  |
+  +-- Web
+  |
+  +-- API
+        |
+        +-- private DigitalOcean Managed PostgreSQL
+        |
+        +-- DigitalOcean Spaces
+        |
+        +-- Postmark SMTP
+        |
+        +-- OpenAI API
+        |
+        +-- Better Stack telemetry
+```
+
+No public/internal routing mechanism, health gate, migration job, rollback
+command, or staging-to-production promotion mechanism is selected by P10-M02.
+
+Those belong to P10-M04.
+
+The primary-cloud candidate set considered was:
+
+```text
+DigitalOcean
+Render
+AWS
+Google Cloud
+```
+
+DigitalOcean was selected for current AI World fit, not as a universal cloud
+ranking.
+
+The decision records provider exit paths by keeping canonical application
+ownership above provider-specific infrastructure/configuration.
+
+The next Phase 10 milestone is:
+
+```text
+P10-M03 — Infrastructure as Code
+NEXT
+```
+
+P10-M03 must evaluate and implement the minimum IaC strategy against this
+accepted provider stack.
+
+Terraform is an evidence-backed leading candidate because DigitalOcean and
+Better Stack expose Terraform providers, but P10-M02 does not select a Terraform
+version, state backend, module layout, or create any Terraform configuration.
 
 ---
 
