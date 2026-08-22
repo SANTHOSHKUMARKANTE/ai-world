@@ -1,15 +1,15 @@
-import Link from 'next/link';
+import { IdentityPage } from '../../identity/identity-page';
 
 import { EmailVerificationPanel } from './email-verification-panel';
 
 export default function VerifyEmailPage() {
   return (
-    <main>
-      <Link href="/">AI World</Link>
-
-      <h1>Email verification</h1>
-
+    <IdentityPage
+      eyebrow="Account security"
+      title="Email verification"
+      description="Request a verification message while signed in, or confirm a single-use token delivered to your email."
+    >
       <EmailVerificationPanel />
-    </main>
+    </IdentityPage>
   );
 }

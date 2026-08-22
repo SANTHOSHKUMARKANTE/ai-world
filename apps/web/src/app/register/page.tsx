@@ -1,15 +1,15 @@
-import Link from 'next/link';
+import { IdentityPage } from '../../identity/identity-page';
 
 import { RegisterForm } from './register-form';
 
 export default function RegisterPage() {
   return (
-    <main>
-      <Link href="/">AI World</Link>
-
-      <h1>Create your account</h1>
-
+    <IdentityPage
+      eyebrow="Join AI World"
+      title="Create your account"
+      description="One secure account gives you a consistent identity across AI World while public exploration stays open."
+    >
       <RegisterForm />
-    </main>
+    </IdentityPage>
   );
 }

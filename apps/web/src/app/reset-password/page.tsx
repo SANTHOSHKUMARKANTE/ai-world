@@ -1,15 +1,15 @@
-import Link from 'next/link';
+import { IdentityPage } from '../../identity/identity-page';
 
 import { PasswordRecoveryResetForm } from './password-recovery-reset-form';
 
 export default function ResetPasswordPage() {
   return (
-    <main>
-      <Link href="/">AI World</Link>
-
-      <h1>Reset your password</h1>
-
+    <IdentityPage
+      eyebrow="Account recovery"
+      title="Reset your password"
+      description="Use the single-use recovery token from your email and choose a new password for your AI World account."
+    >
       <PasswordRecoveryResetForm />
-    </main>
+    </IdentityPage>
   );
 }

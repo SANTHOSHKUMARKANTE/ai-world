@@ -1,15 +1,15 @@
-import Link from 'next/link';
+import { IdentityPage } from '../../identity/identity-page';
 
 import { PasswordRecoveryRequestForm } from './password-recovery-request-form';
 
 export default function ForgotPasswordPage() {
   return (
-    <main>
-      <Link href="/">AI World</Link>
-
-      <h1>Recover your password</h1>
-
+    <IdentityPage
+      eyebrow="Account recovery"
+      title="Recover your password"
+      description="Request a recovery message without revealing whether an email address belongs to an AI World account."
+    >
       <PasswordRecoveryRequestForm />
-    </main>
+    </IdentityPage>
   );
 }

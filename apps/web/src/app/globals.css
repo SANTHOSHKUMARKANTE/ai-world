@@ -481,3 +481,172 @@ textarea {
     transform: none;
   }
 }
+/* WPR-M02 — Identity And Account Experience */
+.aw-identity-page {
+  padding-block: clamp(2.5rem, 6vw, 5.25rem);
+}
+
+.aw-identity-layout {
+  display: grid;
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 1.1fr);
+}
+
+.aw-identity-intro {
+  max-width: 34rem;
+  padding-top: 0.6rem;
+}
+
+.aw-identity-intro h1 {
+  margin: 0.7rem 0 0;
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  font-weight: 820;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.aw-identity-intro > p:last-child {
+  margin: 1.15rem 0 0;
+  color: var(--aw-text-muted);
+  font-size: 1.02rem;
+  line-height: 1.75;
+}
+
+.aw-identity-card {
+  min-width: 0;
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.aw-identity-card form,
+.aw-identity-card section {
+  display: grid;
+  gap: 1rem;
+}
+
+.aw-identity-card section + section,
+.aw-identity-card section + .aw-identity-security-links,
+.aw-identity-card .aw-identity-security-links {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--aw-border);
+  padding-top: 1.5rem;
+}
+
+.aw-identity-card h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
+}
+
+.aw-identity-card p {
+  margin: 0;
+  color: var(--aw-text-muted);
+  line-height: 1.65;
+}
+
+.aw-identity-card form > div {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.aw-identity-card label {
+  color: var(--aw-text);
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.aw-identity-card input {
+  width: 100%;
+  min-height: 2.85rem;
+  border: 1px solid var(--aw-border);
+  border-radius: var(--aw-radius-sm);
+  background: var(--aw-surface-raised);
+  color: var(--aw-text);
+  padding: 0.72rem 0.8rem;
+}
+
+.aw-identity-card input:hover {
+  border-color: #b8c7be;
+}
+
+.aw-identity-card input:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.aw-identity-card button {
+  width: fit-content;
+  min-height: 2.7rem;
+  border: 1px solid transparent;
+  border-radius: var(--aw-radius-sm);
+  background: var(--aw-brand);
+  color: white;
+  cursor: pointer;
+  font-weight: 750;
+  padding: 0.78rem 1rem;
+}
+
+.aw-identity-card button[type='button'] {
+  border-color: var(--aw-border);
+  background: var(--aw-surface-raised);
+  color: var(--aw-text);
+}
+
+.aw-identity-card button:hover:not(:disabled) {
+  filter: brightness(0.97);
+}
+
+.aw-identity-card button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.aw-identity-card a {
+  color: var(--aw-brand);
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+.aw-identity-card [role='status'] {
+  color: var(--aw-success);
+}
+
+.aw-identity-card [role='alert'] {
+  border-left: 3px solid var(--aw-danger);
+  color: var(--aw-danger);
+  padding-left: 0.75rem;
+}
+
+.aw-identity-support-link {
+  margin-top: 1rem !important;
+}
+
+.aw-identity-security-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.25rem;
+}
+
+@media (max-width: 52rem) {
+  .aw-identity-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .aw-identity-intro {
+    max-width: var(--aw-reading-width);
+  }
+}
+
+@media (max-width: 38rem) {
+  .aw-identity-page {
+    padding-block: 2rem 3rem;
+  }
+
+  .aw-identity-card {
+    padding: 1rem;
+  }
+
+  .aw-identity-card button {
+    width: 100%;
+  }
+}
