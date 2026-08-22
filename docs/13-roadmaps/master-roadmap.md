@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -25734,6 +25734,414 @@ Versioning without new accepted demand.
 # 202. Phase 8 Milestone P8-M07 — AI-Assisted CMS
 
 Integrate AI creator assistance through AI / Creator public Contracts.
+
+---
+
+## P8-M07 AI-ASSISTED CMS CLOSURE RECORD
+
+P8-M07 — AI-Assisted CMS is CLOSED.
+
+The accepted implementation baseline is:
+
+```text
+44ada56d3eb439e86cf580dad9f403cad091cabb
+feat(composition): add AI-assisted CMS
+```
+
+Parent:
+
+```text
+14b5ebca907b1871bb464d2261aa00b33087f0c5
+docs(roadmap): close Phase 8 Policy gate
+```
+
+The implementation commit contains the validated 18-file P8-M07 candidate.
+
+Its exact successful GitHub Actions CI is:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32553523405
+
+CI NUMBER
+#162
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+VALIDATE JOB
+96983990106
+```
+
+The closed AI-assisted CMS boundary remains explicitly multi-owner:
+
+```text
+Composition / CMS Platform
+    creator assistance orchestration
+    review boundary before canonical acceptance
+    acceptance Actor, task, and Universe-scope enforcement
+
+AI / Creator Platform
+    authorized Generation execution
+    normalized Generation state, result, provenance, and usage
+    typed Knowledge Resource candidate interpretation
+    explicit canonical acceptance contract
+
+Knowledge Platform
+    canonical Knowledge Resource validation, mutation, and lifecycle
+
+Identity & Access Platform
+    Session validation
+    Role and Permission evaluation
+
+API Application
+    authenticated REST delivery
+    controlled provider-adapter composition
+
+Web Application
+    creator request, review, and explicit acceptance experience
+```
+
+P8-M07 integrates the existing Phase 7 public contracts rather than creating a
+parallel AI execution architecture:
+
+```text
+SuggestKnowledgeResourceCandidate
+
+GenerationReader
+
+ReviewAndAcceptGenerationAsKnowledgeResource
+```
+
+Composition depends only on the deliberate public surface of:
+
+```text
+@ai-world/platform-ai-creator
+```
+
+It does not import AI / Creator persistence internals or any Provider SDK.
+
+The supported suggestion flow is:
+
+```text
+authenticated creator request
+    → composition.edit authorization
+    → typed transport and canonical input validation
+    → authorized AI context resolution
+    → ai.generate authorization
+    → provider-neutral Generation
+    → persisted AI-owned result and provenance
+    → typed Knowledge Resource candidate
+    → non-canonical creator review state
+```
+
+A successful suggestion response is explicit about its status:
+
+```text
+canonical
+false
+```
+
+No Knowledge Resource is created by suggestion execution alone.
+
+Canonical mutation requires a second, explicit acceptance request:
+
+```text
+creator selects Accept as Knowledge draft
+    → valid Session
+    → composition.edit authorization
+    → persisted Generation lookup
+    → same-Actor verification
+    → AI Creator Knowledge-candidate task verification
+    → Universe derived from persisted Generation provenance
+    → ReviewAndAcceptGenerationAsKnowledgeResource
+    → knowledge.resource.create authorization
+    → Knowledge-owned validation and DRAFT creation
+```
+
+The client does not supply acceptance Universe scope. Composition derives it
+from the persisted AI / Creator source context so a client cannot substitute a
+different Universe during acceptance.
+
+Composition also rejects acceptance when the Generation:
+
+```text
+does not exist;
+
+belongs to another Actor;
+
+was produced by another AI task;
+
+does not retain an authorized Universe source context;
+
+is not in a successful state;
+
+does not have a persisted result.
+```
+
+Those checks occur before Knowledge-owned canonical mutation.
+
+The controlled delivery surfaces added for this milestone are:
+
+```text
+POST /composition/ai/knowledge-candidates
+
+POST /composition/ai/knowledge-candidates/:generationId/accept
+```
+
+The suggestion route accepts bounded provider-neutral input for:
+
+```text
+Universe;
+
+creator request;
+
+published Knowledge context query;
+
+optional context Resource types;
+
+optional bounded context limit.
+```
+
+The API transport exposes normalized AI World identifiers and candidate data.
+It does not expose Provider SDK request, response, error, or identifier types.
+
+Authorization precedes transport and canonical validation. An anonymous or
+unauthorized Actor therefore cannot use the assistance routes as validation,
+Generation-existence, or candidate-existence oracles.
+
+P8-M07 reuses the existing owner-defined Permissions:
+
+```text
+composition.edit
+
+ai.generate
+
+knowledge.resource.create
+```
+
+It introduces no new role or Permission vocabulary.
+
+Provider selection remains at the controlled API composition root:
+
+```text
+OPENAI_API_KEY configured
+    → existing OpenAI provider adapter
+
+test/application override
+    → injected AiProviderPort
+
+no configured Provider
+    → API remains bootable
+    → attempted Generation fails through the existing AI-owned failure path
+```
+
+The OpenAI SDK remains isolated inside the accepted AI / Creator adapter. No
+Provider SDK import was added to Composition, API transport controllers, Web,
+or Universe code.
+
+The Creator workspace now presents an explicit two-stage experience:
+
+```text
+Generate AI suggestion
+    → render Non-canonical suggestion
+    → show proposed typed Resource type
+    → add nothing to the canonical reference library
+
+Accept as Knowledge draft
+    → create Knowledge-owned DRAFT
+    → add only the accepted canonical Resource ID to the creator library
+```
+
+Changing the active Universe clears any pending suggestion so a candidate from
+one Universe cannot remain displayed under another active Universe selection.
+
+P8-M07 introduces:
+
+```text
+no Prisma schema change;
+
+no migration;
+
+no new canonical AI model;
+
+no new canonical Knowledge model;
+
+no Provider SDK dependency outside the existing AI / Creator adapter boundary.
+```
+
+Canonical migration count remains:
+
+```text
+26
+```
+
+The focused Composition proof verifies:
+
+```text
+suggestion delegates through AI / Creator public contracts;
+
+suggestion does not call canonical acceptance;
+
+acceptance Universe is derived from persisted Generation provenance;
+
+cross-Actor acceptance is rejected;
+
+non-candidate AI tasks are rejected;
+
+missing source scope is rejected;
+
+rejected candidates do not reach canonical owner mutation.
+```
+
+The PostgreSQL/API proof verifies:
+
+```text
+Session and composition authorization execute before malformed-request validation;
+
+authorized published Knowledge context reaches the Provider Port;
+
+Generation result, provenance, model, Provider key, and usage are persisted;
+
+suggestion creates zero canonical Knowledge Resources;
+
+another Administrator cannot accept the creator's candidate;
+
+the originating creator can explicitly accept the candidate;
+
+accepted canonical output is a Knowledge-owned DRAFT.
+```
+
+The Web and Chromium proof verifies:
+
+```text
+creator request and context query use the Web-to-API boundary;
+
+the suggestion is visibly identified as non-canonical;
+
+no Knowledge library item exists before acceptance;
+
+explicit acceptance removes the pending suggestion;
+
+the accepted canonical Knowledge reference enters the creator library.
+```
+
+The exact GitHub Actions Validate job completed every required repository step
+successfully:
+
+```text
+format check;
+
+lint;
+
+typecheck;
+
+unit tests;
+
+database migrations;
+
+database integration tests;
+
+browser E2E tests;
+
+production build;
+
+architecture check.
+```
+
+Focused milestone validation also completed successfully:
+
+```text
+Composition unit tests — 33/33;
+
+Creator AI assistance PostgreSQL/API integration tests — 2/2;
+
+Creator workspace Web tests — 4/4;
+
+focused Chromium AI review/acceptance E2E — 1/1;
+
+API and Web production builds;
+
+architecture scan — 610 modules and 1892 dependencies, no violations;
+
+Prettier validation;
+
+git diff --check.
+```
+
+P8-M07 deliberately does NOT implement:
+
+```text
+automatic canonical acceptance of AI output;
+
+client-selected acceptance Universe scope;
+
+cross-Actor candidate acceptance;
+
+provider SDK access from Composition, Web, API transport, or Universe code;
+
+AI-written Page, Block, layout, Knowledge, or Media state outside owner Contracts;
+
+multimodal Generation;
+
+multiple Providers or Provider routing;
+
+semantic or vector Search;
+
+long-running Generation or Queue infrastructure;
+
+Universe-specific branching in shared core;
+
+Workflow Kernel;
+
+Policy Kernel;
+
+Localization;
+
+Versioning;
+
+arbitrary rich-text editing.
+```
+
+The Phase 8 ownership rule remains unchanged:
+
+```text
+AI / Creator owns Generation and original normalized output.
+
+Knowledge owns accepted canonical Knowledge state.
+
+Composition owns creator review and Page composition semantics.
+```
+
+Phase 8 remains ACTIVE.
+
+The next real capability is:
+
+```text
+P8-M08 — Devotional Composition Proof
+NEXT
+```
+
+P8-M08 must prove the shared Page, Block, typed composition, preview,
+publication, and AI-assisted creator contracts through Devotional configuration
+and public owner boundaries. It must not introduce named-Universe branching in
+shared core, bypass Knowledge or Media ownership, or pre-advance the Anime proof
+scheduled for P8-M09.
 
 ---
 
