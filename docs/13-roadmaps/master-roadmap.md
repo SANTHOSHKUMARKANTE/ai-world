@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform COMPLETE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate CLOSED — LOCALIZATION KERNEL DEFERRED — FRONTEND LOCALIZATION TECHNOLOGY DEFERRED — Versioning Gate CLOSED — VERSIONING KERNEL DEFERRED — Phase 8 Closure Criteria Evaluation CLOSED — 7/7 SATISFIED — tagged `phase-8-complete` — Phase 9 Engagement Platform ACTIVE — P9-M01 Favorites CLOSED — P9-M02 Collections CLOSED — P9-M03 Activity History DEFERRED — P9-M04 Progress PRODUCT-VALUE DECISION NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform COMPLETE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate CLOSED — LOCALIZATION KERNEL DEFERRED — FRONTEND LOCALIZATION TECHNOLOGY DEFERRED — Versioning Gate CLOSED — VERSIONING KERNEL DEFERRED — Phase 8 Closure Criteria Evaluation CLOSED — 7/7 SATISFIED — tagged `phase-8-complete` — Phase 9 Engagement Platform ACTIVE — P9-M01 Favorites CLOSED — P9-M02 Collections CLOSED — P9-M03 Activity History DEFERRED — P9-M04 Progress DEFERRED — P9-M05 Notifications PRODUCT-WORKFLOW DECISION NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -29677,6 +29677,168 @@ long-running journeys.
 ```
 
 Otherwise defer.
+
+---
+
+## P9-M04 PROGRESS PRODUCT-VALUE DECISION RECORD
+
+P9-M04 — Progress is DEFERRED.
+
+The product-value decision is:
+
+```text
+NOT YET JUSTIFIED
+```
+
+The canonical Capability Map identifies potential Progress semantics:
+
+```text
+learning progress
+
+Journey progress
+
+Experience completion
+```
+
+with status:
+
+```text
+LATER
+```
+
+The P9-M04 roadmap gate permits implementation only if AI World adds:
+
+```text
+learning paths
+
+Experiences that require completion/progress state
+
+long-running journeys
+```
+
+and explicitly requires:
+
+```text
+Otherwise defer.
+```
+
+Current repository evidence at:
+
+```text
+42e1868e3572886b0c7d5a557de802e856d5a38a
+docs(roadmap): defer P9-M03 Activity History
+```
+
+contains no concrete production Progress consumer.
+
+The controlled P9-M04 decision inspection found:
+
+```text
+Progress / Journey / LearningPath production filename hits
+0
+
+strong Progress / Journey / completion consumer hits
+0
+
+weak Experience completion-tracking context hits
+0
+
+relevant Prisma Progress / Journey / LearningPath models
+0
+```
+
+The inspection deliberately did not treat generic uses of the word:
+
+```text
+Experience
+```
+
+as sufficient activation evidence. P9-M04 requires actual persistent User
+progress/completion semantics, not merely the existence of presentation or CMS
+experiences.
+
+There is currently no implemented production requirement for:
+
+```text
+learning-path state
+
+User progress checkpoints
+
+Journey continuation state
+
+Experience completion state
+
+progress percentage
+
+completion timestamps
+
+resume-from-progress behavior
+```
+
+Introducing Progress now would therefore create User-scoped state and persistence
+without a real completion-tracked consumer.
+
+That would violate the governing implementation rule:
+
+> Build the minimum architecture necessary to support the next real capability,
+> then validate it through working vertical slices before expanding further.
+
+Therefore P9-M04 is:
+
+```text
+DEFERRED
+```
+
+until a real learning path, completion-tracked Experience, or long-running
+Journey establishes a concrete Product requirement.
+
+This decision introduces:
+
+```text
+no Progress Domain model
+
+no User Progress persistence
+
+no Journey model
+
+no LearningPath model
+
+no completion-tracking API
+
+no progress endpoint
+
+no schema change
+
+no migration
+
+no package change
+
+no lockfile change
+
+no Web behavior
+
+no background processing
+
+no new infrastructure technology
+```
+
+P9-M04 may be reconsidered when a real completion-tracked consumer exists.
+
+Phase 9 remains ACTIVE.
+
+The next governance action is:
+
+```text
+P9-M05 — Notifications
+PRODUCT-WORKFLOW DECISION NEXT
+```
+
+P9-M05 must be evaluated against current product workflows that require
+user-facing Notification semantics. Email delivery availability alone must not
+be treated as sufficient demand because Engagement owns Notification semantics
+while Email Foundation owns delivery.
+
+This decision record changes roadmap/governance state only.
 
 ---
 
