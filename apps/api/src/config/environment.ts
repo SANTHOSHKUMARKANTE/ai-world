@@ -2,9 +2,29 @@ import { parseConfiguration } from '@ai-world/foundation-configuration';
 import { logLevels } from '@ai-world/foundation-observability';
 import { z } from 'zod';
 
+const aiWorldEnvironments = ['development', 'test', 'staging', 'production'] as const;
+
+const nodeEnvironments = ['development', 'test', 'production'] as const;
+
+function expectedNodeEnvironment(
+  environment: (typeof aiWorldEnvironments)[number],
+): (typeof nodeEnvironments)[number] {
+  if (environment === 'development') {
+    return 'development';
+  }
+
+  if (environment === 'test') {
+    return 'test';
+  }
+
+  return 'production';
+}
+
 const apiEnvironmentSchema = z
   .object({
-    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    AI_WORLD_ENV: z.enum(aiWorldEnvironments).default('development'),
+
+    NODE_ENV: z.enum(nodeEnvironments).default('development'),
 
     PORT: z.coerce.number().int().min(1).max(65535).default(3000),
 
@@ -31,7 +51,17 @@ const apiEnvironmentSchema = z
 
     OPENAI_API_KEY: z.string().trim().min(1).optional(),
   })
-  .superRefine(({ EMAIL_SMTP_USERNAME, EMAIL_SMTP_PASSWORD }, context) => {
+  .superRefine(({ AI_WORLD_ENV, NODE_ENV, EMAIL_SMTP_USERNAME, EMAIL_SMTP_PASSWORD }, context) => {
+    const requiredNodeEnvironment = expectedNodeEnvironment(AI_WORLD_ENV);
+
+    if (NODE_ENV !== requiredNodeEnvironment) {
+      context.addIssue({
+        code: 'custom',
+        message: `NODE_ENV must be ${requiredNodeEnvironment} when AI_WORLD_ENV is ${AI_WORLD_ENV}.`,
+        path: ['NODE_ENV'],
+      });
+    }
+
     if ((EMAIL_SMTP_USERNAME === undefined) !== (EMAIL_SMTP_PASSWORD === undefined)) {
       context.addIssue({
         code: 'custom',
@@ -42,6 +72,7 @@ const apiEnvironmentSchema = z
   })
   .transform(
     ({
+      AI_WORLD_ENV,
       NODE_ENV,
       PORT,
       DATABASE_URL,
@@ -55,6 +86,7 @@ const apiEnvironmentSchema = z
       EMAIL_SMTP_PASSWORD,
       OPENAI_API_KEY,
     }) => ({
+      environmentName: AI_WORLD_ENV,
       nodeEnv: NODE_ENV,
       port: PORT,
       databaseUrl: DATABASE_URL,

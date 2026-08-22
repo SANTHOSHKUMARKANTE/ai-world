@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(
     AppModule.register({
       databaseUrl: environment.databaseUrl,
-      environment: environment.nodeEnv,
+      environment: environment.environmentName,
       logLevel: environment.logLevel,
       storageRootDirectory: environment.mediaStorageRootDirectory,
       email: environment.email,

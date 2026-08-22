@@ -74,6 +74,7 @@ export default defineConfig({
       stdout: 'pipe',
       stderr: 'pipe',
       env: {
+        AI_WORLD_ENV: 'test',
         NODE_ENV: 'test',
         PORT: '3001',
         DATABASE_URL: databaseUrl,
