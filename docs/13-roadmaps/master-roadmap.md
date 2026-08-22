@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -26817,6 +26817,391 @@ This closure changes governance documentation only.
 # 205. Rich Editor Gate
 
 Select rich editor technology only when actual structured editing requirements are understood.
+
+---
+
+## PHASE 8 RICH EDITOR GATE DECISION RECORD
+
+The Phase 8 Rich Editor Gate is CLOSED.
+
+Decision:
+
+```text
+RICH EDITOR TECHNOLOGY
+DEFERRED
+```
+
+Decision baseline:
+
+```text
+83c388f91193e75342ce86a6f483839eef19d30e
+docs(roadmap): close P8-M09
+```
+
+Parent implementation baseline:
+
+```text
+da2fe51e1012567ee4e65d14d6a05c91ec5ad662
+test(composition): prove Anime composition
+```
+
+The exact successful GitHub Actions CI for the decision baseline is:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32556746401
+
+CI NUMBER
+#167
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+VALIDATE JOB
+96992046753
+```
+
+### Current editing-model evidence
+
+Composition currently owns one deliberately small typed Block model:
+
+```text
+composition.block.text
+
+content
+{
+  text
+}
+
+maximum length
+10000 characters
+```
+
+The canonical content validation requires non-empty, non-whitespace text and
+rejects null characters. It does not define rich-text document nodes, marks,
+inline objects, or editor-specific serialized state.
+
+The Creator workspace provides one controlled plain-text input:
+
+```text
+Text content
+textarea
+```
+
+The resulting text crosses the Web-to-API boundary and is validated and owned
+by Composition before it becomes a canonical Text Block.
+
+Page structure is already represented independently through the P8-M03 typed
+composition model:
+
+```text
+Page
+    ordered references to
+        Block
+        Knowledge Resource
+        Media Asset
+```
+
+Moving those typed references establishes Page order. It is not arbitrary JSON
+layout editing and does not require a rich-text editor framework.
+
+### Implemented product-demand review
+
+The completed creator slices require:
+
+```text
+plain Text Block creation
+YES
+
+ordered typed Page composition
+YES
+
+Knowledge references
+YES
+
+Media references
+YES
+
+controlled preview
+YES
+
+Page publication
+YES
+
+AI-assisted Knowledge candidate review
+YES
+```
+
+The following rich-editing requirements are absent:
+
+```text
+inline formatting marks
+NONE
+
+headings inside one rich document
+NONE
+
+nested lists
+NONE
+
+inline links
+NONE
+
+tables
+NONE
+
+inline embeds
+NONE
+
+custom document nodes
+NONE
+
+copy/paste normalization rules
+NONE
+
+editor document schema
+NONE
+
+editor-state serialization format
+NONE
+
+collaborative editing
+NONE
+
+comments or annotations
+NONE
+
+selection-aware commands
+NONE
+
+undo/redo persistence semantics
+NONE
+```
+
+Devotional and Anime both compose distinct Pages through the same plain Text
+Block and typed-reference model. Neither proof introduced a different rich
+content model or Universe-specific editor behavior.
+
+### Canonical selection-criteria review
+
+The accepted Technology Strategy says future editor selection must consider:
+
+```text
+structured content;
+
+schema control;
+
+extensions;
+
+collaboration;
+
+serialization;
+
+accessibility;
+
+React integration.
+```
+
+The current product does not yet provide concrete requirements that can choose
+among tradeoffs for those criteria.
+
+Selecting technology now would require speculative decisions for:
+
+```text
+canonical rich document schema;
+
+Block type expansion;
+
+allowed nodes and marks;
+
+serialization and migration compatibility;
+
+sanitization and rendering security;
+
+copy/paste normalization;
+
+extension ownership;
+
+accessibility commands and keyboard behavior;
+
+collaboration and conflict semantics;
+
+server-side validation;
+
+preview and publication rendering compatibility;
+
+AI-generated rich document validation.
+```
+
+There is no implemented consumer that can validate those choices.
+
+### Current rich-editor materialization
+
+```text
+rich editor framework dependency
+NONE
+
+rich document Domain Model
+NONE
+
+editor-specific Block type
+NONE
+
+editor-state persistence
+NONE
+
+rich document serializer
+NONE
+
+rich document renderer
+NONE
+
+collaboration provider
+NONE
+
+rich editor API route
+NONE
+
+Universe-specific editor
+NONE
+```
+
+No source package, database schema, migration, API route, dependency, or
+infrastructure is introduced by this decision.
+
+### Ownership boundary
+
+The accepted ownership model remains:
+
+```text
+Composition / CMS Platform
+    owns canonical Block types, content validation, Page composition, preview,
+    and publication semantics
+
+Web Application
+    owns creator interaction and editor rendering
+
+Knowledge Platform
+    owns canonical Knowledge Resource state
+
+Media Platform
+    owns canonical Asset state
+
+Universe definitions
+    configure domain Resource types without defining shared editor mechanics
+```
+
+A future editor framework may implement the Web editing experience, but it must
+not define canonical Composition semantics through its internal node or state
+types. Composition must first own the editor-neutral document model and runtime
+validation required by a real product slice.
+
+### Decision rationale
+
+The current structured creator interface is sufficient for every implemented
+Phase 8 slice. Adding a rich editor now would create a framework-shaped content
+model before AI World has defined the required document semantics.
+
+The Rich Editor Gate therefore follows the accepted Technology Strategy:
+
+```text
+defer editor selection until Composition / CMS requirements are concrete.
+```
+
+Decision:
+
+```text
+keep the current typed Text Block and ordered composition model;
+
+defer rich editor technology.
+```
+
+### Future activation gate
+
+Rich editor technology is not rejected permanently. Re-evaluate when an
+implemented creator slice requires a concrete editor-neutral capability such as
+one or more of:
+
+```text
+multiple semantic content nodes within one Block;
+
+inline marks with canonical validation;
+
+nested lists or structured tables;
+
+controlled inline Media or Knowledge embeds;
+
+stable portable document serialization;
+
+schema migrations for persisted rich content;
+
+accessible selection-aware editing commands;
+
+collaborative editing with defined conflict semantics;
+
+editor extensions backed by owner-defined Block contracts.
+```
+
+Before choosing a framework, Composition must define the canonical
+editor-neutral content requirements, security rules, persistence meaning, and
+public contracts. The Web implementation may then evaluate technologies against
+those accepted requirements.
+
+### Decision result
+
+```text
+PHASE 8 RICH EDITOR GATE
+CLOSED
+
+RICH EDITOR TECHNOLOGY
+DEFERRED
+
+PRODUCTION CODE CHANGE
+NONE
+
+SCHEMA CHANGE
+NONE
+
+DEPENDENCY CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+26
+
+PHASE 8
+ACTIVE
+
+NEXT
+Localization Gate
+```
+
+The next required roadmap decision is the Phase 8 Localization Gate. It must
+evaluate actual product rollout requirements for multiple locales and must not
+introduce Localization Kernel or frontend localization technology for
+hypothetical future languages.
+
+The Localization Gate remains blocked until this roadmap-only Rich Editor Gate
+decision commit itself completes exact green `push/main` CI.
+
+This decision changes governance documentation only.
 
 ---
 
