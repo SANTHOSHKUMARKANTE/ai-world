@@ -27,6 +27,7 @@
     "@ai-world/foundation-observability": "workspace:*",
     "@ai-world/platform-ai-creator": "workspace:*",
     "@ai-world/platform-composition": "workspace:*",
+    "@ai-world/platform-engagement": "workspace:*",
     "@ai-world/platform-identity-access": "workspace:*",
     "@ai-world/platform-knowledge": "workspace:*",
     "@ai-world/platform-user": "workspace:*",

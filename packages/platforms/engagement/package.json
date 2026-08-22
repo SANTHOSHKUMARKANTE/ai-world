@@ -1,0 +1,34 @@
+{
+  "name": "@ai-world/platform-engagement",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Canonical user engagement state ownership for AI World",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./infrastructure": {
+      "types": "./dist/infrastructure.d.ts",
+      "default": "./dist/infrastructure.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "vitest run --exclude \"test/**/*.integration.spec.ts\"",
+    "test:integration": "vitest run integration",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "vitest": "4.1.10"
+  },
+  "dependencies": {
+    "@ai-world/foundation-database": "workspace:*",
+    "@ai-world/kernel-identifiers": "workspace:*",
+    "@ai-world/platform-user": "workspace:*"
+  }
+}

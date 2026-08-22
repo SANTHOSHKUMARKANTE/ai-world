@@ -15,6 +15,15 @@ import {
 } from '@ai-world/platform-ai-creator/infrastructure';
 import { createOpenAiProviderAdapter } from '@ai-world/platform-ai-creator/infrastructure/openai';
 import {
+  AddFavorite,
+  AddFavoriteAsActor,
+  ListFavorites,
+  ListFavoritesAsActor,
+  RemoveFavorite,
+  RemoveFavoriteAsActor,
+} from '@ai-world/platform-engagement';
+import { PrismaFavoriteRepository } from '@ai-world/platform-engagement/infrastructure';
+import {
   AiAssistedKnowledgeComposition,
   ArchivePage,
   AuthorizeCompositionArchival,
@@ -120,6 +129,7 @@ import {
   PublicDiscoverySearchController,
 } from './discovery/public-discovery-search.controller';
 import { EmailVerificationController } from './email-verification/email-verification.controller';
+import { FavoritesController } from './engagement/favorites.controller';
 import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
 import { CreatorKnowledgeController } from './knowledge/creator-knowledge.controller';
@@ -276,6 +286,7 @@ export class AppModule {
         EmailVerificationController,
         PasswordRecoveryController,
         UserProfileController,
+        FavoritesController,
         AuthorizationController,
         PublicKnowledgeController,
         PublicDiscoverySearchController,
@@ -724,6 +735,71 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): UpdateUserProfile => {
             return new UpdateUserProfile(new PrismaUserProfileRepository(database.getClient()));
+          },
+        },
+
+        {
+          provide: PrismaFavoriteRepository,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): PrismaFavoriteRepository => {
+            return new PrismaFavoriteRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: AddFavorite,
+          inject: [PrismaFavoriteRepository],
+          useFactory: (repository: PrismaFavoriteRepository): AddFavorite => {
+            return new AddFavorite(repository);
+          },
+        },
+
+        {
+          provide: ListFavorites,
+          inject: [PrismaFavoriteRepository],
+          useFactory: (repository: PrismaFavoriteRepository): ListFavorites => {
+            return new ListFavorites(repository);
+          },
+        },
+
+        {
+          provide: RemoveFavorite,
+          inject: [PrismaFavoriteRepository],
+          useFactory: (repository: PrismaFavoriteRepository): RemoveFavorite => {
+            return new RemoveFavorite(repository);
+          },
+        },
+
+        {
+          provide: AddFavoriteAsActor,
+          inject: [GetUserProfile, AddFavorite],
+          useFactory: (
+            getUserProfile: GetUserProfile,
+            addFavorite: AddFavorite,
+          ): AddFavoriteAsActor => {
+            return new AddFavoriteAsActor(getUserProfile, addFavorite);
+          },
+        },
+
+        {
+          provide: ListFavoritesAsActor,
+          inject: [GetUserProfile, ListFavorites],
+          useFactory: (
+            getUserProfile: GetUserProfile,
+            listFavorites: ListFavorites,
+          ): ListFavoritesAsActor => {
+            return new ListFavoritesAsActor(getUserProfile, listFavorites);
+          },
+        },
+
+        {
+          provide: RemoveFavoriteAsActor,
+          inject: [GetUserProfile, RemoveFavorite],
+          useFactory: (
+            getUserProfile: GetUserProfile,
+            removeFavorite: RemoveFavorite,
+          ): RemoveFavoriteAsActor => {
+            return new RemoveFavoriteAsActor(getUserProfile, removeFavorite);
           },
         },
 
