@@ -1,11 +1,17 @@
 import type { Metadata } from 'next';
 
 import { SessionProvider } from '../session/session-provider';
+import { ApplicationShell } from '../ui/application-shell';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'AI World',
-  description: 'Explore and create across AI World.',
+  title: {
+    default: 'AI World',
+    template: '%s · AI World',
+  },
+  description:
+    'Explore structured Knowledge across Universes, discover connections, and create with responsible AI assistance.',
+  applicationName: 'AI World',
 };
 
 export default function RootLayout({
@@ -16,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <ApplicationShell>{children}</ApplicationShell>
+        </SessionProvider>
       </body>
     </html>
   );
