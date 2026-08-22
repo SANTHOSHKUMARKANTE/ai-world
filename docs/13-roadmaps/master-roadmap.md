@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -26156,6 +26156,296 @@ Deity or Temple presentation;
 
 Scripture/source-aware content composition.
 ```
+
+---
+
+## P8-M08 DEVOTIONAL COMPOSITION PROOF CLOSURE RECORD
+
+P8-M08 — Devotional Composition Proof is CLOSED.
+
+The accepted implementation baseline is:
+
+```text
+7118216dc89959d01031c0365afa1c70181197f8
+test(composition): prove Devotional composition
+```
+
+Parent:
+
+```text
+25c15e70994b3595777f39f6409f263a8ec3eb7e
+docs(roadmap): close P8-M07
+```
+
+Implementation scope:
+
+```text
+apps/api/test/devotional-composition-proof.integration.spec.ts
+```
+
+Committed proof blob:
+
+```text
+87151d13a7b68eff43a61685c871391ee5172439
+```
+
+The exact implementation push CI was verified before this roadmap transition:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32554821913
+
+CI NUMBER
+#164
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+VALIDATE JOB
+96987223246
+```
+
+The controlled PostgreSQL/API proof demonstrates:
+
+```text
+Devotional Creator
+        ↓
+universe.devotional home Page
+        ├── typed text Block
+        ├── AI-assisted devotional.temple Knowledge reference
+        ├── PUBLISHED devotional.scripture Knowledge source
+        └── ACTIVE Media Asset
+        ↓
+ordered typed composition
+        ↓
+controlled DRAFT preview
+        ↓
+PUBLISHED Page
+```
+
+The proof uses the canonical Devotional definition exported by:
+
+```text
+@ai-world/universe-devotional
+
+DEVOTIONAL_UNIVERSE_KEY
+DEVOTIONAL_SCRIPTURE_RESOURCE_TYPE
+DEVOTIONAL_TEMPLE_RESOURCE_TYPE
+```
+
+No Devotional key or Resource type is duplicated inside shared Composition,
+Knowledge, Media, Identity & Access, AI / Creator, or Foundation production
+code.
+
+The owner boundaries remain explicit:
+
+```text
+Composition / CMS
+    Page, Block, ordered typed references, preview, and publication
+
+Knowledge
+    Scripture and accepted Temple canonical state and lifecycle
+
+Media
+    Asset validation, storage, and lifecycle
+
+AI / Creator
+    provider-neutral Generation, provenance, result, and usage
+
+Identity & Access
+    Session, role, and Permission evaluation
+
+Devotional Universe
+    Universe key and closed Devotional Resource-type definition
+```
+
+The Scripture/source-aware path deliberately creates both a PUBLISHED and a
+DRAFT `devotional.scripture` Resource.
+
+Only the PUBLISHED Scripture is admitted to authorized AI context and persisted
+Generation provenance. The DRAFT Scripture is excluded.
+
+The model-facing boundary remains provider-neutral:
+
+```text
+AiProviderPort
+
+provider.devotional-composition-proof
+
+model.devotional-composition-proof
+```
+
+The suggested `devotional.temple` remains non-canonical after Generation.
+
+Canonical Knowledge mutation occurs only after explicit creator acceptance and
+delegates to the Knowledge owner. The accepted Temple begins in the canonical
+Knowledge `DRAFT` lifecycle.
+
+The Devotional Page composition resolves in the persisted order:
+
+```text
+0
+composition.block.text
+
+1
+devotional.temple
+
+2
+devotional.scripture
+
+3
+media.asset
+```
+
+The preview re-resolves those references through their owner contracts and
+preserves their canonical states:
+
+```text
+Page
+DRAFT
+
+Temple Knowledge Resource
+DRAFT
+
+Scripture Knowledge Resource
+PUBLISHED
+
+Media Asset
+ACTIVE
+```
+
+The same creator then publishes the Page through the existing Composition
+publication contract. No direct Page lifecycle mutation is used.
+
+The uploaded image crosses the controlled Media API and Storage Foundation port.
+The public response exposes normalized Media metadata and does not expose the
+internal storage reference.
+
+Generation operational evidence is retained:
+
+```text
+inputTokens
+24
+
+outputTokens
+3
+
+totalTokens
+27
+```
+
+The implementation is proof-only and introduces:
+
+```text
+no production source change;
+
+no Prisma schema change;
+
+no migration;
+
+no package or lockfile change;
+
+no new canonical owner;
+
+no Devotional-specific Provider adapter;
+
+no named-Universe branching in shared core;
+
+no direct Knowledge or Media persistence mutation for proof setup;
+
+no automatic canonical acceptance;
+
+no automatic Knowledge publication;
+
+no Anime composition behavior.
+```
+
+Canonical migration count remains:
+
+```text
+26
+```
+
+Focused milestone validation completed successfully:
+
+```text
+API TypeScript typecheck;
+
+API lint;
+
+API production build;
+
+Devotional Composition integration proof — 1/1;
+
+neighboring Composition and AI Creator regression set — 11/11 across 3 files;
+
+Creator workspace Chromium proof — 3/3 scenarios passed;
+
+focused architecture scan — 205 modules and 472 dependencies, no violations;
+
+Prettier validation;
+
+git diff --check.
+```
+
+The exact GitHub Actions Validate job also completed every required repository
+step successfully:
+
+```text
+format check;
+
+lint;
+
+typecheck;
+
+unit tests;
+
+database migrations;
+
+database integration tests;
+
+browser E2E tests;
+
+production build;
+
+architecture check.
+```
+
+P8-M08 proves the shared Composition / CMS contracts through Devotional
+configuration and public owner boundaries. It does not create a Devotional fork
+of Composition and does not treat earlier generic tests as sufficient evidence.
+
+Phase 8 remains ACTIVE.
+
+The next real capability is:
+
+```text
+P8-M09 — Anime Composition Proof
+NEXT
+```
+
+P8-M09 must independently demonstrate reuse through Anime configuration. It
+must not be treated as satisfied merely because the Devotional proof passed.
+
+P8-M09 remains blocked until this roadmap-only P8-M08 closure commit itself
+completes exact green `push/main` CI.
+
+This closure changes governance documentation only.
 
 ---
 
