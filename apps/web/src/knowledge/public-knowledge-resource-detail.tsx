@@ -2,18 +2,26 @@
 
 import { useEffect, useState } from 'react';
 
+import { WEB_UNIVERSE_PRESENTATIONS } from '../universes/presentation';
 import { getPublicKnowledgeResource, type PublicKnowledgeResource } from './public-knowledge-api';
+import { PublishedResourceImageGallery } from './published-resource-image-gallery';
 
 type State =
   | { readonly status: 'loading' }
   | { readonly status: 'ready'; readonly resource: PublicKnowledgeResource }
   | { readonly status: 'error' };
 
+function resourceLabel(resourceType: string): string {
+  const segment = resourceType.split('.').at(-1) ?? resourceType;
+  return segment.charAt(0).toUpperCase() + segment.slice(1).replaceAll('-', ' ');
+}
+
 export function PublicKnowledgeResourceDetail({ resourceId }: { readonly resourceId: string }) {
   const [state, setState] = useState<State>({ status: 'loading' });
 
   useEffect(() => {
     let active = true;
+
     void getPublicKnowledgeResource(resourceId)
       .then((resource) => {
         if (active) setState({ status: 'ready', resource });
@@ -21,44 +29,58 @@ export function PublicKnowledgeResourceDetail({ resourceId }: { readonly resourc
       .catch(() => {
         if (active) setState({ status: 'error' });
       });
+
     return () => {
       active = false;
     };
   }, [resourceId]);
 
-  if (state.status === 'loading')
-    return (
-      <p role="status" className="text-sm text-slate-500">
-        Loading published resource…
-      </p>
-    );
-  if (state.status === 'error')
-    return (
-      <p role="alert" className="text-sm text-slate-700">
-        This published resource is unavailable.
-      </p>
-    );
+  if (state.status === 'loading') {
+    return <p role="status">Loading published resource…</p>;
+  }
+
+  if (state.status === 'error') {
+    return <p role="alert">This published resource is unavailable.</p>;
+  }
+
+  const presentation = WEB_UNIVERSE_PRESENTATIONS.find(
+    (item) => item.universeKey === state.resource.universeKey,
+  );
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-        {state.resource.universeKey}
-      </p>
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight">{state.resource.resourceType}</h1>
-      <dl className="mt-6 grid gap-4 text-sm">
+    <article
+      className="aw-resource-detail"
+      data-universe-tone={presentation?.tone}
+      aria-labelledby="public-resource-title"
+    >
+      <header className="aw-resource-detail__header">
+        <p className="aw-eyebrow">
+          {presentation?.label ?? state.resource.universeKey} · Published Knowledge
+        </p>
+        <h1 id="public-resource-title">{resourceLabel(state.resource.resourceType)}</h1>
+        <p>{state.resource.resourceType}</p>
+      </header>
+
+      <dl className="aw-resource-meta aw-resource-meta--detail">
         <div>
-          <dt className="font-medium text-slate-700">Resource ID</dt>
-          <dd className="mt-1 break-all font-mono text-xs text-slate-600">{state.resource.id}</dd>
+          <dt>Resource ID</dt>
+          <dd>{state.resource.id}</dd>
         </div>
         <div>
-          <dt className="font-medium text-slate-700">Updated</dt>
-          <dd className="mt-1 text-slate-600">
+          <dt>Updated</dt>
+          <dd>
             {new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(
               new Date(state.resource.updatedAt),
             )}
           </dd>
         </div>
       </dl>
+
+      <PublishedResourceImageGallery
+        resourceId={state.resource.id}
+        resourceType={state.resource.resourceType}
+        label="Published imagery"
+      />
     </article>
   );
 }

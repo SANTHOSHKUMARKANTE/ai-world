@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { type FormEvent, useState } from 'react';
 
+import { WEB_UNIVERSE_PRESENTATIONS } from '../universes/presentation';
 import { searchPublicKnowledge, type PublicDiscoverySearchResult } from './public-discovery-api';
 
 const RESOURCE_TYPE_OPTIONS = [
@@ -18,6 +19,17 @@ type SearchState =
   | { readonly status: 'loading' }
   | { readonly status: 'ready'; readonly items: readonly PublicDiscoverySearchResult[] }
   | { readonly status: 'error' };
+
+function universeLabel(universeKey: string | null | undefined): string {
+  if (!universeKey) {
+    return 'Published Knowledge';
+  }
+
+  return (
+    WEB_UNIVERSE_PRESENTATIONS.find((item) => item.universeKey === universeKey)?.label ??
+    universeKey
+  );
+}
 
 export function SearchExperience() {
   const [query, setQuery] = useState('');
@@ -37,11 +49,14 @@ export function SearchExperience() {
 
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
+
     if (query.trim().length === 0) {
       setState({ status: 'ready', items: [] });
       return;
     }
+
     setState({ status: 'loading' });
+
     try {
       const response = await searchPublicKnowledge({
         query,
@@ -57,44 +72,40 @@ export function SearchExperience() {
   }
 
   return (
-    <section
-      aria-labelledby="discovery-search-heading"
-      className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-    >
-      <h2 id="discovery-search-heading" className="text-2xl font-semibold tracking-tight">
-        Search published Knowledge
-      </h2>
+    <section aria-labelledby="discovery-search-heading" className="aw-search-surface">
+      <div className="aw-search-surface__intro">
+        <h2 id="discovery-search-heading">Search published Knowledge</h2>
+        <p>One Search experience, with scope controls when you need them.</p>
+      </div>
 
-      <form className="mt-6 grid gap-5" onSubmit={(event) => void submit(event)}>
-        <label className="grid gap-2">
-          <span className="text-sm font-medium text-slate-800">Search query</span>
+      <form className="aw-search-form" onSubmit={(event) => void submit(event)}>
+        <label>
+          <span>Search query</span>
           <input
             required
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            className="rounded-lg border border-slate-300 px-3 py-2"
             placeholder="Try temple, character, scripture…"
           />
         </label>
 
-        <label className="grid gap-2">
-          <span className="text-sm font-medium text-slate-800">Search scope</span>
-          <select
-            value={universeKey}
-            onChange={(event) => setUniverseKey(event.target.value)}
-            className="rounded-lg border border-slate-300 px-3 py-2"
-          >
+        <label>
+          <span>Search scope</span>
+          <select value={universeKey} onChange={(event) => setUniverseKey(event.target.value)}>
             <option value="">All Universes</option>
-            <option value="universe.devotional">Devotional Universe</option>
-            <option value="universe.anime">Anime Universe</option>
+            {WEB_UNIVERSE_PRESENTATIONS.map((item) => (
+              <option key={item.universeKey} value={item.universeKey}>
+                {item.label} Universe
+              </option>
+            ))}
           </select>
         </label>
 
-        <fieldset className="grid gap-3">
-          <legend className="text-sm font-medium text-slate-800">Resource Type filters</legend>
-          <div className="grid gap-2 md:grid-cols-2">
+        <fieldset>
+          <legend>Resource Type filters</legend>
+          <div className="aw-search-filter-grid">
             {RESOURCE_TYPE_OPTIONS.map(([value, label]) => (
-              <label key={value} className="flex items-center gap-2 text-sm text-slate-700">
+              <label key={value} className="aw-check-label">
                 <input
                   type="checkbox"
                   checked={resourceTypes.includes(value)}
@@ -106,50 +117,30 @@ export function SearchExperience() {
           </div>
         </fieldset>
 
-        <div>
-          <button
-            type="submit"
-            className="rounded-lg bg-slate-950 px-4 py-2 text-sm font-semibold text-white"
-          >
-            Search
-          </button>
-        </div>
+        <button className="aw-button aw-button--primary" type="submit">
+          Search
+        </button>
       </form>
 
-      <div className="mt-8" aria-live="polite">
+      <div className="aw-search-results" aria-live="polite">
         {state.status === 'idle' ? (
-          <p className="text-sm text-slate-500">
-            Search globally or narrow results to one Universe and selected Resource Types.
-          </p>
+          <p>Search globally or narrow results to one Universe and selected Resource Types.</p>
         ) : null}
-        {state.status === 'loading' ? (
-          <p role="status" className="text-sm text-slate-500">
-            Searching published Knowledge…
-          </p>
-        ) : null}
-        {state.status === 'error' ? (
-          <p role="alert" className="text-sm text-slate-700">
-            Search is temporarily unavailable.
-          </p>
-        ) : null}
+        {state.status === 'loading' ? <p role="status">Searching published Knowledge…</p> : null}
+        {state.status === 'error' ? <p role="alert">Search is temporarily unavailable.</p> : null}
         {state.status === 'ready' && state.items.length === 0 ? (
-          <p className="text-sm text-slate-500">No published Search results.</p>
+          <p className="aw-empty-state">No published Search results.</p>
         ) : null}
         {state.status === 'ready' && state.items.length > 0 ? (
-          <ol aria-label="Search results" className="grid gap-4">
+          <ol aria-label="Search results" className="aw-search-result-list">
             {state.items.map((item) => (
-              <li
-                key={item.resourceId}
-                className="rounded-xl border border-slate-200 bg-slate-50 p-4"
-              >
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {item.universeKey ?? 'Published Knowledge'}
-                </p>
-                <h3 className="mt-1 font-semibold text-slate-950">{item.resourceType}</h3>
-                <p className="mt-2 break-all font-mono text-xs text-slate-600">{item.resourceId}</p>
+              <li key={item.resourceId} className="aw-search-result">
+                <p className="aw-eyebrow">{universeLabel(item.universeKey)}</p>
+                <h3>{item.resourceType}</h3>
+                <p className="aw-resource-card__type">{item.resourceId}</p>
                 <Link
                   href={`/knowledge/resources/${encodeURIComponent(item.resourceId)}`}
-                  className="mt-3 inline-block text-sm font-medium text-slate-800 underline-offset-4 hover:underline"
+                  className="aw-text-link"
                 >
                   Open resource
                 </Link>

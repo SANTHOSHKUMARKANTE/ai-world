@@ -1,54 +1,54 @@
-import Link from 'next/link';
-
 import { KnowledgeUniverseSection } from '../../knowledge/knowledge-universe-section';
+import { PageContainer } from '../../ui/primitives';
+import { WEB_UNIVERSE_PRESENTATIONS } from '../../universes/presentation';
+
+function presentation(universeKey: 'universe.devotional' | 'universe.anime') {
+  const match = WEB_UNIVERSE_PRESENTATIONS.find((item) => item.universeKey === universeKey);
+
+  if (!match) {
+    throw new Error(`Missing Web Universe presentation for ${universeKey}.`);
+  }
+
+  return match;
+}
 
 export default function KnowledgePage() {
+  const devotional = presentation('universe.devotional');
+  const anime = presentation('universe.anime');
+
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-950">
-      <div className="mx-auto max-w-5xl">
-        <nav aria-label="Knowledge">
-          <Link
-            href="/"
-            className="text-sm font-medium text-slate-600 underline-offset-4 hover:underline"
-          >
-            ← AI World
-          </Link>
-        </nav>
-
-        <header className="max-w-3xl py-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
-            Shared Knowledge Platform
-          </p>
-
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight">
-            Explore published Knowledge
-          </h1>
-
-          <p className="mt-4 text-base leading-7 text-slate-600">
-            One public Knowledge contract powers multiple Universes. Devotional remains the primary
-            product experience while Anime provides the bounded reuse proof.
+    <main className="aw-public-page">
+      <PageContainer>
+        <header className="aw-public-hero">
+          <p className="aw-eyebrow">Explore AI World</p>
+          <h1>Explore published Knowledge</h1>
+          <p>
+            Browse published Knowledge across AI World. Start with Devotional, explore Anime through
+            the same shared experience, then open any Resource to view Media and save it for later.
           </p>
         </header>
 
-        <div className="grid gap-6">
+        <div className="aw-universe-stack">
           <KnowledgeUniverseSection
-            title="Devotional Resources"
-            description="The primary AI World domain experience, now proving shared Media through published temple imagery without Devotional-specific storage or processing."
-            universeKey="universe.devotional"
+            title={`${devotional.label} Resources`}
+            description={devotional.description}
+            universeKey={devotional.universeKey}
             priority="primary"
+            tone={devotional.tone}
             imageResourceTypes={['devotional.temple']}
             imageSectionLabel="Temple imagery"
           />
 
           <KnowledgeUniverseSection
-            title="Anime Resources"
-            description="The second-Universe reuse proof now exercises shared Media through published Character and Series imagery without Anime-specific media infrastructure."
-            universeKey="universe.anime"
+            title={`${anime.label} Resources`}
+            description={anime.description}
+            universeKey={anime.universeKey}
+            tone={anime.tone}
             imageResourceTypes={['anime.character', 'anime.series']}
             imageSectionLabel="Anime imagery"
           />
         </div>
-      </div>
+      </PageContainer>
     </main>
   );
 }

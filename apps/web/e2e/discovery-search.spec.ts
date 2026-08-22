@@ -58,6 +58,16 @@ test.describe('Phase 6 Web Discovery integration', () => {
       });
     });
 
+    await page.route(`**/api/knowledge/resources/${devotionalId}/assets`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          assetIds: [],
+        }),
+      });
+    });
+
     expect((await page.goto('/search'))?.status()).toBe(200);
     await expect(page.getByRole('heading', { name: 'Search AI World', level: 1 })).toBeVisible();
     await page.getByLabel('Search query').fill('A');
@@ -78,7 +88,8 @@ test.describe('Phase 6 Web Discovery integration', () => {
 
     await results.getByRole('link', { name: 'Open resource' }).click();
     await expect(page).toHaveURL(new RegExp(`/knowledge/resources/${devotionalId}$`));
-    await expect(page.getByRole('heading', { name: 'devotional.temple' })).toBeVisible();
-    await expect(page.getByText('universe.devotional')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Temple' })).toBeVisible();
+    await expect(page.getByText('Devotional · Published Knowledge')).toBeVisible();
+    await expect(page.getByText('devotional.temple')).toBeVisible();
   });
 });

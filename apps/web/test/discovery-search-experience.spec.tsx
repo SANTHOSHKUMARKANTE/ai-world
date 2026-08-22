@@ -72,22 +72,45 @@ describe('Phase 6 Web Discovery integration', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
-  it('loads a Search result through the existing public Knowledge endpoint', async () => {
+  it('loads a Search result through the existing public Knowledge and Media-reference endpoints', async () => {
     const id = '33333333-3333-4333-8333-333333333333';
     const fetchMock = vi.fn(async (input: unknown) => {
-      expect(String(input)).toBe(`/api/knowledge/resources/${id}`);
-      return jsonResponse({
-        id,
-        universeKey: 'universe.devotional',
-        resourceType: 'devotional.temple',
-        createdAt: '2026-08-18T09:00:00.000Z',
-        updatedAt: '2026-08-18T09:10:00.000Z',
-      });
+      const url = String(input);
+
+      if (url === `/api/knowledge/resources/${id}`) {
+        return jsonResponse({
+          id,
+          universeKey: 'universe.devotional',
+          resourceType: 'devotional.temple',
+          createdAt: '2026-08-18T09:00:00.000Z',
+          updatedAt: '2026-08-18T09:10:00.000Z',
+        });
+      }
+
+      if (url === `/api/knowledge/resources/${id}/assets`) {
+        return jsonResponse({ assetIds: [] });
+      }
+
+      throw new Error(`Unexpected public Resource detail request: ${url}`);
     });
+
     vi.stubGlobal('fetch', fetchMock);
+
     render(<PublicKnowledgeResourceDetail resourceId={id} />);
-    await screen.findByRole('heading', { name: 'devotional.temple' });
-    expect(screen.getByText('universe.devotional')).toBeTruthy();
+
+    await screen.findByRole('heading', { name: 'Temple' });
+
+    expect(screen.getByText('Devotional · Published Knowledge')).toBeTruthy();
+    expect(screen.getByText('devotional.temple')).toBeTruthy();
     expect(screen.getByText(id)).toBeTruthy();
+
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        `/api/knowledge/resources/${id}/assets`,
+        expect.objectContaining({
+          credentials: 'same-origin',
+        }),
+      );
+    });
   });
 });

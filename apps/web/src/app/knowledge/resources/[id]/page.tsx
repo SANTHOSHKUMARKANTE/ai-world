@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
+import { ResourceEngagementControls } from '../../../../engagement/resource-engagement-controls';
 import { PublicKnowledgeResourceDetail } from '../../../../knowledge/public-knowledge-resource-detail';
+import { PageContainer } from '../../../../ui/primitives';
 
 interface Props {
   readonly params: Promise<{ readonly id: string }>;
@@ -8,27 +10,18 @@ interface Props {
 
 export default async function KnowledgeResourcePage({ params }: Props) {
   const { id } = await params;
+
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-950">
-      <div className="mx-auto max-w-3xl">
-        <nav aria-label="Knowledge resource" className="flex gap-4">
-          <Link
-            href="/search"
-            className="text-sm font-medium text-slate-600 underline-offset-4 hover:underline"
-          >
-            ← Search
-          </Link>
-          <Link
-            href="/knowledge"
-            className="text-sm font-medium text-slate-600 underline-offset-4 hover:underline"
-          >
-            Explore Knowledge
-          </Link>
+    <main className="aw-public-page">
+      <PageContainer className="aw-resource-page">
+        <nav aria-label="Knowledge resource" className="aw-context-nav">
+          <Link href="/knowledge">← Explore</Link>
+          <Link href="/search">Search</Link>
         </nav>
-        <div className="py-10">
-          <PublicKnowledgeResourceDetail resourceId={id} />
-        </div>
-      </div>
+
+        <PublicKnowledgeResourceDetail resourceId={id} />
+        <ResourceEngagementControls resourceId={id} />
+      </PageContainer>
     </main>
   );
 }
