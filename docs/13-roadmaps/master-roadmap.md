@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -889,6 +889,9 @@ P8-M06 — Publishing
 CLOSED
 
 Workflow Gate
+CLOSED — Workflow Kernel DEFERRED
+
+Policy Gate
 NEXT
 ```
 
@@ -25024,6 +25027,324 @@ scheduled transitions
 ```
 
 introduce reusable Workflow Kernel.
+
+---
+
+## PHASE 8 WORKFLOW GATE DECISION RECORD
+
+The Phase 8 Workflow Gate is CLOSED.
+
+Decision:
+
+```text
+WORKFLOW KERNEL
+DEFERRED
+```
+
+Decision baseline:
+
+```text
+9e1150d9f357a5f480ba1536f46c800bdda5e111
+docs(roadmap): close P8-M06
+```
+
+Parent implementation baseline:
+
+```text
+599973df79b5d2f38a7c96a59186da2e7bd47c1c
+feat(composition): add page publishing lifecycle
+```
+
+The exact successful GitHub Actions CI for the decision baseline is:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32549971726
+
+CI NUMBER
+#159
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+VALIDATE JOB
+96975004543
+```
+
+### Current editorial-process evidence
+
+Composition now owns a direct Page lifecycle:
+
+```text
+DRAFT
+    → PUBLISHED
+        → ARCHIVED
+```
+
+The supported operations are direct owner mutations:
+
+```text
+publish Page
+
+archive Page
+```
+
+The following reusable editorial-process requirements are absent:
+
+```text
+submit for review
+NONE
+
+review state
+NONE
+
+reviewer or participant assignment
+NONE
+
+approval
+NONE
+
+rejection
+NONE
+
+multiple approval stages
+NONE
+
+scheduled lifecycle transition
+NONE
+
+conditional or branching process
+NONE
+
+durable process history
+NONE
+```
+
+The presence of PUBLISHED and ARCHIVED states is lifecycle evidence, not
+Workflow evidence. The current creator requirement is completely represented by
+the Composition-owned transition graph and operation-specific authorization.
+
+### Current authorization evidence
+
+Composition defines direct action Permissions:
+
+```text
+composition.publish
+
+composition.archive
+```
+
+Identity & Access evaluates those Permissions before identifier or canonical
+validation. Authorization answers who may request a direct Composition
+operation; it does not introduce a reusable review or approval process.
+
+The implementation exposes no separate Workflow actions:
+
+```text
+submit-for-review
+NONE
+
+approve
+NONE
+
+reject
+NONE
+
+assign-reviewer
+NONE
+
+schedule-publication
+NONE
+```
+
+### Current Workflow materialization
+
+```text
+Workflow Kernel package
+NONE
+
+Workflow Platform package
+NONE
+
+Workflow Definition contract
+NONE
+
+Workflow Instance contract
+NONE
+
+Workflow Definition persistence
+NONE
+
+Workflow Instance persistence
+NONE
+
+approval persistence
+NONE
+
+reviewer or assignment persistence
+NONE
+
+workflow schedule persistence
+NONE
+
+Workflow dependency
+NONE
+```
+
+No source package, database schema, migration, API route, UI state, dependency,
+or infrastructure was introduced for Workflow.
+
+### Ownership boundary
+
+The accepted ownership model remains:
+
+```text
+Workflow Kernel
+    owns reusable Workflow mechanics when implemented demand exists
+
+Composition / CMS Platform
+    owns Page lifecycle and canonical Page mutation
+
+Knowledge Platform
+    owns Knowledge Resource lifecycle and canonical Knowledge mutation
+
+Identity & Access Platform
+    owns Role and Permission representation and evaluation
+
+Universe or defining Platform
+    owns the business meaning of a configured Workflow
+```
+
+A future Workflow capability may coordinate a transition approval, but it must
+not take ownership of the target Page, Block, Knowledge Resource, or Media Asset.
+The owning Platform remains responsible for applying every valid canonical
+mutation.
+
+### Decision rationale
+
+Adding Workflow now would require premature choices for:
+
+```text
+Workflow Definition identity;
+
+Workflow Instance lifecycle;
+
+review and approval states;
+
+participant and reviewer assignment;
+
+approval and rejection rules;
+
+conditional transition evaluation;
+
+process history and Audit interaction;
+
+scheduling interaction;
+
+retry and concurrency behavior;
+
+configuration and versioning;
+
+Universe-specific process variation.
+```
+
+There is no implemented consumer that can validate those semantics. Materializing
+them would create speculative shared mechanics and would violate the accepted
+demand-driven Kernel rule.
+
+The Phase 8 Workflow Gate therefore follows the canonical principle:
+
+```text
+Do not add Workflow merely because publishing states exist.
+```
+
+Decision:
+
+```text
+defer reusable Workflow.
+```
+
+### Future activation gate
+
+Workflow is not rejected permanently. Re-evaluate when a real implemented
+editorial slice requires reusable process semantics beyond direct lifecycle
+transitions, such as one or more of:
+
+```text
+submit-for-review;
+
+explicit review state;
+
+reviewer or participant assignment;
+
+approval or rejection;
+
+multiple approval stages;
+
+conditional or branching processes;
+
+scheduled transitions coordinated as process state;
+
+reusable Workflow Definitions;
+
+durable Workflow Instances and history;
+
+materially different reusable editorial processes across contexts or Universes.
+```
+
+When activated, Workflow must own reusable process mechanics while the target
+Platform continues to own target lifecycle and canonical mutation.
+
+### Decision result
+
+```text
+PHASE 8 WORKFLOW GATE
+CLOSED
+
+WORKFLOW KERNEL
+DEFERRED
+
+PRODUCTION CODE CHANGE
+NONE
+
+SCHEMA CHANGE
+NONE
+
+DEPENDENCY CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+26
+
+PHASE 8
+ACTIVE
+
+NEXT
+Policy Gate
+```
+
+The next required roadmap decision is the Policy Gate. It must evaluate whether
+publication rules now vary significantly by Universe, Resource, region, Actor,
+or content status. It must not introduce Policy Kernel for stable owner-local
+lifecycle and authorization rules.
 
 ---
 
