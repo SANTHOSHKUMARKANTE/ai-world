@@ -15,14 +15,27 @@ import {
 } from '@ai-world/platform-ai-creator/infrastructure';
 import { createOpenAiProviderAdapter } from '@ai-world/platform-ai-creator/infrastructure/openai';
 import {
+  AddCollectionResource,
+  AddCollectionResourceAsActor,
   AddFavorite,
   AddFavoriteAsActor,
+  CreateCollection,
+  CreateCollectionAsActor,
+  ListCollectionResources,
+  ListCollectionResourcesAsActor,
+  ListCollections,
+  ListCollectionsAsActor,
   ListFavorites,
   ListFavoritesAsActor,
+  RemoveCollectionResource,
+  RemoveCollectionResourceAsActor,
   RemoveFavorite,
   RemoveFavoriteAsActor,
 } from '@ai-world/platform-engagement';
-import { PrismaFavoriteRepository } from '@ai-world/platform-engagement/infrastructure';
+import {
+  PrismaCollectionRepository,
+  PrismaFavoriteRepository,
+} from '@ai-world/platform-engagement/infrastructure';
 import {
   AiAssistedKnowledgeComposition,
   ArchivePage,
@@ -129,6 +142,7 @@ import {
   PublicDiscoverySearchController,
 } from './discovery/public-discovery-search.controller';
 import { EmailVerificationController } from './email-verification/email-verification.controller';
+import { CollectionsController } from './engagement/collections.controller';
 import { FavoritesController } from './engagement/favorites.controller';
 import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
@@ -287,6 +301,7 @@ export class AppModule {
         PasswordRecoveryController,
         UserProfileController,
         FavoritesController,
+        CollectionsController,
         AuthorizationController,
         PublicKnowledgeController,
         PublicDiscoverySearchController,
@@ -644,6 +659,109 @@ export class AppModule {
             compositions: PrismaPageCompositionRepository,
           ): GetPagePreview => {
             return new GetPagePreview(pages, blocks, knowledgeResources, mediaAssets, compositions);
+          },
+        },
+
+        {
+          provide: PrismaCollectionRepository,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): PrismaCollectionRepository => {
+            return new PrismaCollectionRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: CreateCollection,
+          inject: [PrismaCollectionRepository],
+          useFactory: (repository: PrismaCollectionRepository): CreateCollection => {
+            return new CreateCollection(repository);
+          },
+        },
+
+        {
+          provide: ListCollections,
+          inject: [PrismaCollectionRepository],
+          useFactory: (repository: PrismaCollectionRepository): ListCollections => {
+            return new ListCollections(repository);
+          },
+        },
+
+        {
+          provide: AddCollectionResource,
+          inject: [PrismaCollectionRepository],
+          useFactory: (repository: PrismaCollectionRepository): AddCollectionResource => {
+            return new AddCollectionResource(repository);
+          },
+        },
+
+        {
+          provide: ListCollectionResources,
+          inject: [PrismaCollectionRepository],
+          useFactory: (repository: PrismaCollectionRepository): ListCollectionResources => {
+            return new ListCollectionResources(repository);
+          },
+        },
+
+        {
+          provide: RemoveCollectionResource,
+          inject: [PrismaCollectionRepository],
+          useFactory: (repository: PrismaCollectionRepository): RemoveCollectionResource => {
+            return new RemoveCollectionResource(repository);
+          },
+        },
+
+        {
+          provide: CreateCollectionAsActor,
+          inject: [GetUserProfile, CreateCollection],
+          useFactory: (
+            getUserProfile: GetUserProfile,
+            createCollection: CreateCollection,
+          ): CreateCollectionAsActor => {
+            return new CreateCollectionAsActor(getUserProfile, createCollection);
+          },
+        },
+
+        {
+          provide: ListCollectionsAsActor,
+          inject: [GetUserProfile, ListCollections],
+          useFactory: (
+            getUserProfile: GetUserProfile,
+            listCollections: ListCollections,
+          ): ListCollectionsAsActor => {
+            return new ListCollectionsAsActor(getUserProfile, listCollections);
+          },
+        },
+
+        {
+          provide: AddCollectionResourceAsActor,
+          inject: [GetUserProfile, AddCollectionResource],
+          useFactory: (
+            getUserProfile: GetUserProfile,
+            addCollectionResource: AddCollectionResource,
+          ): AddCollectionResourceAsActor => {
+            return new AddCollectionResourceAsActor(getUserProfile, addCollectionResource);
+          },
+        },
+
+        {
+          provide: ListCollectionResourcesAsActor,
+          inject: [GetUserProfile, ListCollectionResources],
+          useFactory: (
+            getUserProfile: GetUserProfile,
+            listCollectionResources: ListCollectionResources,
+          ): ListCollectionResourcesAsActor => {
+            return new ListCollectionResourcesAsActor(getUserProfile, listCollectionResources);
+          },
+        },
+
+        {
+          provide: RemoveCollectionResourceAsActor,
+          inject: [GetUserProfile, RemoveCollectionResource],
+          useFactory: (
+            getUserProfile: GetUserProfile,
+            removeCollectionResource: RemoveCollectionResource,
+          ): RemoveCollectionResourceAsActor => {
+            return new RemoveCollectionResourceAsActor(getUserProfile, removeCollectionResource);
           },
         },
 

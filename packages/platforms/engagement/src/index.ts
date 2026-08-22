@@ -30,3 +30,51 @@ export {
   type RemoveFavoriteInput,
   type RemoveFavoriteResult,
 } from './remove-favorite';
+
+export {
+  AddCollectionResourceAsActor,
+  CreateCollectionAsActor,
+  ListCollectionResourcesAsActor,
+  ListCollectionsAsActor,
+  RemoveCollectionResourceAsActor,
+  type AddCollectionResourceAsActorInput,
+  type CreateCollectionAsActorInput,
+  type ListCollectionResourcesAsActorInput,
+  type ListCollectionsAsActorInput,
+  type RemoveCollectionResourceAsActorInput,
+} from './actor-collections';
+
+export type { Collection, CollectionResourceMembership } from './collection';
+
+export type {
+  CollectionResourceRecordInput,
+  CollectionStore,
+  CreateCollectionRecordInput,
+  ListCollectionRecordsInput,
+  ListCollectionResourceRecordsInput,
+} from './collection-store';
+
+export {
+  AddCollectionResource,
+  COLLECTION_RESOURCE_LIST_DEFAULT_LIMIT,
+  COLLECTION_RESOURCE_LIST_MAX_LIMIT,
+  ListCollectionResources,
+  RemoveCollectionResource,
+  type AddCollectionResourceInput,
+  type ListCollectionResourcesInput,
+  type RemoveCollectionResourceInput,
+  type RemoveCollectionResourceResult,
+} from './collection-resources';
+
+export {
+  COLLECTION_NAME_MAX_LENGTH,
+  CreateCollection,
+  type CreateCollectionInput,
+} from './create-collection';
+
+export {
+  COLLECTION_LIST_DEFAULT_LIMIT,
+  COLLECTION_LIST_MAX_LIMIT,
+  ListCollections,
+  type ListCollectionsInput,
+} from './list-collections';
