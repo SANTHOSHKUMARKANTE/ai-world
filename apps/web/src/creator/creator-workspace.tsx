@@ -6,11 +6,13 @@ import { type FormEvent, useState } from 'react';
 import { getApiErrorMessage } from '../api/api-error-message';
 import { useSession } from '../session/session-provider';
 import {
+  archiveCreatorPage,
   createCreatorKnowledgeResource,
   createCreatorPage,
   createCreatorTextBlock,
   getCreatorPage,
   getCreatorPageComposition,
+  publishCreatorPage,
   replaceCreatorPageComposition,
   uploadCreatorMediaAsset,
   type CreatorCompositionItemKind,
@@ -79,11 +81,13 @@ function AuthenticatedCreatorWorkspace() {
   const [manualId, setManualId] = useState('');
   const [library, setLibrary] = useState<readonly ReferenceDraft[]>([]);
   const [items, setItems] = useState<readonly ReferenceDraft[]>([]);
+  const [compositionDirty, setCompositionDirty] = useState(false);
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const busy = busyAction !== null;
+  const compositionLocked = activePage !== null && activePage.lifecycle !== 'DRAFT';
 
   async function perform<T>(
     action: string,
@@ -115,6 +119,7 @@ function AuthenticatedCreatorWorkspace() {
         setActivePage(page);
         setPageId(page.id);
         setItems([]);
+        setCompositionDirty(false);
         setStatusMessage(`Page “${page.title}” created as a DRAFT.`);
       },
     );
@@ -143,6 +148,7 @@ function AuthenticatedCreatorWorkspace() {
             label: `${referenceName(item.kind)} ${item.id.slice(0, 8)}`,
           })),
         );
+        setCompositionDirty(false);
         setStatusMessage(`Loaded ${composition.items.length} composition items.`);
       },
     );
@@ -204,6 +210,10 @@ function AuthenticatedCreatorWorkspace() {
 
   function handleAddManualReference(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
+    if (compositionLocked) {
+      setErrorMessage('Published or archived Page composition cannot be edited.');
+      return;
+    }
     const id = manualId.trim();
     if (!id) {
       setErrorMessage('Enter a canonical reference ID.');
@@ -213,12 +223,16 @@ function AuthenticatedCreatorWorkspace() {
       ...current,
       { kind: manualKind, id, label: `${referenceName(manualKind)} ${id.slice(0, 8)}` },
     ]);
+    setCompositionDirty(true);
     setManualId('');
     setErrorMessage(null);
     setStatusMessage(`${referenceName(manualKind)} reference added to the draft order.`);
   }
 
   function moveItem(index: number, direction: -1 | 1): void {
+    if (compositionLocked) {
+      return;
+    }
     const target = index + direction;
     if (target < 0 || target >= items.length) {
       return;
@@ -234,6 +248,7 @@ function AuthenticatedCreatorWorkspace() {
       next[target] = selected;
       return next;
     });
+    setCompositionDirty(true);
   }
 
   async function saveComposition(): Promise<void> {
@@ -264,7 +279,44 @@ function AuthenticatedCreatorWorkspace() {
             );
           }),
         );
+        setCompositionDirty(false);
         setStatusMessage(`Saved ${composition.items.length} ordered composition items.`);
+      },
+    );
+  }
+
+  async function publishPage(): Promise<void> {
+    const id = pageId.trim();
+    if (!id || !activePage) {
+      setErrorMessage('Create or load a Page before publishing.');
+      return;
+    }
+    if (compositionDirty) {
+      setErrorMessage('Save the current composition before publishing.');
+      return;
+    }
+    await perform(
+      'publish-page',
+      () => publishCreatorPage(id),
+      (page) => {
+        setActivePage(page);
+        setStatusMessage(`Page “${page.title}” published.`);
+      },
+    );
+  }
+
+  async function archivePage(): Promise<void> {
+    const id = pageId.trim();
+    if (!id || !activePage) {
+      setErrorMessage('Load a published Page before archiving.');
+      return;
+    }
+    await perform(
+      'archive-page',
+      () => archiveCreatorPage(id),
+      (page) => {
+        setActivePage(page);
+        setStatusMessage(`Page “${page.title}” archived.`);
       },
     );
   }
@@ -308,7 +360,7 @@ function AuthenticatedCreatorWorkspace() {
         <EditorCard
           eyebrow="01 · Page"
           title="Create or load a Page"
-          description="Pages remain canonical Composition-owned DRAFTs. Route and title are structured fields."
+          description="Pages move through the Composition-owned DRAFT, PUBLISHED, and ARCHIVED lifecycle."
         >
           <form onSubmit={handleCreatePage} className="space-y-4">
             <label className="block text-sm font-medium" htmlFor="creator-page-route">
@@ -345,7 +397,12 @@ function AuthenticatedCreatorWorkspace() {
                 placeholder="UUID"
                 value={pageId}
                 disabled={busy}
-                onChange={(event) => setPageId(event.target.value)}
+                onChange={(event) => {
+                  setPageId(event.target.value);
+                  setActivePage(null);
+                  setItems([]);
+                  setCompositionDirty(false);
+                }}
               />
             </label>
             <button
@@ -358,14 +415,44 @@ function AuthenticatedCreatorWorkspace() {
           </form>
 
           {activePage ? (
-            <dl className="mt-5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-xl bg-slate-950/70 p-4 text-sm">
-              <dt className="text-slate-500">Lifecycle</dt>
-              <dd>{activePage.lifecycle}</dd>
-              <dt className="text-slate-500">Universe</dt>
-              <dd className="break-all">{activePage.universeKey}</dd>
-              <dt className="text-slate-500">Route</dt>
-              <dd className="break-all">{activePage.routePath}</dd>
-            </dl>
+            <div className="mt-5 rounded-xl bg-slate-950/70 p-4 text-sm">
+              <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+                <dt className="text-slate-500">Lifecycle</dt>
+                <dd>{activePage.lifecycle}</dd>
+                <dt className="text-slate-500">Universe</dt>
+                <dd className="break-all">{activePage.universeKey}</dd>
+                <dt className="text-slate-500">Route</dt>
+                <dd className="break-all">{activePage.routePath}</dd>
+              </dl>
+              <div className="mt-4 border-t border-slate-800 pt-4">
+                {activePage.lifecycle === 'DRAFT' ? (
+                  <button
+                    className={primaryButtonClassName}
+                    type="button"
+                    disabled={busy || compositionDirty}
+                    onClick={() => void publishPage()}
+                  >
+                    {busyAction === 'publish-page' ? 'Publishing…' : 'Publish Page'}
+                  </button>
+                ) : null}
+                {activePage.lifecycle === 'PUBLISHED' ? (
+                  <button
+                    className={secondaryButtonClassName}
+                    type="button"
+                    disabled={busy}
+                    onClick={() => void archivePage()}
+                  >
+                    {busyAction === 'archive-page' ? 'Archiving…' : 'Archive Page'}
+                  </button>
+                ) : null}
+                {activePage.lifecycle === 'ARCHIVED' ? (
+                  <p className="text-slate-400">Archived Pages are terminal and read-only.</p>
+                ) : null}
+                {compositionDirty && activePage.lifecycle === 'DRAFT' ? (
+                  <p className="mt-2 text-amber-200">Save composition changes before publishing.</p>
+                ) : null}
+              </div>
+            </div>
           ) : null}
         </EditorCard>
 
@@ -455,7 +542,7 @@ function AuthenticatedCreatorWorkspace() {
           <button
             className={primaryButtonClassName}
             type="button"
-            disabled={busy || !pageId.trim()}
+            disabled={busy || !pageId.trim() || compositionLocked}
             onClick={() => void saveComposition()}
           >
             {busyAction === 'save-composition' ? 'Saving…' : 'Save composition'}
@@ -465,13 +552,13 @@ function AuthenticatedCreatorWorkspace() {
         {pageId.trim() ? (
           <div className="mt-4 flex flex-col gap-2 rounded-xl border border-amber-400/25 bg-amber-400/10 p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
             <p className="text-amber-100/80">
-              Preview reads the last saved composition. Save changes before opening it.
+              Preview and publishing read the last saved composition. Save changes first.
             </p>
             <Link
               className={`${secondaryButtonClassName} shrink-0 text-center`}
               href={`/creator/preview/${encodeURIComponent(pageId.trim())}`}
             >
-              Open saved draft preview
+              Open saved preview
             </Link>
           </div>
         ) : null}
@@ -487,8 +574,11 @@ function AuthenticatedCreatorWorkspace() {
                   key={`${reference.kind}-${reference.id}-${index}`}
                   type="button"
                   className={secondaryButtonClassName}
-                  disabled={busy}
-                  onClick={() => setItems((current) => [...current, reference])}
+                  disabled={busy || compositionLocked}
+                  onClick={() => {
+                    setItems((current) => [...current, reference]);
+                    setCompositionDirty(true);
+                  }}
                 >
                   Add {referenceName(reference.kind)} · {reference.label}
                 </button>
@@ -507,7 +597,7 @@ function AuthenticatedCreatorWorkspace() {
               id="creator-reference-kind"
               className={inputClassName}
               value={manualKind}
-              disabled={busy}
+              disabled={busy || compositionLocked}
               onChange={(event) => {
                 if (isReferenceKind(event.target.value)) {
                   setManualKind(event.target.value);
@@ -526,11 +616,15 @@ function AuthenticatedCreatorWorkspace() {
               className={inputClassName}
               placeholder="UUID"
               value={manualId}
-              disabled={busy}
+              disabled={busy || compositionLocked}
               onChange={(event) => setManualId(event.target.value)}
             />
           </label>
-          <button className={secondaryButtonClassName} type="submit" disabled={busy}>
+          <button
+            className={secondaryButtonClassName}
+            type="submit"
+            disabled={busy || compositionLocked}
+          >
             Add reference
           </button>
         </form>
@@ -555,7 +649,7 @@ function AuthenticatedCreatorWorkspace() {
                 <button
                   className={secondaryButtonClassName}
                   type="button"
-                  disabled={busy || index === 0}
+                  disabled={busy || compositionLocked || index === 0}
                   aria-label={`Move item ${index + 1} up`}
                   onClick={() => moveItem(index, -1)}
                 >
@@ -564,7 +658,7 @@ function AuthenticatedCreatorWorkspace() {
                 <button
                   className={secondaryButtonClassName}
                   type="button"
-                  disabled={busy || index === items.length - 1}
+                  disabled={busy || compositionLocked || index === items.length - 1}
                   aria-label={`Move item ${index + 1} down`}
                   onClick={() => moveItem(index, 1)}
                 >
@@ -573,11 +667,12 @@ function AuthenticatedCreatorWorkspace() {
                 <button
                   className={secondaryButtonClassName}
                   type="button"
-                  disabled={busy}
+                  disabled={busy || compositionLocked}
                   aria-label={`Remove item ${index + 1}`}
-                  onClick={() =>
-                    setItems((current) => current.filter((_, itemIndex) => itemIndex !== index))
-                  }
+                  onClick={() => {
+                    setItems((current) => current.filter((_, itemIndex) => itemIndex !== index));
+                    setCompositionDirty(true);
+                  }}
                 >
                   Remove
                 </button>

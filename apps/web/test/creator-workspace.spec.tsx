@@ -114,9 +114,9 @@ describe('Creator workspace', () => {
       expect(screen.getByRole('status').textContent).toContain('created as a DRAFT');
     });
     expect((screen.getByLabelText('Active Page ID') as HTMLInputElement).value).toBe(pageId);
-    expect(
-      screen.getByRole('link', { name: 'Open saved draft preview' }).getAttribute('href'),
-    ).toBe(`/creator/preview/${pageId}`);
+    expect(screen.getByRole('link', { name: 'Open saved preview' }).getAttribute('href')).toBe(
+      `/creator/preview/${pageId}`,
+    );
 
     fireEvent.change(screen.getByLabelText('Text content'), {
       target: { value: 'A structured creator Block.' },
@@ -152,6 +152,72 @@ describe('Creator workspace', () => {
         method: 'PUT',
         body: JSON.stringify({ items: [{ kind: 'BLOCK', id: blockId }] }),
       }),
+    );
+  });
+
+  it('publishes, locks, and archives a saved Page through the lifecycle controls', async () => {
+    const pageId = '11111111-1111-4111-8111-111111111111';
+    const basePage = {
+      id: pageId,
+      universeKey: 'universe.devotional',
+      routePath: '/publication-proof',
+      title: 'Publication proof',
+      createdAt: '2026-08-22T10:00:00.000Z',
+      updatedAt: '2026-08-22T10:00:00.000Z',
+    };
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ actorId: 'creator-actor', expiresAt: '2026-08-22T12:00:00.000Z' }),
+      )
+      .mockResolvedValueOnce(jsonResponse({ ...basePage, lifecycle: 'DRAFT' }, 201))
+      .mockResolvedValueOnce(jsonResponse({ ...basePage, lifecycle: 'PUBLISHED' }, 201))
+      .mockResolvedValueOnce(jsonResponse({ ...basePage, lifecycle: 'ARCHIVED' }, 201));
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <SessionProvider>
+        <CreatorWorkspace />
+      </SessionProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Create draft Page' })).toBeTruthy();
+    });
+    fireEvent.change(screen.getByLabelText('Route path'), {
+      target: { value: '/publication-proof' },
+    });
+    fireEvent.change(screen.getByLabelText('Presentation title'), {
+      target: { value: 'Publication proof' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Create draft Page' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Publish Page' })).toBeTruthy();
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Publish Page' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Archive Page' })).toBeTruthy();
+    });
+    expect(screen.getByRole('button', { name: 'Save composition' })).toHaveProperty(
+      'disabled',
+      true,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Archive Page' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Archived Pages are terminal and read-only.')).toBeTruthy();
+    });
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      3,
+      `/api/composition/pages/${pageId}/publish`,
+      expect.objectContaining({ method: 'POST' }),
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      4,
+      `/api/composition/pages/${pageId}/archive`,
+      expect.objectContaining({ method: 'POST' }),
     );
   });
 });

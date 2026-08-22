@@ -175,6 +175,81 @@ describe('Creator Composition API', () => {
     });
   });
 
+  it('authorizes and enforces the Page publication lifecycle', async () => {
+    const ordinary = await signIn('ordinary-publisher');
+    const denied = await request(app.getHttpServer())
+      .post('/composition/pages/not-a-resource-id/publish')
+      .set('Cookie', ordinary.cookiePair)
+      .expect(403);
+
+    expect(denied.body.error).toMatchObject({
+      code: 'composition.publication.authorization.forbidden',
+      message: 'You do not have permission to publish this Page.',
+    });
+
+    const archiveDenied = await request(app.getHttpServer())
+      .post('/composition/pages/not-a-resource-id/archive')
+      .set('Cookie', ordinary.cookiePair)
+      .expect(403);
+    expect(archiveDenied.body.error).toMatchObject({
+      code: 'composition.publication.authorization.forbidden',
+      message: 'You do not have permission to archive this Page.',
+    });
+
+    const administrator = await signInAdministrator('publication-administrator');
+    const created = await request(app.getHttpServer())
+      .post('/composition/pages')
+      .set('Cookie', administrator.cookiePair)
+      .send({
+        universeKey: 'universe.devotional',
+        routePath: `/publication-${randomUUID()}`,
+        title: 'Publication lifecycle proof',
+      })
+      .expect(201);
+    const pageId = created.body.id as string;
+    pageIds.add(pageId);
+
+    await request(app.getHttpServer())
+      .post(`/composition/pages/${pageId}/publish`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(201)
+      .expect(({ body }) => {
+        expect(body).toMatchObject({ id: pageId, lifecycle: 'PUBLISHED' });
+      });
+
+    const lockedEdit = await request(app.getHttpServer())
+      .put(`/composition/pages/${pageId}/composition`)
+      .set('Cookie', administrator.cookiePair)
+      .send({ items: [] })
+      .expect(409);
+    expect(lockedEdit.body.error).toMatchObject({
+      code: 'composition.page.lifecycle_conflict',
+      message: 'Published or archived Page composition cannot be edited.',
+    });
+
+    await request(app.getHttpServer())
+      .post(`/composition/pages/${pageId}/publish`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(409);
+
+    await request(app.getHttpServer())
+      .post(`/composition/pages/${pageId}/archive`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(201)
+      .expect(({ body }) => {
+        expect(body).toMatchObject({ id: pageId, lifecycle: 'ARCHIVED' });
+      });
+
+    await request(app.getHttpServer())
+      .post(`/composition/pages/${pageId}/archive`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(409);
+    await request(app.getHttpServer())
+      .post(`/composition/pages/${pageId}/publish`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(409);
+  });
+
   it('allows an Administrator to create and reload an ordered multi-owner Page composition', async () => {
     const administrator = await signInAdministrator('administrator');
     const pageResponse = await request(app.getHttpServer())

@@ -225,6 +225,28 @@ describe('Page composition', () => {
     expect(store.replacements).toEqual([]);
   });
 
+  it('rejects composition changes after the Page leaves DRAFT', async () => {
+    const store = new RecordingCompositionStore();
+    const setComposition = new SetPageComposition(
+      new StubPageReader({ ...createPage(), lifecycle: 'PUBLISHED' }),
+      new RecordingBlockReader(createBlock()),
+      new RecordingKnowledgeReader(createKnowledgeResource()),
+      new RecordingMediaResolver({ id: ASSET_ID }),
+      store,
+    );
+
+    await expect(
+      setComposition.execute({
+        pageId: PAGE_ID,
+        items: [{ kind: PAGE_COMPOSITION_BLOCK_ITEM_KIND, id: BLOCK_ID }],
+      }),
+    ).rejects.toMatchObject({
+      code: 'composition.page.lifecycle_conflict',
+      kind: 'conflict',
+    });
+    expect(store.replacements).toEqual([]);
+  });
+
   it('reads the ordered composition only for an existing Page', async () => {
     const store = new RecordingCompositionStore();
     await store.replaceItems({

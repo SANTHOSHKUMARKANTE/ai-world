@@ -90,6 +90,38 @@ test.describe('Creator workspace', () => {
       });
     });
 
+    await page.route(`**/api/composition/pages/${pageId}/publish`, async (route) => {
+      await route.fulfill({
+        status: 201,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: pageId,
+          universeKey: 'universe.devotional',
+          routePath: '/creator-e2e',
+          title: 'Creator E2E',
+          lifecycle: 'PUBLISHED',
+          createdAt: '2026-08-21T12:00:00.000Z',
+          updatedAt: '2026-08-22T12:00:00.000Z',
+        }),
+      });
+    });
+
+    await page.route(`**/api/composition/pages/${pageId}/archive`, async (route) => {
+      await route.fulfill({
+        status: 201,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: pageId,
+          universeKey: 'universe.devotional',
+          routePath: '/creator-e2e',
+          title: 'Creator E2E',
+          lifecycle: 'ARCHIVED',
+          createdAt: '2026-08-21T12:00:00.000Z',
+          updatedAt: '2026-08-22T12:01:00.000Z',
+        }),
+      });
+    });
+
     await page.goto('/creator');
     await expect(page.getByRole('heading', { name: 'Creator workspace', level: 1 })).toBeVisible();
 
@@ -131,6 +163,13 @@ test.describe('Creator workspace', () => {
         { kind: 'MEDIA_ASSET', id: assetId },
       ],
     });
+
+    await page.getByRole('button', { name: 'Publish Page' }).click();
+    await expect(page.getByRole('button', { name: 'Archive Page' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Save composition' })).toBeDisabled();
+
+    await page.getByRole('button', { name: 'Archive Page' }).click();
+    await expect(page.getByText('Archived Pages are terminal and read-only.')).toBeVisible();
   });
 
   test('renders a controlled saved draft preview in typed composition order', async ({ page }) => {

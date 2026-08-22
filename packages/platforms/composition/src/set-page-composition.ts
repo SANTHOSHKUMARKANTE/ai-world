@@ -1,3 +1,4 @@
+import { ApplicationError } from '@ai-world/foundation-errors';
 import { parseResourceId, type ResourceId } from '@ai-world/kernel-identifiers';
 import type { KnowledgeResourceReader } from '@ai-world/platform-knowledge';
 import type { MediaAssetReferenceResolver } from '@ai-world/platform-media';
@@ -47,6 +48,17 @@ function unsupportedReferenceKind(): TypeError {
   return new TypeError('Page composition contains an unsupported reference kind.');
 }
 
+function immutablePage(lifecycle?: Page['lifecycle']): ApplicationError {
+  return new ApplicationError({
+    code: 'composition.page.lifecycle_conflict',
+    kind: 'conflict',
+    message: lifecycle
+      ? `Page composition cannot be edited from lifecycle ${lifecycle}.`
+      : 'Page composition cannot be edited because the Page no longer has the DRAFT lifecycle.',
+    publicMessage: 'Published or archived Page composition cannot be edited.',
+  });
+}
+
 export class SetPageComposition {
   constructor(
     private readonly pages: PageReader,
@@ -61,6 +73,9 @@ export class SetPageComposition {
     if (!page) {
       throw missingPage();
     }
+    if (page.lifecycle !== 'DRAFT') {
+      throw immutablePage(page.lifecycle);
+    }
 
     const items: PageCompositionItem[] = [];
     for (const [position, reference] of input.items.entries()) {
@@ -70,13 +85,15 @@ export class SetPageComposition {
       });
     }
 
-    return {
+    const storedItems = await this.compositions.replaceItems({
       pageId: page.id,
-      items: await this.compositions.replaceItems({
-        pageId: page.id,
-        items,
-      }),
-    };
+      items,
+    });
+    if (!storedItems) {
+      throw immutablePage();
+    }
+
+    return { pageId: page.id, items: storedItems };
   }
 
   private async resolveReference(

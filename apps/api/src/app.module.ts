@@ -2,14 +2,18 @@ import type { EmailDelivery } from '@ai-world/foundation-email';
 import type { StorageObjectStore } from '@ai-world/foundation-storage';
 import { FilesystemStorageAdapter } from '@ai-world/foundation-storage/filesystem';
 import {
+  ArchivePage,
+  AuthorizeCompositionArchival,
   AuthorizeCompositionEditing,
   AuthorizeCompositionPreview,
+  AuthorizeCompositionPublishing,
   CreatePage,
   CreateTextBlock,
   GetBlock,
   GetPage,
   GetPageComposition,
   GetPagePreview,
+  PublishPage,
   SetPageComposition,
 } from '@ai-world/platform-composition';
 import {
@@ -330,6 +334,22 @@ export class AppModule {
         },
 
         {
+          provide: AuthorizeCompositionPublishing,
+          inject: [EvaluatePermission],
+          useFactory: (evaluatePermission: EvaluatePermission): AuthorizeCompositionPublishing => {
+            return new AuthorizeCompositionPublishing(evaluatePermission);
+          },
+        },
+
+        {
+          provide: AuthorizeCompositionArchival,
+          inject: [EvaluatePermission],
+          useFactory: (evaluatePermission: EvaluatePermission): AuthorizeCompositionArchival => {
+            return new AuthorizeCompositionArchival(evaluatePermission);
+          },
+        },
+
+        {
           provide: PrismaPageRepository,
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): PrismaPageRepository => {
@@ -366,6 +386,22 @@ export class AppModule {
           inject: [PrismaPageRepository],
           useFactory: (repository: PrismaPageRepository): GetPage => {
             return new GetPage(repository);
+          },
+        },
+
+        {
+          provide: PublishPage,
+          inject: [PrismaPageRepository],
+          useFactory: (repository: PrismaPageRepository): PublishPage => {
+            return new PublishPage(repository, repository);
+          },
+        },
+
+        {
+          provide: ArchivePage,
+          inject: [PrismaPageRepository],
+          useFactory: (repository: PrismaPageRepository): ArchivePage => {
+            return new ArchivePage(repository, repository);
           },
         },
 

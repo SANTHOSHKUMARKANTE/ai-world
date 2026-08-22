@@ -8,6 +8,11 @@ export {
 export type { Block, BlockType, TextBlock, TextBlockContent } from './block';
 
 export {
+  AuthorizeCompositionArchival,
+  type AuthorizeCompositionArchivalInput,
+} from './authorize-composition-archival';
+
+export {
   AuthorizeCompositionEditing,
   type AuthorizeCompositionEditingInput,
 } from './authorize-composition-editing';
@@ -18,9 +23,19 @@ export {
 } from './authorize-composition-preview';
 
 export {
+  AuthorizeCompositionPublishing,
+  type AuthorizeCompositionPublishingInput,
+} from './authorize-composition-publishing';
+
+export {
+  COMPOSITION_ARCHIVE_PERMISSION_KEY,
   COMPOSITION_EDIT_PERMISSION_KEY,
   COMPOSITION_PREVIEW_PERMISSION_KEY,
+  COMPOSITION_PUBLISH_PERMISSION_KEY,
 } from './composition-authorization-policy';
+
+export { ArchivePage } from './archive-page';
+export type { ArchivePageInput } from './archive-page';
 
 export type { BlockReader, FindBlockByIdInput } from './block-reader';
 
@@ -61,7 +76,15 @@ export type { Page, PageLifecycle, PagePresentationMetadata, PageRouteMetadata }
 
 export type { FindPageByIdInput, FindPageByRouteInput, PageReader } from './page-reader';
 
+export type {
+  PageLifecycleWriter,
+  TransitionPageLifecycleRecordInput,
+} from './page-lifecycle-writer';
+
 export type { CreatePageRecordInput, PageWriter } from './page-writer';
+
+export { PublishPage } from './publish-page';
+export type { PublishPageInput } from './publish-page';
 
 export type {
   PagePreview,

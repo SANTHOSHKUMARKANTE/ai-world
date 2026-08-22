@@ -14,5 +14,7 @@ export interface ReplacePageCompositionItemsInput {
 export interface PageCompositionStore {
   listItems(input: ListPageCompositionItemsInput): Promise<readonly PageCompositionItem[]>;
 
-  replaceItems(input: ReplacePageCompositionItemsInput): Promise<readonly PageCompositionItem[]>;
+  replaceItems(
+    input: ReplacePageCompositionItemsInput,
+  ): Promise<readonly PageCompositionItem[] | null>;
 }

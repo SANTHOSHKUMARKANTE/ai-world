@@ -267,6 +267,20 @@ export async function getCreatorPage(id: string): Promise<CreatorPage> {
   return readPage(await readJson(response));
 }
 
+export async function publishCreatorPage(id: string): Promise<CreatorPage> {
+  const response = await apiRequest(`/composition/pages/${encodeURIComponent(id)}/publish`, {
+    method: 'POST',
+  });
+  return readPage(await readJson(response));
+}
+
+export async function archiveCreatorPage(id: string): Promise<CreatorPage> {
+  const response = await apiRequest(`/composition/pages/${encodeURIComponent(id)}/archive`, {
+    method: 'POST',
+  });
+  return readPage(await readJson(response));
+}
+
 export async function createCreatorTextBlock(input: {
   readonly universeKey: string;
   readonly text: string;

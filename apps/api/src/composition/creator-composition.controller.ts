@@ -2,14 +2,18 @@ import { ApplicationError } from '@ai-world/foundation-errors';
 import { parseResourceId } from '@ai-world/kernel-identifiers';
 import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 import {
+  ArchivePage,
+  AuthorizeCompositionArchival,
   AuthorizeCompositionEditing,
   AuthorizeCompositionPreview,
+  AuthorizeCompositionPublishing,
   CreatePage,
   CreateTextBlock,
   GetBlock,
   GetPage,
   GetPageComposition,
   GetPagePreview,
+  PublishPage,
   SetPageComposition,
   type Block,
   type Page,
@@ -195,8 +199,12 @@ export class CreatorCompositionController {
     private readonly validateSession: ValidateSession,
     private readonly authorizeCompositionEditing: AuthorizeCompositionEditing,
     private readonly authorizeCompositionPreview: AuthorizeCompositionPreview,
+    private readonly authorizeCompositionPublishing: AuthorizeCompositionPublishing,
+    private readonly authorizeCompositionArchival: AuthorizeCompositionArchival,
     private readonly createPage: CreatePage,
     private readonly getPage: GetPage,
+    private readonly publishPage: PublishPage,
+    private readonly archivePage: ArchivePage,
     private readonly createTextBlock: CreateTextBlock,
     private readonly getBlock: GetBlock,
     private readonly setPageComposition: SetPageComposition,
@@ -215,6 +223,18 @@ export class CreatorCompositionController {
     const token = requireSessionToken(this.sessionCookie, cookieHeader);
     const session = await this.validateSession.execute({ token });
     await this.authorizeCompositionPreview.execute({ actingActorId: session.actorId });
+  }
+
+  private async requirePublishingAccess(cookieHeader: string | undefined): Promise<void> {
+    const token = requireSessionToken(this.sessionCookie, cookieHeader);
+    const session = await this.validateSession.execute({ token });
+    await this.authorizeCompositionPublishing.execute({ actingActorId: session.actorId });
+  }
+
+  private async requireArchivalAccess(cookieHeader: string | undefined): Promise<void> {
+    const token = requireSessionToken(this.sessionCookie, cookieHeader);
+    const session = await this.validateSession.execute({ token });
+    await this.authorizeCompositionArchival.execute({ actingActorId: session.actorId });
   }
 
   @Post('pages')
@@ -244,6 +264,30 @@ export class CreatorCompositionController {
     if (!page) {
       throw missingResource('Page');
     }
+    return toPageResponse(page);
+  }
+
+  @Post('pages/:id/publish')
+  async publishCreatorPage(
+    @Headers('cookie') cookieHeader: string | undefined,
+    @Param('id') id: string,
+  ): Promise<CreatorPageResponse> {
+    await this.requirePublishingAccess(cookieHeader);
+    const page = await executeCanonical(() =>
+      this.publishPage.execute({ id: parseResourceId(id) }),
+    );
+    return toPageResponse(page);
+  }
+
+  @Post('pages/:id/archive')
+  async archiveCreatorPage(
+    @Headers('cookie') cookieHeader: string | undefined,
+    @Param('id') id: string,
+  ): Promise<CreatorPageResponse> {
+    await this.requireArchivalAccess(cookieHeader);
+    const page = await executeCanonical(() =>
+      this.archivePage.execute({ id: parseResourceId(id) }),
+    );
     return toPageResponse(page);
   }
 

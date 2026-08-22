@@ -105,8 +105,22 @@ export class PrismaPageCompositionRepository implements PageCompositionStore {
 
   async replaceItems(
     input: ReplacePageCompositionItemsInput,
-  ): Promise<readonly PageCompositionItem[]> {
+  ): Promise<readonly PageCompositionItem[] | null> {
     const items = await this.database.$transaction(async (transaction) => {
+      const page = await transaction.compositionPage.updateMany({
+        where: {
+          id: input.pageId,
+          lifecycle: 'DRAFT',
+        },
+        data: {
+          updatedAt: new Date(),
+        },
+      });
+
+      if (page.count !== 1) {
+        return null;
+      }
+
       await transaction.compositionPageItem.deleteMany({
         where: { pageId: input.pageId },
       });
@@ -127,6 +141,6 @@ export class PrismaPageCompositionRepository implements PageCompositionStore {
       });
     });
 
-    return items.map(mapPersistedItem);
+    return items?.map(mapPersistedItem) ?? null;
   }
 }

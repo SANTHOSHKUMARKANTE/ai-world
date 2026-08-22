@@ -4,6 +4,10 @@ import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 
 import { isPageLifecycle, parsePagePresentationTitle, parsePageRoutePath, type Page } from './page';
 import type { FindPageByIdInput, FindPageByRouteInput, PageReader } from './page-reader';
+import type {
+  PageLifecycleWriter,
+  TransitionPageLifecycleRecordInput,
+} from './page-lifecycle-writer';
 import type { CreatePageRecordInput, PageWriter } from './page-writer';
 
 type PageDatabaseClient = Pick<DatabaseClient, 'compositionPage'>;
@@ -38,7 +42,7 @@ function mapPersistedPage(page: PersistedPage): Page {
   };
 }
 
-export class PrismaPageRepository implements PageReader, PageWriter {
+export class PrismaPageRepository implements PageReader, PageWriter, PageLifecycleWriter {
   constructor(private readonly database: PageDatabaseClient) {}
 
   async findById(input: FindPageByIdInput): Promise<Page | null> {
@@ -79,5 +83,23 @@ export class PrismaPageRepository implements PageReader, PageWriter {
     });
 
     return mapPersistedPage(page);
+  }
+
+  async transitionLifecycle(input: TransitionPageLifecycleRecordInput): Promise<Page | null> {
+    const result = await this.database.compositionPage.updateMany({
+      where: {
+        id: input.id,
+        lifecycle: input.fromLifecycle,
+      },
+      data: {
+        lifecycle: input.toLifecycle,
+      },
+    });
+
+    if (result.count !== 1) {
+      return null;
+    }
+
+    return this.findById({ id: input.id });
   }
 }
