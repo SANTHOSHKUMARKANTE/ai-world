@@ -30,6 +30,21 @@ export interface CreatorTextBlock {
   readonly text: string;
 }
 
+export interface CreatorAiKnowledgeCandidate {
+  readonly generationId: string;
+  readonly universeKey: string;
+  readonly resourceType: string;
+  readonly canonical: false;
+  readonly createdAt: string;
+}
+
+export interface AcceptedCreatorAiKnowledgeCandidate {
+  readonly generationId: string;
+  readonly canonical: true;
+  readonly canonicalOwner: 'knowledge';
+  readonly resource: CreatorKnowledgeResource;
+}
+
 export interface CreatorCompositionItem {
   readonly position: number;
   readonly kind: CreatorCompositionItemKind;
@@ -151,6 +166,45 @@ function readTextBlock(value: unknown): CreatorTextBlock {
   };
 }
 
+function readAiKnowledgeCandidate(value: unknown): CreatorAiKnowledgeCandidate {
+  if (
+    !isRecord(value) ||
+    !isString(value.generationId) ||
+    !isString(value.universeKey) ||
+    !isString(value.resourceType) ||
+    value.canonical !== false ||
+    !isString(value.createdAt)
+  ) {
+    throw new Error('Creator AI assistance response did not match the expected contract.');
+  }
+
+  return {
+    generationId: value.generationId,
+    universeKey: value.universeKey,
+    resourceType: value.resourceType,
+    canonical: false,
+    createdAt: value.createdAt,
+  };
+}
+
+function readAcceptedAiKnowledgeCandidate(value: unknown): AcceptedCreatorAiKnowledgeCandidate {
+  if (
+    !isRecord(value) ||
+    !isString(value.generationId) ||
+    value.canonical !== true ||
+    value.canonicalOwner !== 'knowledge'
+  ) {
+    throw new Error('Creator AI acceptance response did not match the expected contract.');
+  }
+
+  return {
+    generationId: value.generationId,
+    canonical: true,
+    canonicalOwner: 'knowledge',
+    resource: readKnowledgeResource(value.resource),
+  };
+}
+
 function readPageComposition(value: unknown): CreatorPageComposition {
   if (!isRecord(value) || !isString(value.pageId) || !Array.isArray(value.items)) {
     throw new Error('Creator Composition API response did not match the expected contract.');
@@ -240,6 +294,29 @@ export async function createCreatorKnowledgeResource(input: {
     body: JSON.stringify(input),
   });
   return readKnowledgeResource(await readJson(response));
+}
+
+export async function suggestCreatorKnowledgeCandidate(input: {
+  readonly universeKey: string;
+  readonly request: string;
+  readonly contextQuery: string;
+}): Promise<CreatorAiKnowledgeCandidate> {
+  const response = await apiRequest('/composition/ai/knowledge-candidates', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  return readAiKnowledgeCandidate(await readJson(response));
+}
+
+export async function acceptCreatorKnowledgeCandidate(
+  generationId: string,
+): Promise<AcceptedCreatorAiKnowledgeCandidate> {
+  const response = await apiRequest(
+    `/composition/ai/knowledge-candidates/${encodeURIComponent(generationId)}/accept`,
+    { method: 'POST' },
+  );
+  return readAcceptedAiKnowledgeCandidate(await readJson(response));
 }
 
 export async function uploadCreatorMediaAsset(file: File): Promise<CreatorMediaAsset> {

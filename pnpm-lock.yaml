@@ -59,6 +59,9 @@ importers:
       '@ai-world/kernel-namespace':
         specifier: workspace:*
         version: link:../../packages/kernel/namespace
+      '@ai-world/platform-ai-creator':
+        specifier: workspace:*
+        version: link:../../packages/platforms/ai-creator
       '@ai-world/platform-composition':
         specifier: workspace:*
         version: link:../../packages/platforms/composition
@@ -340,6 +343,9 @@ importers:
       '@ai-world/kernel-namespace':
         specifier: workspace:*
         version: link:../../kernel/namespace
+      '@ai-world/platform-ai-creator':
+        specifier: workspace:*
+        version: link:../ai-creator
       '@ai-world/platform-identity-access':
         specifier: workspace:*
         version: link:../identity-access

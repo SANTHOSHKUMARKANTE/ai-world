@@ -25,6 +25,7 @@
     "@ai-world/foundation-email": "workspace:*",
     "@ai-world/foundation-errors": "workspace:*",
     "@ai-world/foundation-observability": "workspace:*",
+    "@ai-world/platform-ai-creator": "workspace:*",
     "@ai-world/platform-composition": "workspace:*",
     "@ai-world/platform-identity-access": "workspace:*",
     "@ai-world/platform-knowledge": "workspace:*",

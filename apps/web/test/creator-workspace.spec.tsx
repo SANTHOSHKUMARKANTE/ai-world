@@ -220,4 +220,96 @@ describe('Creator workspace', () => {
       expect.objectContaining({ method: 'POST' }),
     );
   });
+
+  it('keeps an AI suggestion non-canonical until the creator explicitly accepts it', async () => {
+    const generationId = '55555555-5555-4555-8555-555555555555';
+    const resourceId = '66666666-6666-4666-8666-666666666666';
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ actorId: 'creator-actor', expiresAt: '2026-08-22T12:00:00.000Z' }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            generationId,
+            universeKey: 'universe.devotional',
+            resourceType: 'devotional.temple',
+            canonical: false,
+            createdAt: '2026-08-22T11:00:00.000Z',
+          },
+          201,
+        ),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            generationId,
+            canonical: true,
+            canonicalOwner: 'knowledge',
+            resource: {
+              id: resourceId,
+              universeKey: 'universe.devotional',
+              resourceType: 'devotional.temple',
+              lifecycle: 'DRAFT',
+              createdAt: '2026-08-22T11:01:00.000Z',
+              updatedAt: '2026-08-22T11:01:00.000Z',
+            },
+          },
+          201,
+        ),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <SessionProvider>
+        <CreatorWorkspace />
+      </SessionProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Generate AI suggestion' })).toBeTruthy();
+    });
+    fireEvent.change(screen.getByLabelText('Assistance request'), {
+      target: { value: 'Suggest a Devotional Knowledge type.' },
+    });
+    fireEvent.change(screen.getByLabelText('Published Knowledge context search'), {
+      target: { value: 'temple' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Generate AI suggestion' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Non-canonical suggestion')).toBeTruthy();
+      expect(screen.getByRole('button', { name: 'Accept as Knowledge draft' })).toBeTruthy();
+    });
+    expect(screen.queryByRole('button', { name: /Add Knowledge/ })).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Accept as Knowledge draft' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Add Knowledge.*devotional.temple/ })).toBeTruthy();
+    });
+    expect(screen.queryByText('Non-canonical suggestion')).toBeNull();
+    expect(screen.getByRole('status').textContent).toContain(
+      'accepted as a canonical Knowledge draft',
+    );
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      '/api/composition/ai/knowledge-candidates',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          universeKey: 'universe.devotional',
+          request: 'Suggest a Devotional Knowledge type.',
+          contextQuery: 'temple',
+        }),
+      }),
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      3,
+      `/api/composition/ai/knowledge-candidates/${generationId}/accept`,
+      expect.objectContaining({ method: 'POST' }),
+    );
+  });
 });

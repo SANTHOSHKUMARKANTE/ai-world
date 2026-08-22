@@ -12,6 +12,14 @@ export {
   type AuthorizeCompositionArchivalInput,
 } from './authorize-composition-archival';
 
+export { AiAssistedKnowledgeComposition } from './ai-assisted-knowledge-composition';
+export type {
+  AcceptAiAssistedKnowledgeCandidateInput,
+  AcceptedAiAssistedKnowledgeCandidate,
+  AiAssistedKnowledgeCandidate,
+  SuggestAiAssistedKnowledgeCandidateInput,
+} from './ai-assisted-knowledge-composition';
+
 export {
   AuthorizeCompositionEditing,
   type AuthorizeCompositionEditingInput,

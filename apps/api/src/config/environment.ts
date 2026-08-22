@@ -28,6 +28,8 @@ const apiEnvironmentSchema = z
     EMAIL_SMTP_USERNAME: z.string().trim().min(1).optional(),
 
     EMAIL_SMTP_PASSWORD: z.string().min(1).optional(),
+
+    OPENAI_API_KEY: z.string().trim().min(1).optional(),
   })
   .superRefine(({ EMAIL_SMTP_USERNAME, EMAIL_SMTP_PASSWORD }, context) => {
     if ((EMAIL_SMTP_USERNAME === undefined) !== (EMAIL_SMTP_PASSWORD === undefined)) {
@@ -51,6 +53,7 @@ const apiEnvironmentSchema = z
       EMAIL_FROM,
       EMAIL_SMTP_USERNAME,
       EMAIL_SMTP_PASSWORD,
+      OPENAI_API_KEY,
     }) => ({
       nodeEnv: NODE_ENV,
       port: PORT,
@@ -71,6 +74,7 @@ const apiEnvironmentSchema = z
         },
         from: EMAIL_FROM,
       },
+      ...(OPENAI_API_KEY === undefined ? {} : { openAiApiKey: OPENAI_API_KEY }),
     }),
   );
 

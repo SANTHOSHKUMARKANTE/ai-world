@@ -6,6 +6,7 @@ import { type FormEvent, useState } from 'react';
 import { getApiErrorMessage } from '../api/api-error-message';
 import { useSession } from '../session/session-provider';
 import {
+  acceptCreatorKnowledgeCandidate,
   archiveCreatorPage,
   createCreatorKnowledgeResource,
   createCreatorPage,
@@ -14,7 +15,9 @@ import {
   getCreatorPageComposition,
   publishCreatorPage,
   replaceCreatorPageComposition,
+  suggestCreatorKnowledgeCandidate,
   uploadCreatorMediaAsset,
+  type CreatorAiKnowledgeCandidate,
   type CreatorCompositionItemKind,
   type CreatorPage,
 } from './creator-api';
@@ -75,6 +78,9 @@ function AuthenticatedCreatorWorkspace() {
   const [pageId, setPageId] = useState('');
   const [activePage, setActivePage] = useState<CreatorPage | null>(null);
   const [resourceType, setResourceType] = useState('devotional.deity');
+  const [aiRequest, setAiRequest] = useState('Suggest one useful Knowledge Resource type.');
+  const [aiContextQuery, setAiContextQuery] = useState('deity');
+  const [aiCandidate, setAiCandidate] = useState<CreatorAiKnowledgeCandidate | null>(null);
   const [blockText, setBlockText] = useState('');
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [manualKind, setManualKind] = useState<CreatorCompositionItemKind>('BLOCK');
@@ -166,6 +172,48 @@ function AuthenticatedCreatorWorkspace() {
           label: resource.resourceType,
         });
         setStatusMessage(`Knowledge draft “${resource.resourceType}” created.`);
+      },
+    );
+  }
+
+  async function handleSuggestKnowledge(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    setAiCandidate(null);
+    await perform(
+      'suggest-knowledge',
+      () =>
+        suggestCreatorKnowledgeCandidate({
+          universeKey,
+          request: aiRequest,
+          contextQuery: aiContextQuery,
+        }),
+      (candidate) => {
+        setAiCandidate(candidate);
+        setStatusMessage(
+          `AI suggested “${candidate.resourceType}”. Review it before canonical acceptance.`,
+        );
+      },
+    );
+  }
+
+  async function acceptAiKnowledgeCandidate(): Promise<void> {
+    if (!aiCandidate) {
+      return;
+    }
+
+    await perform(
+      'accept-knowledge',
+      () => acceptCreatorKnowledgeCandidate(aiCandidate.generationId),
+      (accepted) => {
+        registerReference({
+          kind: 'KNOWLEDGE_RESOURCE',
+          id: accepted.resource.id,
+          label: accepted.resource.resourceType,
+        });
+        setAiCandidate(null);
+        setStatusMessage(
+          `AI suggestion “${accepted.resource.resourceType}” accepted as a canonical Knowledge draft.`,
+        );
       },
     );
   }
@@ -332,7 +380,10 @@ function AuthenticatedCreatorWorkspace() {
           className={inputClassName}
           value={universeKey}
           disabled={busy}
-          onChange={(event) => setUniverseKey(event.target.value)}
+          onChange={(event) => {
+            setUniverseKey(event.target.value);
+            setAiCandidate(null);
+          }}
         />
         <p className="mt-2 text-sm text-cyan-100/70">
           New Pages, Blocks, and Knowledge use this shared Universe boundary.
@@ -479,7 +530,69 @@ function AuthenticatedCreatorWorkspace() {
         </EditorCard>
 
         <EditorCard
-          eyebrow="03 · Media"
+          eyebrow="03 · AI assistance"
+          title="Suggest a Knowledge draft type"
+          description="AI / Creator uses authorized published context. Its Generation stays non-canonical until you explicitly accept the candidate."
+        >
+          <form onSubmit={handleSuggestKnowledge} className="space-y-4">
+            <label className="block text-sm font-medium" htmlFor="creator-ai-request">
+              Assistance request
+              <textarea
+                id="creator-ai-request"
+                className={`${inputClassName} min-h-24 resize-y`}
+                value={aiRequest}
+                disabled={busy}
+                onChange={(event) => setAiRequest(event.target.value)}
+              />
+            </label>
+            <label className="block text-sm font-medium" htmlFor="creator-ai-context-query">
+              Published Knowledge context search
+              <input
+                id="creator-ai-context-query"
+                className={inputClassName}
+                value={aiContextQuery}
+                disabled={busy}
+                onChange={(event) => setAiContextQuery(event.target.value)}
+              />
+            </label>
+            <button
+              className={primaryButtonClassName}
+              type="submit"
+              disabled={busy || !aiRequest.trim()}
+            >
+              {busyAction === 'suggest-knowledge' ? 'Generating…' : 'Generate AI suggestion'}
+            </button>
+          </form>
+
+          {aiCandidate ? (
+            <section
+              aria-labelledby="creator-ai-candidate-title"
+              className="mt-5 rounded-xl border border-amber-400/30 bg-amber-400/10 p-4"
+            >
+              <p
+                id="creator-ai-candidate-title"
+                className="text-xs font-semibold uppercase tracking-wider text-amber-200"
+              >
+                Non-canonical suggestion
+              </p>
+              <p className="mt-2 text-lg font-semibold text-amber-50">{aiCandidate.resourceType}</p>
+              <p className="mt-2 text-sm leading-6 text-amber-100/75">
+                Review this model output. No Knowledge Resource exists until you accept it.
+              </p>
+              <button
+                className={`${secondaryButtonClassName} mt-4`}
+                type="button"
+                disabled={busy}
+                onClick={() => void acceptAiKnowledgeCandidate()}
+              >
+                {busyAction === 'accept-knowledge' ? 'Accepting…' : 'Accept as Knowledge draft'}
+              </button>
+            </section>
+          ) : null}
+        </EditorCard>
+
+        <EditorCard
+          eyebrow="04 · Media"
           title="Upload a Media Asset"
           description="Binary storage and Asset lifecycle remain Media-owned. The workspace receives only the canonical Asset ID."
         >
@@ -502,7 +615,7 @@ function AuthenticatedCreatorWorkspace() {
         </EditorCard>
 
         <EditorCard
-          eyebrow="04 · Block"
+          eyebrow="05 · Block"
           title="Create a reusable Text Block"
           description="Blocks own presentation content independently and can be referenced by more than one Page."
         >
@@ -532,7 +645,7 @@ function AuthenticatedCreatorWorkspace() {
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
-              05 · Layout
+              06 · Layout
             </p>
             <h2 className="mt-2 text-2xl font-semibold">Compose the Page</h2>
             <p className="mt-2 text-sm text-slate-400">

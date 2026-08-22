@@ -32,6 +32,7 @@
     "@ai-world/foundation-errors": "workspace:*",
     "@ai-world/kernel-identifiers": "workspace:*",
     "@ai-world/kernel-namespace": "workspace:*",
+    "@ai-world/platform-ai-creator": "workspace:*",
     "@ai-world/platform-identity-access": "workspace:*",
     "@ai-world/platform-knowledge": "workspace:*",
     "@ai-world/platform-media": "workspace:*"

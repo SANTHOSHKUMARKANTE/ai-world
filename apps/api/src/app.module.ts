@@ -2,6 +2,20 @@ import type { EmailDelivery } from '@ai-world/foundation-email';
 import type { StorageObjectStore } from '@ai-world/foundation-storage';
 import { FilesystemStorageAdapter } from '@ai-world/foundation-storage/filesystem';
 import {
+  GenerateText,
+  GenerateTextWithAuthorizedContext,
+  ReviewAndAcceptGenerationAsKnowledgeResource,
+  SuggestKnowledgeResourceCandidate,
+  type AiProviderPort,
+} from '@ai-world/platform-ai-creator';
+import {
+  PlatformAuthorizedAiContext,
+  PlatformKnowledgeCanonicalAcceptance,
+  PrismaGenerationRepository,
+} from '@ai-world/platform-ai-creator/infrastructure';
+import { createOpenAiProviderAdapter } from '@ai-world/platform-ai-creator/infrastructure/openai';
+import {
+  AiAssistedKnowledgeComposition,
   ArchivePage,
   AuthorizeCompositionArchival,
   AuthorizeCompositionEditing,
@@ -97,6 +111,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PasswordAuthenticationController } from './authentication/password-authentication.controller';
 import { AuthorizationController } from './authorization/authorization.controller';
+import { CreatorAiAssistanceController } from './composition/creator-ai-assistance.controller';
 import { CreatorCompositionController } from './composition/creator-composition.controller';
 import { DatabaseModule } from './database/database.module';
 import { DatabaseService } from './database/database.service';
@@ -150,6 +165,21 @@ export interface AppModuleOptions {
    * Test/composition override that avoids real SMTP delivery.
    */
   readonly emailDelivery?: EmailDelivery;
+
+  /**
+   * Runtime OpenAI credential consumed only by the API composition root.
+   */
+  readonly openAiApiKey?: string;
+
+  /**
+   * Test/composition override for the provider-neutral AI Port.
+   */
+  readonly aiProvider?: AiProviderPort;
+
+  /**
+   * Normalized Generation provenance key for an injected AI provider.
+   */
+  readonly aiProviderKey?: string;
 }
 
 const DEFAULT_LOCAL_EMAIL_OPTIONS: AppEmailOptions = {
@@ -184,9 +214,40 @@ function createEmailDelivery(options: AppModuleOptions): EmailDelivery {
   });
 }
 
+interface AppAiProvider {
+  readonly provider: AiProviderPort;
+  readonly providerKey: string;
+}
+
+function createAiProvider(options: AppModuleOptions): AppAiProvider {
+  if (options.aiProvider) {
+    return {
+      provider: options.aiProvider,
+      providerKey: options.aiProviderKey ?? 'provider.override',
+    };
+  }
+
+  if (options.openAiApiKey) {
+    return {
+      provider: createOpenAiProviderAdapter({ apiKey: options.openAiApiKey }),
+      providerKey: 'openai',
+    };
+  }
+
+  return {
+    provider: {
+      async generateText(): Promise<never> {
+        throw new Error('AI provider is not configured for this API runtime.');
+      },
+    },
+    providerKey: 'provider.unconfigured',
+  };
+}
+
 @Module({})
 export class AppModule {
   static register(options: AppModuleOptions): DynamicModule {
+    const aiProvider = createAiProvider(options);
     const emailDelivery = createEmailDelivery(options);
     const storageObjectStore = createStorageObjectStore(options);
 
@@ -221,6 +282,7 @@ export class AppModule {
         CreatorKnowledgeController,
         MediaAssetsController,
         CreatorCompositionController,
+        CreatorAiAssistanceController,
       ],
 
       providers: [
@@ -354,6 +416,102 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): PrismaPageRepository => {
             return new PrismaPageRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: PrismaGenerationRepository,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): PrismaGenerationRepository => {
+            return new PrismaGenerationRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: GenerateText,
+          inject: [PrismaGenerationRepository, DatabaseService],
+          useFactory: (
+            generations: PrismaGenerationRepository,
+            database: DatabaseService,
+          ): GenerateText => {
+            return new GenerateText(aiProvider.provider, generations, {
+              provider: aiProvider.providerKey,
+              permissions: new PrismaAuthorizationRepository(database.getClient()),
+            });
+          },
+        },
+
+        {
+          provide: PlatformAuthorizedAiContext,
+          inject: [DatabaseService, PUBLIC_DISCOVERY_SEARCH, PrismaKnowledgeResourceRepository],
+          useFactory: (
+            database: DatabaseService,
+            discovery: SearchContract,
+            knowledge: PrismaKnowledgeResourceRepository,
+          ): PlatformAuthorizedAiContext => {
+            return new PlatformAuthorizedAiContext(
+              new PrismaUserProfileRepository(database.getClient()),
+              discovery,
+              knowledge,
+            );
+          },
+        },
+
+        {
+          provide: GenerateTextWithAuthorizedContext,
+          inject: [PlatformAuthorizedAiContext, GenerateText],
+          useFactory: (
+            context: PlatformAuthorizedAiContext,
+            generateText: GenerateText,
+          ): GenerateTextWithAuthorizedContext => {
+            return new GenerateTextWithAuthorizedContext(context, generateText);
+          },
+        },
+
+        {
+          provide: SuggestKnowledgeResourceCandidate,
+          inject: [GenerateTextWithAuthorizedContext],
+          useFactory: (
+            generateText: GenerateTextWithAuthorizedContext,
+          ): SuggestKnowledgeResourceCandidate => {
+            return new SuggestKnowledgeResourceCandidate(generateText);
+          },
+        },
+
+        {
+          provide: PlatformKnowledgeCanonicalAcceptance,
+          inject: [CreateKnowledgeResourceAsActor],
+          useFactory: (
+            createKnowledgeResource: CreateKnowledgeResourceAsActor,
+          ): PlatformKnowledgeCanonicalAcceptance => {
+            return new PlatformKnowledgeCanonicalAcceptance(createKnowledgeResource);
+          },
+        },
+
+        {
+          provide: ReviewAndAcceptGenerationAsKnowledgeResource,
+          inject: [PrismaGenerationRepository, PlatformKnowledgeCanonicalAcceptance],
+          useFactory: (
+            generations: PrismaGenerationRepository,
+            knowledgeOwner: PlatformKnowledgeCanonicalAcceptance,
+          ): ReviewAndAcceptGenerationAsKnowledgeResource => {
+            return new ReviewAndAcceptGenerationAsKnowledgeResource(generations, knowledgeOwner);
+          },
+        },
+
+        {
+          provide: AiAssistedKnowledgeComposition,
+          inject: [
+            SuggestKnowledgeResourceCandidate,
+            PrismaGenerationRepository,
+            ReviewAndAcceptGenerationAsKnowledgeResource,
+          ],
+          useFactory: (
+            suggestions: SuggestKnowledgeResourceCandidate,
+            generations: PrismaGenerationRepository,
+            acceptance: ReviewAndAcceptGenerationAsKnowledgeResource,
+          ): AiAssistedKnowledgeComposition => {
+            return new AiAssistedKnowledgeComposition(suggestions, generations, acceptance);
           },
         },
 

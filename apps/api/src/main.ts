@@ -14,6 +14,7 @@ async function bootstrap() {
       logLevel: environment.logLevel,
       storageRootDirectory: environment.mediaStorageRootDirectory,
       email: environment.email,
+      ...(environment.openAiApiKey === undefined ? {} : { openAiApiKey: environment.openAiApiKey }),
     }),
     {
       bufferLogs: true,

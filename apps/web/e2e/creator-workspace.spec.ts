@@ -243,4 +243,82 @@ test.describe('Creator workspace', () => {
     await expect(items.nth(1)).toContainText('devotional.deity');
     await expect(items.nth(2).getByRole('img')).toBeVisible();
   });
+
+  test('reviews an AI suggestion before accepting canonical Knowledge', async ({ page }) => {
+    const generationId = '55555555-5555-4555-8555-555555555555';
+    const resourceId = '66666666-6666-4666-8666-666666666666';
+
+    await page.route('**/api/session', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          actorId: 'ai-creator-e2e-actor',
+          expiresAt: '2026-08-22T12:00:00.000Z',
+        }),
+      });
+    });
+
+    await page.route('**/api/composition/ai/knowledge-candidates', async (route) => {
+      expect(route.request().postDataJSON()).toEqual({
+        universeKey: 'universe.devotional',
+        request: 'Suggest a Devotional Knowledge Resource type.',
+        contextQuery: 'temple',
+      });
+      await route.fulfill({
+        status: 201,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          generationId,
+          universeKey: 'universe.devotional',
+          resourceType: 'devotional.temple',
+          canonical: false,
+          createdAt: '2026-08-22T11:00:00.000Z',
+        }),
+      });
+    });
+
+    await page.route(
+      `**/api/composition/ai/knowledge-candidates/${generationId}/accept`,
+      async (route) => {
+        await route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            generationId,
+            canonical: true,
+            canonicalOwner: 'knowledge',
+            resource: {
+              id: resourceId,
+              universeKey: 'universe.devotional',
+              resourceType: 'devotional.temple',
+              lifecycle: 'DRAFT',
+              createdAt: '2026-08-22T11:01:00.000Z',
+              updatedAt: '2026-08-22T11:01:00.000Z',
+            },
+          }),
+        });
+      },
+    );
+
+    await page.goto('/creator');
+    await page
+      .getByLabel('Assistance request')
+      .fill('Suggest a Devotional Knowledge Resource type.');
+    await page.getByLabel('Published Knowledge context search').fill('temple');
+    await page.getByRole('button', { name: 'Generate AI suggestion' }).click();
+
+    await expect(page.getByText('Non-canonical suggestion')).toBeVisible();
+    await expect(page.getByText('devotional.temple', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Accept as Knowledge draft' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Add Knowledge/ })).toHaveCount(0);
+
+    await page.getByRole('button', { name: 'Accept as Knowledge draft' }).click();
+
+    await expect(page.getByText('Non-canonical suggestion')).toHaveCount(0);
+    await expect(
+      page.getByRole('button', { name: /Add Knowledge.*devotional.temple/ }),
+    ).toBeVisible();
+    await expect(page.getByRole('status')).toContainText('accepted as a canonical Knowledge draft');
+  });
 });

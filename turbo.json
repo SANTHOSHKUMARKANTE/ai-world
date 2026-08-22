@@ -19,7 +19,8 @@
         "EMAIL_SMTP_SECURE",
         "EMAIL_FROM",
         "EMAIL_SMTP_USERNAME",
-        "EMAIL_SMTP_PASSWORD"
+        "EMAIL_SMTP_PASSWORD",
+        "OPENAI_API_KEY"
       ]
     },
     "lint": {
