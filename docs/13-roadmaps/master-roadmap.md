@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate CLOSED — LOCALIZATION KERNEL DEFERRED — FRONTEND LOCALIZATION TECHNOLOGY DEFERRED — Versioning Gate NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate CLOSED — LOCALIZATION KERNEL DEFERRED — FRONTEND LOCALIZATION TECHNOLOGY DEFERRED — Versioning Gate CLOSED — VERSIONING KERNEL DEFERRED — Phase 8 Closure Criteria Evaluation NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -27593,6 +27593,370 @@ If creators require revision history beyond simple Audit:
 ```text
 evaluate Versioning Kernel.
 ```
+
+---
+
+## PHASE 8 VERSIONING GATE DECISION RECORD
+
+The Phase 8 Versioning Gate is CLOSED.
+
+Decision:
+
+```text
+VERSIONING KERNEL
+DEFERRED
+```
+
+Decision baseline:
+
+```text
+5c7747cc78a0c416d0f1b31f0adeae62b06dc8c1
+docs(roadmap): close Phase 8 Localization gate
+```
+
+Parent decision baseline:
+
+```text
+4cb9de66a1a24cefc79c07499a552a83cd97e16d
+docs(roadmap): close Phase 8 Rich Editor gate
+```
+
+The exact successful GitHub Actions CI for the decision baseline is:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32557475780
+
+CI NUMBER
+#169
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+VALIDATE JOB
+96993848317
+```
+
+### Current canonical-state evidence
+
+Composition currently owns one direct Page lifecycle:
+
+```text
+DRAFT
+    → PUBLISHED
+        → ARCHIVED
+```
+
+The lifecycle represents the current canonical Page state. It does not create
+named revisions, published-version identities, historical snapshots, or
+restorable versions.
+
+For a DRAFT Page, the creator may replace the current ordered composition:
+
+```text
+current Page composition
+    replaced transactionally by
+current ordered typed references
+```
+
+The replacement contract persists only the resulting current order. It does not
+retain the previous order as a revision.
+
+After publication, composition editing is locked. ARCHIVED is terminal. The
+implemented product does not expose unpublish, restore, republish, branch,
+compare, or revision-selection behavior.
+
+Text Blocks are created as current canonical Blocks. Phase 8 does not introduce
+Block revision identity or an update history. Knowledge Resources and Media
+Assets remain owned by their Platforms and do not become versioned merely
+because Composition references them.
+
+### Current creator-demand review
+
+The following Versioning requirements are absent:
+
+```text
+named Resource revisions
+NONE
+
+revision numbers
+NONE
+
+immutable revision snapshots
+NONE
+
+draft-versus-published version pairs
+NONE
+
+restore previous Page composition
+NONE
+
+restore previous Block content
+NONE
+
+compare or diff revisions
+NONE
+
+revision history UI
+NONE
+
+historical preview
+NONE
+
+published-version routing
+NONE
+
+branching or merge semantics
+NONE
+
+concurrent-edit conflict resolution
+NONE
+
+version retention policy
+NONE
+
+revision-specific authorization
+NONE
+```
+
+The Devotional and Anime proofs require only current DRAFT composition, current
+preview, and direct publication. Neither proof requires historical rendering or
+restoration.
+
+AI / Creator Generation provenance preserves the original normalized AI result
+and source context for the Generation owner. A Generation is not a revision of
+the accepted Knowledge Resource, Page, or Block.
+
+### Versioning is distinct from lifecycle and Audit
+
+The accepted terminology remains:
+
+```text
+Versioning
+    manages multiple versions over time
+
+Audit
+    durably records significant actions or state changes for accountability
+```
+
+Created/updated timestamps and Page lifecycle values identify current state;
+they do not provide revision history.
+
+The existing Audit Kernel records required accountability facts for its real
+Identity & Access and Media consumers. Audit Records do not store restorable
+Page or Block snapshots and must not be used as an implicit revision model.
+
+A future Composition Audit record may establish who performed an action, but it
+would remain distinct from a reconstructable or restorable Resource revision.
+
+### Current Versioning materialization
+
+```text
+Versioning Kernel package
+NONE
+
+Version identifier contract
+NONE
+
+Revision contract
+NONE
+
+Revision writer or reader
+NONE
+
+snapshot persistence
+NONE
+
+revision graph
+NONE
+
+diff contract
+NONE
+
+restore contract
+NONE
+
+version retention policy
+NONE
+
+version-aware API route
+NONE
+
+version-history UI
+NONE
+
+Versioning dependency
+NONE
+```
+
+No source package, database schema, migration, API route, UI state, dependency,
+or infrastructure is introduced by this decision.
+
+### Ownership boundary
+
+The accepted ownership model remains:
+
+```text
+Versioning Kernel
+    owns shared revision and version mechanics when implemented demand exists
+
+Composition / CMS Platform
+    owns Page and Block meaning, validation, lifecycle, and canonical mutation
+
+Knowledge Platform
+    owns Knowledge Resource meaning, lifecycle, and canonical mutation
+
+Media Platform
+    owns Asset meaning, lifecycle, and canonical mutation
+
+Audit Kernel
+    owns accountability records, not Resource revisions
+```
+
+Versioning must not take ownership of a versioned target Resource. The target
+Platform remains responsible for validating and applying every canonical
+mutation or restore operation.
+
+The repository architecture explicitly says that:
+
+```text
+packages/kernel/versioning
+```
+
+must not be materialized merely because Versioning appears in architecture
+documentation. A real consumer must require implementation first.
+
+### Decision rationale
+
+The global Versioning vision permits meaningful revisions where a capability
+requires them and explicitly rejects universal revision history for every
+record.
+
+Adding Versioning now would require speculative choices for:
+
+```text
+version and revision identity;
+
+snapshot versus delta persistence;
+
+revision graph and parent semantics;
+
+current-versus-published pointers;
+
+restore validation and ownership;
+
+diff representation;
+
+concurrent editing and conflict behavior;
+
+retention and deletion;
+
+authorization;
+
+Audit and Event interaction;
+
+cross-owner reference behavior;
+
+Universe-specific variation.
+```
+
+There is no implemented creator consumer that can validate those semantics.
+
+The Phase 8 Versioning Gate therefore follows the canonical principle:
+
+```text
+Version everything only when it matters.
+```
+
+Decision:
+
+```text
+retain direct owner-controlled current state and lifecycle;
+
+defer reusable Versioning.
+```
+
+### Future activation gate
+
+Versioning is not rejected permanently. Re-evaluate when an implemented product
+slice requires one or more concrete capabilities such as:
+
+```text
+durable Page or Block revision history;
+
+restore to a validated previous revision;
+
+separate draft and published version identities;
+
+historical preview or published-version rendering;
+
+revision comparison or diff;
+
+concurrent-edit conflict detection using revision identity;
+
+reusable revision mechanics required by multiple owner Platforms.
+```
+
+Before implementation, the target owner must define which state is versioned,
+what constitutes a revision, how restore re-enters canonical validation, and how
+references behave across revisions. Shared mechanics may then be owned by the
+Versioning Kernel without absorbing target Resource semantics.
+
+### Decision result
+
+```text
+PHASE 8 VERSIONING GATE
+CLOSED
+
+VERSIONING KERNEL
+DEFERRED
+
+PRODUCTION CODE CHANGE
+NONE
+
+SCHEMA CHANGE
+NONE
+
+DEPENDENCY CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+26
+
+PHASE 8
+ACTIVE
+
+NEXT
+Phase 8 Closure Criteria Evaluation
+```
+
+The next required roadmap action is the Phase 8 Closure Criteria Evaluation. It
+must assess every criterion in section 208 against committed green-CI evidence
+and must not declare Phase 8 complete merely because the final conditional gate
+was deferred.
+
+The Phase 8 Closure Criteria Evaluation remains blocked until this roadmap-only
+Versioning Gate decision commit itself completes exact green `push/main` CI.
+
+This decision changes governance documentation only.
 
 ---
 
