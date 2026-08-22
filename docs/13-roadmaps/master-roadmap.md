@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate NEXT |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform ACTIVE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate CLOSED — LOCALIZATION KERNEL DEFERRED — FRONTEND LOCALIZATION TECHNOLOGY DEFERRED — Versioning Gate NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -27214,6 +27214,375 @@ implement Localization Kernel baseline.
 ```
 
 Do not implement localization solely for hypothetical future languages.
+
+---
+
+## PHASE 8 LOCALIZATION GATE DECISION RECORD
+
+The Phase 8 Localization Gate is CLOSED.
+
+Decision:
+
+```text
+LOCALIZATION KERNEL
+DEFERRED
+
+FRONTEND LOCALIZATION TECHNOLOGY
+DEFERRED
+```
+
+Decision baseline:
+
+```text
+4cb9de66a1a24cefc79c07499a552a83cd97e16d
+docs(roadmap): close Phase 8 Rich Editor gate
+```
+
+Parent milestone-closure baseline:
+
+```text
+83c388f91193e75342ce86a6f483839eef19d30e
+docs(roadmap): close P8-M09
+```
+
+The exact successful GitHub Actions CI for the decision baseline is:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32557071619
+
+CI NUMBER
+#168
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+VALIDATE JOB
+96992847040
+```
+
+### Current rollout evidence
+
+The implemented product has no accepted rollout requirement for multiple
+locales.
+
+Current locale demand is:
+
+```text
+supported locale registry
+NONE
+
+default locale configuration
+NONE
+
+request locale resolution
+NONE
+
+User locale preference
+NONE
+
+localized Page title or Block content
+NONE
+
+localized Knowledge Resource value
+NONE
+
+localized Media selection
+NONE
+
+locale-aware Search
+NONE
+
+locale-aware AI context or output
+NONE
+
+locale-aware publication rule
+NONE
+
+regional formatting requirement
+NONE
+
+multiple-locale launch plan
+NONE
+```
+
+The earlier User Platform profile gate deliberately deferred `locale` and
+`timezone` because no consumer required their semantics. Phase 8 introduces no
+new consumer that changes that decision.
+
+### Implemented content-model evidence
+
+The current Page and Block contracts contain:
+
+```text
+Page
+    universeKey
+    routePath
+    title
+    lifecycle
+
+Text Block
+    universeKey
+    blockType
+    text
+```
+
+They contain no locale key, localized-value map, translation identity, fallback
+chain, or locale-specific lifecycle.
+
+Knowledge Resources remain identified by Universe and Resource type. Media
+Assets remain technical/canonical Asset records. Discovery scope and AI context
+are Universe-scoped, not locale-scoped.
+
+The completed Devotional and Anime proofs demonstrate distinct domain
+configuration. Different Universes are not localization substitutes, and their
+successful reuse does not establish multiple-locale demand.
+
+### Localization is structural
+
+The accepted platform principles state that Localization may affect:
+
+```text
+content;
+
+search;
+
+metadata labels;
+
+AI output;
+
+media;
+
+formatting;
+
+publishing.
+```
+
+Localization therefore must not be introduced as translation strings inside
+only the Web Application.
+
+The accepted ownership boundary remains:
+
+```text
+Localization Kernel
+    owns Locale semantics, Localized Value mechanics, and locale resolution
+    primitives when implemented demand exists
+
+Composition / CMS Platform
+    owns localized Page and Block content using Localization mechanics
+
+Knowledge Platform
+    owns localized Knowledge content using Localization mechanics
+
+Media Platform
+    owns localized Asset selection and Media semantics
+
+Discovery Platform
+    owns locale-aware Search behavior
+
+AI / Creator Platform
+    owns locale-aware AI execution semantics
+
+User Platform
+    owns User locale preference when a real consumer requires it
+```
+
+Localization mechanics must not absorb ownership of the underlying Page,
+Block, Knowledge Resource, Media Asset, Search behavior, Generation, or User
+profile.
+
+### Current Localization materialization
+
+```text
+Localization Kernel package
+NONE
+
+Locale Domain type
+NONE
+
+Localized Value contract
+NONE
+
+supported locale registry
+NONE
+
+locale resolution contract
+NONE
+
+fallback contract
+NONE
+
+localized-content persistence
+NONE
+
+locale-aware API contract
+NONE
+
+frontend localization dependency
+NONE
+
+translation catalog
+NONE
+
+Universe-specific locale branch
+NONE
+```
+
+No source package, database schema, migration, API route, UI state, dependency,
+or infrastructure is introduced by this decision.
+
+### Technology decision
+
+The accepted Technology Strategy states:
+
+```text
+Frontend/localization libraries
+DEFERRED UNTIL LOCALIZATION IMPLEMENTATION
+```
+
+and requires Localization Kernel semantics to be designed before a
+framework-specific frontend library defines the model.
+
+Choosing a library now would prematurely decide:
+
+```text
+Locale identifier syntax;
+
+supported and default locale ownership;
+
+request and User-preference precedence;
+
+fallback chains;
+
+translation catalog ownership;
+
+localized Domain value representation;
+
+URL and route locale semantics;
+
+server/client locale propagation;
+
+Search indexing and ranking behavior;
+
+AI prompt and output locale rules;
+
+Media and publication variation;
+
+missing-translation behavior.
+```
+
+There is no implemented consumer or rollout plan that can validate those
+semantics.
+
+### Decision rationale
+
+The global platform vision expects eventual support across languages, regions,
+and cultures. That future direction is architectural guidance, not evidence for
+immediate implementation without a real product rollout.
+
+The Localization Gate therefore follows the roadmap rule:
+
+```text
+Do not implement localization solely for hypothetical future languages.
+```
+
+Decision:
+
+```text
+preserve Localization as a planned structural Kernel capability;
+
+defer Localization Kernel implementation;
+
+defer frontend localization technology.
+```
+
+### Future activation gate
+
+Localization is not rejected permanently. Re-evaluate when an implemented
+product slice provides concrete demand such as one or more of:
+
+```text
+a committed multiple-locale rollout;
+
+localized canonical Page, Block, or Knowledge values;
+
+User-selectable locale with an active consumer;
+
+request locale negotiation;
+
+localized taxonomy or metadata labels;
+
+locale-aware Search indexing and retrieval;
+
+locale-aware AI context or generated output;
+
+regional Media or publication behavior;
+
+shared Locale semantics required by multiple Platforms.
+```
+
+Before selecting frontend technology, the Localization Kernel must define the
+editor- and framework-neutral Locale, Localized Value, resolution, and fallback
+semantics required by that real slice.
+
+### Decision result
+
+```text
+PHASE 8 LOCALIZATION GATE
+CLOSED
+
+LOCALIZATION KERNEL
+DEFERRED
+
+FRONTEND LOCALIZATION TECHNOLOGY
+DEFERRED
+
+PRODUCTION CODE CHANGE
+NONE
+
+SCHEMA CHANGE
+NONE
+
+DEPENDENCY CHANGE
+NONE
+
+MIGRATION
+NONE
+
+CANONICAL MIGRATIONS
+26
+
+PHASE 8
+ACTIVE
+
+NEXT
+Versioning Gate
+```
+
+The next required roadmap decision is the Phase 8 Versioning Gate. It must
+evaluate whether creators require revision history beyond the existing direct
+canonical state and Audit evidence. It must not introduce Versioning Kernel for
+hypothetical restore, branching, diff, or history requirements.
+
+The Versioning Gate remains blocked until this roadmap-only Localization Gate
+decision commit itself completes exact green `push/main` CI.
+
+This decision changes governance documentation only.
 
 ---
 
