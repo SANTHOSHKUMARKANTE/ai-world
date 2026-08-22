@@ -1,0 +1,13 @@
+# Documentation example only. Do not commit a real *.tfvars file.
+ai_world_env = "production"
+region       = "blr1"
+vpc_cidr     = "10.10.0.0/20"
+
+# P10-M03 intentionally does not approve final capacity.
+database_size       = "REPLACE_WITH_APPROVED_PRODUCTION_DATABASE_SIZE"
+database_node_count = 1
+
+# Supplied/materialized by P10-M04 before plan/apply.
+database_trusted_app_id = "REPLACE_WITH_PRODUCTION_APP_PLATFORM_ID"
+
+media_bucket_name = "REPLACE_WITH_GLOBALLY_UNIQUE_PRODUCTION_MEDIA_BUCKET"

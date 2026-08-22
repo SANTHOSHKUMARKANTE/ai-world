@@ -57,11 +57,28 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4.0.1
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Check formatting
         run: pnpm run format:check
+
+      - name: Check Terraform formatting
+        run: terraform fmt -check -recursive infrastructure/terraform
+
+      - name: Initialize Terraform for validation
+        working-directory: infrastructure/terraform/platform
+        run: terraform init -backend=false -input=false -lockfile=readonly
+
+      - name: Validate Terraform
+        working-directory: infrastructure/terraform/platform
+        run: terraform validate -no-color
 
       - name: Lint
         run: pnpm run lint

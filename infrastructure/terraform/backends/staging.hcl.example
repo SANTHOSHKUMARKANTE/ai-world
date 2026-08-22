@@ -1,0 +1,18 @@
+# Copy to an operational backend config outside version control and replace
+# placeholders. Credentials are supplied only through environment variables.
+endpoints = {
+  s3 = "https://blr1.digitaloceanspaces.com"
+}
+
+bucket = "REPLACE_WITH_PRIVATE_STAGING_TERRAFORM_STATE_BUCKET"
+key    = "ai-world/platform.tfstate"
+
+region = "us-east-1"
+
+skip_credentials_validation = true
+skip_requesting_account_id  = true
+skip_metadata_api_check     = true
+skip_region_validation      = true
+skip_s3_checksum            = true
+
+use_lockfile = true
