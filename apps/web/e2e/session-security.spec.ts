@@ -193,6 +193,9 @@ test.describe('Real browser Session security', () => {
     expect(await displayNameInput.inputValue()).toBe(displayName);
 
     await page
+      .getByRole('navigation', {
+        name: 'Account',
+      })
       .getByRole('button', {
         name: 'Sign out',
       })

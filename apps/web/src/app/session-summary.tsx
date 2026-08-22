@@ -21,8 +21,8 @@ export function SessionSummary() {
       return (
         <Surface className="aw-session-card" aria-live="polite">
           <div className="aw-session-card-copy">
-            <strong>Explore as a guest</strong>
-            <p>Sign in when you want account and authorized creator tools.</p>
+            <strong>You are signed out.</strong>
+            <p>Explore as a guest. Sign in when you want account and authorized creator tools.</p>
           </div>
         </Surface>
       );
@@ -31,7 +31,7 @@ export function SessionSummary() {
       return (
         <Surface className="aw-session-card" aria-live="polite">
           <div className="aw-session-card-copy">
-            <strong>You are signed in</strong>
+            <strong>You are signed in.</strong>
             <p>
               Your account and authorized creator tools are available from the global navigation.
             </p>
