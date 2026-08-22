@@ -12,7 +12,7 @@
 | Version | 1.2.0 |
 | Created | 2026-08-08 |
 | Last Reviewed | 2026-08-18 |
-| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform COMPLETE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate CLOSED — LOCALIZATION KERNEL DEFERRED — FRONTEND LOCALIZATION TECHNOLOGY DEFERRED — Versioning Gate CLOSED — VERSIONING KERNEL DEFERRED — Phase 8 Closure Criteria Evaluation CLOSED — 7/7 SATISFIED — `phase-8-complete` TAG BLOCKED PENDING CLOSURE-COMMIT CI |
+| Current Delivery | Phase 3 COMPLETE — tagged `phase-3-complete`; Phase 4 Knowledge Platform COMPLETE — P4-M01 Knowledge Resource Model CLOSED; P4-M02 Typed Domain Resource Support CLOSED; P4-M03 Knowledge CRUD Baseline CLOSED; P4-M04 Knowledge Authorization CLOSED; P4-M05 Taxonomy Integration DEFERRED — no implemented Devotional classification consumer; P4-M06 Relationship Integration DEFERRED — no implemented Devotional Resource-to-Resource relationship consumer; P4-M07 Knowledge Lifecycle CLOSED; P4-M08 Knowledge Events DEFERRED — no real production Event consumer; P4-M09 Sources DEFERRED — no implemented Devotional source-backed Resource; P4-M10 Citations DEFERRED — no implemented Devotional Resource requires Citation semantics distinct from Source; P4-M11 Temporal Baseline DEFERRED — no implemented Devotional Resource requires reusable date/date-range semantics; P4-M12 Devotional Universe v1 CLOSED; P4-M13 Anime Reuse-Test Universe v1 CLOSED; P4-M14 Basic Public Knowledge API CLOSED; P4-M15 Basic Creator Knowledge API CLOSED; P4-M16 Web Knowledge Experience CLOSED; Phase 4 Proof Generality Review CLOSED; Metadata Decision Gate CLOSED — Metadata Kernel DEFERRED; Workflow Decision Gate CLOSED — Workflow Kernel DEFERRED; Policy Decision Gate CLOSED — Policy Kernel DEFERRED; Phase 4 Closure Criteria Evaluation CLOSED — 15/15 SATISFIED; Exit Outcome MULTI-UNIVERSE KNOWLEDGE PLATFORM; Phase 5 Media Platform COMPLETE — P5-M01 Asset Model CLOSED; P5-M02 Storage Foundation CLOSED; P5-M03 Upload CLOSED; P5-M04 Delivery CLOSED; P5-M05 Image Processing CLOSED; P5-M06 Knowledge Integration CLOSED; P5-M07 Devotional Media Proof CLOSED; P5-M08 Anime Media Proof CLOSED; P5-M09 Media Audit/Events CLOSED; Phase 5 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED; Phase 6 Discovery Platform COMPLETE — P6-M01 Search Contract CLOSED; P6-M02 Knowledge Search CLOSED; P6-M03 Universe-Scoped Search CLOSED; P6-M04 Cross-Universe Search CLOSED; P6-M05 Filters CLOSED; P6-M06 Basic Ranking CLOSED; P6-M07 Indexing Architecture Review CLOSED; Phase 6 Web Integration CLOSED; Phase 6 Security Review CLOSED; PostgreSQL Search Measurement Evidence CLOSED; Phase 6 Closure Criteria Evaluation CLOSED — 8/8 SATISFIED; Exit Outcome SHARED MULTI-UNIVERSE DISCOVERY PLATFORM; Phase 6 Final Closure Documentation CLOSED; Phase 7 AI / Creator Platform COMPLETE — Phase 7 Provider Decision CLOSED — INITIAL PROVIDER OpenAI API — P7-M01 AI Provider Port CLOSED — P7-M02 Initial Provider Adapter CLOSED — INITIAL MODEL gpt-5.6-terra — OPENAI SDK 7.5.0 — P7-M03 Generation Model CLOSED — P7-M03 CI Revalidation CLOSED — P7-M04 Text Generation CLOSED — P7-M05 Authorized AI Context CLOSED — P7-M06 AI Provenance CLOSED — P7-M07 Safety Baseline CLOSED — P7-M08 Canonical Acceptance Flow CLOSED — P7-M09 AI Creator Assistance CLOSED — P7-M10 AI Tool Baseline CLOSED — P7-M11 AI Usage Tracking CLOSED — Phase 7 Multi-Provider Gate CLOSED — SECOND PROVIDER DEFERRED — Phase 7 Semantic Search Gate CLOSED — SEMANTIC/VECTOR SEARCH DEFERRED — Phase 7 Devotional AI Proof CLOSED — Phase 7 Anime AI Proof CLOSED — Phase 7 Closure Criteria Evaluation CLOSED — 9/9 SATISFIED — Phase 7 COMPLETE — tagged `phase-7-complete` — Phase 8 Composition / CMS Platform COMPLETE — P8-M01 Page Model CLOSED — P8-M02 Block Model CLOSED — P8-M03 Layout / Composition CLOSED — P8-M04 Creator Editing UI CLOSED — P8-M05 Preview CLOSED — P8-M06 Publishing CLOSED — Workflow Gate CLOSED — Workflow Kernel DEFERRED — Policy Gate CLOSED — Policy Kernel DEFERRED — P8-M07 AI-Assisted CMS CLOSED — P8-M08 Devotional Composition Proof CLOSED — P8-M09 Anime Composition Proof CLOSED — Rich Editor Gate CLOSED — RICH EDITOR TECHNOLOGY DEFERRED — Localization Gate CLOSED — LOCALIZATION KERNEL DEFERRED — FRONTEND LOCALIZATION TECHNOLOGY DEFERRED — Versioning Gate CLOSED — VERSIONING KERNEL DEFERRED — Phase 8 Closure Criteria Evaluation CLOSED — 7/7 SATISFIED — tagged `phase-8-complete` — Phase 9 Engagement Platform ACTIVE — P9-M01 Favorites NEXT |
 | Authority | Canonical Delivery Sequence and Phase Governance |
 | Applies To | Entire AI World Platform |
 | Parent Documents | `docs/00-governance/project-charter.md`, `docs/01-vision/vision.md`, `docs/01-vision/mission.md`, `docs/01-vision/platform-principles.md`, `docs/01-vision/universe-principles.md`, `docs/01-vision/goals.md`, `docs/01-vision/non-goals.md`, `docs/01-vision/terminology.md`, `docs/02-architecture/system-context.md`, `docs/02-architecture/platform-architecture.md`, `docs/02-architecture/platform-layers.md`, `docs/02-architecture/capability-map.md`, `docs/02-architecture/ownership-model.md`, `docs/02-architecture/dependency-rules.md`, `docs/02-architecture/extension-model.md`, `docs/02-architecture/repository-architecture.md`, `docs/02-architecture/technology-strategy.md` |
@@ -28324,6 +28324,218 @@ verified to resolve to that exact final Phase 8 closure commit.
 
 The next governance action after tag verification is a separate Phase 9
 activation decision. This final Phase 8 closure does not activate Phase 9.
+
+---
+
+## PHASE 9 ACTIVATION RECORD
+
+Phase 9 — Engagement Platform is ACTIVE.
+
+The activation occurs only after the final Phase 8 closure commit:
+
+```text
+f6c9181cd6aeeb8596239b623745ee6800077d22
+docs(roadmap): close Phase 8
+```
+
+Parent:
+
+```text
+b8fc7081b622ab8b2b0fd5d36b67aa49ff792927
+docs(roadmap): close Phase 8 Versioning gate
+```
+
+received its own exact successful GitHub Actions CI:
+
+```text
+WORKFLOW
+CI
+
+RUN ID
+32558488409
+
+CI NUMBER
+#171
+
+ATTEMPT
+1
+
+EVENT
+push
+
+BRANCH
+main
+
+HEAD SHA
+f6c9181cd6aeeb8596239b623745ee6800077d22
+
+STATUS
+completed
+
+CONCLUSION
+success
+
+VALIDATE JOB
+96996302697
+```
+
+and the annotated completion tag was independently verified:
+
+```text
+TAG
+phase-8-complete
+
+TAG OBJECT
+e07e9ae9145b90bea3d804c5310f783d21640b29
+
+PEELED COMMIT
+f6c9181cd6aeeb8596239b623745ee6800077d22
+
+REMOTE TAG OBJECT
+e07e9ae9145b90bea3d804c5310f783d21640b29
+
+REMOTE PEELED COMMIT
+f6c9181cd6aeeb8596239b623745ee6800077d22
+```
+
+The Phase 9 activation prerequisites are SATISFIED:
+
+```text
+User ownership
+SATISFIED — the User Platform owns canonical User state and exposes deliberate
+public contracts
+
+Identity and Authorization
+SATISFIED — shared Session, Role, and Permission semantics are implemented and
+validated
+
+Canonical Resource references
+SATISFIED — Identifiers and the Knowledge, Media, and Composition owners expose
+typed public reference boundaries
+
+Multi-Universe reuse
+SATISFIED — Devotional and Anime independently reuse shared Platform contracts
+
+Phase 8 Composition / CMS
+SATISFIED — Phase 8 is complete, green, tagged, and remotely verified
+```
+
+Phase 9 therefore starts with the minimum next real capability:
+
+```text
+P9-M01 — Favorites
+NEXT
+```
+
+Canonical P9-M01 scope remains exactly:
+
+```text
+Implement generic Resource Favorites.
+```
+
+The accepted ownership boundary is:
+
+```text
+Engagement Platform
+    owns Favorite semantics, validation, mutation, lifecycle, and persistence meaning
+
+User Platform
+    remains owner of canonical User state
+
+Referenced Resource owner
+    remains owner of the referenced Resource
+
+Favorite
+    references canonical User and Resource identifiers
+    may retain bounded Universe context only where real requirements justify it
+```
+
+Favorite references do not copy or transfer ownership of the User or referenced
+Resource. Engagement must consume deliberately exposed public contracts and must
+not deep-import User, Knowledge, Media, Composition, or Universe internals.
+
+P9-M01 must begin by inspecting the current repository and defining the minimum
+typed Favorite Domain model, authorization boundary, and persistence semantics
+required by a real cross-Universe consumer. This activation does not pre-design
+its implementation.
+
+The following later Phase 9 capabilities remain demand-driven and are NOT
+activated merely because Phase 9 begins:
+
+```text
+P9-M02 Collections
+    introduce where product requirements justify Resource collections
+
+P9-M03 Activity History
+    introduce only with product value, privacy, retention, and preference design
+
+P9-M04 Progress
+    introduce only for learning paths, Experiences, or long-running journeys
+
+P9-M05 Notifications
+    introduce only when product workflows require user-facing Notification semantics
+
+P9-M06 Personalization
+    begin only with explicit preferences or signals backed by requirements
+
+Recommendation Gate
+    remains closed until usage data, product value, privacy design, and evaluation exist
+
+Community features
+    comments, follows, ratings, and social graph remain optional
+```
+
+If Notifications are later justified, Engagement may own Notification semantics
+while the Email Foundation remains owner of delivery mechanics. Phase 9
+activation does not materialize either capability.
+
+This activation intentionally introduces:
+
+```text
+no Engagement production package
+
+no Favorite Domain model
+
+no Favorite API
+
+no Favorite Web UI
+
+no Collection model
+
+no Activity History tracking
+
+no Progress model
+
+no Notification model or Email integration
+
+no Personalization or recommendation system
+
+no community feature
+
+no schema change
+
+no migration
+
+no dependency change
+
+no infrastructure change
+```
+
+Canonical migration count remains:
+
+```text
+26
+```
+
+The next implementation decision must inspect the current repository and build
+only the minimum architecture necessary for:
+
+```text
+P9-M01 — Favorites
+```
+
+P9-M01 remains blocked until this roadmap-only activation commit itself completes
+exact green `push/main` CI.
 
 ---
 
