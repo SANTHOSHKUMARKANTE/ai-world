@@ -135,6 +135,7 @@ import { PasswordAuthenticationController } from './authentication/password-auth
 import { AuthorizationController } from './authorization/authorization.controller';
 import { CreatorAiAssistanceController } from './composition/creator-ai-assistance.controller';
 import { CreatorCompositionController } from './composition/creator-composition.controller';
+import { PublicCompositionController } from './composition/public-composition.controller';
 import { DatabaseModule } from './database/database.module';
 import { DatabaseService } from './database/database.service';
 import {
@@ -308,6 +309,7 @@ export class AppModule {
         CreatorKnowledgeController,
         MediaAssetsController,
         CreatorCompositionController,
+        PublicCompositionController,
         CreatorAiAssistanceController,
       ],
 

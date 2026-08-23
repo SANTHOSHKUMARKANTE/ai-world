@@ -370,7 +370,7 @@ function AuthenticatedCreatorWorkspace() {
   }
 
   return (
-    <div>
+    <div className="aw-creator-workspace">
       <section className="mb-6 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-5">
         <label className="text-sm font-semibold text-cyan-100" htmlFor="creator-universe-key">
           Active Universe
@@ -487,14 +487,22 @@ function AuthenticatedCreatorWorkspace() {
                   </button>
                 ) : null}
                 {activePage.lifecycle === 'PUBLISHED' ? (
-                  <button
-                    className={secondaryButtonClassName}
-                    type="button"
-                    disabled={busy}
-                    onClick={() => void archivePage()}
-                  >
-                    {busyAction === 'archive-page' ? 'Archiving…' : 'Archive Page'}
-                  </button>
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      className={primaryButtonClassName}
+                      href={`/experiences/${encodeURIComponent(activePage.id)}`}
+                    >
+                      View published experience
+                    </Link>
+                    <button
+                      className={secondaryButtonClassName}
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void archivePage()}
+                    >
+                      {busyAction === 'archive-page' ? 'Archiving…' : 'Archive Page'}
+                    </button>
+                  </div>
                 ) : null}
                 {activePage.lifecycle === 'ARCHIVED' ? (
                   <p className="text-slate-400">Archived Pages are terminal and read-only.</p>

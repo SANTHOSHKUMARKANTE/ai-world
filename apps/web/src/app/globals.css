@@ -1015,3 +1015,110 @@ textarea {
     width: 100%;
   }
 }
+
+/* WPR-M04 — Creator, Composition, Public Experience And AI Experience */
+.aw-creator-hero {
+  margin-bottom: 2rem;
+}
+
+.aw-creator-workspace {
+  overflow: clip;
+  border-radius: var(--aw-radius-lg);
+}
+
+.aw-experience {
+  border: 1px solid var(--aw-border);
+  border-radius: var(--aw-radius-lg);
+  background: var(--aw-surface);
+  box-shadow: var(--aw-shadow-soft);
+  overflow: hidden;
+}
+
+.aw-experience[data-universe-tone='devotional'] {
+  --aw-experience-accent: #b36c25;
+  border-top: 0.3rem solid var(--aw-experience-accent);
+}
+
+.aw-experience[data-universe-tone='anime'] {
+  --aw-experience-accent: #6d5bd0;
+  border-top: 0.3rem solid var(--aw-experience-accent);
+}
+
+.aw-experience__header {
+  max-width: 52rem;
+  padding: clamp(1.5rem, 5vw, 3rem);
+}
+
+.aw-experience__header h1 {
+  margin: 0.6rem 0 0;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.aw-experience__content {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0 clamp(1.25rem, 4vw, 2rem) clamp(1.25rem, 4vw, 2rem);
+}
+
+.aw-experience__content > li {
+  min-width: 0;
+}
+
+.aw-experience-block,
+.aw-experience-knowledge,
+.aw-experience-media {
+  overflow: hidden;
+  border: 1px solid var(--aw-border);
+  border-radius: var(--aw-radius-md);
+  background: var(--aw-surface-muted);
+}
+
+.aw-experience-block,
+.aw-experience-knowledge {
+  padding: clamp(1.2rem, 4vw, 2rem);
+}
+
+.aw-experience-block p {
+  max-width: var(--aw-reading-width);
+  margin: 0;
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.aw-experience-knowledge h2 {
+  margin: 0.45rem 0 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.aw-experience-knowledge > p:not(.aw-eyebrow) {
+  color: var(--aw-text-muted);
+  overflow-wrap: anywhere;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.78rem;
+}
+
+.aw-experience-media__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--aw-surface-raised);
+}
+
+.aw-experience-media img {
+  object-fit: contain;
+}
+
+@media (max-width: 48rem) {
+  .aw-creator-workspace {
+    border-radius: var(--aw-radius-md);
+  }
+
+  .aw-experience__header,
+  .aw-experience__content {
+    padding-inline: 1rem;
+  }
+}

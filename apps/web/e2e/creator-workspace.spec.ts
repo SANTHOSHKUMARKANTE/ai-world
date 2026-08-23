@@ -166,10 +166,15 @@ test.describe('Creator workspace', () => {
 
     await page.getByRole('button', { name: 'Publish Page' }).click();
     await expect(page.getByRole('button', { name: 'Archive Page' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View published experience' })).toHaveAttribute(
+      'href',
+      `/experiences/${pageId}`,
+    );
     await expect(page.getByRole('button', { name: 'Save composition' })).toBeDisabled();
 
     await page.getByRole('button', { name: 'Archive Page' }).click();
     await expect(page.getByText('Archived Pages are terminal and read-only.')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View published experience' })).toHaveCount(0);
   });
 
   test('renders a controlled saved draft preview in typed composition order', async ({ page }) => {

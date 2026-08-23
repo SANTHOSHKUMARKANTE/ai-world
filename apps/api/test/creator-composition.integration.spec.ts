@@ -176,6 +176,16 @@ describe('Creator Composition API', () => {
   });
 
   it('authorizes and enforces the Page publication lifecycle', async () => {
+    await request(app.getHttpServer())
+      .get('/composition/public/pages/not-a-resource-id')
+      .expect(404)
+      .expect(({ body }) => {
+        expect(body.error).toMatchObject({
+          code: 'composition.public.not_found',
+          message: 'The published Experience was not found.',
+        });
+      });
+
     const ordinary = await signIn('ordinary-publisher');
     const denied = await request(app.getHttpServer())
       .post('/composition/pages/not-a-resource-id/publish')
@@ -210,11 +220,35 @@ describe('Creator Composition API', () => {
     pageIds.add(pageId);
 
     await request(app.getHttpServer())
+      .get(`/composition/public/pages/${pageId}`)
+      .expect(404)
+      .expect(({ body }) => {
+        expect(body.error).toMatchObject({
+          code: 'composition.public.not_found',
+          message: 'The published Experience was not found.',
+        });
+      });
+
+    await request(app.getHttpServer())
       .post(`/composition/pages/${pageId}/publish`)
       .set('Cookie', administrator.cookiePair)
       .expect(201)
       .expect(({ body }) => {
         expect(body).toMatchObject({ id: pageId, lifecycle: 'PUBLISHED' });
+      });
+
+    await request(app.getHttpServer())
+      .get(`/composition/public/pages/${pageId}`)
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body).toMatchObject({
+          page: {
+            id: pageId,
+            universeKey: 'universe.devotional',
+            lifecycle: 'PUBLISHED',
+          },
+          items: [],
+        });
       });
 
     const lockedEdit = await request(app.getHttpServer())
@@ -238,6 +272,16 @@ describe('Creator Composition API', () => {
       .expect(201)
       .expect(({ body }) => {
         expect(body).toMatchObject({ id: pageId, lifecycle: 'ARCHIVED' });
+      });
+
+    await request(app.getHttpServer())
+      .get(`/composition/public/pages/${pageId}`)
+      .expect(404)
+      .expect(({ body }) => {
+        expect(body.error).toMatchObject({
+          code: 'composition.public.not_found',
+          message: 'The published Experience was not found.',
+        });
       });
 
     await request(app.getHttpServer())
@@ -350,6 +394,32 @@ describe('Creator Composition API', () => {
       .set('Cookie', administrator.cookiePair)
       .expect(200)
       .expect(saved.body);
+
+    await request(app.getHttpServer())
+      .post(`/composition/pages/${pageId}/publish`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .get(`/composition/public/pages/${pageId}`)
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body.page).toMatchObject({
+          id: pageId,
+          lifecycle: 'PUBLISHED',
+        });
+        expect(body.items).toEqual([
+          {
+            position: 1,
+            kind: 'BLOCK',
+            id: blockId,
+            blockType: 'composition.block.text',
+            text: 'A structured creator Block.',
+          },
+          { position: 2, kind: 'MEDIA_ASSET', id: assetId },
+        ]);
+        expect(JSON.stringify(body)).not.toContain(knowledgeId);
+      });
   });
 
   it('allows an Administrator to resolve a saved draft preview through owner contracts', async () => {

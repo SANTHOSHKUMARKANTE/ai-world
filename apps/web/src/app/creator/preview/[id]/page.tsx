@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { DraftPreview } from '../../../../creator/draft-preview';
+import { PageContainer } from '../../../../ui/primitives';
 
 interface CreatorDraftPreviewPageProps {
   readonly params: Promise<{ readonly id: string }>;
@@ -10,16 +11,16 @@ export default async function CreatorDraftPreviewPage({ params }: CreatorDraftPr
   const { id } = await params;
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100 sm:px-8">
-      <div className="mx-auto max-w-5xl">
-        <nav aria-label="Preview breadcrumb" className="mb-8 text-sm text-slate-400">
-          <Link href="/creator" className="transition hover:text-cyan-300">
-            Creator workspace
-          </Link>{' '}
-          <span aria-hidden="true">/</span> Saved draft preview
+    <main className="aw-public-page">
+      <PageContainer>
+        <nav aria-label="Preview breadcrumb" className="aw-context-nav">
+          <Link href="/creator">Creator workspace</Link>
+          <span aria-hidden="true">/</span>
+          <span>Saved draft preview</span>
         </nav>
+
         <DraftPreview pageId={id} />
-      </div>
+      </PageContainer>
     </main>
   );
 }

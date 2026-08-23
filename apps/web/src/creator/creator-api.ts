@@ -380,6 +380,11 @@ export async function getCreatorPagePreview(id: string): Promise<CreatorPagePrev
   return readPagePreview(await readJson(response));
 }
 
+export async function getPublicExperience(id: string): Promise<CreatorPagePreview> {
+  const response = await apiRequest(`/composition/public/pages/${encodeURIComponent(id)}`);
+  return readPagePreview(await readJson(response));
+}
+
 export async function replaceCreatorPageComposition(
   id: string,
   items: readonly Pick<CreatorCompositionItem, 'kind' | 'id'>[],
