@@ -394,4 +394,227 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
       fullPage: true,
     });
   });
+  test('reuses the Entity Experience across universes for Naruto', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+
+    const narutoAssetIds = [
+      '60000000-0000-4000-8000-000000000001',
+      '60000000-0000-4000-8000-000000000002',
+      '60000000-0000-4000-8000-000000000003',
+      '60000000-0000-4000-8000-000000000004',
+      '60000000-0000-4000-8000-000000000005',
+    ];
+
+    function animeRelation(
+      index: number,
+      sectionKey: string,
+      displayName: string,
+      summary: string,
+      relationshipType: string,
+      resourceType: string,
+    ) {
+      const id = `70000000-0000-4000-8000-${String(index).padStart(12, '0')}`;
+      const previewAssetId = `80000000-0000-4000-8000-${String(index).padStart(12, '0')}`;
+      const slug = displayName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/gu, '-')
+        .replace(/^-|-$/gu, '');
+
+      return {
+        sectionKey,
+        relationshipType,
+        position: index,
+        target: {
+          id,
+          universeKey: 'universe.anime',
+          resourceType,
+          slug,
+          displayName,
+          summary,
+          previewAssetId,
+        },
+      };
+    }
+
+    const narutoRelations = [
+      animeRelation(
+        1,
+        'entity.forms',
+        'Sage Mode',
+        'A heightened state using natural energy',
+        'anime.form',
+        'anime.form',
+      ),
+      animeRelation(
+        2,
+        'entity.forms',
+        'Nine-Tails Chakra Mode',
+        'A powerful chakra transformation',
+        'anime.form',
+        'anime.form',
+      ),
+      animeRelation(
+        3,
+        'entity.meditation',
+        'Rasengan Training',
+        'Training behind Naruto’s signature technique',
+        'anime.technique',
+        'anime.technique',
+      ),
+      animeRelation(
+        4,
+        'entity.stories',
+        'Pain Assault Arc',
+        'A defining story arc for Naruto and the Hidden Leaf',
+        'anime.arc',
+        'anime.arc',
+      ),
+      animeRelation(
+        5,
+        'entity.family',
+        'Sasuke Uchiha',
+        'Rival, teammate and lifelong bond',
+        'anime.relationship',
+        'anime.character',
+      ),
+      animeRelation(
+        6,
+        'entity.family',
+        'Sakura Haruno',
+        'Team 7 ally and close friend',
+        'anime.relationship',
+        'anime.character',
+      ),
+      animeRelation(
+        7,
+        'entity.temples',
+        'Hidden Leaf Village',
+        'Naruto’s home and the center of his journey',
+        'anime.location',
+        'anime.location',
+      ),
+      animeRelation(
+        8,
+        'entity.quotes',
+        'I never go back on my word.',
+        'Naruto Uzumaki',
+        'anime.quote',
+        'anime.quote',
+      ),
+      animeRelation(
+        9,
+        'entity.experiences',
+        'Road to Hokage',
+        'An image-led journey through Naruto’s growth',
+        'anime.experience',
+        'anime.experience',
+      ),
+    ];
+
+    await page.route('**/api/session', async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          error: {
+            code: 'identity.session.invalid',
+            message: 'Authentication is required.',
+            status: 401,
+          },
+        }),
+      });
+    });
+
+    await page.route('**/api/knowledge/entities/universe.anime/naruto-uzumaki', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          resource: {
+            id: '99999999-9999-4999-8999-999999999999',
+            universeKey: 'universe.anime',
+            resourceType: 'anime.character',
+          },
+          profile: {
+            slug: 'naruto-uzumaki',
+            displayName: 'Naruto Uzumaki',
+            summary:
+              'A determined shinobi whose journey from outsider to Hokage is shaped by courage, bonds and perseverance.',
+            facts: [
+              { key: 'anime.series', label: 'Series', value: 'Naruto' },
+              { key: 'anime.village', label: 'Village', value: 'Hidden Leaf' },
+              { key: 'anime.rank', label: 'Role', value: 'Hokage' },
+              { key: 'anime.team', label: 'Team', value: 'Team 7' },
+              { key: 'anime.mentor', label: 'Mentor', value: 'Kakashi Hatake' },
+              { key: 'anime.signature', label: 'Signature', value: 'Rasengan' },
+            ],
+          },
+          assetIds: narutoAssetIds,
+          relations: narutoRelations,
+        }),
+      });
+    });
+
+    await page.route('**/api/media/assets/*/thumbnail', async (route) => {
+      const body = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
+        <defs>
+          <linearGradient id="anime" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#07152f"/>
+            <stop offset="0.52" stop-color="#234e9b"/>
+            <stop offset="1" stop-color="#e87824"/>
+          </linearGradient>
+        </defs>
+        <rect width="1200" height="800" fill="url(#anime)"/>
+        <circle cx="790" cy="290" r="205" fill="#f6b14a" opacity=".34"/>
+        <path d="M690 610 Q790 410 910 610" fill="none" stroke="#ffffff" stroke-width="30" opacity=".38"/>
+        <text x="70" y="700" fill="#ffffff" font-size="58" font-family="Arial, sans-serif" font-weight="700">Naruto Uzumaki</text>
+      </svg>`;
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'image/svg+xml',
+        body,
+      });
+    });
+
+    const response = await page.goto('/anime/characters/naruto-uzumaki');
+    expect(response?.status()).toBe(200);
+
+    await expect(page.getByRole('heading', { level: 1, name: 'Naruto Uzumaki' })).toBeVisible();
+    await expect(page.getByText('Character · Anime')).toBeVisible();
+    await expect(page.getByText('Hidden Leaf', { exact: true })).toBeVisible();
+    await expect(page.getByText('Rasengan', { exact: true })).toBeVisible();
+
+    await expect(page.getByRole('heading', { name: 'Forms & Transformations' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Training & Techniques' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Story Arcs & Knowledge' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Allies & Relationships' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Places & Landmarks' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Quotes' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Experiences' })).toBeVisible();
+
+    await expect(page.getByRole('link', { name: 'Sasuke Uchiha' })).toHaveAttribute(
+      'href',
+      '/anime/characters/sasuke-uchiha',
+    );
+
+    const galleryImages = page.locator('.aw-entity-image-card img');
+    await expect(galleryImages).toHaveCount(5);
+    await page.waitForFunction(() => {
+      const images = [...document.querySelectorAll<HTMLImageElement>('.aw-entity-image-card img')];
+      return (
+        images.length === 5 && images.every((image) => image.complete && image.naturalWidth > 0)
+      );
+    });
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    );
+    expect(overflow).toBe(false);
+
+    await page.screenshot({
+      path: 'test-results/wpr-m05-naruto-entity-page.png',
+      fullPage: true,
+    });
+  });
 });

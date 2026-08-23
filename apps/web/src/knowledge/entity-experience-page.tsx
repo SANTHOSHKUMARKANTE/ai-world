@@ -60,8 +60,29 @@ function entityPath(target: PublicKnowledgeEntityRelation['target']): string {
   return `/knowledge/resources/${encodeURIComponent(target.id)}`;
 }
 
-function sectionTitle(sectionKey: string, displayName: string): string {
+function sectionTitle(sectionKey: string, displayName: string, universeKey: string): string {
   const entityName = displayName.replace(/^Lord\s+/u, '');
+
+  if (universeKey === 'universe.anime') {
+    switch (sectionKey) {
+      case 'entity.forms':
+        return 'Forms & Transformations';
+      case 'entity.meditation':
+        return 'Training & Techniques';
+      case 'entity.stories':
+        return 'Story Arcs & Knowledge';
+      case 'entity.family':
+        return 'Allies & Relationships';
+      case 'entity.temples':
+        return 'Places & Landmarks';
+      case 'entity.quotes':
+        return 'Quotes';
+      case 'entity.experiences':
+        return 'Experiences';
+      default:
+        break;
+    }
+  }
 
   switch (sectionKey) {
     case 'entity.forms':
@@ -93,12 +114,14 @@ function EntityRail({
   sectionKey,
   items,
   displayName,
+  universeKey,
 }: {
   readonly sectionKey: string;
   readonly items: readonly PublicKnowledgeEntityRelation[];
   readonly displayName: string;
+  readonly universeKey: string;
 }) {
-  const title = sectionTitle(sectionKey, displayName);
+  const title = sectionTitle(sectionKey, displayName, universeKey);
   const quoteSection = sectionKey === 'entity.quotes';
 
   return (
@@ -289,7 +312,7 @@ export function EntityExperiencePage({
         {entity.assetIds.length > 0 ? <a href="#entity-images">Images</a> : null}
         {availableSectionKeys.map((sectionKey) => (
           <a key={sectionKey} href={`#${sectionAnchor(sectionKey)}`}>
-            {sectionTitle(sectionKey, entity.profile.displayName)}
+            {sectionTitle(sectionKey, entity.profile.displayName, entity.resource.universeKey)}
           </a>
         ))}
       </nav>
@@ -342,6 +365,7 @@ export function EntityExperiencePage({
           sectionKey={sectionKey}
           items={grouped.get(sectionKey) ?? []}
           displayName={entity.profile.displayName}
+          universeKey={entity.resource.universeKey}
         />
       ))}
     </article>
