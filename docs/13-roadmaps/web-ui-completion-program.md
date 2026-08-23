@@ -493,26 +493,53 @@ The previous page must satisfy its Definition of Done first.
 
 This phase must remain minimal and Character-driven.
 
-Likely required work:
+The pre-implementation repository / architecture review is complete.
+
+The frozen detailed implementation contract is:
 
 ```text
-typed Universe presentation tokens beyond a single tone string;
-Anime and Devotional semantic presentation variables;
-shared Media tile/viewer;
-image + video + audio-aware public Media descriptor;
-poster/fallback behavior;
-muted short-loop behavior;
-reduced-motion behavior;
-media caption/alt presentation;
-share/copy-link control;
-social/deep-link parsing;
-canonical metadata helpers where a real public route consumes them;
-skeleton/error/not-found states.
+docs/13-roadmaps/uxp-01-shared-universe-media-foundation.md
 ```
 
-Do not create a generic design-system package.
+The accepted direction is:
 
-Do not build components without the Character page consuming them.
+```text
+typed Web Universe presentation
++
+contextual Knowledge Media placement
++
+ordered public Entity Media descriptors
++
+bounded IMAGE / SHORT_LOOP VIDEO support
++
+reduced-motion + poster fallback
++
+minimum permissioned Creator management
+```
+
+Important boundaries:
+
+```text
+Media continues to own Asset / lifecycle / technical metadata / delivery;
+
+Knowledge owns the contextual fact that an Entity uses an Asset;
+
+no Media → Knowledge dependency is introduced;
+
+IMAGE / VIDEO / AUDIO / DOCUMENT remain the canonical Asset types;
+
+SHORT_LOOP is presentation behavior, not a new Asset type;
+
+no generic theme engine or packages/ui is introduced;
+
+no general seekable/long-form video platform is introduced by UXP-01.
+```
+
+Implementation proceeds through UXP-01A through UXP-01E as defined in the
+detailed contract.
+
+Do not create components without the current Entity consumer using them.
+
 
 ---
 
