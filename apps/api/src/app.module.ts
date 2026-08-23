@@ -101,6 +101,7 @@ import {
   DeliverAsset,
   GenerateImageThumbnail,
   ResolveAssetReference,
+  ResolvePublicMediaAssetDescriptor,
   UploadAssetAsActor,
 } from '@ai-world/platform-media';
 import {
@@ -950,6 +951,14 @@ export class AppModule {
         },
 
         {
+          provide: ResolvePublicMediaAssetDescriptor,
+          inject: [PrismaAssetRepository],
+          useFactory: (repository: PrismaAssetRepository): ResolvePublicMediaAssetDescriptor => {
+            return new ResolvePublicMediaAssetDescriptor(repository);
+          },
+        },
+
+        {
           provide: DeliverAsset,
           inject: [PrismaAssetRepository],
           useFactory: (repository: PrismaAssetRepository): DeliverAsset => {
@@ -1005,9 +1014,12 @@ export class AppModule {
 
         {
           provide: PrismaKnowledgeEntityRepository,
-          inject: [DatabaseService],
-          useFactory: (database: DatabaseService): PrismaKnowledgeEntityRepository => {
-            return new PrismaKnowledgeEntityRepository(database.getClient());
+          inject: [DatabaseService, ResolvePublicMediaAssetDescriptor],
+          useFactory: (
+            database: DatabaseService,
+            mediaDescriptors: ResolvePublicMediaAssetDescriptor,
+          ): PrismaKnowledgeEntityRepository => {
+            return new PrismaKnowledgeEntityRepository(database.getClient(), mediaDescriptors);
           },
         },
 

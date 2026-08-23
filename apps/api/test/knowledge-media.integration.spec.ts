@@ -287,7 +287,7 @@ describe('Knowledge Media Placement Integration API', () => {
     await request(app.getHttpServer()).get(`/knowledge/resources/${resourceId}/assets`).expect(404);
   });
 
-  it('preserves ordered public assetIds compatibility for published Resource and Entity reads', async () => {
+  it('keeps Resource asset-ID compatibility while Entity publishes ordered Media descriptors', async () => {
     const editor = await signInKnowledgeEditor('editor-public-order');
     const resourceId = await createKnowledgeResource('PUBLISHED');
     const firstId = await createAsset();
@@ -334,7 +334,33 @@ describe('Knowledge Media Placement Integration API', () => {
     const entity = await request(app.getHttpServer())
       .get(`/knowledge/entities/universe.anime/${slug}`)
       .expect(200);
-    expect(entity.body.assetIds).toEqual([secondId, firstId]);
+    expect(entity.body).not.toHaveProperty('assetIds');
+    expect(entity.body.media.map((media: { assetId: string }) => media.assetId)).toEqual([
+      secondId,
+      firstId,
+    ]);
+    expect(entity.body.media).toMatchObject([
+      {
+        assetId: secondId,
+        assetType: 'IMAGE',
+        mimeType: 'image/png',
+        role: 'HERO',
+        playback: 'STILL',
+        position: 0,
+        altText: 'Hero',
+        posterAssetId: null,
+      },
+      {
+        assetId: firstId,
+        assetType: 'IMAGE',
+        mimeType: 'image/png',
+        role: 'GALLERY',
+        playback: 'STILL',
+        position: 1,
+        altText: 'Gallery',
+        posterAssetId: null,
+      },
+    ]);
   });
 
   it('accepts a VIDEO SHORT_LOOP placement with an ACTIVE IMAGE poster without enabling video delivery', async () => {

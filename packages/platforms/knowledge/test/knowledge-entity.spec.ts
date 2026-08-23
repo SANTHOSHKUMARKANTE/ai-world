@@ -160,7 +160,7 @@ describe('Knowledge Entity', () => {
     entities.publicEntity = {
       resource: shiva,
       profile,
-      assetIds: [],
+      media: [],
       relations: [],
     };
 

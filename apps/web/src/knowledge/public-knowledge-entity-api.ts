@@ -1,9 +1,28 @@
 import { apiRequest } from '../api/api-client';
 
+export type PublicKnowledgeEntityAssetType = 'IMAGE' | 'VIDEO' | 'AUDIO' | 'DOCUMENT';
+export type PublicKnowledgeEntityMediaRole = 'HERO' | 'GALLERY' | 'HIGHLIGHT';
+export type PublicKnowledgeEntityMediaPlayback = 'STILL' | 'SHORT_LOOP';
+
 export interface PublicKnowledgeEntityFact {
   readonly key: string;
   readonly label: string;
   readonly value: string;
+}
+
+export interface PublicKnowledgeEntityMedia {
+  readonly assetId: string;
+  readonly assetType: PublicKnowledgeEntityAssetType;
+  readonly mimeType: string;
+  readonly role: PublicKnowledgeEntityMediaRole;
+  readonly playback: PublicKnowledgeEntityMediaPlayback;
+  readonly position: number;
+  readonly altText: string | null;
+  readonly caption: string | null;
+  readonly width?: number;
+  readonly height?: number;
+  readonly durationMs?: number;
+  readonly posterAssetId: string | null;
 }
 
 export interface PublicKnowledgeEntityRelation {
@@ -33,7 +52,7 @@ export interface PublicKnowledgeEntity {
     readonly summary: string;
     readonly facts: readonly PublicKnowledgeEntityFact[];
   };
-  readonly assetIds: readonly string[];
+  readonly media: readonly PublicKnowledgeEntityMedia[];
   readonly relations: readonly PublicKnowledgeEntityRelation[];
 }
 
@@ -47,6 +66,41 @@ function isFact(value: unknown): value is PublicKnowledgeEntityFact {
     typeof value.key === 'string' &&
     typeof value.label === 'string' &&
     typeof value.value === 'string'
+  );
+}
+
+function isAssetType(value: unknown): value is PublicKnowledgeEntityAssetType {
+  return value === 'IMAGE' || value === 'VIDEO' || value === 'AUDIO' || value === 'DOCUMENT';
+}
+
+function isMediaRole(value: unknown): value is PublicKnowledgeEntityMediaRole {
+  return value === 'HERO' || value === 'GALLERY' || value === 'HIGHLIGHT';
+}
+
+function isMediaPlayback(value: unknown): value is PublicKnowledgeEntityMediaPlayback {
+  return value === 'STILL' || value === 'SHORT_LOOP';
+}
+
+function isOptionalPositiveInteger(value: unknown): boolean {
+  return value === undefined || (Number.isInteger(value) && Number(value) > 0);
+}
+
+function isMedia(value: unknown): value is PublicKnowledgeEntityMedia {
+  return (
+    isRecord(value) &&
+    typeof value.assetId === 'string' &&
+    isAssetType(value.assetType) &&
+    typeof value.mimeType === 'string' &&
+    isMediaRole(value.role) &&
+    isMediaPlayback(value.playback) &&
+    Number.isInteger(value.position) &&
+    Number(value.position) >= 0 &&
+    (typeof value.altText === 'string' || value.altText === null) &&
+    (typeof value.caption === 'string' || value.caption === null) &&
+    isOptionalPositiveInteger(value.width) &&
+    isOptionalPositiveInteger(value.height) &&
+    isOptionalPositiveInteger(value.durationMs) &&
+    (typeof value.posterAssetId === 'string' || value.posterAssetId === null)
   );
 }
 
@@ -70,6 +124,7 @@ function isRelation(value: unknown): value is PublicKnowledgeEntityRelation {
 function isPublicKnowledgeEntity(value: unknown): value is PublicKnowledgeEntity {
   return (
     isRecord(value) &&
+    !('assetIds' in value) &&
     isRecord(value.resource) &&
     typeof value.resource.id === 'string' &&
     typeof value.resource.universeKey === 'string' &&
@@ -80,8 +135,8 @@ function isPublicKnowledgeEntity(value: unknown): value is PublicKnowledgeEntity
     typeof value.profile.summary === 'string' &&
     Array.isArray(value.profile.facts) &&
     value.profile.facts.every(isFact) &&
-    Array.isArray(value.assetIds) &&
-    value.assetIds.every((assetId) => typeof assetId === 'string') &&
+    Array.isArray(value.media) &&
+    value.media.every(isMedia) &&
     Array.isArray(value.relations) &&
     value.relations.every(isRelation)
   );

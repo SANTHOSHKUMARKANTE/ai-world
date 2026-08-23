@@ -41,6 +41,7 @@ describe('Knowledge Entity API', () => {
   let app: INestApplication;
   let database: DatabaseClient;
   const resourceIds = new Set<string>();
+  const assetIds = new Set<string>();
 
   async function cleanup(): Promise<void> {
     if (resourceIds.size > 0) {
@@ -52,6 +53,17 @@ describe('Knowledge Entity API', () => {
         },
       });
       resourceIds.clear();
+    }
+
+    if (assetIds.size > 0) {
+      await database.asset.deleteMany({
+        where: {
+          id: {
+            in: [...assetIds],
+          },
+        },
+      });
+      assetIds.clear();
     }
 
     const actorEmails = await database.actorEmail.findMany({
@@ -95,6 +107,25 @@ describe('Knowledge Entity API', () => {
         id,
         universeKey: 'universe.devotional',
         resourceType,
+        lifecycle,
+      },
+    });
+    return id;
+  }
+
+  async function createAsset(
+    assetType: 'IMAGE' | 'VIDEO',
+    lifecycle: 'ACTIVE' | 'ARCHIVED' = 'ACTIVE',
+  ): Promise<string> {
+    const id = randomUUID();
+    assetIds.add(id);
+    await database.asset.create({
+      data: {
+        id,
+        assetType,
+        mimeType: assetType === 'VIDEO' ? 'video/mp4' : 'image/png',
+        sizeBytes: 1234,
+        storageReference: `private/provider/${id}/original`,
         lifecycle,
       },
     });
@@ -162,11 +193,74 @@ describe('Knowledge Entity API', () => {
     await database.$disconnect();
   });
 
-  it('configures a reusable Entity and exposes only published related Resources', async () => {
+  it('projects ordered public-safe media, filters unavailable Assets and selects semantic related previews', async () => {
     const shivaId = await createResource('PUBLISHED');
     const parvatiId = await createResource('PUBLISHED');
     const draftTargetId = await createResource('DRAFT');
     const cookie = await signInKnowledgeEditor();
+
+    const shivaHero = await createAsset('IMAGE');
+    const shivaArchivedGallery = await createAsset('IMAGE');
+    const shivaVideo = await createAsset('VIDEO');
+    const shivaVideoPoster = await createAsset('IMAGE');
+
+    const parvatiGallery = await createAsset('IMAGE');
+    const parvatiHeroVideo = await createAsset('VIDEO');
+    const parvatiHeroPoster = await createAsset('IMAGE');
+
+    await database.knowledgeResourceAssetReference.createMany({
+      data: [
+        {
+          knowledgeResourceId: shivaId,
+          assetId: shivaHero,
+          role: 'HERO',
+          playback: 'STILL',
+          position: 0,
+          altText: 'Shiva hero',
+          caption: 'Primary Shiva image',
+        },
+        {
+          knowledgeResourceId: shivaId,
+          assetId: shivaArchivedGallery,
+          role: 'GALLERY',
+          playback: 'STILL',
+          position: 1,
+          altText: 'Unavailable gallery image',
+        },
+        {
+          knowledgeResourceId: shivaId,
+          assetId: shivaVideo,
+          role: 'HIGHLIGHT',
+          playback: 'SHORT_LOOP',
+          position: 2,
+          altText: 'Shiva short motion',
+          caption: 'Motion highlight',
+          posterAssetId: shivaVideoPoster,
+        },
+        {
+          knowledgeResourceId: parvatiId,
+          assetId: parvatiGallery,
+          role: 'GALLERY',
+          playback: 'STILL',
+          position: 0,
+          altText: 'Parvati gallery',
+        },
+        {
+          knowledgeResourceId: parvatiId,
+          assetId: parvatiHeroVideo,
+          role: 'HERO',
+          playback: 'SHORT_LOOP',
+          position: 1,
+          altText: 'Parvati hero motion',
+          posterAssetId: parvatiHeroPoster,
+        },
+      ],
+    });
+
+    await database.asset.update({
+      where: { id: shivaArchivedGallery },
+      data: { lifecycle: 'ARCHIVED' },
+    });
 
     await database.knowledgeResourceProfile.createMany({
       data: [
@@ -189,7 +283,7 @@ describe('Knowledge Entity API', () => {
       ],
     });
 
-    const configured = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .put(`/knowledge/resources/${shivaId}/entity`)
       .set('Cookie', cookie)
       .send({
@@ -222,27 +316,40 @@ describe('Knowledge Entity API', () => {
       })
       .expect(200);
 
-    expect(configured.body).toMatchObject({
-      resourceId: shivaId,
-      slug: 'shiva',
-      displayName: 'Lord Shiva',
-    });
-
     const publicResponse = await request(app.getHttpServer())
       .get('/knowledge/entities/universe.devotional/shiva')
       .expect(200);
 
-    expect(publicResponse.body).toMatchObject({
-      resource: {
-        id: shivaId,
-        universeKey: 'universe.devotional',
-        resourceType: 'devotional.deity',
+    expect(publicResponse.body).not.toHaveProperty('assetIds');
+    expect(publicResponse.body.media).toEqual([
+      {
+        assetId: shivaHero,
+        assetType: 'IMAGE',
+        mimeType: 'image/png',
+        role: 'HERO',
+        playback: 'STILL',
+        position: 0,
+        altText: 'Shiva hero',
+        caption: 'Primary Shiva image',
+        posterAssetId: null,
       },
-      profile: {
-        slug: 'shiva',
-        displayName: 'Lord Shiva',
+      {
+        assetId: shivaVideo,
+        assetType: 'VIDEO',
+        mimeType: 'video/mp4',
+        role: 'HIGHLIGHT',
+        playback: 'SHORT_LOOP',
+        position: 2,
+        altText: 'Shiva short motion',
+        caption: 'Motion highlight',
+        posterAssetId: shivaVideoPoster,
       },
-    });
+    ]);
+
+    const serialized = JSON.stringify(publicResponse.body);
+    expect(serialized).not.toContain('storageReference');
+    expect(serialized).not.toContain('private/provider/');
+    expect(serialized).not.toContain('sizeBytes');
 
     expect(publicResponse.body.relations).toHaveLength(1);
     expect(publicResponse.body.relations[0]).toMatchObject({
@@ -252,6 +359,7 @@ describe('Knowledge Entity API', () => {
         id: parvatiId,
         slug: 'parvati',
         displayName: 'Parvati',
+        previewAssetId: parvatiHeroPoster,
       },
     });
   });

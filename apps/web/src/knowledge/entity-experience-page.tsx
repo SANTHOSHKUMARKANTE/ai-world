@@ -13,6 +13,7 @@ import {
 import {
   getPublicKnowledgeEntity,
   type PublicKnowledgeEntity,
+  type PublicKnowledgeEntityMedia,
   type PublicKnowledgeEntityRelation,
 } from './public-knowledge-entity-api';
 
@@ -50,6 +51,11 @@ function mediaThumbnailPath(assetId: string): string {
 
 function mediaContentPath(assetId: string): string {
   return `/api/media/assets/${encodeURIComponent(assetId)}/content`;
+}
+
+function mediaAltText(media: PublicKnowledgeEntityMedia, displayName: string): string {
+  const altText = media.altText?.trim();
+  return altText && altText.length > 0 ? altText : `${displayName} artwork`;
 }
 
 function entityPath(target: PublicKnowledgeEntityRelation['target']): string {
@@ -201,7 +207,22 @@ export function EntityExperiencePage({
 
   const entity = state.entity;
   const presentation = resolveWebUniversePresentation(entity.resource.universeKey);
-  const heroAssetId = entity.assetIds[0] ?? null;
+  const imageMedia = entity.media.filter(
+    (media) => media.assetType === 'IMAGE' && media.playback === 'STILL',
+  );
+  const heroMedia = entity.media.find((media) => media.role === 'HERO') ?? null;
+  const fallbackImage = imageMedia[0] ?? null;
+  const heroAssetId =
+    heroMedia?.assetType === 'IMAGE'
+      ? heroMedia.assetId
+      : heroMedia?.playback === 'SHORT_LOOP'
+        ? heroMedia.posterAssetId
+        : (fallbackImage?.assetId ?? null);
+  const heroAltText = heroMedia
+    ? mediaAltText(heroMedia, entity.profile.displayName)
+    : fallbackImage
+      ? mediaAltText(fallbackImage, entity.profile.displayName)
+      : '';
   const availableSectionKeys = SECTION_ORDER.filter((sectionKey) => grouped.has(sectionKey));
 
   return (
@@ -224,7 +245,7 @@ export function EntityExperiencePage({
           <p className="aw-entity-hero__summary">{entity.profile.summary}</p>
 
           <div className="aw-entity-hero__actions">
-            {entity.assetIds.length > 0 ? (
+            {imageMedia.length > 0 ? (
               <a href="#entity-images" className="aw-button aw-button--primary">
                 Explore images
               </a>
@@ -239,7 +260,7 @@ export function EntityExperiencePage({
           {heroAssetId ? (
             <Image
               src={mediaThumbnailPath(heroAssetId)}
-              alt={`Featured ${entity.profile.displayName} artwork`}
+              alt={heroAltText}
               fill
               unoptimized
               priority
@@ -269,7 +290,7 @@ export function EntityExperiencePage({
 
       <nav className="aw-entity-section-nav" aria-label={`${entity.profile.displayName} sections`}>
         <a href="#entity-overview">Overview</a>
-        {entity.assetIds.length > 0 ? <a href="#entity-images">Images</a> : null}
+        {imageMedia.length > 0 ? <a href="#entity-images">Images</a> : null}
         {availableSectionKeys.map((sectionKey) => (
           <a key={sectionKey} href={`#${sectionAnchor(sectionKey)}`}>
             {resolveEntitySectionTitle(presentation, sectionKey, entity.profile.displayName)}
@@ -287,7 +308,7 @@ export function EntityExperiencePage({
         <p>{entity.profile.summary}</p>
       </section>
 
-      {entity.assetIds.length > 0 ? (
+      {imageMedia.length > 0 ? (
         <section
           id="entity-images"
           className="aw-entity-section aw-entity-section--images"
@@ -300,13 +321,13 @@ export function EntityExperiencePage({
             </div>
           </div>
           <ul className="aw-entity-image-rail">
-            {entity.assetIds.map((assetId) => (
-              <li key={assetId}>
-                <a href={mediaContentPath(assetId)} target="_blank" rel="noreferrer">
+            {imageMedia.map((media) => (
+              <li key={media.assetId}>
+                <a href={mediaContentPath(media.assetId)} target="_blank" rel="noreferrer">
                   <div className="aw-entity-image-card">
                     <Image
-                      src={mediaThumbnailPath(assetId)}
-                      alt={`${entity.profile.displayName} artwork`}
+                      src={mediaThumbnailPath(media.assetId)}
+                      alt={mediaAltText(media, entity.profile.displayName)}
                       fill
                       unoptimized
                       sizes="(max-width: 700px) 70vw, 260px"

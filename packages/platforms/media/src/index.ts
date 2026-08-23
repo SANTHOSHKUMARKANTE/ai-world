@@ -59,3 +59,10 @@ export {
   type MediaAssetReferenceResolver,
   type ResolveMediaAssetReferenceInput,
 } from './media-asset-reference';
+
+export {
+  ResolvePublicMediaAssetDescriptor,
+  type FindPublicMediaAssetDescriptorInput,
+  type PublicMediaAssetDescriptor,
+  type PublicMediaAssetDescriptorReader,
+} from './public-media-asset-descriptor';

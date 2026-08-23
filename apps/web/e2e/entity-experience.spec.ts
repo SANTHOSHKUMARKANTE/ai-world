@@ -10,6 +10,20 @@ const assetIds = [
   '10000000-0000-4000-8000-000000000005',
 ];
 
+function imageMedia(ids: readonly string[], displayName: string) {
+  return ids.map((assetId, position) => ({
+    assetId,
+    assetType: 'IMAGE',
+    mimeType: 'image/png',
+    role: position === 0 ? 'HERO' : 'GALLERY',
+    playback: 'STILL',
+    position,
+    altText: `${displayName} artwork ${position + 1}`,
+    caption: null,
+    posterAssetId: null,
+  }));
+}
+
 function relation(
   index: number,
   sectionKey: string,
@@ -157,7 +171,7 @@ async function installEntityFixture(page: Page) {
             { key: 'devotional.symbol', label: 'Symbol', value: 'Trishul' },
           ],
         },
-        assetIds,
+        media: imageMedia(assetIds, 'Lord Shiva'),
         relations,
       }),
     });
@@ -184,6 +198,10 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
     expect(response?.status()).toBe(200);
 
     await expect(page.getByRole('heading', { level: 1, name: 'Lord Shiva' })).toBeVisible();
+    await expect(page.locator('.aw-entity-hero__visual img')).toHaveAttribute(
+      'alt',
+      'Lord Shiva artwork 1',
+    );
     await expect(page.getByText('Om Namah Shivaya')).toBeVisible();
     await expect(page.getByText('Deity · Devotional')).toBeVisible();
 
@@ -356,7 +374,7 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
               { key: 'devotional.symbol', label: 'Symbol', value: 'Gada' },
             ],
           },
-          assetIds: hanumanAssetIds,
+          media: imageMedia(hanumanAssetIds, 'Lord Hanuman'),
           relations: hanumanRelations,
         }),
       });
@@ -563,7 +581,7 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
               { key: 'anime.signature', label: 'Signature', value: 'Rasengan' },
             ],
           },
-          assetIds: narutoAssetIds,
+          media: imageMedia(narutoAssetIds, 'Naruto Uzumaki'),
           relations: narutoRelations,
         }),
       });

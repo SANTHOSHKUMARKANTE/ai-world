@@ -17,7 +17,20 @@ export interface PublicKnowledgeEntityResponse {
       readonly value: string;
     }[];
   };
-  readonly assetIds: readonly string[];
+  readonly media: readonly {
+    readonly assetId: string;
+    readonly assetType: string;
+    readonly mimeType: string;
+    readonly role: string;
+    readonly playback: string;
+    readonly position: number;
+    readonly altText: string | null;
+    readonly caption: string | null;
+    readonly width?: number;
+    readonly height?: number;
+    readonly durationMs?: number;
+    readonly posterAssetId: string | null;
+  }[];
   readonly relations: readonly {
     readonly sectionKey: string;
     readonly relationshipType: string;
@@ -47,7 +60,20 @@ function toResponse(entity: PublicKnowledgeEntity): PublicKnowledgeEntityRespons
       summary: entity.profile.summary,
       facts: entity.profile.facts,
     },
-    assetIds: entity.assetIds,
+    media: entity.media.map((media) => ({
+      assetId: media.assetId,
+      assetType: media.assetType,
+      mimeType: media.mimeType,
+      role: media.role,
+      playback: media.playback,
+      position: media.position,
+      altText: media.altText,
+      caption: media.caption,
+      ...(media.width === undefined ? {} : { width: media.width }),
+      ...(media.height === undefined ? {} : { height: media.height }),
+      ...(media.durationMs === undefined ? {} : { durationMs: media.durationMs }),
+      posterAssetId: media.posterAssetId,
+    })),
     relations: entity.relations.map((relation) => ({
       sectionKey: relation.sectionKey,
       relationshipType: relation.relationshipType,

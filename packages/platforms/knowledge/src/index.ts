@@ -148,6 +148,7 @@ export type {
   KnowledgeEntityRelation,
   KnowledgeEntityRelationTarget,
   PublicKnowledgeEntity,
+  PublicKnowledgeEntityMedia,
 } from './knowledge-entity';
 
 export type {
