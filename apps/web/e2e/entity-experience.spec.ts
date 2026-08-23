@@ -244,4 +244,154 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
     await page.keyboard.press('Tab');
     await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
   });
+  test('reuses the same Entity Experience for Lord Hanuman without production changes', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+
+    const hanumanId = '44444444-4444-4444-8444-444444444444';
+    const hanumanAssetIds = [
+      '50000000-0000-4000-8000-000000000001',
+      '50000000-0000-4000-8000-000000000002',
+      '50000000-0000-4000-8000-000000000003',
+      '50000000-0000-4000-8000-000000000004',
+      '50000000-0000-4000-8000-000000000005',
+    ];
+    const hanumanRelations = [
+      relation(21, 'entity.forms', 'Panchamukhi Hanuman', 'The five-faced form', 'devotional.form'),
+      relation(22, 'entity.forms', 'Veera Hanuman', 'The courageous protector', 'devotional.form'),
+      relation(
+        23,
+        'entity.stories',
+        'Leap Across the Ocean',
+        'Hanuman’s journey toward Lanka',
+        'devotional.story',
+      ),
+      relation(
+        24,
+        'entity.stories',
+        'Sanjeevani Journey',
+        'The journey to bring the life-restoring herb',
+        'devotional.story',
+      ),
+      relation(25, 'entity.family', 'Anjana', 'Mother', 'devotional.parent'),
+      relation(26, 'entity.family', 'Kesari', 'Father', 'devotional.parent'),
+      relation(27, 'entity.family', 'Rama', 'Beloved Lord', 'devotional.devotion'),
+      relation(28, 'entity.family', 'Sita', 'Divine relationship', 'devotional.devotion'),
+      relation(
+        29,
+        'entity.meditation',
+        'Rama Nama Meditation',
+        'Devotion through remembrance of Rama',
+        'devotional.theme',
+      ),
+      relation(
+        30,
+        'entity.temples',
+        'Hanuman Garhi',
+        'A sacred Hanuman pilgrimage place',
+        'devotional.sacred-place',
+      ),
+      relation(
+        31,
+        'entity.quotes',
+        'Strength grows through devotion and service.',
+        'Hanuman reflection',
+        'devotional.quote',
+      ),
+      relation(
+        32,
+        'entity.experiences',
+        'Journey with Hanuman',
+        'An image-led devotional experience',
+        'devotional.experience',
+      ),
+    ];
+
+    await page.route('**/api/session', async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          error: {
+            code: 'identity.session.invalid',
+            message: 'Authentication is required.',
+            status: 401,
+          },
+        }),
+      });
+    });
+
+    await page.route('**/api/knowledge/entities/universe.devotional/hanuman', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          resource: {
+            id: hanumanId,
+            universeKey: 'universe.devotional',
+            resourceType: 'devotional.deity',
+          },
+          profile: {
+            slug: 'hanuman',
+            displayName: 'Lord Hanuman',
+            summary:
+              'A timeless symbol of devotion, courage, strength, humility and selfless service.',
+            facts: [
+              { key: 'devotional.identity', label: 'Deity', value: 'Hanuman' },
+              { key: 'devotional.mantra', label: 'Mantra', value: 'Om Hanumate Namah' },
+              { key: 'devotional.mother', label: 'Mother', value: 'Anjana' },
+              { key: 'devotional.father', label: 'Father', value: 'Kesari' },
+              { key: 'devotional.devotion', label: 'Devotion', value: 'Lord Rama' },
+              { key: 'devotional.symbol', label: 'Symbol', value: 'Gada' },
+            ],
+          },
+          assetIds: hanumanAssetIds,
+          relations: hanumanRelations,
+        }),
+      });
+    });
+
+    await page.route('**/api/media/assets/*/thumbnail', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'image/svg+xml',
+        body: svgCard('Lord Hanuman'),
+      });
+    });
+
+    const response = await page.goto('/devotional/hanuman');
+    expect(response?.status()).toBe(200);
+
+    await expect(page.getByRole('heading', { level: 1, name: 'Lord Hanuman' })).toBeVisible();
+    await expect(page.getByText('Deity · Devotional')).toBeVisible();
+    await expect(page.getByText('Om Hanumate Namah')).toBeVisible();
+    await expect(page.getByText('Lord Rama')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Forms of Hanuman' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Popular Images' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Stories & Knowledge' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Family & Relationships' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Anjana' })).toHaveAttribute(
+      'href',
+      '/devotional/anjana',
+    );
+    await expect(page.getByRole('link', { name: 'Rama', exact: true })).toHaveAttribute(
+      'href',
+      '/devotional/rama',
+    );
+
+    const galleryImages = page.locator('.aw-entity-image-card img');
+    await expect(galleryImages).toHaveCount(5);
+    await page.waitForFunction(() => {
+      const images = [...document.querySelectorAll<HTMLImageElement>('.aw-entity-image-card img')];
+      return (
+        images.length === 5 && images.every((image) => image.complete && image.naturalWidth > 0)
+      );
+    });
+
+    await page.screenshot({
+      path: 'test-results/wpr-m05-hanuman-entity-page.png',
+      fullPage: true,
+    });
+  });
 });
