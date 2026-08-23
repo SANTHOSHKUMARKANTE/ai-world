@@ -1604,3 +1604,194 @@ textarea {
     transform: none;
   }
 }
+
+/* UXP-01A — Typed Universe presentation for the reusable Entity Experience */
+.aw-entity-experience {
+  --aw-universe-surface: #030815;
+  --aw-universe-surface-muted: #091224;
+  --aw-universe-surface-raised: #0b1426;
+  --aw-universe-text: #f7f9ff;
+  --aw-universe-text-muted: #aeb8ce;
+  --aw-universe-border: rgb(171 190 230 / 16%);
+  --aw-universe-accent: #91a7ff;
+  --aw-universe-accent-strong: #748dff;
+  --aw-universe-focus: #c7d1ff;
+  --aw-universe-page-background: #030815;
+  --aw-universe-hero-background: linear-gradient(135deg, #030817, #101b39 56%, #25170e);
+  --aw-universe-hero-scrim:
+    linear-gradient(
+      90deg,
+      rgb(2 7 18 / 98%) 0%,
+      rgb(2 7 18 / 84%) 34%,
+      rgb(2 7 18 / 22%) 70%,
+      rgb(2 7 18 / 18%) 100%
+    ),
+    linear-gradient(0deg, rgb(2 7 18 / 88%) 0%, transparent 42%);
+  --aw-universe-section-background: #0a1426;
+  --aw-universe-card-media-background: linear-gradient(140deg, #0b1430, #191f39);
+  --aw-universe-card-lift: -2px;
+  --aw-universe-image-scale: 1.026;
+  --aw-universe-motion-duration: 180ms;
+
+  background: var(--aw-universe-page-background);
+  color: var(--aw-universe-text);
+  --aw-surface: var(--aw-universe-surface);
+  --aw-surface-muted: var(--aw-universe-surface-muted);
+  --aw-surface-raised: var(--aw-universe-surface-raised);
+  --aw-text: var(--aw-universe-text);
+  --aw-text-muted: var(--aw-universe-text-muted);
+  --aw-border: var(--aw-universe-border);
+  --aw-brand: var(--aw-universe-accent);
+  --aw-brand-strong: var(--aw-universe-accent-strong);
+  --aw-focus: var(--aw-universe-focus);
+}
+
+.aw-entity-experience[data-universe-tone='devotional'] {
+  --aw-universe-surface: #0c0b10;
+  --aw-universe-surface-muted: #141117;
+  --aw-universe-surface-raised: #1a161b;
+  --aw-universe-text: #fff9ee;
+  --aw-universe-text-muted: #c8bca9;
+  --aw-universe-border: rgb(232 205 162 / 18%);
+  --aw-universe-accent: #d8ae6a;
+  --aw-universe-accent-strong: #bd8438;
+  --aw-universe-focus: #f1d49c;
+  --aw-universe-page-background:
+    radial-gradient(circle at 18% 24%, rgb(178 121 57 / 13%), transparent 25rem),
+    radial-gradient(circle at 82% 8%, rgb(91 79 138 / 12%), transparent 28rem), #09090e;
+  --aw-universe-hero-background:
+    radial-gradient(circle at 72% 26%, rgb(212 166 91 / 24%), transparent 25rem),
+    linear-gradient(135deg, #0a0910, #171321 58%, #26190e);
+  --aw-universe-hero-scrim:
+    linear-gradient(
+      90deg,
+      rgb(8 7 12 / 98%) 0%,
+      rgb(8 7 12 / 86%) 36%,
+      rgb(8 7 12 / 28%) 72%,
+      rgb(8 7 12 / 18%) 100%
+    ),
+    linear-gradient(0deg, rgb(8 7 12 / 88%) 0%, transparent 44%);
+  --aw-universe-section-background: #17131a;
+  --aw-universe-card-media-background:
+    radial-gradient(circle at 50% 28%, rgb(216 174 106 / 18%), transparent 30%),
+    linear-gradient(140deg, #16121d, #21191d);
+}
+
+.aw-entity-experience[data-universe-tone='anime'] {
+  --aw-universe-surface: #030815;
+  --aw-universe-surface-muted: #071126;
+  --aw-universe-surface-raised: #0b1426;
+  --aw-universe-text: #f7f9ff;
+  --aw-universe-text-muted: #aeb8ce;
+  --aw-universe-border: rgb(171 190 230 / 16%);
+  --aw-universe-accent: #91a7ff;
+  --aw-universe-accent-strong: #748dff;
+  --aw-universe-focus: #c7d1ff;
+  --aw-universe-page-background:
+    radial-gradient(circle at 78% 4%, rgb(82 105 190 / 18%), transparent 28rem),
+    radial-gradient(circle at 18% 35%, rgb(232 126 45 / 10%), transparent 24rem), #030815;
+  --aw-universe-hero-background:
+    radial-gradient(circle at 72% 24%, rgb(118 143 233 / 34%), transparent 26rem),
+    linear-gradient(135deg, #030817, #101b39 56%, #25170e);
+  --aw-universe-section-background: #0a1426;
+  --aw-universe-card-media-background:
+    radial-gradient(circle at 50% 30%, rgb(111 133 255 / 35%), transparent 28%),
+    linear-gradient(140deg, #0b1430, #191f39);
+}
+
+.aw-entity-experience[data-universe-motion='calm'] {
+  --aw-universe-card-lift: -1px;
+  --aw-universe-image-scale: 1.016;
+  --aw-universe-motion-duration: 240ms;
+}
+
+.aw-entity-experience[data-universe-motion='energetic'] {
+  --aw-universe-card-lift: -3px;
+  --aw-universe-image-scale: 1.035;
+  --aw-universe-motion-duration: 160ms;
+}
+
+.aw-entity-experience .aw-entity-hero {
+  border-color: var(--aw-universe-border);
+  background: var(--aw-universe-hero-background);
+}
+
+.aw-entity-experience .aw-entity-hero__veil {
+  background: var(--aw-universe-hero-scrim);
+}
+
+.aw-entity-experience .aw-entity-context-link,
+.aw-entity-experience .aw-entity-hero__summary,
+.aw-entity-experience .aw-entity-overview p:last-child,
+.aw-entity-experience .aw-entity-card__body p,
+.aw-entity-experience .aw-entity-quote-card footer {
+  color: var(--aw-universe-text-muted);
+}
+
+.aw-entity-experience .aw-eyebrow,
+.aw-entity-experience .aw-entity-hero .aw-eyebrow,
+.aw-entity-experience .aw-entity-overview .aw-eyebrow,
+.aw-entity-experience .aw-entity-section .aw-eyebrow {
+  color: var(--aw-universe-accent);
+}
+
+.aw-entity-experience .aw-entity-hero h1,
+.aw-entity-experience .aw-entity-overview h2,
+.aw-entity-experience .aw-entity-section__heading h2,
+.aw-entity-experience .aw-entity-card__body h3,
+.aw-entity-experience .aw-entity-quote-card p {
+  color: var(--aw-universe-text);
+}
+
+.aw-entity-experience .aw-entity-facts > div,
+.aw-entity-experience .aw-entity-section-nav,
+.aw-entity-experience .aw-entity-card,
+.aw-entity-experience .aw-entity-quote-card,
+.aw-entity-experience .aw-entity-image-card {
+  border-color: var(--aw-universe-border);
+  background-color: var(--aw-universe-surface-raised);
+}
+
+.aw-entity-experience .aw-entity-facts dt,
+.aw-entity-experience .aw-entity-section-nav a {
+  color: var(--aw-universe-text-muted);
+}
+
+.aw-entity-experience .aw-entity-facts dd,
+.aw-entity-experience .aw-entity-section-nav a:hover,
+.aw-entity-experience .aw-entity-section-nav a:focus-visible {
+  color: var(--aw-universe-text);
+}
+
+.aw-entity-experience .aw-entity-section--images,
+.aw-entity-experience .aw-entity-quote-card {
+  background: var(--aw-universe-section-background);
+}
+
+.aw-entity-experience .aw-entity-card__media {
+  background: var(--aw-universe-card-media-background);
+}
+
+.aw-entity-experience .aw-entity-card {
+  transition-duration: var(--aw-universe-motion-duration);
+}
+
+.aw-entity-experience .aw-entity-card:hover {
+  transform: translateY(var(--aw-universe-card-lift));
+  border-color: var(--aw-universe-accent);
+}
+
+.aw-entity-experience .aw-entity-image-card img {
+  transition-duration: var(--aw-universe-motion-duration);
+}
+
+.aw-entity-experience .aw-entity-image-card:hover img {
+  transform: scale(var(--aw-universe-image-scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aw-entity-experience .aw-entity-card:hover,
+  .aw-entity-experience .aw-entity-image-card:hover img {
+    transform: none;
+  }
+}

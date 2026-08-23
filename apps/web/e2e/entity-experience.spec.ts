@@ -186,6 +186,16 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Lord Shiva' })).toBeVisible();
     await expect(page.getByText('Om Namah Shivaya')).toBeVisible();
     await expect(page.getByText('Deity · Devotional')).toBeVisible();
+
+    const devotionalExperience = page.locator('.aw-entity-experience');
+    await expect(devotionalExperience).toHaveAttribute('data-universe-tone', 'devotional');
+    await expect(devotionalExperience).toHaveAttribute('data-universe-motion', 'calm');
+    expect(
+      await devotionalExperience.evaluate((element) =>
+        getComputedStyle(element).getPropertyValue('--aw-universe-accent').trim(),
+      ),
+    ).toBe('#d8ae6a');
+
     await expect(page.getByRole('link', { name: 'Save', exact: true })).toHaveAttribute(
       'href',
       '#entity-engagement',
@@ -365,6 +375,10 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
 
     await expect(page.getByRole('heading', { level: 1, name: 'Lord Hanuman' })).toBeVisible();
     await expect(page.getByText('Deity · Devotional')).toBeVisible();
+    await expect(page.locator('.aw-entity-experience')).toHaveAttribute(
+      'data-universe-motion',
+      'calm',
+    );
     await expect(page.getByText('Om Hanumate Namah')).toBeVisible();
     await expect(page.getByText('Lord Rama')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Forms of Hanuman' })).toBeVisible();
@@ -582,6 +596,16 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
 
     await expect(page.getByRole('heading', { level: 1, name: 'Naruto Uzumaki' })).toBeVisible();
     await expect(page.getByText('Character · Anime')).toBeVisible();
+
+    const animeExperience = page.locator('.aw-entity-experience');
+    await expect(animeExperience).toHaveAttribute('data-universe-tone', 'anime');
+    await expect(animeExperience).toHaveAttribute('data-universe-motion', 'energetic');
+    expect(
+      await animeExperience.evaluate((element) =>
+        getComputedStyle(element).getPropertyValue('--aw-universe-accent').trim(),
+      ),
+    ).toBe('#91a7ff');
+
     await expect(page.getByText('Hidden Leaf', { exact: true })).toBeVisible();
     await expect(page.getByText('Rasengan', { exact: true })).toBeVisible();
 

@@ -5,7 +5,11 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ResourceEngagementControls } from '../engagement/resource-engagement-controls';
-import { WEB_UNIVERSE_PRESENTATIONS } from '../universes/presentation';
+import {
+  resolveEntitySectionTitle,
+  resolveWebUniversePresentation,
+  type WebUniversePresentation,
+} from '../universes/presentation';
 import {
   getPublicKnowledgeEntity,
   type PublicKnowledgeEntity,
@@ -60,52 +64,6 @@ function entityPath(target: PublicKnowledgeEntityRelation['target']): string {
   return `/knowledge/resources/${encodeURIComponent(target.id)}`;
 }
 
-function sectionTitle(sectionKey: string, displayName: string, universeKey: string): string {
-  const entityName = displayName.replace(/^Lord\s+/u, '');
-
-  if (universeKey === 'universe.anime') {
-    switch (sectionKey) {
-      case 'entity.forms':
-        return 'Forms & Transformations';
-      case 'entity.meditation':
-        return 'Training & Techniques';
-      case 'entity.stories':
-        return 'Story Arcs & Knowledge';
-      case 'entity.family':
-        return 'Allies & Relationships';
-      case 'entity.temples':
-        return 'Places & Landmarks';
-      case 'entity.quotes':
-        return 'Quotes';
-      case 'entity.experiences':
-        return 'Experiences';
-      default:
-        break;
-    }
-  }
-
-  switch (sectionKey) {
-    case 'entity.forms':
-      return `Forms of ${entityName}`;
-    case 'entity.stories':
-      return 'Stories & Knowledge';
-    case 'entity.family':
-      return 'Family & Relationships';
-    case 'entity.meditation':
-      return 'Meditation';
-    case 'entity.temples':
-      return 'Temples & Sacred Places';
-    case 'entity.quotes':
-      return 'Sacred Quotes';
-    case 'entity.experiences':
-      return 'Experiences';
-    default: {
-      const segment = sectionKey.split('.').at(-1) ?? sectionKey;
-      return segment.charAt(0).toUpperCase() + segment.slice(1).replaceAll('-', ' ');
-    }
-  }
-}
-
 function sectionAnchor(sectionKey: string): string {
   return `entity-${sectionKey.replaceAll('.', '-')}`;
 }
@@ -114,14 +72,14 @@ function EntityRail({
   sectionKey,
   items,
   displayName,
-  universeKey,
+  presentation,
 }: {
   readonly sectionKey: string;
   readonly items: readonly PublicKnowledgeEntityRelation[];
   readonly displayName: string;
-  readonly universeKey: string;
+  readonly presentation: WebUniversePresentation | undefined;
 }) {
-  const title = sectionTitle(sectionKey, displayName, universeKey);
+  const title = resolveEntitySectionTitle(presentation, sectionKey, displayName);
   const quoteSection = sectionKey === 'entity.quotes';
 
   return (
@@ -242,14 +200,16 @@ export function EntityExperiencePage({
   }
 
   const entity = state.entity;
-  const presentation = WEB_UNIVERSE_PRESENTATIONS.find(
-    (item) => item.universeKey === entity.resource.universeKey,
-  );
+  const presentation = resolveWebUniversePresentation(entity.resource.universeKey);
   const heroAssetId = entity.assetIds[0] ?? null;
   const availableSectionKeys = SECTION_ORDER.filter((sectionKey) => grouped.has(sectionKey));
 
   return (
-    <article className="aw-entity-experience" data-universe-tone={presentation?.tone}>
+    <article
+      className="aw-entity-experience"
+      data-universe-tone={presentation?.tone}
+      data-universe-motion={presentation?.motion}
+    >
       <header className="aw-entity-hero">
         <div className="aw-entity-hero__copy">
           <Link href="/knowledge" className="aw-entity-context-link">
@@ -312,7 +272,7 @@ export function EntityExperiencePage({
         {entity.assetIds.length > 0 ? <a href="#entity-images">Images</a> : null}
         {availableSectionKeys.map((sectionKey) => (
           <a key={sectionKey} href={`#${sectionAnchor(sectionKey)}`}>
-            {sectionTitle(sectionKey, entity.profile.displayName, entity.resource.universeKey)}
+            {resolveEntitySectionTitle(presentation, sectionKey, entity.profile.displayName)}
           </a>
         ))}
       </nav>
@@ -365,7 +325,7 @@ export function EntityExperiencePage({
           sectionKey={sectionKey}
           items={grouped.get(sectionKey) ?? []}
           displayName={entity.profile.displayName}
-          universeKey={entity.resource.universeKey}
+          presentation={presentation}
         />
       ))}
     </article>
