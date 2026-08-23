@@ -1,8 +1,9 @@
 import { ValidateSession } from '@ai-world/platform-identity-access';
 import {
   CreateKnowledgeResourceAsActor,
-  SetKnowledgeResourceAssetsAsActor,
+  SetKnowledgeResourceMediaAsActor,
   type KnowledgeResource,
+  type KnowledgeResourceMediaPlacement,
   UpdateKnowledgeResourceAsActor,
 } from '@ai-world/platform-knowledge';
 import { Body, Controller, Headers, Param, Patch, Post, Put } from '@nestjs/common';
@@ -11,7 +12,7 @@ import { requireSessionToken } from '../session/require-session-token';
 import { SessionCookie } from '../session/session-cookie';
 import {
   parseCreateCreatorKnowledgeRequest,
-  parseSetCreatorKnowledgeAssetsRequest,
+  parseSetCreatorKnowledgeMediaRequest,
   parseUpdateCreatorKnowledgeRequest,
 } from './creator-knowledge-request';
 
@@ -24,8 +25,18 @@ export interface CreatorKnowledgeResourceResponse {
   readonly updatedAt: string;
 }
 
-export interface CreatorKnowledgeResourceAssetsResponse {
-  readonly assetIds: readonly string[];
+export interface CreatorKnowledgeMediaPlacementResponse {
+  readonly assetId: string;
+  readonly role: string;
+  readonly playback: string;
+  readonly position: number;
+  readonly altText: string | null;
+  readonly caption: string | null;
+  readonly posterAssetId: string | null;
+}
+
+export interface CreatorKnowledgeResourceMediaResponse {
+  readonly placements: readonly CreatorKnowledgeMediaPlacementResponse[];
 }
 
 function toCreatorKnowledgeResourceResponse(
@@ -41,23 +52,33 @@ function toCreatorKnowledgeResourceResponse(
   };
 }
 
+function toCreatorKnowledgeMediaPlacementResponse(
+  placement: KnowledgeResourceMediaPlacement,
+): CreatorKnowledgeMediaPlacementResponse {
+  return {
+    assetId: placement.assetId,
+    role: placement.role,
+    playback: placement.playback,
+    position: placement.position,
+    altText: placement.altText,
+    caption: placement.caption,
+    posterAssetId: placement.posterAssetId,
+  };
+}
+
 @Controller('knowledge/resources')
 export class CreatorKnowledgeController {
   public constructor(
     private readonly validateSession: ValidateSession,
     private readonly createKnowledgeResourceAsActor: CreateKnowledgeResourceAsActor,
     private readonly updateKnowledgeResourceAsActor: UpdateKnowledgeResourceAsActor,
-    private readonly setKnowledgeResourceAssetsAsActor: SetKnowledgeResourceAssetsAsActor,
+    private readonly setKnowledgeResourceMediaAsActor: SetKnowledgeResourceMediaAsActor,
     private readonly sessionCookie: SessionCookie,
   ) {}
 
   private async requireActingActorId(cookieHeader: string | undefined): Promise<string> {
     const sessionToken = requireSessionToken(this.sessionCookie, cookieHeader);
-
-    const session = await this.validateSession.execute({
-      token: sessionToken,
-    });
-
+    const session = await this.validateSession.execute({ token: sessionToken });
     return session.actorId;
   }
 
@@ -78,20 +99,24 @@ export class CreatorKnowledgeController {
     return toCreatorKnowledgeResourceResponse(resource);
   }
 
-  @Put(':id/assets')
-  public async setResourceAssets(
+  @Put(':id/media')
+  public async setResourceMedia(
     @Headers('cookie') cookieHeader: string | undefined,
     @Param('id') id: string,
     @Body() body: unknown,
-  ): Promise<CreatorKnowledgeResourceAssetsResponse> {
+  ): Promise<CreatorKnowledgeResourceMediaResponse> {
     const actingActorId = await this.requireActingActorId(cookieHeader);
-    const request = parseSetCreatorKnowledgeAssetsRequest(body);
-    const assetIds = await this.setKnowledgeResourceAssetsAsActor.execute({
+    const request = parseSetCreatorKnowledgeMediaRequest(body);
+
+    const placements = await this.setKnowledgeResourceMediaAsActor.execute({
       actingActorId,
       id,
-      assetIds: request.assetIds,
+      placements: request.placements,
     });
-    return { assetIds };
+
+    return {
+      placements: placements.map(toCreatorKnowledgeMediaPlacementResponse),
+    };
   }
 
   @Patch(':id')

@@ -1,7 +1,7 @@
 import { ApplicationError } from '@ai-world/foundation-errors';
 import { parseResourceId, type ResourceId } from '@ai-world/kernel-identifiers';
 
-import { ASSET_INITIAL_LIFECYCLE } from './asset';
+import { ASSET_INITIAL_LIFECYCLE, type AssetType } from './asset';
 import type { AssetReader } from './asset-reader';
 
 export interface ResolveMediaAssetReferenceInput {
@@ -10,6 +10,7 @@ export interface ResolveMediaAssetReferenceInput {
 
 export interface MediaAssetReference {
   readonly id: ResourceId;
+  readonly assetType: AssetType;
 }
 
 export interface MediaAssetReferenceResolver {
@@ -53,6 +54,6 @@ export class ResolveAssetReference implements MediaAssetReferenceResolver {
       throw assetReferenceNotFound();
     }
 
-    return { id: asset.id };
+    return { id: asset.id, assetType: asset.assetType };
   }
 }

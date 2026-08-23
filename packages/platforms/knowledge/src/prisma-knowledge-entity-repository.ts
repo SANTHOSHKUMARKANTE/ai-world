@@ -200,7 +200,7 @@ export class PrismaKnowledgeEntityRepository implements KnowledgeEntityStore {
           assetId: true,
         },
         orderBy: {
-          assetId: 'asc',
+          position: 'asc',
         },
       }),
       this.database.knowledgeResourceRelation.findMany({
@@ -216,7 +216,7 @@ export class PrismaKnowledgeEntityRepository implements KnowledgeEntityStore {
                   assetId: true,
                 },
                 orderBy: {
-                  assetId: 'asc',
+                  position: 'asc',
                 },
                 take: 1,
               },

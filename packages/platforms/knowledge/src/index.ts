@@ -93,8 +93,21 @@ export {
 export type {
   KnowledgeResourceAssetReferenceStore,
   ListKnowledgeResourceAssetIdsInput,
-  ReplaceKnowledgeResourceAssetIdsInput,
+  ReplaceKnowledgeResourceMediaPlacementsInput,
 } from './knowledge-resource-asset-reference-store';
+
+export {
+  isKnowledgeResourceMediaPlayback,
+  isKnowledgeResourceMediaRole,
+  KNOWLEDGE_MEDIA_GALLERY_ROLE,
+  KNOWLEDGE_MEDIA_HERO_ROLE,
+  KNOWLEDGE_MEDIA_HIGHLIGHT_ROLE,
+  KNOWLEDGE_MEDIA_SHORT_LOOP_PLAYBACK,
+  KNOWLEDGE_MEDIA_STILL_PLAYBACK,
+  type KnowledgeResourceMediaPlacement,
+  type KnowledgeResourceMediaPlayback,
+  type KnowledgeResourceMediaRole,
+} from './knowledge-resource-media-placement';
 
 export {
   ListPublicKnowledgeResourceAssets,
@@ -102,14 +115,15 @@ export {
 } from './list-public-knowledge-resource-assets';
 
 export {
-  SetKnowledgeResourceAssets,
-  type SetKnowledgeResourceAssetsInput,
-} from './set-knowledge-resource-assets';
+  SetKnowledgeResourceMedia,
+  type SetKnowledgeResourceMediaInput,
+  type SetKnowledgeResourceMediaPlacementInput,
+} from './set-knowledge-resource-media';
 
 export {
-  SetKnowledgeResourceAssetsAsActor,
-  type SetKnowledgeResourceAssetsAsActorInput,
-} from './set-knowledge-resource-assets-as-actor';
+  SetKnowledgeResourceMediaAsActor,
+  type SetKnowledgeResourceMediaAsActorInput,
+} from './set-knowledge-resource-media-as-actor';
 
 export {
   ConfigureKnowledgeEntity,

@@ -5,6 +5,7 @@ import {
   ASSET_ARCHIVED_LIFECYCLE,
   ASSET_IMAGE_TYPE,
   ASSET_INITIAL_LIFECYCLE,
+  ASSET_VIDEO_TYPE,
   type Asset,
 } from '../src/asset';
 import type { AssetReader, FindAssetByIdInput } from '../src/asset-reader';
@@ -36,11 +37,12 @@ class RecordingAssetReader implements AssetReader {
 }
 
 describe('ResolveAssetReference', () => {
-  it('returns only the canonical ID for an ACTIVE Media Asset', async () => {
-    const reader = new RecordingAssetReader(createAsset());
+  it('returns only canonical reference-safe identity and Asset Type for an ACTIVE Asset', async () => {
+    const reader = new RecordingAssetReader(createAsset({ assetType: ASSET_VIDEO_TYPE }));
     const resolver = new ResolveAssetReference(reader);
     const reference = await resolver.resolve({ id: ASSET_ID });
-    expect(reference).toEqual({ id: ASSET_ID });
+
+    expect(reference).toEqual({ id: ASSET_ID, assetType: ASSET_VIDEO_TYPE });
     expect(reference).not.toHaveProperty('storageReference');
     expect(reference).not.toHaveProperty('technicalMetadata');
     expect(reader.ids).toEqual([ASSET_ID]);
@@ -49,6 +51,7 @@ describe('ResolveAssetReference', () => {
   it('rejects malformed IDs before Media lookup', async () => {
     const reader = new RecordingAssetReader(createAsset());
     const resolver = new ResolveAssetReference(reader);
+
     await expect(resolver.resolve({ id: 'not-a-resource-id' })).rejects.toMatchObject({
       code: 'media.asset.reference.invalid_asset_id',
       kind: 'validation',
@@ -60,6 +63,7 @@ describe('ResolveAssetReference', () => {
     const resolver = new ResolveAssetReference(
       new RecordingAssetReader(createAsset({ lifecycle: ASSET_ARCHIVED_LIFECYCLE })),
     );
+
     await expect(resolver.resolve({ id: ASSET_ID })).rejects.toMatchObject({
       code: 'media.asset.reference.not_found',
       kind: 'not_found',
@@ -68,6 +72,7 @@ describe('ResolveAssetReference', () => {
 
   it('returns the same not-found contract for an unknown Asset', async () => {
     const resolver = new ResolveAssetReference(new RecordingAssetReader(null));
+
     await expect(resolver.resolve({ id: ASSET_ID })).rejects.toMatchObject({
       code: 'media.asset.reference.not_found',
       kind: 'not_found',

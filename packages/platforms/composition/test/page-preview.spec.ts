@@ -70,7 +70,7 @@ function createPreview(
     }),
   };
   const mediaAssets: MediaAssetReferenceResolver = {
-    resolve: async () => ({ id: assetId }),
+    resolve: async () => ({ id: assetId, assetType: 'IMAGE' }),
   };
   const compositions: PageCompositionStore = {
     listItems: async () => composition,

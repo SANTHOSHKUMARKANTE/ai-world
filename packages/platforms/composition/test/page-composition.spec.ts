@@ -142,7 +142,7 @@ describe('Page composition', () => {
   it('resolves and stores ordered typed references through canonical owner contracts', async () => {
     const blocks = new RecordingBlockReader(createBlock());
     const knowledge = new RecordingKnowledgeReader(createKnowledgeResource());
-    const media = new RecordingMediaResolver({ id: ASSET_ID });
+    const media = new RecordingMediaResolver({ id: ASSET_ID, assetType: 'IMAGE' });
     const store = new RecordingCompositionStore();
     const setComposition = new SetPageComposition(
       new StubPageReader(createPage()),
@@ -190,7 +190,7 @@ describe('Page composition', () => {
       new StubPageReader(createPage()),
       new RecordingBlockReader(createBlock(parseNamespacedKey('universe.anime'))),
       new RecordingKnowledgeReader(createKnowledgeResource()),
-      new RecordingMediaResolver({ id: ASSET_ID }),
+      new RecordingMediaResolver({ id: ASSET_ID, assetType: 'IMAGE' }),
       store,
     );
 
@@ -231,7 +231,7 @@ describe('Page composition', () => {
       new StubPageReader({ ...createPage(), lifecycle: 'PUBLISHED' }),
       new RecordingBlockReader(createBlock()),
       new RecordingKnowledgeReader(createKnowledgeResource()),
-      new RecordingMediaResolver({ id: ASSET_ID }),
+      new RecordingMediaResolver({ id: ASSET_ID, assetType: 'IMAGE' }),
       store,
     );
 

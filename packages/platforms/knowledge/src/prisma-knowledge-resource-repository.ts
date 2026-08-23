@@ -10,8 +10,9 @@ import {
 import type {
   KnowledgeResourceAssetReferenceStore,
   ListKnowledgeResourceAssetIdsInput,
-  ReplaceKnowledgeResourceAssetIdsInput,
+  ReplaceKnowledgeResourceMediaPlacementsInput,
 } from './knowledge-resource-asset-reference-store';
+import type { KnowledgeResourceMediaPlacement } from './knowledge-resource-media-placement';
 import type {
   KnowledgeResourceLifecycleWriter,
   TransitionKnowledgeResourceLifecycleRecordInput,
@@ -171,16 +172,16 @@ export class PrismaKnowledgeResourceRepository
         assetId: true,
       },
       orderBy: {
-        assetId: 'asc',
+        position: 'asc',
       },
     });
 
     return references.map(({ assetId }) => parseResourceId(assetId));
   }
 
-  async replaceAssetIds(
-    input: ReplaceKnowledgeResourceAssetIdsInput,
-  ): Promise<readonly ResourceId[]> {
+  async replaceMediaPlacements(
+    input: ReplaceKnowledgeResourceMediaPlacementsInput,
+  ): Promise<readonly KnowledgeResourceMediaPlacement[]> {
     await this.database.$transaction(async (transaction) => {
       await transaction.knowledgeResourceAssetReference.deleteMany({
         where: {
@@ -188,18 +189,22 @@ export class PrismaKnowledgeResourceRepository
         },
       });
 
-      if (input.assetIds.length > 0) {
+      if (input.placements.length > 0) {
         await transaction.knowledgeResourceAssetReference.createMany({
-          data: input.assetIds.map((assetId) => ({
+          data: input.placements.map((placement) => ({
             knowledgeResourceId: input.knowledgeResourceId,
-            assetId,
+            assetId: placement.assetId,
+            role: placement.role,
+            playback: placement.playback,
+            position: placement.position,
+            altText: placement.altText,
+            caption: placement.caption,
+            posterAssetId: placement.posterAssetId,
           })),
         });
       }
     });
 
-    return this.listAssetIds({
-      knowledgeResourceId: input.knowledgeResourceId,
-    });
+    return input.placements;
   }
 }

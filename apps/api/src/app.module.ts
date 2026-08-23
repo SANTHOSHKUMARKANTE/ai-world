@@ -117,8 +117,8 @@ import {
   GetPublicKnowledgeResource,
   ListPublicKnowledgeResourceAssets,
   ListPublicKnowledgeResources,
-  SetKnowledgeResourceAssets,
-  SetKnowledgeResourceAssetsAsActor,
+  SetKnowledgeResourceMedia,
+  SetKnowledgeResourceMediaAsActor,
   UpdateKnowledgeResource,
   UpdateKnowledgeResourceAsActor,
 } from '@ai-world/platform-knowledge';
@@ -1012,26 +1012,26 @@ export class AppModule {
         },
 
         {
-          provide: SetKnowledgeResourceAssets,
+          provide: SetKnowledgeResourceMedia,
           inject: [PrismaKnowledgeResourceRepository, ResolveAssetReference],
           useFactory: (
             repository: PrismaKnowledgeResourceRepository,
             resolveAssetReference: ResolveAssetReference,
-          ): SetKnowledgeResourceAssets => {
-            return new SetKnowledgeResourceAssets(repository, repository, resolveAssetReference);
+          ): SetKnowledgeResourceMedia => {
+            return new SetKnowledgeResourceMedia(repository, repository, resolveAssetReference);
           },
         },
 
         {
-          provide: SetKnowledgeResourceAssetsAsActor,
-          inject: [EvaluatePermission, SetKnowledgeResourceAssets],
+          provide: SetKnowledgeResourceMediaAsActor,
+          inject: [EvaluatePermission, SetKnowledgeResourceMedia],
           useFactory: (
             evaluatePermission: EvaluatePermission,
-            setKnowledgeResourceAssets: SetKnowledgeResourceAssets,
-          ): SetKnowledgeResourceAssetsAsActor => {
-            return new SetKnowledgeResourceAssetsAsActor(
+            setKnowledgeResourceMedia: SetKnowledgeResourceMedia,
+          ): SetKnowledgeResourceMediaAsActor => {
+            return new SetKnowledgeResourceMediaAsActor(
               evaluatePermission,
-              setKnowledgeResourceAssets,
+              setKnowledgeResourceMedia,
             );
           },
         },

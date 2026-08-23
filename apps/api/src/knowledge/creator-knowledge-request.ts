@@ -14,9 +14,20 @@ const updateCreatorKnowledgeRequestSchema = z
   })
   .strict();
 
-const setCreatorKnowledgeAssetsRequestSchema = z
+const creatorKnowledgeMediaPlacementSchema = z
   .object({
-    assetIds: z.array(z.string()),
+    assetId: z.string(),
+    role: z.string(),
+    playback: z.string(),
+    altText: z.string(),
+    caption: z.string().nullable().optional(),
+    posterAssetId: z.string().nullable().optional(),
+  })
+  .strict();
+
+const setCreatorKnowledgeMediaRequestSchema = z
+  .object({
+    placements: z.array(creatorKnowledgeMediaPlacementSchema),
   })
   .strict();
 
@@ -29,8 +40,17 @@ export interface UpdateCreatorKnowledgeRequest {
   readonly resourceType: string;
 }
 
-export interface SetCreatorKnowledgeAssetsRequest {
-  readonly assetIds: readonly string[];
+export interface SetCreatorKnowledgeMediaPlacementRequest {
+  readonly assetId: string;
+  readonly role: string;
+  readonly playback: string;
+  readonly altText: string;
+  readonly caption: string | null;
+  readonly posterAssetId: string | null;
+}
+
+export interface SetCreatorKnowledgeMediaRequest {
+  readonly placements: readonly SetCreatorKnowledgeMediaPlacementRequest[];
 }
 
 function invalidCreatorKnowledgeRequest(operation: string): ApplicationError {
@@ -62,12 +82,23 @@ export function parseUpdateCreatorKnowledgeRequest(input: unknown): UpdateCreato
   return result.data;
 }
 
-export function parseSetCreatorKnowledgeAssetsRequest(
+export function parseSetCreatorKnowledgeMediaRequest(
   input: unknown,
-): SetCreatorKnowledgeAssetsRequest {
-  const result = setCreatorKnowledgeAssetsRequestSchema.safeParse(input);
+): SetCreatorKnowledgeMediaRequest {
+  const result = setCreatorKnowledgeMediaRequestSchema.safeParse(input);
+
   if (!result.success) {
-    throw invalidCreatorKnowledgeRequest('Asset-reference replacement');
+    throw invalidCreatorKnowledgeRequest('media-placement replacement');
   }
-  return result.data;
+
+  return {
+    placements: result.data.placements.map((placement) => ({
+      assetId: placement.assetId,
+      role: placement.role,
+      playback: placement.playback,
+      altText: placement.altText,
+      caption: placement.caption ?? null,
+      posterAssetId: placement.posterAssetId ?? null,
+    })),
+  };
 }
