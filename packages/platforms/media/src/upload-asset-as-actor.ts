@@ -68,6 +68,9 @@ export class UploadAssetAsActor {
             assetType: asset.assetType,
             mimeType: asset.technicalMetadata.mimeType,
             sizeBytes: asset.technicalMetadata.sizeBytes,
+            ...(asset.technicalMetadata.durationMs === undefined
+              ? {}
+              : { durationMs: asset.technicalMetadata.durationMs }),
             lifecycle: asset.lifecycle,
           },
         });

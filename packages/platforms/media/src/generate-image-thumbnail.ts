@@ -8,7 +8,7 @@ import type { ImageThumbnailProcessor } from './image-thumbnail-processor';
 import {
   MEDIA_UPLOAD_JPEG_MIME_TYPE,
   MEDIA_UPLOAD_PNG_MIME_TYPE,
-  type SupportedMediaUploadMimeType,
+  type SupportedImageUploadMimeType,
 } from './media-upload-policy';
 
 export const MEDIA_IMAGE_THUMBNAIL_MAX_EDGE_PIXELS = 320 as const;
@@ -20,7 +20,7 @@ export interface GenerateImageThumbnailInput {
 export interface GeneratedImageThumbnail {
   readonly id: ResourceId;
   readonly content: Uint8Array;
-  readonly mimeType: SupportedMediaUploadMimeType;
+  readonly mimeType: SupportedImageUploadMimeType;
   readonly widthPixels: number;
   readonly heightPixels: number;
 }
@@ -45,7 +45,7 @@ function thumbnailNotAvailable(): ApplicationError {
   });
 }
 
-function isSupportedThumbnailMimeType(mimeType: string): mimeType is SupportedMediaUploadMimeType {
+function isSupportedThumbnailMimeType(mimeType: string): mimeType is SupportedImageUploadMimeType {
   return mimeType === MEDIA_UPLOAD_PNG_MIME_TYPE || mimeType === MEDIA_UPLOAD_JPEG_MIME_TYPE;
 }
 

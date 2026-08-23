@@ -21,6 +21,7 @@ export type AssetLifecycle =
 export interface AssetTechnicalMetadata {
   readonly mimeType: string;
   readonly sizeBytes: number;
+  readonly durationMs?: number;
 }
 
 export interface Asset {

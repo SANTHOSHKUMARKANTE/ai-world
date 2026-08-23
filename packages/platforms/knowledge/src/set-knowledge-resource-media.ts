@@ -3,6 +3,7 @@ import type { ResourceId } from '@ai-world/kernel-identifiers';
 import {
   ASSET_IMAGE_TYPE,
   ASSET_VIDEO_TYPE,
+  MEDIA_SHORT_VIDEO_MAX_DURATION_MS,
   type MediaAssetReferenceResolver,
 } from '@ai-world/platform-media';
 
@@ -163,7 +164,17 @@ export class SetKnowledgeResourceMedia {
         }
       } else if (reference.assetType === ASSET_VIDEO_TYPE) {
         if (inputPlacement.playback !== KNOWLEDGE_MEDIA_SHORT_LOOP_PLAYBACK) {
-          throw invalidPlacement('VIDEO media placements require SHORT_LOOP playback in UXP-01B.');
+          throw invalidPlacement('VIDEO media placements require SHORT_LOOP playback.');
+        }
+        if (
+          reference.durationMs === undefined ||
+          !Number.isInteger(reference.durationMs) ||
+          reference.durationMs <= 0 ||
+          reference.durationMs > MEDIA_SHORT_VIDEO_MAX_DURATION_MS
+        ) {
+          throw invalidPlacement(
+            `VIDEO SHORT_LOOP placements require duration metadata between 1 and ${MEDIA_SHORT_VIDEO_MAX_DURATION_MS} milliseconds.`,
+          );
         }
         if (posterInput === null) {
           throw invalidPlacement('SHORT_LOOP media placements require an IMAGE poster Asset.');

@@ -224,7 +224,7 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
     await expect(page.getByRole('heading', { name: 'Forms of Shiva' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Stories & Knowledge' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Family & Relationships' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Popular Images' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Media Highlights' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Sacred Quotes' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Experiences' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Parvati' })).toHaveAttribute(
@@ -232,7 +232,7 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
       '/devotional/parvati',
     );
 
-    const imageHeading = page.getByRole('heading', { name: 'Popular Images' });
+    const imageHeading = page.getByRole('heading', { name: 'Media Highlights' });
     expect(
       await imageHeading.evaluate((element) =>
         Boolean(
@@ -400,7 +400,7 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
     await expect(page.getByText('Om Hanumate Namah')).toBeVisible();
     await expect(page.getByText('Lord Rama')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Forms of Hanuman' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Popular Images' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Media Highlights' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Stories & Knowledge' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Family & Relationships' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Anjana' })).toHaveAttribute(

@@ -55,6 +55,7 @@ describe('Media Delivery API', () => {
       readonly mimeType?: string;
       readonly content?: Buffer;
       readonly sizeBytes?: number;
+      readonly durationMs?: number | null;
     } = {},
   ): Promise<string> {
     const id = randomUUID();
@@ -74,6 +75,7 @@ describe('Media Delivery API', () => {
         assetType: options.assetType ?? 'IMAGE',
         mimeType: options.mimeType ?? 'image/png',
         sizeBytes: options.sizeBytes ?? content.byteLength,
+        durationMs: options.durationMs ?? null,
         storageReference,
         lifecycle: options.lifecycle ?? 'ACTIVE',
       },
@@ -156,17 +158,25 @@ describe('Media Delivery API', () => {
     expect(response.body.error.code).toBe('media.asset.delivery.not_found');
   });
 
-  it('does not claim delivery support for non-image Assets yet', async () => {
+  it('publicly delivers an ACTIVE VIDEO as one bounded full object without Range semantics', async () => {
+    const content = Buffer.from('bounded-video-content');
     const id = await createAssetFixture({
       assetType: 'VIDEO',
       mimeType: 'video/mp4',
+      content,
+      durationMs: 5000,
     });
 
     const response = await request(app.getHttpServer())
       .get(`/media/assets/${id}/content`)
-      .expect(404);
+      .set('Range', 'bytes=0-3')
+      .expect('Content-Type', 'video/mp4')
+      .expect('Content-Length', String(content.byteLength))
+      .expect(200);
 
-    expect(response.body.error.code).toBe('media.asset.delivery.not_found');
+    expect(Buffer.from(response.body)).toEqual(content);
+    expect(response.headers['accept-ranges']).toBeUndefined();
+    expect(response.headers['content-range']).toBeUndefined();
   });
 
   it('rejects a malformed Asset identifier before delivery lookup', async () => {
@@ -189,4 +199,22 @@ describe('Media Delivery API', () => {
     expect(response.body.error.code).toBe('http.internal_server_error');
     expect(response.body.error.message).toBe('Internal server error.');
   });
+
+  it.each([null, 8001])(
+    'does not expose unknown-duration or overlong VIDEO through bounded delivery (%s)',
+    async (durationMs) => {
+      const id = await createAssetFixture({
+        assetType: 'VIDEO',
+        mimeType: 'video/mp4',
+        content: Buffer.from('not-deliverable-video'),
+        durationMs,
+      });
+
+      const response = await request(app.getHttpServer())
+        .get(`/media/assets/${id}/content`)
+        .expect(404);
+
+      expect(response.body.error.code).toBe('media.asset.delivery.not_found');
+    },
+  );
 });

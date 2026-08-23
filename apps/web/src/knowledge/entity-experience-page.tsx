@@ -58,6 +58,82 @@ function mediaAltText(media: PublicKnowledgeEntityMedia, displayName: string): s
   return altText && altText.length > 0 ? altText : `${displayName} artwork`;
 }
 
+function useShortMotionAllowed(): boolean {
+  const [allowed, setAllowed] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => setAllowed(!query.matches);
+
+    sync();
+    query.addEventListener('change', sync);
+
+    return () => {
+      query.removeEventListener('change', sync);
+    };
+  }, []);
+
+  return allowed;
+}
+
+function isPlayableShortLoopMedia(media: PublicKnowledgeEntityMedia): boolean {
+  return (
+    media.assetType === 'VIDEO' &&
+    media.playback === 'SHORT_LOOP' &&
+    media.mimeType === 'video/mp4' &&
+    media.posterAssetId !== null &&
+    media.durationMs !== undefined &&
+    Number.isInteger(media.durationMs) &&
+    media.durationMs > 0 &&
+    media.durationMs <= 8000
+  );
+}
+
+function ShortLoopVisual({
+  media,
+  displayName,
+  motionAllowed,
+  priority = false,
+  sizes,
+}: {
+  readonly media: PublicKnowledgeEntityMedia;
+  readonly displayName: string;
+  readonly motionAllowed: boolean;
+  readonly priority?: boolean;
+  readonly sizes: string;
+}) {
+  if (!media.posterAssetId) {
+    return null;
+  }
+
+  if (!motionAllowed || !isPlayableShortLoopMedia(media)) {
+    return (
+      <Image
+        src={mediaThumbnailPath(media.posterAssetId)}
+        alt={mediaAltText(media, displayName)}
+        fill
+        unoptimized
+        priority={priority}
+        sizes={sizes}
+      />
+    );
+  }
+
+  return (
+    <video
+      data-short-loop="true"
+      src={mediaContentPath(media.assetId)}
+      poster={mediaThumbnailPath(media.posterAssetId)}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-label={mediaAltText(media, displayName)}
+    />
+  );
+}
+
 function entityPath(target: PublicKnowledgeEntityRelation['target']): string {
   if (target.resourceType === 'devotional.deity') {
     return `/devotional/${encodeURIComponent(target.slug)}`;
@@ -169,6 +245,8 @@ export function EntityExperiencePage({
     };
   }, [slug, universeKey]);
 
+  const motionAllowed = useShortMotionAllowed();
+
   const grouped = useMemo(() => {
     if (state.status !== 'ready') {
       return new Map<string, PublicKnowledgeEntityRelation[]>();
@@ -207,22 +285,17 @@ export function EntityExperiencePage({
 
   const entity = state.entity;
   const presentation = resolveWebUniversePresentation(entity.resource.universeKey);
-  const imageMedia = entity.media.filter(
-    (media) => media.assetType === 'IMAGE' && media.playback === 'STILL',
+  const mediaHighlights = entity.media.filter(
+    (media) =>
+      (media.assetType === 'IMAGE' && media.playback === 'STILL') ||
+      (media.assetType === 'VIDEO' &&
+        media.playback === 'SHORT_LOOP' &&
+        media.posterAssetId !== null),
   );
-  const heroMedia = entity.media.find((media) => media.role === 'HERO') ?? null;
+  const imageMedia = mediaHighlights.filter((media) => media.assetType === 'IMAGE');
+  const heroMedia = mediaHighlights.find((media) => media.role === 'HERO') ?? null;
   const fallbackImage = imageMedia[0] ?? null;
-  const heroAssetId =
-    heroMedia?.assetType === 'IMAGE'
-      ? heroMedia.assetId
-      : heroMedia?.playback === 'SHORT_LOOP'
-        ? heroMedia.posterAssetId
-        : (fallbackImage?.assetId ?? null);
-  const heroAltText = heroMedia
-    ? mediaAltText(heroMedia, entity.profile.displayName)
-    : fallbackImage
-      ? mediaAltText(fallbackImage, entity.profile.displayName)
-      : '';
+  const heroVisual = heroMedia ?? fallbackImage;
   const availableSectionKeys = SECTION_ORDER.filter((sectionKey) => grouped.has(sectionKey));
 
   return (
@@ -245,9 +318,9 @@ export function EntityExperiencePage({
           <p className="aw-entity-hero__summary">{entity.profile.summary}</p>
 
           <div className="aw-entity-hero__actions">
-            {imageMedia.length > 0 ? (
+            {mediaHighlights.length > 0 ? (
               <a href="#entity-images" className="aw-button aw-button--primary">
-                Explore images
+                Explore media
               </a>
             ) : null}
             <a href="#entity-engagement" className="aw-button aw-button--secondary">
@@ -257,15 +330,25 @@ export function EntityExperiencePage({
         </div>
 
         <div className="aw-entity-hero__visual">
-          {heroAssetId ? (
-            <Image
-              src={mediaThumbnailPath(heroAssetId)}
-              alt={heroAltText}
-              fill
-              unoptimized
-              priority
-              sizes="(max-width: 900px) 100vw, 58vw"
-            />
+          {heroVisual ? (
+            heroVisual.assetType === 'VIDEO' ? (
+              <ShortLoopVisual
+                media={heroVisual}
+                displayName={entity.profile.displayName}
+                motionAllowed={motionAllowed}
+                priority
+                sizes="(max-width: 900px) 100vw, 58vw"
+              />
+            ) : (
+              <Image
+                src={mediaThumbnailPath(heroVisual.assetId)}
+                alt={mediaAltText(heroVisual, entity.profile.displayName)}
+                fill
+                unoptimized
+                priority
+                sizes="(max-width: 900px) 100vw, 58vw"
+              />
+            )
           ) : (
             <div className="aw-entity-hero__fallback" aria-hidden="true" />
           )}
@@ -290,7 +373,7 @@ export function EntityExperiencePage({
 
       <nav className="aw-entity-section-nav" aria-label={`${entity.profile.displayName} sections`}>
         <a href="#entity-overview">Overview</a>
-        {imageMedia.length > 0 ? <a href="#entity-images">Images</a> : null}
+        {mediaHighlights.length > 0 ? <a href="#entity-images">Media</a> : null}
         {availableSectionKeys.map((sectionKey) => (
           <a key={sectionKey} href={`#${sectionAnchor(sectionKey)}`}>
             {resolveEntitySectionTitle(presentation, sectionKey, entity.profile.displayName)}
@@ -308,7 +391,7 @@ export function EntityExperiencePage({
         <p>{entity.profile.summary}</p>
       </section>
 
-      {imageMedia.length > 0 ? (
+      {mediaHighlights.length > 0 ? (
         <section
           id="entity-images"
           className="aw-entity-section aw-entity-section--images"
@@ -316,22 +399,31 @@ export function EntityExperiencePage({
         >
           <div className="aw-entity-section__heading">
             <div>
-              <p className="aw-eyebrow">Gallery</p>
-              <h2 id="entity-images-title">Popular Images</h2>
+              <p className="aw-eyebrow">Media</p>
+              <h2 id="entity-images-title">Media Highlights</h2>
             </div>
           </div>
           <ul className="aw-entity-image-rail">
-            {imageMedia.map((media) => (
+            {mediaHighlights.map((media) => (
               <li key={media.assetId}>
                 <a href={mediaContentPath(media.assetId)} target="_blank" rel="noreferrer">
                   <div className="aw-entity-image-card">
-                    <Image
-                      src={mediaThumbnailPath(media.assetId)}
-                      alt={mediaAltText(media, entity.profile.displayName)}
-                      fill
-                      unoptimized
-                      sizes="(max-width: 700px) 70vw, 260px"
-                    />
+                    {media.assetType === 'VIDEO' ? (
+                      <ShortLoopVisual
+                        media={media}
+                        displayName={entity.profile.displayName}
+                        motionAllowed={motionAllowed}
+                        sizes="(max-width: 700px) 70vw, 260px"
+                      />
+                    ) : (
+                      <Image
+                        src={mediaThumbnailPath(media.assetId)}
+                        alt={mediaAltText(media, entity.profile.displayName)}
+                        fill
+                        unoptimized
+                        sizes="(max-width: 700px) 70vw, 260px"
+                      />
+                    )}
                   </div>
                 </a>
               </li>

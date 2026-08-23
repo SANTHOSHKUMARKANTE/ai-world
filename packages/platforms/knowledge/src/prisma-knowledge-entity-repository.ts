@@ -4,6 +4,8 @@ import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 import {
   ASSET_IMAGE_TYPE,
   ASSET_VIDEO_TYPE,
+  MEDIA_SHORT_VIDEO_MAX_DURATION_MS,
+  MEDIA_UPLOAD_MP4_MIME_TYPE,
   type PublicMediaAssetDescriptor,
   type PublicMediaAssetDescriptorReader,
 } from '@ai-world/platform-media';
@@ -137,6 +139,17 @@ function parsePlayback(value: string): KnowledgeResourceMediaPlayback {
   }
 
   return value;
+}
+
+function isBoundedShortVideo(descriptor: PublicMediaAssetDescriptor): boolean {
+  return (
+    descriptor.assetType === ASSET_VIDEO_TYPE &&
+    descriptor.mimeType === MEDIA_UPLOAD_MP4_MIME_TYPE &&
+    descriptor.durationMs !== undefined &&
+    Number.isInteger(descriptor.durationMs) &&
+    descriptor.durationMs > 0 &&
+    descriptor.durationMs <= MEDIA_SHORT_VIDEO_MAX_DURATION_MS
+  );
 }
 
 export class PrismaKnowledgeEntityRepository implements KnowledgeEntityStore {
@@ -325,7 +338,7 @@ export class PrismaKnowledgeEntityRepository implements KnowledgeEntityStore {
       }
 
       if (
-        descriptor.assetType !== ASSET_VIDEO_TYPE ||
+        !isBoundedShortVideo(descriptor) ||
         playback !== KNOWLEDGE_MEDIA_SHORT_LOOP_PLAYBACK ||
         !placement.posterAssetId
       ) {
@@ -373,7 +386,8 @@ export class PrismaKnowledgeEntityRepository implements KnowledgeEntityStore {
       for (const placement of heroPlacements) {
         const descriptor = await describe(placement.assetId);
         if (
-          descriptor?.assetType !== ASSET_VIDEO_TYPE ||
+          !descriptor ||
+          !isBoundedShortVideo(descriptor) ||
           parsePlayback(placement.playback) !== KNOWLEDGE_MEDIA_SHORT_LOOP_PLAYBACK ||
           !placement.posterAssetId
         ) {

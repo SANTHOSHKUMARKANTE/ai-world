@@ -121,6 +121,7 @@ describe('Knowledge Media Placement Integration API', () => {
     input: {
       readonly assetType?: 'IMAGE' | 'VIDEO';
       readonly lifecycle?: 'ACTIVE' | 'ARCHIVED';
+      readonly durationMs?: number | null;
     } = {},
   ) {
     const id = randomUUID();
@@ -134,6 +135,8 @@ describe('Knowledge Media Placement Integration API', () => {
         assetType,
         mimeType: assetType === 'VIDEO' ? 'video/mp4' : 'image/png',
         sizeBytes: 4,
+        durationMs:
+          input.durationMs === undefined ? (assetType === 'VIDEO' ? 5000 : null) : input.durationMs,
         storageReference: `test/knowledge-media/${id}/original`,
         lifecycle,
       },
@@ -583,5 +586,33 @@ describe('Knowledge Media Placement Integration API', () => {
         where: { knowledgeResourceId: resourceId },
       }),
     ).resolves.toBe(0);
+  });
+
+  it('rejects a VIDEO SHORT_LOOP whose Media-owned duration is missing or overlong', async () => {
+    const editor = await signInKnowledgeEditor('editor-invalid-video-duration');
+    const resourceId = await createKnowledgeResource();
+    const posterId = await createAsset({ assetType: 'IMAGE' });
+
+    for (const durationMs of [null, 8001]) {
+      const videoId = await createAsset({ assetType: 'VIDEO', durationMs });
+
+      const response = await request(app.getHttpServer())
+        .put(`/knowledge/resources/${resourceId}/media`)
+        .set('Cookie', editor.cookiePair)
+        .send({
+          placements: [
+            {
+              assetId: videoId,
+              role: 'HIGHLIGHT',
+              playback: 'SHORT_LOOP',
+              altText: 'Invalid duration video',
+              posterAssetId: posterId,
+            },
+          ],
+        })
+        .expect(400);
+
+      expect(response.body.error.code).toBe('knowledge.resource.media.invalid_placement');
+    }
   });
 });

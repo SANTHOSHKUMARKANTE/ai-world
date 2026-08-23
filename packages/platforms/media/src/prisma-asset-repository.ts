@@ -10,6 +10,7 @@ interface PersistedAsset {
   readonly assetType: string;
   readonly mimeType: string;
   readonly sizeBytes: number;
+  readonly durationMs: number | null;
   readonly storageReference: string;
   readonly lifecycle: string;
   readonly createdAt: Date;
@@ -31,6 +32,7 @@ function mapPersistedAsset(asset: PersistedAsset): Asset {
     technicalMetadata: {
       mimeType: asset.mimeType,
       sizeBytes: asset.sizeBytes,
+      ...(asset.durationMs === null ? {} : { durationMs: asset.durationMs }),
     },
     storageReference: asset.storageReference,
     lifecycle: asset.lifecycle,
@@ -59,6 +61,7 @@ export class PrismaAssetRepository implements AssetReader, AssetWriter {
         assetType: input.assetType,
         mimeType: input.technicalMetadata.mimeType,
         sizeBytes: input.technicalMetadata.sizeBytes,
+        durationMs: input.technicalMetadata.durationMs ?? null,
         storageReference: input.storageReference,
         lifecycle: input.lifecycle,
       },

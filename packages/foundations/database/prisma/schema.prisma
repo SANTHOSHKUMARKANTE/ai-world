@@ -231,6 +231,7 @@ model Asset {
   assetType        String   @map("asset_type") @db.VarChar(32)
   mimeType         String   @map("mime_type") @db.VarChar(255)
   sizeBytes        Int      @map("size_bytes")
+  durationMs       Int?     @map("duration_ms")
   storageReference String   @map("storage_reference") @db.Text
   lifecycle        String   @db.VarChar(32)
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(3)

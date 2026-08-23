@@ -1,12 +1,23 @@
-import { ASSET_IMAGE_TYPE, type AssetTechnicalMetadata, type AssetType } from './asset';
+import {
+  ASSET_IMAGE_TYPE,
+  ASSET_VIDEO_TYPE,
+  type AssetTechnicalMetadata,
+  type AssetType,
+} from './asset';
+import { inspectShortMp4Video } from './mp4-short-video';
 
 export const MEDIA_UPLOAD_MAX_BYTES = 10 * 1024 * 1024;
+export const MEDIA_SHORT_VIDEO_MAX_DURATION_MS = 8000;
 
 export const MEDIA_UPLOAD_PNG_MIME_TYPE = 'image/png' as const;
 export const MEDIA_UPLOAD_JPEG_MIME_TYPE = 'image/jpeg' as const;
+export const MEDIA_UPLOAD_MP4_MIME_TYPE = 'video/mp4' as const;
+
+export type SupportedImageUploadMimeType =
+  typeof MEDIA_UPLOAD_PNG_MIME_TYPE | typeof MEDIA_UPLOAD_JPEG_MIME_TYPE;
 
 export type SupportedMediaUploadMimeType =
-  typeof MEDIA_UPLOAD_PNG_MIME_TYPE | typeof MEDIA_UPLOAD_JPEG_MIME_TYPE;
+  SupportedImageUploadMimeType | typeof MEDIA_UPLOAD_MP4_MIME_TYPE;
 
 export interface ValidatedMediaUpload {
   readonly assetType: AssetType;
@@ -29,7 +40,9 @@ function startsWithBytes(content: Uint8Array, signature: Uint8Array): boolean {
   return true;
 }
 
-function detectSupportedMimeType(content: Uint8Array): SupportedMediaUploadMimeType | null {
+function detectSupportedImageMimeType(
+  content: Uint8Array,
+): typeof MEDIA_UPLOAD_PNG_MIME_TYPE | typeof MEDIA_UPLOAD_JPEG_MIME_TYPE | null {
   if (startsWithBytes(content, PNG_SIGNATURE)) {
     return MEDIA_UPLOAD_PNG_MIME_TYPE;
   }
@@ -60,14 +73,34 @@ export function validateMediaUpload(
 
   if (
     declaredMimeType !== MEDIA_UPLOAD_PNG_MIME_TYPE &&
-    declaredMimeType !== MEDIA_UPLOAD_JPEG_MIME_TYPE
+    declaredMimeType !== MEDIA_UPLOAD_JPEG_MIME_TYPE &&
+    declaredMimeType !== MEDIA_UPLOAD_MP4_MIME_TYPE
   ) {
     throw new TypeError(
-      'Uploaded media type is not supported. Initial upload supports image/png and image/jpeg.',
+      'Uploaded media type is not supported. Upload supports image/png, image/jpeg and bounded video/mp4.',
     );
   }
 
-  const detectedMimeType = detectSupportedMimeType(content);
+  if (declaredMimeType === MEDIA_UPLOAD_MP4_MIME_TYPE) {
+    const inspection = inspectShortMp4Video(content);
+
+    if (inspection.durationMs <= 0 || inspection.durationMs > MEDIA_SHORT_VIDEO_MAX_DURATION_MS) {
+      throw new TypeError(
+        `Uploaded MP4 duration must be between 1 and ${MEDIA_SHORT_VIDEO_MAX_DURATION_MS} milliseconds.`,
+      );
+    }
+
+    return {
+      assetType: ASSET_VIDEO_TYPE,
+      technicalMetadata: {
+        mimeType: MEDIA_UPLOAD_MP4_MIME_TYPE,
+        sizeBytes: content.byteLength,
+        durationMs: inspection.durationMs,
+      },
+    };
+  }
+
+  const detectedMimeType = detectSupportedImageMimeType(content);
 
   if (!detectedMimeType) {
     throw new TypeError('Uploaded bytes do not match a supported PNG or JPEG file signature.');

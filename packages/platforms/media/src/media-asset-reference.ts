@@ -11,6 +11,7 @@ export interface ResolveMediaAssetReferenceInput {
 export interface MediaAssetReference {
   readonly id: ResourceId;
   readonly assetType: AssetType;
+  readonly durationMs?: number;
 }
 
 export interface MediaAssetReferenceResolver {
@@ -54,6 +55,12 @@ export class ResolveAssetReference implements MediaAssetReferenceResolver {
       throw assetReferenceNotFound();
     }
 
-    return { id: asset.id, assetType: asset.assetType };
+    return {
+      id: asset.id,
+      assetType: asset.assetType,
+      ...(asset.technicalMetadata.durationMs === undefined
+        ? {}
+        : { durationMs: asset.technicalMetadata.durationMs }),
+    };
   }
 }

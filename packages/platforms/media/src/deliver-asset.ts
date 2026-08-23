@@ -2,8 +2,18 @@ import { ApplicationError } from '@ai-world/foundation-errors';
 import type { StorageObjectStore } from '@ai-world/foundation-storage';
 import { parseResourceId } from '@ai-world/kernel-identifiers';
 
-import { ASSET_IMAGE_TYPE, ASSET_INITIAL_LIFECYCLE, type AssetTechnicalMetadata } from './asset';
+import {
+  ASSET_IMAGE_TYPE,
+  ASSET_INITIAL_LIFECYCLE,
+  ASSET_VIDEO_TYPE,
+  type Asset,
+  type AssetTechnicalMetadata,
+} from './asset';
 import type { AssetReader } from './asset-reader';
+import {
+  MEDIA_SHORT_VIDEO_MAX_DURATION_MS,
+  MEDIA_UPLOAD_MP4_MIME_TYPE,
+} from './media-upload-policy';
 
 export interface DeliverAssetInput {
   readonly id: string;
@@ -30,9 +40,20 @@ function assetNotDeliverable(): ApplicationError {
     code: 'media.asset.delivery.not_found',
     kind: 'not_found',
     message:
-      'No ACTIVE initial Media Asset is available for delivery under the supplied Resource ID.',
+      'No ACTIVE supported Media Asset is available for delivery under the supplied Resource ID.',
     publicMessage: 'Media Asset not found.',
   });
+}
+
+function isBoundedDeliverableVideo(asset: Asset): boolean {
+  return (
+    asset.assetType === ASSET_VIDEO_TYPE &&
+    asset.technicalMetadata.mimeType === MEDIA_UPLOAD_MP4_MIME_TYPE &&
+    asset.technicalMetadata.durationMs !== undefined &&
+    Number.isInteger(asset.technicalMetadata.durationMs) &&
+    asset.technicalMetadata.durationMs > 0 &&
+    asset.technicalMetadata.durationMs <= MEDIA_SHORT_VIDEO_MAX_DURATION_MS
+  );
 }
 
 export class DeliverAsset {
@@ -55,7 +76,7 @@ export class DeliverAsset {
     if (
       !asset ||
       asset.lifecycle !== ASSET_INITIAL_LIFECYCLE ||
-      asset.assetType !== ASSET_IMAGE_TYPE
+      (asset.assetType !== ASSET_IMAGE_TYPE && !isBoundedDeliverableVideo(asset))
     ) {
       throw assetNotDeliverable();
     }

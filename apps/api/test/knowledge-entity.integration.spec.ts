@@ -125,6 +125,7 @@ describe('Knowledge Entity API', () => {
         assetType,
         mimeType: assetType === 'VIDEO' ? 'video/mp4' : 'image/png',
         sizeBytes: 1234,
+        durationMs: assetType === 'VIDEO' ? 5000 : null,
         storageReference: `private/provider/${id}/original`,
         lifecycle,
       },
@@ -342,6 +343,7 @@ describe('Knowledge Entity API', () => {
         position: 2,
         altText: 'Shiva short motion',
         caption: 'Motion highlight',
+        durationMs: 5000,
         posterAssetId: shivaVideoPoster,
       },
     ]);

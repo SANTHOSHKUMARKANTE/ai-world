@@ -90,7 +90,7 @@ function resolver(): RecordingMediaResolver {
     new Map([
       [IMAGE_A, { id: IMAGE_A, assetType: ASSET_IMAGE_TYPE }],
       [IMAGE_B, { id: IMAGE_B, assetType: ASSET_IMAGE_TYPE }],
-      [VIDEO, { id: VIDEO, assetType: ASSET_VIDEO_TYPE }],
+      [VIDEO, { id: VIDEO, assetType: ASSET_VIDEO_TYPE, durationMs: 5000 }],
       [POSTER, { id: POSTER, assetType: ASSET_IMAGE_TYPE }],
     ]),
   );
@@ -285,5 +285,54 @@ describe('SetKnowledgeResourceMedia', () => {
 
     await expect(useCase.execute({ id: RESOURCE_ID, placements: [] })).resolves.toEqual([]);
     expect(media.ids).toEqual([]);
+  });
+
+  it.each([
+    {
+      label: 'missing VIDEO duration metadata',
+      durationMs: undefined,
+    },
+    {
+      label: 'overlong VIDEO duration metadata',
+      durationMs: 8001,
+    },
+  ])('rejects $label before persisting a SHORT_LOOP', async ({ durationMs }) => {
+    const references = new RecordingPlacementStore();
+    const media = new RecordingMediaResolver(
+      new Map([
+        [
+          VIDEO,
+          {
+            id: VIDEO,
+            assetType: ASSET_VIDEO_TYPE,
+            ...(durationMs === undefined ? {} : { durationMs }),
+          },
+        ],
+        [POSTER, { id: POSTER, assetType: ASSET_IMAGE_TYPE }],
+      ]),
+    );
+    const useCase = new SetKnowledgeResourceMedia(
+      new RecordingResourceReader(createResource()),
+      references,
+      media,
+    );
+
+    await expect(
+      useCase.execute({
+        id: RESOURCE_ID,
+        placements: [
+          {
+            assetId: VIDEO,
+            role: 'HIGHLIGHT',
+            playback: 'SHORT_LOOP',
+            altText: 'Video',
+            posterAssetId: POSTER,
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: 'knowledge.resource.media.invalid_placement',
+    });
+    expect(references.replacements).toEqual([]);
   });
 });

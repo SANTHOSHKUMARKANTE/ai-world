@@ -123,24 +123,24 @@ describe('DeliverAsset', () => {
     expect(storage.readReferences).toEqual([]);
   });
 
-  it('does not claim delivery support for a non-image Asset yet', async () => {
-    const reader = new RecordingAssetReader(
-      createAsset({
-        assetType: ASSET_VIDEO_TYPE,
-      }),
-    );
-    const storage = new RecordingStorage(CONTENT);
-    const deliver = new DeliverAsset(reader, storage);
-
-    await expect(
-      deliver.execute({
-        id: ASSET_ID,
-      }),
-    ).rejects.toMatchObject({
-      code: 'media.asset.delivery.not_found',
+  it('delivers bytes for an ACTIVE VIDEO Asset without adding a second delivery path', async () => {
+    const asset = createAsset({
+      assetType: ASSET_VIDEO_TYPE,
+      technicalMetadata: {
+        mimeType: 'video/mp4',
+        sizeBytes: CONTENT.byteLength,
+        durationMs: 5000,
+      },
     });
+    const storage = new RecordingStorage(CONTENT);
+    const deliver = new DeliverAsset(new RecordingAssetReader(asset), storage);
 
-    expect(storage.readReferences).toEqual([]);
+    await expect(deliver.execute({ id: ASSET_ID })).resolves.toEqual({
+      id: asset.id,
+      technicalMetadata: asset.technicalMetadata,
+      content: CONTENT,
+    });
+    expect(storage.readReferences).toEqual([asset.storageReference]);
   });
 
   it('rejects malformed Resource IDs before repository or Storage access', async () => {

@@ -1795,3 +1795,21 @@ textarea {
     transform: none;
   }
 }
+
+/* UXP-01D — bounded short-motion VIDEO uses the existing Entity media containers. */
+.aw-entity-hero__visual video,
+.aw-entity-image-card video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+  object-position: center;
+  background: var(--aw-universe-card-media-background, #0a1426);
+}
+
+.aw-entity-hero__visual video {
+  filter: saturate(0.92) contrast(1.08);
+}

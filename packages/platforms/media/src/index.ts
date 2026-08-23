@@ -41,8 +41,10 @@ export type {
 export { MEDIA_ASSET_UPLOAD_PERMISSION_KEY } from './media-authorization-policy';
 
 export {
+  MEDIA_SHORT_VIDEO_MAX_DURATION_MS,
   MEDIA_UPLOAD_JPEG_MIME_TYPE,
   MEDIA_UPLOAD_MAX_BYTES,
+  MEDIA_UPLOAD_MP4_MIME_TYPE,
   MEDIA_UPLOAD_PNG_MIME_TYPE,
   validateMediaUpload,
   type SupportedMediaUploadMimeType,

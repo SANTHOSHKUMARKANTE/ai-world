@@ -75,4 +75,28 @@ describe('ResolvePublicMediaAssetDescriptor', () => {
 
     expect(descriptor).toBeNull();
   });
+
+  it('exposes VIDEO duration without exposing private technical or Storage fields', async () => {
+    const descriptor = await new ResolvePublicMediaAssetDescriptor(
+      new StaticAssetReader(
+        asset({
+          assetType: ASSET_VIDEO_TYPE,
+          technicalMetadata: {
+            mimeType: 'video/mp4',
+            sizeBytes: 9876,
+            durationMs: 5000,
+          },
+        }),
+      ),
+    ).findById({ id: ASSET_ID });
+
+    expect(descriptor).toEqual({
+      id: ASSET_ID,
+      assetType: ASSET_VIDEO_TYPE,
+      mimeType: 'video/mp4',
+      durationMs: 5000,
+    });
+    expect(descriptor).not.toHaveProperty('sizeBytes');
+    expect(descriptor).not.toHaveProperty('storageReference');
+  });
 });

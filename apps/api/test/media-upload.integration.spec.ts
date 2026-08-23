@@ -27,6 +27,29 @@ const VALID_PNG = Buffer.from(
   'base64',
 );
 
+function mp4Box(type: string, payload: Buffer): Buffer {
+  const result = Buffer.alloc(8 + payload.byteLength);
+  result.writeUInt32BE(result.byteLength, 0);
+  result.write(type, 4, 4, 'ascii');
+  payload.copy(result, 8);
+  return result;
+}
+
+function shortMp4(durationMs: number): Buffer {
+  const ftyp = Buffer.alloc(16);
+  ftyp.write('isom', 0, 'ascii');
+  ftyp.write('isom', 8, 'ascii');
+
+  const mvhd = Buffer.alloc(20);
+  mvhd.writeUInt32BE(1000, 12);
+  mvhd.writeUInt32BE(durationMs, 16);
+
+  return Buffer.concat([
+    mp4Box('ftyp', ftyp),
+    mp4Box('moov', Buffer.concat([mp4Box('mvhd', mvhd), mp4Box('avc1', Buffer.alloc(0))])),
+  ]);
+}
+
 function createFixtureEmail(label: string): string {
   return `${runMarker}-${label}-${randomUUID()}@example.com`;
 }
@@ -382,5 +405,76 @@ describe('Media Upload API', () => {
     const stored = await readFile(join(storageRoot, 'media', 'assets', id, 'original'));
 
     expect(stored).toEqual(VALID_PNG);
+  });
+
+  it('stores a bounded H.264 MP4 VIDEO with canonical duration and audit metadata', async () => {
+    const actor = await signInAdministrator('video-success');
+    const video = shortMp4(5000);
+
+    const response = await request(app.getHttpServer())
+      .post('/media/assets')
+      .set('Cookie', actor.cookiePair)
+      .attach('file', video, {
+        filename: 'short-motion.mp4',
+        contentType: 'video/mp4',
+      })
+      .expect(201);
+
+    const id = response.body.id as string;
+    createdAssetIds.add(id);
+
+    expect(response.body).toMatchObject({
+      id,
+      assetType: 'VIDEO',
+      technicalMetadata: {
+        mimeType: 'video/mp4',
+        sizeBytes: video.byteLength,
+        durationMs: 5000,
+      },
+      lifecycle: 'ACTIVE',
+    });
+
+    const persisted = await database.asset.findUniqueOrThrow({ where: { id } });
+    expect(persisted.assetType).toBe('VIDEO');
+    expect(persisted.mimeType).toBe('video/mp4');
+    expect(persisted.durationMs).toBe(5000);
+
+    const auditRecord = await database.auditRecord.findFirstOrThrow({
+      where: {
+        actorId: actor.actorId,
+        action: 'media.asset.upload',
+        resourceType: 'media.asset',
+        resourceId: id,
+        result: 'media.asset.created',
+      },
+    });
+    expect(auditRecord.context).toMatchObject({
+      assetType: 'VIDEO',
+      mimeType: 'video/mp4',
+      sizeBytes: video.byteLength,
+      durationMs: 5000,
+      lifecycle: 'ACTIVE',
+    });
+    expect(JSON.stringify(auditRecord.context)).not.toContain('storageReference');
+
+    const stored = await readFile(join(storageRoot, 'media', 'assets', id, 'original'));
+    expect(stored).toEqual(video);
+  });
+
+  it('rejects an overlong MP4 before creating an Asset or stored object', async () => {
+    const actor = await signInAdministrator('video-overlong');
+    const before = await currentAssetCount();
+
+    const response = await request(app.getHttpServer())
+      .post('/media/assets')
+      .set('Cookie', actor.cookiePair)
+      .attach('file', shortMp4(8001), {
+        filename: 'too-long.mp4',
+        contentType: 'video/mp4',
+      })
+      .expect(400);
+
+    expect(response.body.error.code).toBe('media.asset.upload.invalid_input');
+    expect(await currentAssetCount()).toBe(before);
   });
 });

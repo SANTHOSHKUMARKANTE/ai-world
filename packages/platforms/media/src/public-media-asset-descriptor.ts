@@ -36,6 +36,9 @@ export class ResolvePublicMediaAssetDescriptor implements PublicMediaAssetDescri
       id: asset.id,
       assetType: asset.assetType,
       mimeType: asset.technicalMetadata.mimeType,
+      ...(asset.technicalMetadata.durationMs === undefined
+        ? {}
+        : { durationMs: asset.technicalMetadata.durationMs }),
     };
   }
 }

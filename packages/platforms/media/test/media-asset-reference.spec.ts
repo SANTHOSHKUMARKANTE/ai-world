@@ -78,4 +78,25 @@ describe('ResolveAssetReference', () => {
       kind: 'not_found',
     });
   });
+
+  it('includes bounded duration metadata when the ACTIVE reference is a VIDEO with duration', async () => {
+    const resolver = new ResolveAssetReference(
+      new RecordingAssetReader(
+        createAsset({
+          assetType: ASSET_VIDEO_TYPE,
+          technicalMetadata: {
+            mimeType: 'video/mp4',
+            sizeBytes: 4,
+            durationMs: 5000,
+          },
+        }),
+      ),
+    );
+
+    await expect(resolver.resolve({ id: ASSET_ID })).resolves.toEqual({
+      id: ASSET_ID,
+      assetType: ASSET_VIDEO_TYPE,
+      durationMs: 5000,
+    });
+  });
 });
