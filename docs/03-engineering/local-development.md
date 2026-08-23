@@ -14,7 +14,9 @@ PostgreSQL
 
 provided through Docker Compose.
 
-The initial local stack does not include Redis, a search engine, a queue broker, or a vector database.
+The Phase 1 baseline did not include Redis, a search engine, a queue broker, a vector database, or local email capture.
+
+The current product-readiness stack adds Mailpit as bounded local SMTP and email-inspection infrastructure for real verification and recovery journeys. It does not change the production email architecture.
 
 Additional infrastructure must only be introduced when a later accepted milestone or demonstrated platform requirement justifies it.
 
@@ -36,9 +38,12 @@ Developer Machine
 └── Docker Desktop / Docker Engine
     │
     └── ai-world-local
-        └── PostgreSQL 18.4
-            ├── container port: 5432
-            └── host port: 55432
+        ├── PostgreSQL 18.4
+        │   ├── container port: 5432
+        │   └── host port: 55432
+        └── Mailpit 1.30.0
+            ├── SMTP: 127.0.0.1:1025
+            └── Web UI: http://127.0.0.1:8025
 ```
 
 The application processes run directly through pnpm.
@@ -56,7 +61,7 @@ Node.js: 24.18.1
 pnpm:    10.17.1
 ```
 
-Docker Desktop or another compatible Docker Engine with Docker Compose support is required for local PostgreSQL.
+Docker Desktop or another compatible Docker Engine with Docker Compose support is required for local PostgreSQL and Mailpit.
 
 Verify the local toolchain with:
 
@@ -91,10 +96,16 @@ The local environment file is:
 The canonical local values are:
 
 ```dotenv
+AI_WORLD_ENV=development
 NODE_ENV=development
 PORT=3001
 LOG_LEVEL=debug
 DATABASE_URL=postgresql://ai_world:ai_world@127.0.0.1:55432/ai_world
+MEDIA_STORAGE_ROOT=./uploads
+EMAIL_SMTP_HOST=127.0.0.1
+EMAIL_SMTP_PORT=1025
+EMAIL_SMTP_SECURE=false
+EMAIL_FROM=AI World <noreply@ai-world.local>
 ```
 
 Create the local environment file from the template.
@@ -150,6 +161,13 @@ NODE_ENV
 PORT
 DATABASE_URL
 LOG_LEVEL
+EMAIL_SMTP_HOST
+EMAIL_SMTP_PORT
+EMAIL_SMTP_SECURE
+EMAIL_FROM
+EMAIL_SMTP_USERNAME
+EMAIL_SMTP_PASSWORD
+OPENAI_API_KEY
 ```
 
 Do not switch the repository to loose Turbo environment handling merely to simplify local development.
@@ -170,7 +188,7 @@ The Compose project name is:
 ai-world-local
 ```
 
-The initial stack contains only PostgreSQL.
+The current stack contains PostgreSQL plus Mailpit for local email delivery and inspection.
 
 PostgreSQL uses:
 
@@ -238,6 +256,12 @@ Follow PostgreSQL logs:
 pnpm infra:local:logs
 ```
 
+When local email delivery needs diagnostics, follow Mailpit directly:
+
+```bash
+docker compose -f infrastructure/local/compose.yml logs -f mailpit
+```
+
 Stop the local infrastructure without removing containers:
 
 ```bash
@@ -250,7 +274,7 @@ Remove the local Compose containers and network while preserving the named volum
 pnpm infra:local:down
 ```
 
-After starting PostgreSQL, wait until its status is healthy before expecting API readiness to succeed.
+After starting local infrastructure, wait until PostgreSQL is healthy before expecting API readiness to succeed. Mailpit should also be reachable at `http://127.0.0.1:8025` before testing verification or recovery delivery.
 
 ---
 
@@ -352,6 +376,8 @@ The canonical Phase 1 local ports are:
 ```text
 Web:          3000
 API:          3001
+Mailpit SMTP: 1025
+Mailpit UI:   8025
 PostgreSQL:  55432
 Playwright:   3100
 ```
@@ -495,13 +521,13 @@ pnpm infra:local:status
 
 When development is finished, application processes may be stopped with the terminal interrupt command.
 
-PostgreSQL may remain running, or it may be stopped with:
+Local infrastructure may remain running, or PostgreSQL and Mailpit may both be stopped with:
 
 ```bash
 pnpm infra:local:stop
 ```
 
-Its named volume remains persistent.
+The PostgreSQL named volume remains persistent.
 
 ---
 
@@ -515,7 +541,7 @@ For a clean clone or a new development machine:
 3. Install and start Docker Desktop or another compatible Docker Engine.
 4. Install repository dependencies with the frozen lockfile.
 5. Copy .env.example to .env.
-6. Start local PostgreSQL.
+6. Start local infrastructure (PostgreSQL and Mailpit).
 7. Verify or run the seed baseline.
 8. Start development applications.
 ```
@@ -535,6 +561,8 @@ Expected services:
 ```text
 Web           http://127.0.0.1:3000
 API           http://127.0.0.1:3001
+Mailpit SMTP  127.0.0.1:1025
+Mailpit UI    http://127.0.0.1:8025
 PostgreSQL    127.0.0.1:55432
 ```
 
@@ -612,9 +640,11 @@ pnpm infra:local:logs
 Canonical ports are:
 
 ```text
+1025
 3000
 3001
 3100
+8025
 55432
 ```
 
@@ -643,7 +673,7 @@ Queue broker
 Vector database
 ```
 
-The local infrastructure baseline remains PostgreSQL-only until an accepted later requirement changes that decision.
+The Phase 1 baseline was PostgreSQL-only. Later accepted Product Readiness work introduced Mailpit as the bounded local email-delivery dependency; the current local stack is PostgreSQL plus Mailpit.
 
 The same general principle applies to other optional infrastructure: add capabilities when the owning platform requires them rather than pre-building speculative infrastructure.
 
@@ -667,6 +697,7 @@ Local infrastructure validation includes:
 ```bash
 pnpm infra:local:status
 pnpm db:seed
+curl http://127.0.0.1:8025/api/v1/info
 ```
 
 API runtime validation includes:
@@ -723,4 +754,18 @@ Developer workflow
   pnpm dev
 ```
 
-This is the canonical Phase 1 local development baseline for AI World.
+This is the canonical historical Phase 1 local development baseline for AI World.
+
+The current local product-readiness stack extends that baseline with Mailpit for verification and recovery delivery while preserving PostgreSQL as the only canonical data dependency.
+
+---
+
+## WPR-M05 Product Acceptance
+
+The repeatable Web product acceptance procedure is documented in:
+
+```text
+docs/03-engineering/web-product-local-acceptance.md
+```
+
+Use that procedure for the final WPR-M05 local normal-user, authorized-creator, accessibility, performance, and restart/persistence acceptance. Automated validation alone does not close the Web Product Readiness Gate.

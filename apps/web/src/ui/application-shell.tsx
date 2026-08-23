@@ -7,6 +7,10 @@ import { PageContainer } from './primitives';
 export function ApplicationShell({ children }: { readonly children: ReactNode }) {
   return (
     <div className="aw-app-shell">
+      <a className="aw-skip-link" href="#aw-main-content">
+        Skip to main content
+      </a>
+
       <header className="aw-site-header">
         <PageContainer className="aw-header-inner">
           <Link className="aw-brand" href="/" aria-label="AI World home">
@@ -35,7 +39,9 @@ export function ApplicationShell({ children }: { readonly children: ReactNode })
         </PageContainer>
       </header>
 
-      <div className="aw-app-content">{children}</div>
+      <div id="aw-main-content" className="aw-app-content" tabIndex={-1}>
+        {children}
+      </div>
 
       <footer className="aw-site-footer">
         <PageContainer className="aw-footer-inner">

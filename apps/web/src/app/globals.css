@@ -70,6 +70,24 @@ textarea {
   outline-offset: 3px;
 }
 
+.aw-skip-link {
+  position: fixed;
+  top: 0.65rem;
+  left: 0.65rem;
+  z-index: 100;
+  border-radius: var(--aw-radius-sm);
+  background: var(--aw-brand-strong);
+  color: white;
+  font-weight: 800;
+  padding: 0.7rem 0.9rem;
+  text-decoration: none;
+  transform: translateY(calc(-100% - 1rem));
+}
+
+.aw-skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 .aw-app-shell {
   display: grid;
   min-height: 100vh;
