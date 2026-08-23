@@ -110,3 +110,36 @@ export {
   SetKnowledgeResourceAssetsAsActor,
   type SetKnowledgeResourceAssetsAsActorInput,
 } from './set-knowledge-resource-assets-as-actor';
+
+export {
+  ConfigureKnowledgeEntity,
+  type ConfigureKnowledgeEntityFactInput,
+  type ConfigureKnowledgeEntityInput,
+  type ConfigureKnowledgeEntityRelationInput,
+} from './configure-knowledge-entity';
+
+export {
+  ConfigureKnowledgeEntityAsActor,
+  type ConfigureKnowledgeEntityAsActorInput,
+} from './configure-knowledge-entity-as-actor';
+
+export {
+  GetPublicKnowledgeEntity,
+  type GetPublicKnowledgeEntityInput,
+} from './get-public-knowledge-entity';
+
+export type {
+  KnowledgeEntityFact,
+  KnowledgeEntityProfile,
+  KnowledgeEntityRelation,
+  KnowledgeEntityRelationTarget,
+  PublicKnowledgeEntity,
+} from './knowledge-entity';
+
+export type {
+  FindKnowledgeEntityRouteOwnerInput,
+  FindPublishedKnowledgeEntityByRouteKeyInput,
+  KnowledgeEntityRelationRecordInput,
+  KnowledgeEntityStore,
+  ReplaceKnowledgeEntityConfigurationInput,
+} from './knowledge-entity-store';

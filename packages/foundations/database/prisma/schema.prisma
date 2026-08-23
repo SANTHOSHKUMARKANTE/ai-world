@@ -185,10 +185,45 @@ model KnowledgeResource {
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  assetReferences      KnowledgeResourceAssetReference[]
-  compositionPageItems CompositionPageItem[]
+  assetReferences         KnowledgeResourceAssetReference[]
+  compositionPageItems    CompositionPageItem[]
+  profile                 KnowledgeResourceProfile?
+  outgoingEntityRelations KnowledgeResourceRelation[]       @relation("KnowledgeEntityRelationSource")
+  incomingEntityRelations KnowledgeResourceRelation[]       @relation("KnowledgeEntityRelationTarget")
 
   @@map("knowledge_resources")
+}
+
+model KnowledgeResourceProfile {
+  knowledgeResourceId String   @id @map("knowledge_resource_id") @db.Uuid
+  routeKey            String   @unique @map("route_key") @db.VarChar(256)
+  slug                String   @db.VarChar(96)
+  displayName         String   @map("display_name") @db.VarChar(160)
+  summary             String   @db.Text
+  facts               Json     @db.JsonB
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt           DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  knowledgeResource KnowledgeResource @relation(fields: [knowledgeResourceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([slug])
+  @@map("knowledge_resource_profiles")
+}
+
+model KnowledgeResourceRelation {
+  sourceResourceId String @map("source_resource_id") @db.Uuid
+  targetResourceId String @map("target_resource_id") @db.Uuid
+  sectionKey       String @map("section_key") @db.VarChar(128)
+  relationshipType String @map("relationship_type") @db.VarChar(128)
+  position         Int
+
+  sourceResource KnowledgeResource @relation("KnowledgeEntityRelationSource", fields: [sourceResourceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  targetResource KnowledgeResource @relation("KnowledgeEntityRelationTarget", fields: [targetResourceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([sourceResourceId, relationshipType, targetResourceId])
+  @@unique([sourceResourceId, sectionKey, position])
+  @@index([targetResourceId])
+  @@map("knowledge_resource_relations")
 }
 
 model Asset {

@@ -109,8 +109,11 @@ import {
   SharpImageThumbnailProcessor,
 } from '@ai-world/platform-media/infrastructure';
 import {
+  ConfigureKnowledgeEntity,
+  ConfigureKnowledgeEntityAsActor,
   CreateKnowledgeResource,
   CreateKnowledgeResourceAsActor,
+  GetPublicKnowledgeEntity,
   GetPublicKnowledgeResource,
   ListPublicKnowledgeResourceAssets,
   ListPublicKnowledgeResources,
@@ -121,7 +124,10 @@ import {
 } from '@ai-world/platform-knowledge';
 import type { SearchContract } from '@ai-world/platform-discovery';
 import { PrismaKnowledgeSearch } from '@ai-world/platform-discovery/infrastructure';
-import { PrismaKnowledgeResourceRepository } from '@ai-world/platform-knowledge/infrastructure';
+import {
+  PrismaKnowledgeEntityRepository,
+  PrismaKnowledgeResourceRepository,
+} from '@ai-world/platform-knowledge/infrastructure';
 import { GetUserProfile, UpdateUserProfile } from '@ai-world/platform-user';
 import {
   PrismaUserProfileRepository,
@@ -147,9 +153,11 @@ import { CollectionsController } from './engagement/collections.controller';
 import { FavoritesController } from './engagement/favorites.controller';
 import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
+import { CreatorKnowledgeEntityController } from './knowledge/creator-knowledge-entity.controller';
 import { CreatorKnowledgeController } from './knowledge/creator-knowledge.controller';
 import { MediaAssetsController } from './media/media-assets.controller';
 import { MediaUploadPreauthorizationGuard } from './media/media-upload-preauthorization.guard';
+import { PublicKnowledgeEntityController } from './knowledge/public-knowledge-entity.controller';
 import { PublicKnowledgeController } from './knowledge/public-knowledge.controller';
 import { ObservabilityModule } from './observability/observability.module';
 import { PasswordRecoveryController } from './password-recovery/password-recovery.controller';
@@ -305,8 +313,10 @@ export class AppModule {
         CollectionsController,
         AuthorizationController,
         PublicKnowledgeController,
+        PublicKnowledgeEntityController,
         PublicDiscoverySearchController,
         CreatorKnowledgeController,
+        CreatorKnowledgeEntityController,
         MediaAssetsController,
         CreatorCompositionController,
         PublicCompositionController,
@@ -994,6 +1004,14 @@ export class AppModule {
         },
 
         {
+          provide: PrismaKnowledgeEntityRepository,
+          inject: [DatabaseService],
+          useFactory: (database: DatabaseService): PrismaKnowledgeEntityRepository => {
+            return new PrismaKnowledgeEntityRepository(database.getClient());
+          },
+        },
+
+        {
           provide: SetKnowledgeResourceAssets,
           inject: [PrismaKnowledgeResourceRepository, ResolveAssetReference],
           useFactory: (
@@ -1063,6 +1081,39 @@ export class AppModule {
             repository: PrismaKnowledgeResourceRepository,
           ): GetPublicKnowledgeResource => {
             return new GetPublicKnowledgeResource(repository);
+          },
+        },
+
+        {
+          provide: ConfigureKnowledgeEntity,
+          inject: [PrismaKnowledgeResourceRepository, PrismaKnowledgeEntityRepository],
+          useFactory: (
+            resources: PrismaKnowledgeResourceRepository,
+            entities: PrismaKnowledgeEntityRepository,
+          ): ConfigureKnowledgeEntity => {
+            return new ConfigureKnowledgeEntity(resources, entities);
+          },
+        },
+
+        {
+          provide: ConfigureKnowledgeEntityAsActor,
+          inject: [EvaluatePermission, ConfigureKnowledgeEntity],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            configureKnowledgeEntity: ConfigureKnowledgeEntity,
+          ): ConfigureKnowledgeEntityAsActor => {
+            return new ConfigureKnowledgeEntityAsActor(
+              evaluatePermission,
+              configureKnowledgeEntity,
+            );
+          },
+        },
+
+        {
+          provide: GetPublicKnowledgeEntity,
+          inject: [PrismaKnowledgeEntityRepository],
+          useFactory: (entities: PrismaKnowledgeEntityRepository): GetPublicKnowledgeEntity => {
+            return new GetPublicKnowledgeEntity(entities);
           },
         },
 

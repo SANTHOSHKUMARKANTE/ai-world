@@ -1,0 +1,247 @@
+import { expect, test, type Page } from '@playwright/test';
+
+const SHIVA_ID = '11111111-1111-4111-8111-111111111111';
+
+const assetIds = [
+  '10000000-0000-4000-8000-000000000001',
+  '10000000-0000-4000-8000-000000000002',
+  '10000000-0000-4000-8000-000000000003',
+  '10000000-0000-4000-8000-000000000004',
+  '10000000-0000-4000-8000-000000000005',
+];
+
+function relation(
+  index: number,
+  sectionKey: string,
+  displayName: string,
+  summary: string,
+  relationshipType: string,
+) {
+  const id = `20000000-0000-4000-8000-${String(index).padStart(12, '0')}`;
+  const previewAssetId = `30000000-0000-4000-8000-${String(index).padStart(12, '0')}`;
+  const slug = displayName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/gu, '-')
+    .replace(/^-|-$/gu, '');
+
+  return {
+    sectionKey,
+    relationshipType,
+    position: index,
+    target: {
+      id,
+      universeKey: 'universe.devotional',
+      resourceType: 'devotional.deity',
+      slug,
+      displayName,
+      summary,
+      previewAssetId,
+    },
+  };
+}
+
+function svgCard(label: string): string {
+  const safe = label.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#071126"/>
+        <stop offset="0.56" stop-color="#243d77"/>
+        <stop offset="1" stop-color="#b47b32"/>
+      </linearGradient>
+      <radialGradient id="r">
+        <stop offset="0" stop-color="#cad6ff" stop-opacity=".72"/>
+        <stop offset="1" stop-color="#202b5e" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1200" height="800" fill="url(#g)"/>
+    <circle cx="760" cy="300" r="310" fill="url(#r)"/>
+    <path d="M760 110 L830 520 L690 520 Z" fill="#d9e3ff" opacity=".22"/>
+    <circle cx="760" cy="270" r="110" fill="#071125" opacity=".68"/>
+    <path d="M640 610 Q760 430 880 610" fill="none" stroke="#d9e3ff" stroke-width="28" opacity=".42"/>
+    <text x="70" y="700" fill="#ffffff" font-size="58" font-family="Arial, sans-serif" font-weight="700">${safe}</text>
+  </svg>`;
+}
+
+async function installEntityFixture(page: Page) {
+  const relations = [
+    relation(1, 'entity.forms', 'Meditating Shiva', 'The Eternal Yogi', 'devotional.form'),
+    relation(2, 'entity.forms', 'Nataraja', 'Lord of Dance', 'devotional.form'),
+    relation(3, 'entity.forms', 'Ardhanarishvara', 'The Divine Unity', 'devotional.form'),
+    relation(4, 'entity.forms', 'Rudra', 'The Fierce Form', 'devotional.form'),
+    relation(
+      5,
+      'entity.stories',
+      'The Story of Neelkanth',
+      'A story of protection and sacrifice',
+      'devotional.story',
+    ),
+    relation(
+      6,
+      'entity.stories',
+      'Ganga’s Descent',
+      'The sacred river and Shiva',
+      'devotional.story',
+    ),
+    relation(7, 'entity.family', 'Parvati', 'Consort', 'devotional.consort'),
+    relation(8, 'entity.family', 'Ganesha', 'Son', 'devotional.child'),
+    relation(9, 'entity.family', 'Kartikeya', 'Son', 'devotional.child'),
+    relation(10, 'entity.family', 'Nandi', 'Companion', 'devotional.companion'),
+    relation(
+      11,
+      'entity.meditation',
+      'Himalayan Meditation',
+      'Stillness in the mountains',
+      'devotional.theme',
+    ),
+    relation(12, 'entity.temples', 'Kailash', 'Sacred mountain', 'devotional.sacred-place'),
+    relation(
+      13,
+      'entity.quotes',
+      'The quieter you become, the more you can hear.',
+      'Shiva reflection',
+      'devotional.quote',
+    ),
+    relation(
+      14,
+      'entity.quotes',
+      'When ego dissolves, truth becomes visible.',
+      'Shiva reflection',
+      'devotional.quote',
+    ),
+    relation(
+      15,
+      'entity.experiences',
+      'Journey to Kailash',
+      'An image-led sacred experience',
+      'devotional.experience',
+    ),
+  ];
+
+  await page.route('**/api/session', async (route) => {
+    await route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        error: {
+          code: 'identity.session.invalid',
+          message: 'Authentication is required.',
+          status: 401,
+        },
+      }),
+    });
+  });
+
+  await page.route('**/api/knowledge/entities/universe.devotional/shiva', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        resource: {
+          id: SHIVA_ID,
+          universeKey: 'universe.devotional',
+          resourceType: 'devotional.deity',
+        },
+        profile: {
+          slug: 'shiva',
+          displayName: 'Lord Shiva',
+          summary:
+            'The Supreme Yogi, a timeless symbol of transformation, stillness and cosmic balance.',
+          facts: [
+            { key: 'devotional.identity', label: 'Deity', value: 'Adi Deva' },
+            { key: 'devotional.mantra', label: 'Mantra', value: 'Om Namah Shivaya' },
+            { key: 'devotional.mount', label: 'Mount', value: 'Kailash' },
+            { key: 'devotional.consort', label: 'Consort', value: 'Parvati' },
+            { key: 'devotional.vehicle', label: 'Companion', value: 'Nandi' },
+            { key: 'devotional.symbol', label: 'Symbol', value: 'Trishul' },
+          ],
+        },
+        assetIds,
+        relations,
+      }),
+    });
+  });
+
+  await page.route('**/api/media/assets/*/thumbnail', async (route) => {
+    const url = new URL(route.request().url());
+    const parts = url.pathname.split('/');
+    const assetId = parts.at(-2) ?? 'image';
+    await route.fulfill({
+      status: 200,
+      contentType: 'image/svg+xml',
+      body: svgCard(assetId.startsWith('100') ? 'Lord Shiva' : 'Devotional'),
+    });
+  });
+}
+
+test.describe('WPR-M05 reusable Entity Experience', () => {
+  test('renders the approved Shiva-first deity page architecture', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await installEntityFixture(page);
+
+    const response = await page.goto('/devotional/shiva');
+    expect(response?.status()).toBe(200);
+
+    await expect(page.getByRole('heading', { level: 1, name: 'Lord Shiva' })).toBeVisible();
+    await expect(page.getByText('Om Namah Shivaya')).toBeVisible();
+    await expect(page.getByText('Deity · Devotional')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Save', exact: true })).toHaveAttribute(
+      'href',
+      '#entity-engagement',
+    );
+    await expect(page.getByRole('link', { name: 'Open saved' })).toHaveCount(0);
+    await expect(page.getByText('Explore →')).toHaveCount(0);
+    await expect(page.getByText('View all →')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Forms of Shiva' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Stories & Knowledge' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Family & Relationships' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Popular Images' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Sacred Quotes' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Experiences' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Parvati' })).toHaveAttribute(
+      'href',
+      '/devotional/parvati',
+    );
+
+    const imageHeading = page.getByRole('heading', { name: 'Popular Images' });
+    expect(
+      await imageHeading.evaluate((element) =>
+        Boolean(
+          element.compareDocumentPosition(document.querySelector('#entity-entity-forms-title')!) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+        ),
+      ),
+    ).toBe(true);
+
+    await imageHeading.scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => {
+      const images = [...document.querySelectorAll<HTMLImageElement>('.aw-entity-image-card img')];
+      return (
+        images.length === 5 && images.every((image) => image.complete && image.naturalWidth > 0)
+      );
+    });
+
+    await page.screenshot({
+      path: 'test-results/wpr-m05-shiva-entity-page.png',
+      fullPage: true,
+    });
+  });
+
+  test('remains usable without horizontal overflow on mobile', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await installEntityFixture(page);
+
+    await page.goto('/devotional/shiva');
+
+    await expect(page.getByRole('heading', { level: 1, name: 'Lord Shiva' })).toBeVisible();
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    );
+    expect(overflow).toBe(false);
+
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
+  });
+});
