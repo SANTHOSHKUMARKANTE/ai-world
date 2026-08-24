@@ -615,4 +615,93 @@ describe('Knowledge Media Placement Integration API', () => {
       expect(response.body.error.code).toBe('knowledge.resource.media.invalid_placement');
     }
   });
+
+  it('requires a Session before reading creator Knowledge media placements', async () => {
+    await request(app.getHttpServer())
+      .get(`/knowledge/resources/${randomUUID()}/media`)
+      .expect(401);
+  });
+
+  it('denies ordinary creator media reads before canonical Resource ID validation', async () => {
+    const actor = await signInFixture('ordinary-read');
+
+    const response = await request(app.getHttpServer())
+      .get('/knowledge/resources/not-a-resource-id/media')
+      .set('Cookie', actor.cookiePair)
+      .expect(403);
+
+    expect(response.body.error.code).toBe('knowledge.authorization.forbidden');
+  });
+
+  it('returns controlled Resource ID validation for an authorized creator media read', async () => {
+    const editor = await signInKnowledgeEditor('editor-read-invalid-id');
+
+    const response = await request(app.getHttpServer())
+      .get('/knowledge/resources/not-a-resource-id/media')
+      .set('Cookie', editor.cookiePair)
+      .expect(400);
+
+    expect(response.body.error.code).toBe('knowledge.resource.invalid_input');
+  });
+
+  it('returns ordered contextual placements for an authorized DRAFT creator without storage leakage', async () => {
+    const editor = await signInKnowledgeEditor('editor-read-draft');
+    const resourceId = await createKnowledgeResource('DRAFT');
+    const imageId = await createAsset();
+    const videoId = await createAsset({ assetType: 'VIDEO' });
+    const posterId = await createAsset();
+
+    await request(app.getHttpServer())
+      .put(`/knowledge/resources/${resourceId}/media`)
+      .set('Cookie', editor.cookiePair)
+      .send({
+        placements: [
+          {
+            assetId: videoId,
+            role: 'HIGHLIGHT',
+            playback: 'SHORT_LOOP',
+            altText: 'Naruto motion',
+            caption: 'Five second motion',
+            posterAssetId: posterId,
+          },
+          {
+            assetId: imageId,
+            role: 'HERO',
+            playback: 'STILL',
+            altText: 'Naruto hero',
+          },
+        ],
+      })
+      .expect(200);
+
+    const response = await request(app.getHttpServer())
+      .get(`/knowledge/resources/${resourceId}/media`)
+      .set('Cookie', editor.cookiePair)
+      .expect(200);
+
+    expect(response.body).toEqual({
+      placements: [
+        {
+          assetId: videoId,
+          role: 'HIGHLIGHT',
+          playback: 'SHORT_LOOP',
+          position: 0,
+          altText: 'Naruto motion',
+          caption: 'Five second motion',
+          posterAssetId: posterId,
+        },
+        {
+          assetId: imageId,
+          role: 'HERO',
+          playback: 'STILL',
+          position: 1,
+          altText: 'Naruto hero',
+          caption: null,
+          posterAssetId: null,
+        },
+      ],
+    });
+    expect(JSON.stringify(response.body)).not.toContain('storageReference');
+    expect(JSON.stringify(response.body)).not.toContain('sizeBytes');
+  });
 });

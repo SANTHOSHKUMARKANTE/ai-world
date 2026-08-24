@@ -21,6 +21,7 @@ import {
   type CreatorCompositionItemKind,
   type CreatorPage,
 } from './creator-api';
+import { KnowledgeMediaManager } from './knowledge-media-manager';
 
 interface ReferenceDraft {
   readonly kind: CreatorCompositionItemKind;
@@ -78,6 +79,8 @@ function AuthenticatedCreatorWorkspace() {
   const [pageId, setPageId] = useState('');
   const [activePage, setActivePage] = useState<CreatorPage | null>(null);
   const [resourceType, setResourceType] = useState('devotional.deity');
+  const [knowledgeResourceId, setKnowledgeResourceId] = useState('');
+  const [knowledgeMediaManagerRevision, setKnowledgeMediaManagerRevision] = useState(0);
   const [aiRequest, setAiRequest] = useState('Suggest one useful Knowledge Resource type.');
   const [aiContextQuery, setAiContextQuery] = useState('deity');
   const [aiCandidate, setAiCandidate] = useState<CreatorAiKnowledgeCandidate | null>(null);
@@ -171,6 +174,8 @@ function AuthenticatedCreatorWorkspace() {
           id: resource.id,
           label: resource.resourceType,
         });
+        setKnowledgeResourceId(resource.id);
+        setKnowledgeMediaManagerRevision((revision) => revision + 1);
         setStatusMessage(`Knowledge draft “${resource.resourceType}” created.`);
       },
     );
@@ -210,6 +215,8 @@ function AuthenticatedCreatorWorkspace() {
           id: accepted.resource.id,
           label: accepted.resource.resourceType,
         });
+        setKnowledgeResourceId(accepted.resource.id);
+        setKnowledgeMediaManagerRevision((revision) => revision + 1);
         setAiCandidate(null);
         setStatusMessage(
           `AI suggestion “${accepted.resource.resourceType}” accepted as a canonical Knowledge draft.`,
@@ -648,6 +655,12 @@ function AuthenticatedCreatorWorkspace() {
           </form>
         </EditorCard>
       </div>
+
+      <KnowledgeMediaManager
+        key={knowledgeMediaManagerRevision}
+        knowledgeResourceId={knowledgeResourceId}
+        onKnowledgeResourceIdChange={setKnowledgeResourceId}
+      />
 
       <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/10">
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">

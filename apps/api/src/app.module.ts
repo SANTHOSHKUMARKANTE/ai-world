@@ -114,6 +114,8 @@ import {
   ConfigureKnowledgeEntityAsActor,
   CreateKnowledgeResource,
   CreateKnowledgeResourceAsActor,
+  GetKnowledgeResourceMedia,
+  GetKnowledgeResourceMediaAsActor,
   GetPublicKnowledgeEntity,
   GetPublicKnowledgeResource,
   ListPublicKnowledgeResourceAssets,
@@ -1020,6 +1022,30 @@ export class AppModule {
             mediaDescriptors: ResolvePublicMediaAssetDescriptor,
           ): PrismaKnowledgeEntityRepository => {
             return new PrismaKnowledgeEntityRepository(database.getClient(), mediaDescriptors);
+          },
+        },
+
+        {
+          provide: GetKnowledgeResourceMedia,
+          inject: [PrismaKnowledgeResourceRepository],
+          useFactory: (
+            repository: PrismaKnowledgeResourceRepository,
+          ): GetKnowledgeResourceMedia => {
+            return new GetKnowledgeResourceMedia(repository, repository);
+          },
+        },
+
+        {
+          provide: GetKnowledgeResourceMediaAsActor,
+          inject: [EvaluatePermission, GetKnowledgeResourceMedia],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            getKnowledgeResourceMedia: GetKnowledgeResourceMedia,
+          ): GetKnowledgeResourceMediaAsActor => {
+            return new GetKnowledgeResourceMediaAsActor(
+              evaluatePermission,
+              getKnowledgeResourceMedia,
+            );
           },
         },
 

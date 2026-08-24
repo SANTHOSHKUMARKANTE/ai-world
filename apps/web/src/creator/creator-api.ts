@@ -15,6 +15,32 @@ export interface CreatorMediaAsset {
   readonly lifecycle: string;
 }
 
+export type CreatorKnowledgeMediaRole = 'HERO' | 'GALLERY' | 'HIGHLIGHT';
+export type CreatorKnowledgeMediaPlayback = 'STILL' | 'SHORT_LOOP';
+
+export interface CreatorKnowledgeMediaPlacement {
+  readonly assetId: string;
+  readonly role: CreatorKnowledgeMediaRole;
+  readonly playback: CreatorKnowledgeMediaPlayback;
+  readonly position: number;
+  readonly altText: string | null;
+  readonly caption: string | null;
+  readonly posterAssetId: string | null;
+}
+
+export interface CreatorKnowledgeMediaPlacementInput {
+  readonly assetId: string;
+  readonly role: CreatorKnowledgeMediaRole;
+  readonly playback: CreatorKnowledgeMediaPlayback;
+  readonly altText: string;
+  readonly caption: string | null;
+  readonly posterAssetId: string | null;
+}
+
+export interface CreatorKnowledgeMediaResponse {
+  readonly placements: readonly CreatorKnowledgeMediaPlacement[];
+}
+
 export interface CreatorPage {
   readonly id: string;
   readonly universeKey: string;
@@ -126,6 +152,49 @@ function readMediaAsset(value: unknown): CreatorMediaAsset {
     assetType: value.assetType,
     lifecycle: value.lifecycle,
   };
+}
+
+function isCreatorKnowledgeMediaRole(value: unknown): value is CreatorKnowledgeMediaRole {
+  return value === 'HERO' || value === 'GALLERY' || value === 'HIGHLIGHT';
+}
+
+function isCreatorKnowledgeMediaPlayback(value: unknown): value is CreatorKnowledgeMediaPlayback {
+  return value === 'STILL' || value === 'SHORT_LOOP';
+}
+
+function readKnowledgeMediaResponse(value: unknown): CreatorKnowledgeMediaResponse {
+  if (!isRecord(value) || !Array.isArray(value.placements)) {
+    throw new Error('Creator Knowledge Media API response did not match the expected contract.');
+  }
+
+  const placements = value.placements.map((placement): CreatorKnowledgeMediaPlacement => {
+    if (
+      !isRecord(placement) ||
+      !isString(placement.assetId) ||
+      !isCreatorKnowledgeMediaRole(placement.role) ||
+      !isCreatorKnowledgeMediaPlayback(placement.playback) ||
+      typeof placement.position !== 'number' ||
+      !Number.isInteger(placement.position) ||
+      placement.position < 0 ||
+      !(isString(placement.altText) || placement.altText === null) ||
+      !(isString(placement.caption) || placement.caption === null) ||
+      !(isString(placement.posterAssetId) || placement.posterAssetId === null)
+    ) {
+      throw new Error('Creator Knowledge Media placement did not match the expected contract.');
+    }
+
+    return {
+      assetId: placement.assetId,
+      role: placement.role,
+      playback: placement.playback,
+      position: placement.position,
+      altText: placement.altText,
+      caption: placement.caption,
+      posterAssetId: placement.posterAssetId,
+    };
+  });
+
+  return { placements };
 }
 
 function readPage(value: unknown): CreatorPage {
@@ -324,6 +393,23 @@ export async function uploadCreatorMediaAsset(file: File): Promise<CreatorMediaA
   body.append('file', file);
   const response = await apiRequest('/media/assets', { method: 'POST', body });
   return readMediaAsset(await readJson(response));
+}
+
+export async function getCreatorKnowledgeMedia(id: string): Promise<CreatorKnowledgeMediaResponse> {
+  const response = await apiRequest(`/knowledge/resources/${encodeURIComponent(id)}/media`);
+  return readKnowledgeMediaResponse(await readJson(response));
+}
+
+export async function replaceCreatorKnowledgeMedia(
+  id: string,
+  placements: readonly CreatorKnowledgeMediaPlacementInput[],
+): Promise<CreatorKnowledgeMediaResponse> {
+  const response = await apiRequest(`/knowledge/resources/${encodeURIComponent(id)}/media`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ placements }),
+  });
+  return readKnowledgeMediaResponse(await readJson(response));
 }
 
 export async function createCreatorPage(input: {

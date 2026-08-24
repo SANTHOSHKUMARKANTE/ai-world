@@ -1,12 +1,13 @@
 import { ValidateSession } from '@ai-world/platform-identity-access';
 import {
   CreateKnowledgeResourceAsActor,
+  GetKnowledgeResourceMediaAsActor,
   SetKnowledgeResourceMediaAsActor,
   type KnowledgeResource,
   type KnowledgeResourceMediaPlacement,
   UpdateKnowledgeResourceAsActor,
 } from '@ai-world/platform-knowledge';
-import { Body, Controller, Headers, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Patch, Post, Put } from '@nestjs/common';
 
 import { requireSessionToken } from '../session/require-session-token';
 import { SessionCookie } from '../session/session-cookie';
@@ -71,6 +72,7 @@ export class CreatorKnowledgeController {
   public constructor(
     private readonly validateSession: ValidateSession,
     private readonly createKnowledgeResourceAsActor: CreateKnowledgeResourceAsActor,
+    private readonly getKnowledgeResourceMediaAsActor: GetKnowledgeResourceMediaAsActor,
     private readonly updateKnowledgeResourceAsActor: UpdateKnowledgeResourceAsActor,
     private readonly setKnowledgeResourceMediaAsActor: SetKnowledgeResourceMediaAsActor,
     private readonly sessionCookie: SessionCookie,
@@ -97,6 +99,23 @@ export class CreatorKnowledgeController {
     });
 
     return toCreatorKnowledgeResourceResponse(resource);
+  }
+
+  @Get(':id/media')
+  public async getResourceMedia(
+    @Headers('cookie') cookieHeader: string | undefined,
+    @Param('id') id: string,
+  ): Promise<CreatorKnowledgeResourceMediaResponse> {
+    const actingActorId = await this.requireActingActorId(cookieHeader);
+
+    const placements = await this.getKnowledgeResourceMediaAsActor.execute({
+      actingActorId,
+      id,
+    });
+
+    return {
+      placements: placements.map(toCreatorKnowledgeMediaPlacementResponse),
+    };
   }
 
   @Put(':id/media')

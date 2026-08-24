@@ -12,7 +12,15 @@ import type {
   ListKnowledgeResourceAssetIdsInput,
   ReplaceKnowledgeResourceMediaPlacementsInput,
 } from './knowledge-resource-asset-reference-store';
-import type { KnowledgeResourceMediaPlacement } from './knowledge-resource-media-placement';
+import {
+  isKnowledgeResourceMediaPlayback,
+  isKnowledgeResourceMediaRole,
+  type KnowledgeResourceMediaPlacement,
+} from './knowledge-resource-media-placement';
+import type {
+  KnowledgeResourceMediaPlacementReader,
+  ListKnowledgeResourceMediaPlacementsInput,
+} from './knowledge-resource-media-placement-reader';
 import type {
   KnowledgeResourceLifecycleWriter,
   TransitionKnowledgeResourceLifecycleRecordInput,
@@ -64,7 +72,8 @@ export class PrismaKnowledgeResourceRepository
     PublicKnowledgeResourceReader,
     KnowledgeResourceWriter,
     KnowledgeResourceLifecycleWriter,
-    KnowledgeResourceAssetReferenceStore
+    KnowledgeResourceAssetReferenceStore,
+    KnowledgeResourceMediaPlacementReader
 {
   constructor(private readonly database: DatabaseClient) {}
 
@@ -177,6 +186,50 @@ export class PrismaKnowledgeResourceRepository
     });
 
     return references.map(({ assetId }) => parseResourceId(assetId));
+  }
+
+  async listMediaPlacements(
+    input: ListKnowledgeResourceMediaPlacementsInput,
+  ): Promise<readonly KnowledgeResourceMediaPlacement[]> {
+    const references = await this.database.knowledgeResourceAssetReference.findMany({
+      where: {
+        knowledgeResourceId: input.knowledgeResourceId,
+      },
+      select: {
+        assetId: true,
+        role: true,
+        playback: true,
+        position: true,
+        altText: true,
+        caption: true,
+        posterAssetId: true,
+      },
+      orderBy: {
+        position: 'asc',
+      },
+    });
+
+    return references.map((reference) => {
+      if (!isKnowledgeResourceMediaRole(reference.role)) {
+        throw new TypeError(`Persisted Knowledge media role is unsupported: ${reference.role}`);
+      }
+      if (!isKnowledgeResourceMediaPlayback(reference.playback)) {
+        throw new TypeError(
+          `Persisted Knowledge media playback is unsupported: ${reference.playback}`,
+        );
+      }
+
+      return {
+        assetId: parseResourceId(reference.assetId),
+        role: reference.role,
+        playback: reference.playback,
+        position: reference.position,
+        altText: reference.altText,
+        caption: reference.caption,
+        posterAssetId:
+          reference.posterAssetId === null ? null : parseResourceId(reference.posterAssetId),
+      };
+    });
   }
 
   async replaceMediaPlacements(

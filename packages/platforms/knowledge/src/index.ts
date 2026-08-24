@@ -115,6 +115,21 @@ export {
 } from './list-public-knowledge-resource-assets';
 
 export {
+  GetKnowledgeResourceMedia,
+  type GetKnowledgeResourceMediaInput,
+} from './get-knowledge-resource-media';
+
+export {
+  GetKnowledgeResourceMediaAsActor,
+  type GetKnowledgeResourceMediaAsActorInput,
+} from './get-knowledge-resource-media-as-actor';
+
+export type {
+  KnowledgeResourceMediaPlacementReader,
+  ListKnowledgeResourceMediaPlacementsInput,
+} from './knowledge-resource-media-placement-reader';
+
+export {
   SetKnowledgeResourceMedia,
   type SetKnowledgeResourceMediaInput,
   type SetKnowledgeResourceMediaPlacementInput,
