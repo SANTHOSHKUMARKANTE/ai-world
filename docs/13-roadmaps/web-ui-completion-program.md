@@ -540,6 +540,22 @@ detailed contract.
 
 Do not create components without the current Entity consumer using them.
 
+## 11.1 UXP-01 closure
+
+UXP-01 closed on 2026-08-24 after the accepted implementation commit:
+
+```text
+573cc1b2e24345c2571698326eb4041bc493da0b
+feat(creator): add knowledge media management
+```
+
+The complete UXP-01 acceptance chain passed and CI was reported green.
+
+The active detailed implementation contract is now:
+
+```text
+docs/13-roadmaps/uxp-02-anime-character-page.md
+```
 
 ---
 

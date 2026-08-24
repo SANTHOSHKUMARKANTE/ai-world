@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-01 |
 | Area | Product / Web / Knowledge / Media |
-| Status | ACTIVE IMPLEMENTATION CONTRACT |
+| Status | CLOSED — ACCEPTED |
 | Created | 2026-08-23 |
 | Baseline | `04061464d2621bb55a1b6dd4e68fe68312729d50` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -15,6 +15,8 @@
 | Governing Roadmap | `docs/13-roadmaps/master-roadmap.md` |
 | Scope | Smallest shared Universe + Media foundation required by the finished Anime Character page |
 | Roadmap Effect | None until WPR-M05 closes |
+| Closed | 2026-08-24 |
+| Closure Baseline | `573cc1b2e24345c2571698326eb4041bc493da0b` |
 
 ---
 
@@ -1270,3 +1272,61 @@ canonical/API-driven Character data and then prove the same finished renderer
 with a second Anime Character.
 
 No Anime landing page begins before Character acceptance.
+
+---
+
+# 19. Closure Record
+
+UXP-01 is closed and accepted.
+
+The implementation sequence was completed as:
+
+```text
+contract freeze
+05cc0c2dbec14ba04d07b2c70f128ed11e91b332
+
+UXP-01A — Typed Universe presentation
+8949aa0aeff6cc4b149ccb7b5e2bbf31605dcd77
+
+UXP-01B — Contextual Knowledge Media placement
+3864cda1e48098b1e0d2aa131a77f537f5c57300
+
+UXP-01C — Public Entity Media descriptor
+0b16dd711b65b1ef847337f2a69ecc0d98311125
+
+UXP-01D — Bounded short-motion VIDEO
+3cbbc9b663c3ebfd94078f5bee0837da76aa5b00
+
+UXP-01E — Minimum Creator management + foundation acceptance
+573cc1b2e24345c2571698326eb4041bc493da0b
+```
+
+The accepted UXP-01E evidence proved:
+
+```text
+typed Universe presentation remained intact;
+ordered contextual IMAGE / SHORT_LOOP VIDEO Media remained intact;
+Media ownership and public-safe descriptor boundaries remained intact;
+bounded MP4 upload/delivery and reduced-motion poster fallback remained intact;
+minimum permissioned Creator Media management worked;
+Shiva / Hanuman / Naruto regression proofs passed;
+format / lint / typecheck / unit / integration / browser / build /
+architecture acceptance passed;
+repository push completed;
+CI was reported green on 2026-08-24.
+```
+
+The repository is therefore ready to begin the first finished page:
+
+```text
+UXP-02 — Anime Character
+```
+
+The governing detailed contract is:
+
+```text
+docs/13-roadmaps/uxp-02-anime-character-page.md
+```
+
+UXP-01 must not be reopened merely to redesign the shared foundation. A later
+change to the foundation requires evidence from a real downstream page need.
