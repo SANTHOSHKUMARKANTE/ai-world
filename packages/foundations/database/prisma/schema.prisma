@@ -199,7 +199,10 @@ model KnowledgeResourceProfile {
   routeKey            String   @unique @map("route_key") @db.VarChar(256)
   slug                String   @db.VarChar(96)
   displayName         String   @map("display_name") @db.VarChar(160)
+  nativeName          String?  @map("native_name") @db.VarChar(160)
+  alternateNames      Json     @default("[]") @map("alternate_names") @db.JsonB
   summary             String   @db.Text
+  overview            String?  @db.Text
   facts               Json     @db.JsonB
   createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt           DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)

@@ -27,7 +27,10 @@ export interface ReplaceKnowledgeEntityConfigurationInput {
   readonly routeKey: string;
   readonly slug: string;
   readonly displayName: string;
+  readonly nativeName: string | null;
+  readonly alternateNames: readonly string[];
   readonly summary: string;
+  readonly overview: string | null;
   readonly facts: readonly KnowledgeEntityFact[];
   readonly relations: readonly KnowledgeEntityRelationRecordInput[];
 }

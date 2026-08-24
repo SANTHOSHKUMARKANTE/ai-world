@@ -19,7 +19,10 @@ export interface KnowledgeEntityProfile {
   readonly routeKey: string;
   readonly slug: string;
   readonly displayName: string;
+  readonly nativeName: string | null;
+  readonly alternateNames: readonly string[];
   readonly summary: string;
+  readonly overview: string | null;
   readonly facts: readonly KnowledgeEntityFact[];
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -38,6 +41,18 @@ export interface PublicKnowledgeEntityMedia {
   readonly height?: number;
   readonly durationMs?: number;
   readonly posterAssetId: ResourceId | null;
+}
+
+export interface KnowledgeEntityConfigurationRelation {
+  readonly targetResourceId: ResourceId;
+  readonly sectionKey: NamespacedKey;
+  readonly relationshipType: NamespacedKey;
+  readonly position: number;
+}
+
+export interface KnowledgeEntityConfiguration {
+  readonly profile: KnowledgeEntityProfile;
+  readonly relations: readonly KnowledgeEntityConfigurationRelation[];
 }
 
 export interface KnowledgeEntityRelationTarget {

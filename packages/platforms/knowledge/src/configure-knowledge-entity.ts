@@ -29,7 +29,10 @@ export interface ConfigureKnowledgeEntityInput {
   readonly profile: {
     readonly slug: string;
     readonly displayName: string;
+    readonly nativeName?: string | null;
+    readonly alternateNames?: readonly string[];
     readonly summary: string;
+    readonly overview?: string | null;
     readonly facts: readonly ConfigureKnowledgeEntityFactInput[];
   };
   readonly relations: readonly ConfigureKnowledgeEntityRelationInput[];
@@ -79,6 +82,37 @@ function canonicalText(value: string, label: string, maxLength: number): string 
   }
 
   return normalized;
+}
+
+function canonicalOptionalText(
+  value: string | null | undefined,
+  label: string,
+  maxLength: number,
+): string | null {
+  if (value === undefined || value === null) {
+    return null;
+  }
+
+  return canonicalText(value, label, maxLength);
+}
+
+function canonicalAlternateNames(input: readonly string[] | undefined): readonly string[] {
+  const values = input ?? [];
+
+  if (values.length > 12) {
+    throw invalidInput('no more than 12 alternate names are allowed.');
+  }
+
+  const seen = new Set<string>();
+  return values.map((value) => {
+    const normalized = canonicalText(value, 'alternate name', 160);
+    const identity = normalized.normalize('NFKC').toLocaleLowerCase('en-US');
+    if (seen.has(identity)) {
+      throw invalidInput(`alternate name is duplicated: ${normalized}`);
+    }
+    seen.add(identity);
+    return normalized;
+  });
 }
 
 function canonicalSlug(value: string): string {
@@ -194,7 +228,10 @@ export class ConfigureKnowledgeEntity {
 
     const slug = canonicalSlug(input.profile.slug);
     const displayName = canonicalText(input.profile.displayName, 'display name', 160);
+    const nativeName = canonicalOptionalText(input.profile.nativeName, 'native name', 160);
+    const alternateNames = canonicalAlternateNames(input.profile.alternateNames);
     const summary = canonicalText(input.profile.summary, 'summary', 600);
+    const overview = canonicalOptionalText(input.profile.overview, 'overview', 6000);
     const facts = canonicalFacts(input.profile.facts);
     const relations = canonicalRelations(input.relations);
     const routeKey = `${resource.universeKey}/${slug}`;
@@ -220,7 +257,10 @@ export class ConfigureKnowledgeEntity {
       routeKey,
       slug,
       displayName,
+      nativeName,
+      alternateNames,
       summary,
+      overview,
       facts,
       relations,
     });

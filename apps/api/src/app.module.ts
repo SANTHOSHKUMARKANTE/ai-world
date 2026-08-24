@@ -114,6 +114,8 @@ import {
   ConfigureKnowledgeEntityAsActor,
   CreateKnowledgeResource,
   CreateKnowledgeResourceAsActor,
+  GetKnowledgeEntity,
+  GetKnowledgeEntityAsActor,
   GetKnowledgeResourceMedia,
   GetKnowledgeResourceMediaAsActor,
   GetPublicKnowledgeEntity,
@@ -1144,6 +1146,25 @@ export class AppModule {
               evaluatePermission,
               configureKnowledgeEntity,
             );
+          },
+        },
+
+        {
+          provide: GetKnowledgeEntity,
+          inject: [PrismaKnowledgeEntityRepository],
+          useFactory: (entities: PrismaKnowledgeEntityRepository): GetKnowledgeEntity => {
+            return new GetKnowledgeEntity(entities);
+          },
+        },
+
+        {
+          provide: GetKnowledgeEntityAsActor,
+          inject: [EvaluatePermission, GetKnowledgeEntity],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            getKnowledgeEntity: GetKnowledgeEntity,
+          ): GetKnowledgeEntityAsActor => {
+            return new GetKnowledgeEntityAsActor(evaluatePermission, getKnowledgeEntity);
           },
         },
 

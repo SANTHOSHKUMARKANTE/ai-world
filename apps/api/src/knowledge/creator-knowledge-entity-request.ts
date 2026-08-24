@@ -24,7 +24,10 @@ const configureKnowledgeEntitySchema = z
       .object({
         slug: z.string().min(1).max(96),
         displayName: z.string().min(1).max(160),
+        nativeName: z.string().max(160).nullable().optional(),
+        alternateNames: z.array(z.string().max(160)).max(12).optional(),
         summary: z.string().min(1).max(600),
+        overview: z.string().max(6000).nullable().optional(),
         facts: z.array(factSchema).max(12),
       })
       .strict(),

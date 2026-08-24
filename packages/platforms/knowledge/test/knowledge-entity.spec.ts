@@ -59,7 +59,10 @@ class MemoryEntities implements KnowledgeEntityStore {
       routeKey: input.routeKey,
       slug: input.slug,
       displayName: input.displayName,
+      nativeName: input.nativeName,
+      alternateNames: input.alternateNames,
       summary: input.summary,
+      overview: input.overview,
       facts: input.facts,
       createdAt: new Date('2026-08-23T00:00:00.000Z'),
       updatedAt: new Date('2026-08-23T00:00:00.000Z'),
@@ -89,7 +92,10 @@ describe('Knowledge Entity', () => {
       profile: {
         slug: 'shiva',
         displayName: 'Lord Shiva',
+        nativeName: '  शिव  ',
+        alternateNames: ['  Mahadeva  ', 'Shankara'],
         summary: 'The Supreme Yogi and a central deity of the Devotional Universe.',
+        overview: '  A longer canonical overview.  ',
         facts: [
           {
             key: 'devotional.mantra',
@@ -109,6 +115,9 @@ describe('Knowledge Entity', () => {
     });
 
     expect(profile.routeKey).toBe('universe.devotional/shiva');
+    expect(profile.nativeName).toBe('शिव');
+    expect(profile.alternateNames).toEqual(['Mahadeva', 'Shankara']);
+    expect(profile.overview).toBe('A longer canonical overview.');
     expect(entities.lastConfiguration?.relations).toEqual([
       {
         targetResourceId: PARVATI_ID,
@@ -152,7 +161,10 @@ describe('Knowledge Entity', () => {
       routeKey: 'universe.devotional/shiva',
       slug: 'shiva',
       displayName: 'Lord Shiva',
+      nativeName: null,
+      alternateNames: [],
       summary: 'Published entity.',
+      overview: null,
       facts: [],
       createdAt: new Date('2026-08-23T00:00:00.000Z'),
       updatedAt: new Date('2026-08-23T00:00:00.000Z'),
@@ -170,5 +182,25 @@ describe('Knowledge Entity', () => {
     });
 
     expect(result.profile.displayName).toBe('Lord Shiva');
+  });
+  it('rejects duplicate alternate names after canonical comparison', async () => {
+    const entities = new MemoryEntities();
+    const useCase = new ConfigureKnowledgeEntity(
+      new MemoryResources(new Map([[SHIVA_ID, resource(SHIVA_ID)]])),
+      entities,
+    );
+    await expect(
+      useCase.execute({
+        id: SHIVA_ID,
+        profile: {
+          slug: 'shiva',
+          displayName: 'Lord Shiva',
+          alternateNames: ['Mahadeva', '  MAHADEVA  '],
+          summary: 'A reusable entity profile.',
+          facts: [],
+        },
+        relations: [],
+      }),
+    ).rejects.toMatchObject({ code: 'knowledge.entity.invalid_input' });
   });
 });

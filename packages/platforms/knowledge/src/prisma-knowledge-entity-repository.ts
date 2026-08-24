@@ -11,6 +11,7 @@ import {
 } from '@ai-world/platform-media';
 
 import type {
+  KnowledgeEntityConfiguration,
   KnowledgeEntityFact,
   KnowledgeEntityProfile,
   KnowledgeEntityRelation,
@@ -23,6 +24,10 @@ import type {
   KnowledgeEntityStore,
   ReplaceKnowledgeEntityConfigurationInput,
 } from './knowledge-entity-store';
+import type {
+  FindKnowledgeEntityConfigurationByResourceIdInput,
+  KnowledgeEntityConfigurationReader,
+} from './knowledge-entity-configuration-reader';
 import {
   isKnowledgeResourceLifecycle,
   KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
@@ -52,7 +57,10 @@ interface PersistedKnowledgeEntityProfile {
   readonly routeKey: string;
   readonly slug: string;
   readonly displayName: string;
+  readonly nativeName: string | null;
+  readonly alternateNames: unknown;
   readonly summary: string;
+  readonly overview: string | null;
   readonly facts: unknown;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -112,13 +120,23 @@ function mapFacts(value: unknown): readonly KnowledgeEntityFact[] {
   });
 }
 
+function mapAlternateNames(value: unknown): readonly string[] {
+  if (!Array.isArray(value) || value.some((item) => typeof item !== 'string')) {
+    throw new TypeError('Persisted Knowledge Entity alternate names must be a string array.');
+  }
+  return value;
+}
+
 function mapProfile(profile: PersistedKnowledgeEntityProfile): KnowledgeEntityProfile {
   return {
     knowledgeResourceId: parseResourceId(profile.knowledgeResourceId),
     routeKey: profile.routeKey,
     slug: profile.slug,
     displayName: profile.displayName,
+    nativeName: profile.nativeName,
+    alternateNames: mapAlternateNames(profile.alternateNames),
     summary: profile.summary,
+    overview: profile.overview,
     facts: mapFacts(profile.facts),
     createdAt: profile.createdAt,
     updatedAt: profile.updatedAt,
@@ -152,7 +170,9 @@ function isBoundedShortVideo(descriptor: PublicMediaAssetDescriptor): boolean {
   );
 }
 
-export class PrismaKnowledgeEntityRepository implements KnowledgeEntityStore {
+export class PrismaKnowledgeEntityRepository
+  implements KnowledgeEntityStore, KnowledgeEntityConfigurationReader
+{
   public constructor(
     private readonly database: DatabaseClient,
     private readonly mediaDescriptors: PublicMediaAssetDescriptorReader,
@@ -173,6 +193,30 @@ export class PrismaKnowledgeEntityRepository implements KnowledgeEntityStore {
     return profile ? parseResourceId(profile.knowledgeResourceId) : null;
   }
 
+  public async findConfigurationByResourceId(
+    input: FindKnowledgeEntityConfigurationByResourceIdInput,
+  ): Promise<KnowledgeEntityConfiguration | null> {
+    const profile = await this.database.knowledgeResourceProfile.findUnique({
+      where: { knowledgeResourceId: input.knowledgeResourceId },
+    });
+    if (!profile) {
+      return null;
+    }
+    const relations = await this.database.knowledgeResourceRelation.findMany({
+      where: { sourceResourceId: input.knowledgeResourceId },
+      orderBy: [{ sectionKey: 'asc' }, { position: 'asc' }],
+    });
+    return {
+      profile: mapProfile(profile),
+      relations: relations.map((relation) => ({
+        targetResourceId: parseResourceId(relation.targetResourceId),
+        sectionKey: parseNamespacedKey(relation.sectionKey),
+        relationshipType: parseNamespacedKey(relation.relationshipType),
+        position: relation.position,
+      })),
+    };
+  }
+
   public async replaceConfiguration(
     input: ReplaceKnowledgeEntityConfigurationInput,
   ): Promise<KnowledgeEntityProfile> {
@@ -186,7 +230,10 @@ export class PrismaKnowledgeEntityRepository implements KnowledgeEntityStore {
           routeKey: input.routeKey,
           slug: input.slug,
           displayName: input.displayName,
+          nativeName: input.nativeName,
+          alternateNames: [...input.alternateNames],
           summary: input.summary,
+          overview: input.overview,
           facts: input.facts.map((fact) => ({
             key: fact.key,
             label: fact.label,
@@ -197,7 +244,10 @@ export class PrismaKnowledgeEntityRepository implements KnowledgeEntityStore {
           routeKey: input.routeKey,
           slug: input.slug,
           displayName: input.displayName,
+          nativeName: input.nativeName,
+          alternateNames: [...input.alternateNames],
           summary: input.summary,
+          overview: input.overview,
           facts: input.facts.map((fact) => ({
             key: fact.key,
             label: fact.label,

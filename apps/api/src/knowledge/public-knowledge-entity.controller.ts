@@ -10,7 +10,10 @@ export interface PublicKnowledgeEntityResponse {
   readonly profile: {
     readonly slug: string;
     readonly displayName: string;
+    readonly nativeName: string | null;
+    readonly alternateNames: readonly string[];
     readonly summary: string;
+    readonly overview: string | null;
     readonly facts: readonly {
       readonly key: string;
       readonly label: string;
@@ -57,7 +60,10 @@ function toResponse(entity: PublicKnowledgeEntity): PublicKnowledgeEntityRespons
     profile: {
       slug: entity.profile.slug,
       displayName: entity.profile.displayName,
+      nativeName: entity.profile.nativeName,
+      alternateNames: entity.profile.alternateNames,
       summary: entity.profile.summary,
+      overview: entity.profile.overview,
       facts: entity.profile.facts,
     },
     media: entity.media.map((media) => ({

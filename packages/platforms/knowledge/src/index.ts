@@ -152,12 +152,21 @@ export {
   type ConfigureKnowledgeEntityAsActorInput,
 } from './configure-knowledge-entity-as-actor';
 
+export { GetKnowledgeEntity, type GetKnowledgeEntityInput } from './get-knowledge-entity';
+
+export {
+  GetKnowledgeEntityAsActor,
+  type GetKnowledgeEntityAsActorInput,
+} from './get-knowledge-entity-as-actor';
+
 export {
   GetPublicKnowledgeEntity,
   type GetPublicKnowledgeEntityInput,
 } from './get-public-knowledge-entity';
 
 export type {
+  KnowledgeEntityConfiguration,
+  KnowledgeEntityConfigurationRelation,
   KnowledgeEntityFact,
   KnowledgeEntityProfile,
   KnowledgeEntityRelation,
@@ -173,3 +182,8 @@ export type {
   KnowledgeEntityStore,
   ReplaceKnowledgeEntityConfigurationInput,
 } from './knowledge-entity-store';
+
+export type {
+  FindKnowledgeEntityConfigurationByResourceIdInput,
+  KnowledgeEntityConfigurationReader,
+} from './knowledge-entity-configuration-reader';
