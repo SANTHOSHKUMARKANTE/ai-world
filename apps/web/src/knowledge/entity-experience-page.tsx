@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
+import { AnimeCharacterShareControls } from '../anime/anime-character-share-controls';
+import { ApiClientError } from '../api/api-client';
 import { ResourceEngagementControls } from '../engagement/resource-engagement-controls';
 import {
   resolveEntitySectionTitle,
@@ -20,6 +22,7 @@ import {
 type State =
   | { readonly status: 'loading' }
   | { readonly status: 'ready'; readonly entity: PublicKnowledgeEntity }
+  | { readonly status: 'not-found' }
   | { readonly status: 'error' };
 
 const SECTION_ORDER = [
@@ -234,9 +237,13 @@ export function EntityExperiencePage({
           setState({ status: 'ready', entity });
         }
       })
-      .catch(() => {
+      .catch((error: unknown) => {
         if (active) {
-          setState({ status: 'error' });
+          setState(
+            error instanceof ApiClientError && error.status === 404
+              ? { status: 'not-found' }
+              : { status: 'error' },
+          );
         }
       });
 
@@ -275,6 +282,20 @@ export function EntityExperiencePage({
     );
   }
 
+  if (state.status === 'not-found') {
+    return (
+      <div className="aw-entity-status aw-entity-status--not-found" role="status">
+        <strong>
+          {universeKey === 'universe.anime' ? 'Character not found' : 'Entity not found'}
+        </strong>
+        <span>This published page is not available.</span>
+        <Link href="/knowledge" className="aw-text-link">
+          Explore published Knowledge
+        </Link>
+      </div>
+    );
+  }
+
   if (state.status === 'error') {
     return (
       <div className="aw-entity-status" role="alert">
@@ -284,6 +305,12 @@ export function EntityExperiencePage({
   }
 
   const entity = state.entity;
+  const animeCharacter =
+    entity.resource.universeKey === 'universe.anime' &&
+    entity.resource.resourceType === 'anime.character';
+  const seriesFact = animeCharacter
+    ? entity.profile.facts.find((fact) => fact.key === 'anime.series')
+    : undefined;
   const presentation = resolveWebUniversePresentation(entity.resource.universeKey);
   const mediaHighlights = entity.media.filter(
     (media) =>
@@ -300,9 +327,10 @@ export function EntityExperiencePage({
 
   return (
     <article
-      className="aw-entity-experience"
+      className={`aw-entity-experience ${animeCharacter ? 'aw-anime-character' : ''}`}
       data-universe-tone={presentation?.tone}
       data-universe-motion={presentation?.motion}
+      data-character-shell={animeCharacter ? 'anime' : undefined}
     >
       <header className="aw-entity-hero">
         <div className="aw-entity-hero__copy">
@@ -314,7 +342,27 @@ export function EntityExperiencePage({
             {entityKindLabel(entity.resource.resourceType)} ·{' '}
             {presentation?.label ?? entity.resource.universeKey}
           </p>
+
+          {animeCharacter && seriesFact ? (
+            <p className="aw-anime-character__series">From {seriesFact.value}</p>
+          ) : null}
+
           <h1>{entity.profile.displayName}</h1>
+
+          {animeCharacter &&
+          (entity.profile.nativeName !== null || entity.profile.alternateNames.length > 0) ? (
+            <div className="aw-anime-character__identity" aria-label="Character identity">
+              {entity.profile.nativeName ? (
+                <p className="aw-anime-character__native-name">{entity.profile.nativeName}</p>
+              ) : null}
+              {entity.profile.alternateNames.length > 0 ? (
+                <p className="aw-anime-character__alternate-names">
+                  Also known as {entity.profile.alternateNames.join(' · ')}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+
           <p className="aw-entity-hero__summary">{entity.profile.summary}</p>
 
           <div className="aw-entity-hero__actions">
@@ -326,6 +374,13 @@ export function EntityExperiencePage({
             <a href="#entity-engagement" className="aw-button aw-button--secondary">
               Save
             </a>
+            {animeCharacter ? (
+              <AnimeCharacterShareControls
+                slug={entity.profile.slug}
+                displayName={entity.profile.displayName}
+                summary={entity.profile.summary}
+              />
+            ) : null}
           </div>
         </div>
 
@@ -386,9 +441,17 @@ export function EntityExperiencePage({
         className="aw-entity-overview"
         aria-labelledby="entity-overview-title"
       >
-        <p className="aw-eyebrow">Overview</p>
-        <h2 id="entity-overview-title">Discover {entity.profile.displayName}</h2>
-        <p>{entity.profile.summary}</p>
+        <p className="aw-eyebrow">{animeCharacter ? 'Character story' : 'Overview'}</p>
+        <h2 id="entity-overview-title">
+          {animeCharacter
+            ? `About ${entity.profile.displayName}`
+            : `Discover ${entity.profile.displayName}`}
+        </h2>
+        <p>
+          {animeCharacter
+            ? (entity.profile.overview ?? entity.profile.summary)
+            : entity.profile.summary}
+        </p>
       </section>
 
       {mediaHighlights.length > 0 ? (

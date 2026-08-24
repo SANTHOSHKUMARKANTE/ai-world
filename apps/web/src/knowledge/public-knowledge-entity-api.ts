@@ -49,7 +49,10 @@ export interface PublicKnowledgeEntity {
   readonly profile: {
     readonly slug: string;
     readonly displayName: string;
+    readonly nativeName: string | null;
+    readonly alternateNames: readonly string[];
     readonly summary: string;
+    readonly overview: string | null;
     readonly facts: readonly PublicKnowledgeEntityFact[];
   };
   readonly media: readonly PublicKnowledgeEntityMedia[];
@@ -121,25 +124,59 @@ function isRelation(value: unknown): value is PublicKnowledgeEntityRelation {
   );
 }
 
-function isPublicKnowledgeEntity(value: unknown): value is PublicKnowledgeEntity {
+function isOptionalNullableString(value: unknown): value is string | null | undefined {
+  return value === undefined || value === null || typeof value === 'string';
+}
+
+function isOptionalStringArray(value: unknown): value is readonly string[] | undefined {
   return (
-    isRecord(value) &&
-    !('assetIds' in value) &&
-    isRecord(value.resource) &&
-    typeof value.resource.id === 'string' &&
-    typeof value.resource.universeKey === 'string' &&
-    typeof value.resource.resourceType === 'string' &&
-    isRecord(value.profile) &&
-    typeof value.profile.slug === 'string' &&
-    typeof value.profile.displayName === 'string' &&
-    typeof value.profile.summary === 'string' &&
-    Array.isArray(value.profile.facts) &&
-    value.profile.facts.every(isFact) &&
-    Array.isArray(value.media) &&
-    value.media.every(isMedia) &&
-    Array.isArray(value.relations) &&
-    value.relations.every(isRelation)
+    value === undefined || (Array.isArray(value) && value.every((item) => typeof item === 'string'))
   );
+}
+
+export function parsePublicKnowledgeEntity(value: unknown): PublicKnowledgeEntity | null {
+  if (
+    !isRecord(value) ||
+    'assetIds' in value ||
+    !isRecord(value.resource) ||
+    typeof value.resource.id !== 'string' ||
+    typeof value.resource.universeKey !== 'string' ||
+    typeof value.resource.resourceType !== 'string' ||
+    !isRecord(value.profile) ||
+    typeof value.profile.slug !== 'string' ||
+    typeof value.profile.displayName !== 'string' ||
+    typeof value.profile.summary !== 'string' ||
+    !isOptionalNullableString(value.profile.nativeName) ||
+    !isOptionalStringArray(value.profile.alternateNames) ||
+    !isOptionalNullableString(value.profile.overview) ||
+    !Array.isArray(value.profile.facts) ||
+    !value.profile.facts.every(isFact) ||
+    !Array.isArray(value.media) ||
+    !value.media.every(isMedia) ||
+    !Array.isArray(value.relations) ||
+    !value.relations.every(isRelation)
+  ) {
+    return null;
+  }
+
+  return {
+    resource: {
+      id: value.resource.id,
+      universeKey: value.resource.universeKey,
+      resourceType: value.resource.resourceType,
+    },
+    profile: {
+      slug: value.profile.slug,
+      displayName: value.profile.displayName,
+      nativeName: value.profile.nativeName ?? null,
+      alternateNames: value.profile.alternateNames ?? [],
+      summary: value.profile.summary,
+      overview: value.profile.overview ?? null,
+      facts: value.profile.facts,
+    },
+    media: value.media,
+    relations: value.relations,
+  };
 }
 
 export async function getPublicKnowledgeEntity(
@@ -150,10 +187,11 @@ export async function getPublicKnowledgeEntity(
     `/knowledge/entities/${encodeURIComponent(universeKey)}/${encodeURIComponent(slug)}`,
   );
   const payload: unknown = await response.json();
+  const entity = parsePublicKnowledgeEntity(payload);
 
-  if (!isPublicKnowledgeEntity(payload)) {
+  if (!entity) {
     throw new Error('Public Knowledge Entity response did not match the expected Web contract.');
   }
 
-  return payload;
+  return entity;
 }
