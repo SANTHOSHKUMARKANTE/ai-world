@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-02 |
 | Area | Product / Web / Knowledge / Engagement / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-02B ACTIVE |
 | Created | 2026-08-24 |
 | Baseline | `573cc1b2e24345c2571698326eb4041bc493da0b` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -665,6 +665,19 @@ The visual result must remain usable at 200% zoom for core content/actions.
 
 ## UXP-02A — Character canonical depth + Creator read boundary
 
+Status:
+
+```text
+CLOSED — ACCEPTED
+```
+
+Accepted implementation checkpoint:
+
+```text
+a1df9afb749a4f3e3ece6a9e7709093ff174edc6
+feat(knowledge): deepen character entity profiles
+```
+
 Production scope:
 
 ```text
@@ -692,6 +705,12 @@ second Character uses the same contract.
 ```
 
 ## UXP-02B — Finished Anime Character shell + social identity
+
+Status:
+
+```text
+ACTIVE — NEXT IMPLEMENTATION SLICE
+```
 
 Production scope:
 
@@ -932,3 +951,83 @@ Only then may work begin on:
 ```text
 UXP-03 — Anime Universe landing
 ```
+
+---
+
+# 20. Current Slice Status
+
+UXP-02A closed and was accepted on 2026-08-24.
+
+Accepted implementation checkpoint:
+
+```text
+a1df9afb749a4f3e3ece6a9e7709093ff174edc6
+feat(knowledge): deepen character entity profiles
+```
+
+Accepted UXP-02A evidence established:
+
+```text
+the Knowledge Entity profile evolved non-destructively with nativeName,
+alternateNames and overview;
+
+the migration preserved existing profiles through deterministic null / [] /
+null defaults;
+
+server validation canonicalizes the new profile depth and rejects duplicate
+alternate names after canonical comparison;
+
+the public Entity projection exposes only the new intended public fields;
+
+Creator Entity configuration can be loaded through an authorized GET using the
+existing knowledge.resource.update permission;
+
+authorization is evaluated before Creator configuration lookup;
+
+the existing PUT remains the only authoritative Character Entity write path;
+
+Naruto and Sasuke use the same generic Knowledge Entity contract;
+
+Creator configuration round-trips canonical profile depth plus deterministically
+ordered relationships;
+
+the existing Knowledge Entity integration regression and the focused UXP-02A
+integration proof passed;
+
+the implementation was committed and pushed at the exact checkpoint above;
+
+CI was reported green for the pushed implementation on 2026-08-24.
+```
+
+UXP-02A deliberately did not redesign the public Character page.
+
+The active implementation slice is now:
+
+```text
+UXP-02B — Finished Anime Character shell + social identity
+```
+
+UXP-02B must remain inside its frozen scope:
+
+```text
+Anime-specific Character composition in apps/web;
+cinematic desktop/mobile hero;
+identity / native / alternate names;
+quick facts;
+overview;
+existing Engagement integration;
+Share / Copy link;
+canonical / Open Graph metadata;
+loading / error / not-found states;
+second-Character reuse;
+Shiva / Hanuman regression isolation.
+```
+
+UXP-02C, UXP-02D and UXP-02E remain unstarted.
+
+UXP-02 itself remains ACTIVE and does not close until the Section 19 exit rule
+and full UXP-02E acceptance chain are satisfied.
+
+This sub-slice closure does not change the Master Roadmap. WPR-M05 remains the
+active Product Quality And Local User Acceptance gate, and P10-M04 remains
+sequencing-blocked until that gate closes.

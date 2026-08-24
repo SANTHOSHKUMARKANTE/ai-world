@@ -728,6 +728,42 @@ The browser/UAT proof must include:
 | Social/deep-link entry | Yes |
 | Shiva/Hanuman regression | Yes |
 
+## 12.8 UXP-02 current slice status
+
+Current accepted slice state:
+
+```text
+UXP-02A — Character canonical depth + Creator read boundary
+CLOSED — ACCEPTED
+implementation checkpoint:
+a1df9afb749a4f3e3ece6a9e7709093ff174edc6
+
+UXP-02B — Finished Anime Character shell + social identity
+ACTIVE — NEXT IMPLEMENTATION SLICE
+
+UXP-02C — Character Media viewer + deep link
+NOT STARTED
+
+UXP-02D — Anime relationships + Creator Character manager
+NOT STARTED
+
+UXP-02E — Reuse + full Character acceptance
+NOT STARTED
+```
+
+UXP-02A established the canonical/API depth needed by the finished Character
+page without landing the visual redesign.
+
+The immediate engineering objective is now UXP-02B. The detailed frozen scope
+and proof remain governed by:
+
+```text
+docs/13-roadmaps/uxp-02-anime-character-page.md
+```
+
+UXP-02 as a whole remains ACTIVE. UXP-03 does not begin until UXP-02E closes the
+complete Character Page Definition of Done.
+
 ---
 
 # 13. Later Page Intent
@@ -1018,20 +1054,36 @@ WPR-M05 receives its roadmap closure update only when the entire accepted gate i
 
 # 16. Immediate Next Work
 
-The immediate execution order is:
+The accepted execution position is:
 
 ```text
-UXP-00 — commit this planning contract
+UXP-00 — Program contract
+CLOSED
         ↓
 UXP-01 — Character-driven Universe/Media foundation
+CLOSED
         ↓
-UXP-02 — fully complete Anime Character page
+UXP-02A — Character canonical depth + Creator read boundary
+CLOSED — a1df9afb749a4f3e3ece6a9e7709093ff174edc6
+        ↓
+UXP-02B — Finished Anime Character shell + social identity
+ACTIVE
+        ↓
+UXP-02C — Character Media viewer + deep link
+        ↓
+UXP-02D — Anime relationships + Creator Character manager
+        ↓
+UXP-02E — Reuse + full Character acceptance
         ↓
 UXP-03 — Anime Universe landing
 ```
 
-Before UXP-01 implementation, inspect the current public Entity API, Media delivery API, Creator Media flow and authorization contract to freeze the smallest correct Character-page media contract.
-
 No additional Entity proof milestone is needed.
 
-The next engineering objective is product completion of the Character page.
+The next engineering objective is UXP-02B: finish the Anime Character shell and
+social identity from the now-accepted canonical Character API depth while
+preserving the Devotional regression boundary.
+
+The Master Roadmap remains unchanged by this sub-slice transition. WPR-M05
+receives its roadmap closure update only when the entire accepted gate is ready
+to close.
