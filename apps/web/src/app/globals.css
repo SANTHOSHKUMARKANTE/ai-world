@@ -1998,3 +1998,190 @@ textarea {
     opacity: 0.32;
   }
 }
+
+/* UXP-02C — Character Media viewer + deep link */
+.aw-anime-media-trigger {
+  display: block;
+  width: 100%;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.aw-anime-media-trigger:focus-visible {
+  outline: 0.18rem solid var(--aw-focus);
+  outline-offset: 0.2rem;
+  border-radius: 1rem;
+}
+
+.aw-anime-media-trigger .aw-entity-image-card {
+  transition:
+    transform var(--aw-universe-motion-duration, 180ms) ease,
+    border-color var(--aw-universe-motion-duration, 180ms) ease;
+}
+
+.aw-anime-media-trigger:hover .aw-entity-image-card,
+.aw-anime-media-trigger:focus-visible .aw-entity-image-card {
+  transform: translateY(var(--aw-universe-card-lift, -2px));
+  border-color: var(--aw-universe-accent);
+}
+
+.aw-anime-media-trigger__kind {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.7rem;
+  z-index: 2;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  background: rgb(2 6 17 / 82%);
+  color: #f7f9ff;
+  padding: 0.34rem 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+.aw-anime-media-static {
+  cursor: default;
+}
+
+.aw-anime-media-caption {
+  margin: 0.55rem 0 0;
+  color: var(--aw-universe-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.aw-anime-media-viewer {
+  width: min(94vw, 74rem);
+  max-width: none;
+  border: 1px solid rgb(136 171 255 / 24%);
+  border-radius: 1.2rem;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  background: #050a15;
+  color: #f7f9ff;
+  box-shadow: 0 34px 100px rgb(0 0 0 / 72%);
+}
+
+.aw-anime-media-viewer::backdrop {
+  background: rgb(0 3 10 / 82%);
+  backdrop-filter: blur(12px);
+}
+
+.aw-anime-media-viewer__surface {
+  display: grid;
+  max-height: 92vh;
+}
+
+.aw-anime-media-viewer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgb(151 179 239 / 14%);
+  padding: 1rem 1.1rem;
+  background: radial-gradient(circle at 85% 0%, rgb(60 109 220 / 18%), transparent 18rem), #07101f;
+}
+
+.aw-anime-media-viewer__header .aw-eyebrow {
+  margin: 0;
+  color: var(--aw-anime-warm, #ff9b42);
+}
+
+.aw-anime-media-viewer__header h2 {
+  margin: 0.2rem 0 0;
+  color: #fff;
+  font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+}
+
+.aw-anime-media-viewer__close {
+  min-height: 2.75rem;
+  border: 1px solid rgb(166 190 245 / 24%);
+  border-radius: 999px;
+  background: rgb(17 31 59 / 88%);
+  color: #f7f9ff;
+  padding: 0.6rem 0.9rem;
+  font-weight: 780;
+  cursor: pointer;
+}
+
+.aw-anime-media-viewer__close:hover,
+.aw-anime-media-viewer__close:focus-visible {
+  border-color: var(--aw-universe-accent, #91a7ff);
+  background: rgb(29 47 84 / 96%);
+}
+
+.aw-anime-media-viewer__close:focus-visible {
+  outline: 0.18rem solid var(--aw-focus);
+  outline-offset: 0.16rem;
+}
+
+.aw-anime-media-viewer__frame {
+  position: relative;
+  width: 100%;
+  height: min(72vh, 48rem);
+  min-height: 18rem;
+  background: radial-gradient(circle at 50% 42%, rgb(52 84 152 / 24%), transparent 24rem), #02050b;
+}
+
+.aw-anime-media-viewer__frame img,
+.aw-anime-media-viewer__frame video {
+  object-fit: contain;
+}
+
+.aw-anime-media-viewer__frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+}
+
+.aw-anime-media-viewer__caption {
+  margin: 0;
+  border-top: 1px solid rgb(151 179 239 / 12%);
+  background: #07101f;
+  color: #b9c5dc;
+  padding: 0.9rem 1.1rem 1.05rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 700px) {
+  .aw-anime-media-viewer {
+    width: calc(100vw - 1rem);
+    border-radius: 0.9rem;
+  }
+
+  .aw-anime-media-viewer__header {
+    align-items: flex-start;
+    padding: 0.85rem;
+  }
+
+  .aw-anime-media-viewer__frame {
+    height: min(66vh, 38rem);
+    min-height: 16rem;
+  }
+
+  .aw-anime-media-viewer__caption {
+    padding-inline: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aw-anime-media-trigger .aw-entity-image-card {
+    transition: none;
+  }
+
+  .aw-anime-media-trigger:hover .aw-entity-image-card,
+  .aw-anime-media-trigger:focus-visible .aw-entity-image-card {
+    transform: none;
+  }
+}

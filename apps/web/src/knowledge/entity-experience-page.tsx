@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { AnimeCharacterMediaViewer } from '../anime/anime-character-media-viewer';
 import { AnimeCharacterShareControls } from '../anime/anime-character-share-controls';
 import { ApiClientError } from '../api/api-client';
 import { ResourceEngagementControls } from '../engagement/resource-engagement-controls';
@@ -90,6 +91,24 @@ function isPlayableShortLoopMedia(media: PublicKnowledgeEntityMedia): boolean {
     media.durationMs > 0 &&
     media.durationMs <= 8000
   );
+}
+
+function isViewerEligibleMedia(media: PublicKnowledgeEntityMedia): boolean {
+  return (
+    (media.assetType === 'IMAGE' && media.playback === 'STILL') || isPlayableShortLoopMedia(media)
+  );
+}
+
+function updateMediaSelectionQuery(assetId: string | null): void {
+  const url = new URL(window.location.href);
+
+  if (assetId) {
+    url.searchParams.set('media', assetId);
+  } else {
+    url.searchParams.delete('media');
+  }
+
+  window.history.replaceState(window.history.state, '', url.toString());
 }
 
 function ShortLoopVisual({
@@ -222,11 +241,15 @@ function EntityRail({
 export function EntityExperiencePage({
   universeKey,
   slug,
+  initialMediaId = null,
 }: {
   readonly universeKey: string;
   readonly slug: string;
+  readonly initialMediaId?: string | null;
 }) {
   const [state, setState] = useState<State>({ status: 'loading' });
+  const [selectedMediaId, setSelectedMediaId] = useState<string | null>(initialMediaId);
+  const mediaOpenerRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -274,6 +297,46 @@ export function EntityExperiencePage({
     return groups;
   }, [state]);
 
+  useEffect(() => {
+    if (state.status !== 'ready' || !initialMediaId) {
+      return;
+    }
+
+    const isAnimeCharacter =
+      state.entity.resource.universeKey === 'universe.anime' &&
+      state.entity.resource.resourceType === 'anime.character';
+
+    if (!isAnimeCharacter) {
+      return;
+    }
+
+    const eligible = state.entity.media.some(
+      (media) => media.assetId === initialMediaId && isViewerEligibleMedia(media),
+    );
+
+    if (!eligible) {
+      updateMediaSelectionQuery(null);
+    }
+  }, [initialMediaId, state]);
+
+  function openMediaViewer(media: PublicKnowledgeEntityMedia, trigger: HTMLButtonElement): void {
+    mediaOpenerRef.current = trigger;
+    setSelectedMediaId(media.assetId);
+    updateMediaSelectionQuery(media.assetId);
+  }
+
+  function closeMediaViewer(): void {
+    const opener = mediaOpenerRef.current;
+
+    mediaOpenerRef.current = null;
+    setSelectedMediaId(null);
+    updateMediaSelectionQuery(null);
+
+    if (opener) {
+      window.requestAnimationFrame(() => opener.focus());
+    }
+  }
+
   if (state.status === 'loading') {
     return (
       <div className="aw-entity-status" role="status">
@@ -320,6 +383,8 @@ export function EntityExperiencePage({
         media.posterAssetId !== null),
   );
   const imageMedia = mediaHighlights.filter((media) => media.assetType === 'IMAGE');
+  const viewerMedia = animeCharacter ? mediaHighlights.filter(isViewerEligibleMedia) : [];
+  const selectedMedia = viewerMedia.find((media) => media.assetId === selectedMediaId) ?? null;
   const heroMedia = mediaHighlights.find((media) => media.role === 'HERO') ?? null;
   const fallbackImage = imageMedia[0] ?? null;
   const heroVisual = heroMedia ?? fallbackImage;
@@ -467,30 +532,63 @@ export function EntityExperiencePage({
             </div>
           </div>
           <ul className="aw-entity-image-rail">
-            {mediaHighlights.map((media) => (
-              <li key={media.assetId}>
-                <a href={mediaContentPath(media.assetId)} target="_blank" rel="noreferrer">
-                  <div className="aw-entity-image-card">
-                    {media.assetType === 'VIDEO' ? (
-                      <ShortLoopVisual
-                        media={media}
-                        displayName={entity.profile.displayName}
-                        motionAllowed={motionAllowed}
-                        sizes="(max-width: 700px) 70vw, 260px"
-                      />
+            {mediaHighlights.map((media) => {
+              const mediaName = mediaAltText(media, entity.profile.displayName);
+              const card = (
+                <div className="aw-entity-image-card">
+                  {media.assetType === 'VIDEO' ? (
+                    <ShortLoopVisual
+                      media={media}
+                      displayName={entity.profile.displayName}
+                      motionAllowed={motionAllowed}
+                      sizes="(max-width: 700px) 70vw, 260px"
+                    />
+                  ) : (
+                    <Image
+                      src={mediaThumbnailPath(media.assetId)}
+                      alt={mediaName}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 700px) 70vw, 260px"
+                    />
+                  )}
+                  {animeCharacter ? (
+                    <span className="aw-anime-media-trigger__kind" aria-hidden="true">
+                      {media.assetType === 'VIDEO' ? 'Short motion' : 'Image'}
+                    </span>
+                  ) : null}
+                </div>
+              );
+
+              return (
+                <li key={media.assetId}>
+                  {animeCharacter ? (
+                    isViewerEligibleMedia(media) ? (
+                      <button
+                        type="button"
+                        className="aw-anime-media-trigger"
+                        aria-label={`Open ${mediaName} in media viewer`}
+                        onClick={(event) => openMediaViewer(media, event.currentTarget)}
+                      >
+                        {card}
+                      </button>
                     ) : (
-                      <Image
-                        src={mediaThumbnailPath(media.assetId)}
-                        alt={mediaAltText(media, entity.profile.displayName)}
-                        fill
-                        unoptimized
-                        sizes="(max-width: 700px) 70vw, 260px"
-                      />
-                    )}
-                  </div>
-                </a>
-              </li>
-            ))}
+                      <div className="aw-anime-media-static" aria-label={`${mediaName} preview`}>
+                        {card}
+                      </div>
+                    )
+                  ) : (
+                    <a href={mediaContentPath(media.assetId)} target="_blank" rel="noreferrer">
+                      {card}
+                    </a>
+                  )}
+
+                  {animeCharacter && media.caption ? (
+                    <p className="aw-anime-media-caption">{media.caption}</p>
+                  ) : null}
+                </li>
+              );
+            })}
           </ul>
         </section>
       ) : null}
@@ -504,6 +602,14 @@ export function EntityExperiencePage({
           presentation={presentation}
         />
       ))}
+
+      {animeCharacter ? (
+        <AnimeCharacterMediaViewer
+          media={selectedMedia}
+          displayName={entity.profile.displayName}
+          onRequestClose={closeMediaViewer}
+        />
+      ) : null}
     </article>
   );
 }
