@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-02 |
 | Area | Product / Web / Knowledge / Engagement / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-02C ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-02D ACTIVE |
 | Created | 2026-08-24 |
 | Baseline | `573cc1b2e24345c2571698326eb4041bc493da0b` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -751,7 +751,14 @@ Devotional regression remains stable.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
+```
+
+Accepted implementation checkpoint:
+
+```text
+381a9ab9c47f4544f3a42c265ef6eea0c30f8723
+feat(web): add character media viewer
 ```
 
 Production scope:
@@ -780,6 +787,12 @@ no raw new-tab Media as primary interaction.
 ```
 
 ## UXP-02D — Anime relationships + Creator Character manager
+
+Status:
+
+```text
+ACTIVE — NEXT IMPLEMENTATION SLICE
+```
 
 Production scope:
 
@@ -969,7 +982,7 @@ UXP-03 — Anime Universe landing
 
 # 20. Current Slice Status
 
-UXP-02A and UXP-02B are closed and accepted.
+UXP-02A, UXP-02B and UXP-02C are closed and accepted.
 
 Accepted implementation checkpoints:
 
@@ -981,74 +994,83 @@ feat(knowledge): deepen character entity profiles
 UXP-02B
 c7d754f6851d90d36aabaf62a6b139ede4b6e963
 feat(web): finish anime character shell
+
+UXP-02C
+381a9ab9c47f4544f3a42c265ef6eea0c30f8723
+feat(web): add character media viewer
 ```
 
-Accepted UXP-02B evidence established:
+Accepted UXP-02C evidence established:
 
 ```text
-the Anime route now presents an Anime-specific Character shell inside apps/web
-without introducing a second application or named-Character production branches;
+Anime Character Media Highlights now use a page-owned viewer instead of raw
+new-tab Asset content as the primary interaction;
 
-the Web public Entity decoder consumes nativeName / alternateNames / overview
-while remaining compatible with legacy public Entity payloads;
+the accepted public IMAGE and bounded SHORT_LOOP VIDEO descriptors remain the
+only media types consumed by this Character slice;
 
-the Character hero, identity, quick facts and long overview remain usable on
-desktop and 390px-class mobile without horizontal overflow;
+image-only Characters open the accessible viewer with authored alt/caption
+context;
 
-Favorite and Collection continue through the existing Engagement Platform for
-authenticated users, while anonymous behavior remains the existing sign-in path;
+mixed IMAGE + bounded VIDEO Characters preserve the existing ambient muted
+short-motion behavior while viewer VIDEO remains explicitly user-started;
 
-Share and Copy link use the canonical Character URL and do not preserve campaign
-query parameters as canonical identity;
+viewer VIDEO uses poster fallback, controls, playsInline and metadata preload
+without autoplay or looping;
 
-server-generated Character metadata provides title, description, canonical URL
-and Open Graph projection from the public Character contract;
+valid media=<asset-id> deep links select only media eligible on the current
+public Character;
 
-loading, not-found / unpublished and unexpected-error states remain
-distinguishable;
+invalid or unrelated media IDs are ignored safely and removed without deleting
+campaign query parameters;
 
-Naruto proves the finished shell and Sasuke proves second-Character reuse through
-the same production composition;
+keyboard activation, visible Close, Escape close and focus return to the invoking
+Media control were proven;
 
-Shiva and Hanuman regressions remain green and the accepted bounded short-motion
-behavior remains stable;
+reduced-motion keeps ambient short motion poster-first while deep-linked viewer
+VIDEO remains user-started;
+
+the implementation remained inside apps/web with no API, schema, dependency,
+Creator-management or relationship-vocabulary expansion;
 
 the full Web unit suite passed 48 / 48 tests;
 
 the root production build passed 22 / 22 tasks;
 
-the final focused browser acceptance and regression run passed 12 / 12 tests;
+the database remained current at 32 migrations;
+
+the final focused browser acceptance and regression run passed 16 / 16 tests,
+including all four UXP-02C proofs plus UXP-02B, Shiva/Hanuman, cross-Universe
+Entity and bounded short-motion regressions;
 
 the implementation was committed and pushed at the exact checkpoint above;
 
 CI was reported green for the pushed implementation on 2026-08-24.
 ```
 
-UXP-02B deliberately did not implement the page-owned Media viewer or the
-finished Anime relationship / Creator Character management slice.
+UXP-02C deliberately did not implement the finished Anime relationship
+vocabulary or Creator Character management path.
 
 The active implementation slice is now:
 
 ```text
-UXP-02C — Character Media viewer + deep link
+UXP-02D — Anime relationships + Creator Character manager
 ```
 
-UXP-02C remains inside its frozen scope:
+UXP-02D remains inside its frozen scope:
 
 ```text
-mixed IMAGE / bounded VIDEO rail/grid;
-accessible page-owned viewer;
-user-started bounded VIDEO in viewer;
-caption / alt behavior;
-poster fallback;
-media query selection restricted to the current Entity;
-invalid / unrelated media query ignored safely;
-keyboard close / Escape / focus return;
-reduced-motion behavior;
-no raw new-tab Media as the primary interaction.
+finished Anime section vocabulary;
+relationship grouping + ordering;
+Creator Character profile editor;
+facts editor;
+relationship editor;
+existing Media manager integration;
+Creator preview;
+existing lifecycle controls only.
 ```
 
-UXP-02D and UXP-02E remain unstarted.
+UXP-02E remains unstarted.
 
 UXP-02 itself remains ACTIVE and does not close until the Section 19 exit rule
 and full UXP-02E acceptance chain are satisfied.
