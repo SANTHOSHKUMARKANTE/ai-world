@@ -2185,3 +2185,497 @@ textarea {
     transform: none;
   }
 }
+
+/* UXP-03B — Finished Anime landing shell + Character discovery */
+.aw-public-page.aw-anime-universe-route {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: clip;
+  background:
+    radial-gradient(circle at 82% 4%, rgb(49 105 221 / 24%), transparent 30rem),
+    radial-gradient(circle at 10% 28%, rgb(255 130 42 / 13%), transparent 26rem),
+    linear-gradient(180deg, #020611 0%, #061022 52%, #02050d 100%);
+  color: #f7f9ff;
+  --aw-text: #f7f9ff;
+  --aw-text-muted: #aebbd3;
+  --aw-border: rgb(148 177 237 / 18%);
+  --aw-brand: #ff9b42;
+  --aw-brand-strong: #ffad63;
+  --aw-focus: #b7c9ff;
+}
+
+.aw-anime-universe {
+  padding-block: clamp(1.25rem, 3vw, 2.5rem) clamp(4rem, 9vw, 7rem);
+}
+
+.aw-anime-universe-hero {
+  position: relative;
+  display: grid;
+  min-height: clamp(32rem, 56vw, 45rem);
+  overflow: hidden;
+  align-items: end;
+  border: 1px solid rgb(130 167 255 / 24%);
+  border-radius: clamp(1.2rem, 3vw, 2rem);
+  background:
+    radial-gradient(circle at 74% 25%, rgb(74 126 235 / 34%), transparent 22rem),
+    radial-gradient(circle at 72% 68%, rgb(255 139 53 / 18%), transparent 20rem),
+    linear-gradient(126deg, #020611 0%, #071631 49%, #241207 100%);
+  box-shadow: 0 34px 100px rgb(0 0 0 / 42%);
+  grid-template-columns: minmax(0, 1.05fr) minmax(18rem, 0.95fr);
+}
+
+.aw-anime-universe-hero::after {
+  position: absolute;
+  inset: auto -10% 12% 42%;
+  height: 0.18rem;
+  background: linear-gradient(90deg, transparent, #ff9b42, transparent);
+  content: '';
+  opacity: 0.55;
+  transform: rotate(-7deg);
+  pointer-events: none;
+}
+
+.aw-anime-universe-hero__copy {
+  position: relative;
+  z-index: 3;
+  max-width: 47rem;
+  padding: clamp(2rem, 5vw, 4.8rem);
+  text-shadow: 0 2px 28px rgb(0 0 0 / 68%);
+}
+
+.aw-anime-universe-hero .aw-eyebrow {
+  color: #ff9b42;
+}
+
+.aw-anime-universe-hero__promise {
+  width: fit-content;
+  margin: 1rem 0 0;
+  border: 1px solid rgb(130 168 255 / 22%);
+  border-radius: 999px;
+  background: rgb(8 20 46 / 68%);
+  color: #dbe5ff;
+  padding: 0.48rem 0.78rem;
+  font-size: 0.82rem;
+  font-weight: 760;
+  letter-spacing: 0.025em;
+}
+
+.aw-anime-universe-hero h1 {
+  margin: 0.7rem 0 1rem;
+  color: #fff;
+  font-size: clamp(4rem, 10vw, 8.2rem);
+  font-weight: 850;
+  letter-spacing: -0.07em;
+  line-height: 0.86;
+}
+
+.aw-anime-universe-hero__description {
+  max-width: 39rem;
+  margin: 0;
+  color: #c7d2e8;
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+  line-height: 1.75;
+}
+
+.aw-anime-universe-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.8rem;
+}
+
+.aw-anime-universe-route .aw-button--primary {
+  background: #ff9b42;
+  color: #140803;
+}
+
+.aw-anime-universe-route .aw-button--primary:hover {
+  background: #ffad63;
+}
+
+.aw-anime-universe-route .aw-button--secondary {
+  border-color: rgb(172 194 240 / 28%);
+  background: rgb(10 22 46 / 76%);
+  color: #f7f9ff;
+}
+
+.aw-anime-universe-route .aw-button--secondary:hover {
+  border-color: rgb(190 209 250 / 48%);
+  background: rgb(19 36 68 / 92%);
+}
+
+.aw-anime-universe-hero__visual {
+  position: relative;
+  align-self: stretch;
+  min-height: 24rem;
+  overflow: hidden;
+}
+
+.aw-anime-universe-hero__orb,
+.aw-anime-universe-hero__slash {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.aw-anime-universe-hero__orb {
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+.aw-anime-universe-hero__orb--one {
+  width: clamp(14rem, 28vw, 26rem);
+  aspect-ratio: 1;
+  top: 9%;
+  right: 4%;
+  border: 1px solid rgb(135 176 255 / 22%);
+  background:
+    radial-gradient(circle at 38% 36%, rgb(152 188 255 / 34%), transparent 18%),
+    radial-gradient(circle at 60% 58%, rgb(53 107 224 / 56%), transparent 48%), rgb(6 18 43 / 72%);
+  box-shadow:
+    0 0 80px rgb(53 107 224 / 20%),
+    inset 0 0 70px rgb(2 6 17 / 60%);
+}
+
+.aw-anime-universe-hero__orb--two {
+  width: clamp(7rem, 14vw, 12rem);
+  aspect-ratio: 1;
+  right: 38%;
+  bottom: 12%;
+  background: radial-gradient(circle at 45% 45%, rgb(255 157 75 / 52%), transparent 62%);
+  opacity: 0.7;
+}
+
+.aw-anime-universe-hero__slash {
+  width: 70%;
+  height: 0.14rem;
+  right: -12%;
+  background: linear-gradient(90deg, transparent, rgb(133 169 255 / 70%), transparent);
+  transform-origin: center;
+}
+
+.aw-anime-universe-hero__slash--one {
+  top: 35%;
+  transform: rotate(-24deg);
+}
+
+.aw-anime-universe-hero__slash--two {
+  top: 60%;
+  transform: rotate(-12deg);
+}
+
+.aw-anime-discovery {
+  scroll-margin-top: 6rem;
+  padding-top: clamp(4rem, 8vw, 7rem);
+}
+
+.aw-anime-discovery__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem 3rem;
+}
+
+.aw-anime-discovery__heading > div {
+  max-width: 46rem;
+}
+
+.aw-anime-discovery__heading .aw-eyebrow {
+  color: #ff9b42;
+}
+
+.aw-anime-discovery__heading h2 {
+  margin: 0.5rem 0 0;
+  color: #fff;
+  font-size: clamp(2.3rem, 5vw, 4.1rem);
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.aw-anime-discovery__heading > p {
+  max-width: 26rem;
+  margin: 0;
+  color: #9dabc5;
+  line-height: 1.65;
+}
+
+.aw-anime-discovery-grid {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.aw-anime-discovery-grid > li {
+  min-width: 0;
+}
+
+.aw-anime-discovery-card {
+  display: grid;
+  min-height: 100%;
+  overflow: hidden;
+  border: 1px solid rgb(139 169 230 / 18%);
+  border-radius: 1.25rem;
+  background: linear-gradient(155deg, rgb(13 28 55 / 94%), rgb(5 12 27 / 98%));
+  color: #f7f9ff;
+  text-decoration: none;
+  box-shadow: 0 20px 54px rgb(0 0 0 / 24%);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.aw-anime-discovery-card:hover,
+.aw-anime-discovery-card:focus-visible {
+  border-color: rgb(255 155 66 / 58%);
+  box-shadow: 0 26px 70px rgb(0 0 0 / 34%);
+  transform: translateY(-3px);
+}
+
+.aw-anime-discovery-card:focus-visible {
+  outline: 0.2rem solid var(--aw-focus);
+  outline-offset: 0.24rem;
+}
+
+.aw-anime-discovery-card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 65% 28%, rgb(68 120 225 / 32%), transparent 45%),
+    linear-gradient(145deg, #09162e, #180e0a);
+}
+
+.aw-anime-discovery-card__media img,
+.aw-anime-discovery-card__media video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.aw-anime-discovery-card__media img {
+  transition: transform 180ms ease;
+}
+
+.aw-anime-discovery-card:hover .aw-anime-discovery-card__media img {
+  transform: scale(1.025);
+}
+
+.aw-anime-discovery-card__fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: rgb(231 237 255 / 68%);
+  font-size: clamp(5rem, 12vw, 9rem);
+  font-weight: 850;
+  letter-spacing: -0.08em;
+  text-shadow: 0 18px 44px rgb(0 0 0 / 48%);
+}
+
+.aw-anime-discovery-card__body {
+  display: grid;
+  align-content: start;
+  gap: 0.65rem;
+  padding: 1.15rem 1.2rem 1.25rem;
+}
+
+.aw-anime-discovery-card__body .aw-eyebrow {
+  color: #ff9b42;
+  font-size: 0.68rem;
+}
+
+.aw-anime-discovery-card__body h3 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  letter-spacing: -0.035em;
+}
+
+.aw-anime-discovery-card__body > p:not(.aw-eyebrow) {
+  margin: 0;
+  color: #aebbd3;
+  line-height: 1.6;
+}
+
+.aw-anime-discovery-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  color: #dce5ff;
+  font-size: 0.84rem;
+  font-weight: 780;
+}
+
+.aw-anime-discovery-card__cta span {
+  color: #ff9b42;
+}
+
+.aw-anime-discovery-state {
+  display: grid;
+  min-height: 16rem;
+  place-items: center;
+  gap: 1rem;
+  margin-top: 1.8rem;
+  border: 1px solid rgb(139 169 230 / 18%);
+  border-radius: 1.25rem;
+  background: rgb(7 16 35 / 76%);
+  color: #c5d0e5;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  text-align: center;
+}
+
+.aw-anime-discovery-state > p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.aw-anime-discovery-state--error,
+.aw-anime-discovery-state--empty {
+  display: flex;
+  min-height: 12rem;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.aw-anime-discovery-state strong {
+  display: block;
+  color: #fff;
+  font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+}
+
+.aw-anime-discovery-state div > p {
+  max-width: 40rem;
+  margin: 0.55rem 0 0;
+  color: #aebbd3;
+  line-height: 1.65;
+}
+
+.aw-anime-discovery-skeletons {
+  display: grid;
+  width: 100%;
+  gap: 0.8rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.aw-anime-discovery-skeletons span {
+  min-height: 7rem;
+  border-radius: 0.9rem;
+  background: linear-gradient(135deg, rgb(61 91 153 / 26%), rgb(23 38 70 / 38%));
+}
+
+@media (max-width: 70rem) {
+  .aw-anime-universe-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.7fr);
+  }
+
+  .aw-anime-discovery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 52rem) {
+  .aw-anime-universe-hero {
+    min-height: 40rem;
+    align-items: end;
+    grid-template-columns: 1fr;
+  }
+
+  .aw-anime-universe-hero__copy {
+    z-index: 4;
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  .aw-anime-universe-hero__visual {
+    position: absolute;
+    inset: 0;
+  }
+
+  .aw-anime-universe-hero__visual::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgb(2 6 17 / 96%) 0%, rgb(2 6 17 / 72%) 46%, transparent 78%);
+    content: '';
+  }
+
+  .aw-anime-discovery__heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .aw-anime-discovery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .aw-anime-discovery-state--error,
+  .aw-anime-discovery-state--empty {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .aw-anime-discovery-state--error .aw-button,
+  .aw-anime-discovery-state--empty .aw-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 38rem) {
+  .aw-anime-universe {
+    width: min(calc(100% - 1rem), var(--aw-content-width));
+    padding-top: 0.75rem;
+  }
+
+  .aw-anime-universe-hero {
+    min-height: 37rem;
+    border-radius: 1rem;
+  }
+
+  .aw-anime-universe-hero h1 {
+    font-size: clamp(3.6rem, 22vw, 6rem);
+  }
+
+  .aw-anime-universe-hero__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .aw-anime-universe-hero__actions .aw-button {
+    width: 100%;
+  }
+
+  .aw-anime-discovery {
+    padding-top: 3.5rem;
+  }
+
+  .aw-anime-discovery-card__media {
+    aspect-ratio: 16 / 11;
+  }
+
+  .aw-anime-discovery-skeletons {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aw-anime-universe-hero::after {
+    opacity: 0.32;
+  }
+
+  .aw-anime-discovery-card:hover,
+  .aw-anime-discovery-card:focus-visible,
+  .aw-anime-discovery-card:hover .aw-anime-discovery-card__media img {
+    transform: none;
+  }
+}
