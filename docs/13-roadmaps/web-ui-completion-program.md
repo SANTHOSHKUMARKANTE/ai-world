@@ -936,26 +936,62 @@ UXP-03 is therefore CLOSED — ACCEPTED.
 Status:
 
 ```text
-ACTIVE — NEXT PAGE
+ACTIVE — UXP-04A NEXT IMPLEMENTATION SLICE
 ```
 
-The first UXP-04 action is repository/architecture inspection and detailed page
-contract freeze. Activation does not itself implement `/anime/series/[slug]`.
+Repository/architecture inspection is complete.
 
-Series page should combine:
+The frozen detailed implementation contract is:
 
 ```text
-cinematic series hero;
-status/format/episode facts;
-description;
-characters;
-staff/studio where modeled;
-episodes/scenes where modeled;
-media;
-related series/movies;
-Experiences;
-save/share;
-social entry.
+docs/13-roadmaps/uxp-04-anime-series-page.md
+```
+
+Repository evidence freezes the minimum direction as:
+
+```text
+canonical /anime/series/[slug];
+existing public Knowledge Entity read;
+strict universe.anime + anime.series guard;
+existing Entity profile / facts;
+existing Knowledge Media placements;
+existing Resource Engagement controls;
+Series-specific Character + related-Series relationship presentation;
+canonical Anime landing / relationship navigation;
+existing root metadataBase / social-origin behavior;
+bounded Series-specific Creator Web manager over generic Creator APIs;
+existing generic Knowledge Media manager;
+Creator-only Series preview;
+no schema migration expected;
+no new public or Creator backend endpoint expected.
+```
+
+Explicitly deferred because no current canonical model exists:
+
+```text
+staff/studio persistence;
+episodes/scenes;
+streaming availability / watch providers;
+direct Experience relationship infrastructure.
+```
+
+Search remains regression-only in UXP-04. Its current public result contract has no
+Entity slug, and UXP-08 owns the finished Search experience.
+
+Current UXP-04 slice state:
+
+```text
+UXP-04A — Canonical route + identity / social shell
+ACTIVE — NEXT IMPLEMENTATION SLICE
+
+UXP-04B — Media + Series relationships + canonical Anime navigation
+NOT STARTED
+
+UXP-04C — Creator Series manager + creator-only preview
+NOT STARTED
+
+UXP-04D — Reuse + full Series acceptance
+NOT STARTED
 ```
 
 ## UXP-05 — Public Experience
@@ -1261,24 +1297,35 @@ test(web): prove full anime landing acceptance
 GitHub CI run 231 — success
 ```
 
-The next engineering objective is UXP-04:
+The detailed UXP-04 repository/architecture inspection is complete and the
+implementation contract is frozen at:
 
 ```text
-Anime Series
+docs/13-roadmaps/uxp-04-anime-series-page.md
 ```
 
-The first UXP-04 action is to inspect current repository contracts and freeze the
-minimum detailed Series-page implementation contract. The review must build from
-existing Knowledge Resource/Entity semantics, public Media, relationships,
-Engagement, Creator permissions and the accepted Anime presentation rather than
-assuming new platform capability.
+The next engineering objective is:
 
-This docs-only transition does not implement `/anime/series/[slug]`. Do not add
-episode infrastructure, streaming availability, staff/studio persistence,
-ranking/recommendation semantics, editorial curation, a Series CMS, new Anime
-persistence, new roles/permissions, or speculative infrastructure before current
-repository evidence justifies them.
+```text
+UXP-04A — Canonical route + identity / social shell
+```
 
-The Master Roadmap remains unchanged by this page transition. WPR-M05 remains the
+UXP-04A must add the real `/anime/series/[slug]` route over the existing public
+Knowledge Entity contract with a strict `universe.anime + anime.series` guard,
+Series identity/facts/overview, existing Engagement, share/copy-link and
+campaign-safe canonical/Open Graph identity.
+
+Do not begin UXP-04B Media/relationships/navigation, UXP-04C Creator Series
+management, or UXP-04D full acceptance until the preceding slice has an accepted
+implementation checkpoint and exact remote CI green.
+
+Do not expand Search during UXP-04 merely to obtain a Series slug. UXP-08 owns the
+finished Search experience.
+
+Do not add episode/staff/studio/streaming/Experience infrastructure, ranking or
+recommendations, editorial curation, a Series CMS, Series-specific persistence,
+new roles/permissions, or speculative platform work.
+
+The Master Roadmap remains unchanged by this contract freeze. WPR-M05 remains the
 active Web Product Readiness gate, and P10-M04 remains sequencing-blocked until
 that gate closes.
