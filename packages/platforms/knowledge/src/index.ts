@@ -164,6 +164,20 @@ export {
   type GetPublicKnowledgeEntityInput,
 } from './get-public-knowledge-entity';
 
+export {
+  ListPublicKnowledgeDiscovery,
+  PUBLIC_KNOWLEDGE_DISCOVERY_DEFAULT_LIMIT,
+  PUBLIC_KNOWLEDGE_DISCOVERY_MAX_LIMIT,
+  type ListPublicKnowledgeDiscoveryInput,
+  type PublicKnowledgeDiscoveryItem,
+  type PublicKnowledgeDiscoveryPreview,
+} from './list-public-knowledge-discovery';
+
+export type {
+  ListPublishedKnowledgeDiscoveryEntitiesInput,
+  PublicKnowledgeDiscoveryReader,
+} from './public-knowledge-discovery-reader';
+
 export type {
   KnowledgeEntityConfiguration,
   KnowledgeEntityConfigurationRelation,

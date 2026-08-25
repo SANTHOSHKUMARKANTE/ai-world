@@ -123,6 +123,7 @@ import {
   GetKnowledgeResourceMediaAsActor,
   GetPublicKnowledgeEntity,
   GetPublicKnowledgeResource,
+  ListPublicKnowledgeDiscovery,
   ListPublicKnowledgeResourceAssets,
   ListPublicKnowledgeResources,
   PublishKnowledgeResource,
@@ -167,6 +168,7 @@ import { CreatorKnowledgeEntityController } from './knowledge/creator-knowledge-
 import { CreatorKnowledgeController } from './knowledge/creator-knowledge.controller';
 import { MediaAssetsController } from './media/media-assets.controller';
 import { MediaUploadPreauthorizationGuard } from './media/media-upload-preauthorization.guard';
+import { PublicKnowledgeDiscoveryController } from './knowledge/public-knowledge-discovery.controller';
 import { PublicKnowledgeEntityController } from './knowledge/public-knowledge-entity.controller';
 import { PublicKnowledgeController } from './knowledge/public-knowledge.controller';
 import { ObservabilityModule } from './observability/observability.module';
@@ -324,6 +326,7 @@ export class AppModule {
         AuthorizationController,
         PublicKnowledgeController,
         PublicKnowledgeEntityController,
+        PublicKnowledgeDiscoveryController,
         PublicDiscoverySearchController,
         CreatorKnowledgeController,
         CreatorKnowledgeEntityController,
@@ -1230,6 +1233,16 @@ export class AppModule {
           inject: [PrismaKnowledgeEntityRepository],
           useFactory: (entities: PrismaKnowledgeEntityRepository): GetPublicKnowledgeEntity => {
             return new GetPublicKnowledgeEntity(entities);
+          },
+        },
+
+        {
+          provide: ListPublicKnowledgeDiscovery,
+          inject: [PrismaKnowledgeEntityRepository],
+          useFactory: (
+            repository: PrismaKnowledgeEntityRepository,
+          ): ListPublicKnowledgeDiscovery => {
+            return new ListPublicKnowledgeDiscovery(repository);
           },
         },
 

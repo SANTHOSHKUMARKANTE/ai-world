@@ -25,6 +25,10 @@ import type {
   ReplaceKnowledgeEntityConfigurationInput,
 } from './knowledge-entity-store';
 import type {
+  ListPublishedKnowledgeDiscoveryEntitiesInput,
+  PublicKnowledgeDiscoveryReader,
+} from './public-knowledge-discovery-reader';
+import type {
   FindKnowledgeEntityConfigurationByResourceIdInput,
   KnowledgeEntityConfigurationReader,
 } from './knowledge-entity-configuration-reader';
@@ -171,7 +175,10 @@ function isBoundedShortVideo(descriptor: PublicMediaAssetDescriptor): boolean {
 }
 
 export class PrismaKnowledgeEntityRepository
-  implements KnowledgeEntityStore, KnowledgeEntityConfigurationReader
+  implements
+    KnowledgeEntityStore,
+    KnowledgeEntityConfigurationReader,
+    PublicKnowledgeDiscoveryReader
 {
   public constructor(
     private readonly database: DatabaseClient,
@@ -278,6 +285,48 @@ export class PrismaKnowledgeEntityRepository
     });
 
     return mapProfile(profile);
+  }
+
+  public async listPublishedEntities(
+    input: ListPublishedKnowledgeDiscoveryEntitiesInput,
+  ): Promise<readonly PublicKnowledgeEntity[]> {
+    const resources = await this.database.knowledgeResource.findMany({
+      where: {
+        universeKey: input.universeKey,
+        lifecycle: KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE,
+        ...(input.resourceType === undefined
+          ? {}
+          : {
+              resourceType: input.resourceType,
+            }),
+        profile: {
+          isNot: null,
+        },
+      },
+      select: {
+        profile: {
+          select: {
+            routeKey: true,
+          },
+        },
+      },
+      orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
+      take: input.limit,
+    });
+
+    const entities = await Promise.all(
+      resources.map((resource) => {
+        if (!resource.profile) {
+          return Promise.resolve(null);
+        }
+
+        return this.findPublishedByRouteKey({
+          routeKey: resource.profile.routeKey,
+        });
+      }),
+    );
+
+    return entities.filter((entity): entity is PublicKnowledgeEntity => entity !== null);
   }
 
   public async findPublishedByRouteKey(
