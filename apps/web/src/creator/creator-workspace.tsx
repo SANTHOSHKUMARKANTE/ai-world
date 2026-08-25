@@ -19,8 +19,10 @@ import {
   uploadCreatorMediaAsset,
   type CreatorAiKnowledgeCandidate,
   type CreatorCompositionItemKind,
+  type CreatorKnowledgeResource,
   type CreatorPage,
 } from './creator-api';
+import { AnimeCharacterManager } from './anime-character-manager';
 import { KnowledgeMediaManager } from './knowledge-media-manager';
 
 interface ReferenceDraft {
@@ -80,6 +82,8 @@ function AuthenticatedCreatorWorkspace() {
   const [activePage, setActivePage] = useState<CreatorPage | null>(null);
   const [resourceType, setResourceType] = useState('devotional.deity');
   const [knowledgeResourceId, setKnowledgeResourceId] = useState('');
+  const [activeKnowledgeResource, setActiveKnowledgeResource] =
+    useState<CreatorKnowledgeResource | null>(null);
   const [knowledgeMediaManagerRevision, setKnowledgeMediaManagerRevision] = useState(0);
   const [aiRequest, setAiRequest] = useState('Suggest one useful Knowledge Resource type.');
   const [aiContextQuery, setAiContextQuery] = useState('deity');
@@ -175,6 +179,7 @@ function AuthenticatedCreatorWorkspace() {
           label: resource.resourceType,
         });
         setKnowledgeResourceId(resource.id);
+        setActiveKnowledgeResource(resource);
         setKnowledgeMediaManagerRevision((revision) => revision + 1);
         setStatusMessage(`Knowledge draft “${resource.resourceType}” created.`);
       },
@@ -216,6 +221,7 @@ function AuthenticatedCreatorWorkspace() {
           label: accepted.resource.resourceType,
         });
         setKnowledgeResourceId(accepted.resource.id);
+        setActiveKnowledgeResource(accepted.resource);
         setKnowledgeMediaManagerRevision((revision) => revision + 1);
         setAiCandidate(null);
         setStatusMessage(
@@ -656,10 +662,28 @@ function AuthenticatedCreatorWorkspace() {
         </EditorCard>
       </div>
 
+      <AnimeCharacterManager
+        key={`character-${knowledgeMediaManagerRevision}`}
+        knowledgeResourceId={knowledgeResourceId}
+        initialResource={activeKnowledgeResource}
+        onKnowledgeResourceIdChange={(id) => {
+          setKnowledgeResourceId(id);
+          if (activeKnowledgeResource?.id !== id) {
+            setActiveKnowledgeResource(null);
+          }
+        }}
+        onResourceChange={setActiveKnowledgeResource}
+      />
+
       <KnowledgeMediaManager
         key={knowledgeMediaManagerRevision}
         knowledgeResourceId={knowledgeResourceId}
-        onKnowledgeResourceIdChange={setKnowledgeResourceId}
+        onKnowledgeResourceIdChange={(id) => {
+          setKnowledgeResourceId(id);
+          if (activeKnowledgeResource?.id !== id) {
+            setActiveKnowledgeResource(null);
+          }
+        }}
       />
 
       <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/10">

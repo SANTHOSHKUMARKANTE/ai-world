@@ -1,7 +1,9 @@
 import { ValidateSession } from '@ai-world/platform-identity-access';
 import {
+  ArchiveKnowledgeResourceAsActor,
   CreateKnowledgeResourceAsActor,
   GetKnowledgeResourceMediaAsActor,
+  PublishKnowledgeResourceAsActor,
   SetKnowledgeResourceMediaAsActor,
   type KnowledgeResource,
   type KnowledgeResourceMediaPlacement,
@@ -75,6 +77,8 @@ export class CreatorKnowledgeController {
     private readonly getKnowledgeResourceMediaAsActor: GetKnowledgeResourceMediaAsActor,
     private readonly updateKnowledgeResourceAsActor: UpdateKnowledgeResourceAsActor,
     private readonly setKnowledgeResourceMediaAsActor: SetKnowledgeResourceMediaAsActor,
+    private readonly publishKnowledgeResourceAsActor: PublishKnowledgeResourceAsActor,
+    private readonly archiveKnowledgeResourceAsActor: ArchiveKnowledgeResourceAsActor,
     private readonly sessionCookie: SessionCookie,
   ) {}
 
@@ -99,6 +103,28 @@ export class CreatorKnowledgeController {
     });
 
     return toCreatorKnowledgeResourceResponse(resource);
+  }
+
+  @Post(':id/publish')
+  public async publishResource(
+    @Headers('cookie') cookieHeader: string | undefined,
+    @Param('id') id: string,
+  ): Promise<CreatorKnowledgeResourceResponse> {
+    const actingActorId = await this.requireActingActorId(cookieHeader);
+    return toCreatorKnowledgeResourceResponse(
+      await this.publishKnowledgeResourceAsActor.execute({ actingActorId, id }),
+    );
+  }
+
+  @Post(':id/archive')
+  public async archiveResource(
+    @Headers('cookie') cookieHeader: string | undefined,
+    @Param('id') id: string,
+  ): Promise<CreatorKnowledgeResourceResponse> {
+    const actingActorId = await this.requireActingActorId(cookieHeader);
+    return toCreatorKnowledgeResourceResponse(
+      await this.archiveKnowledgeResourceAsActor.execute({ actingActorId, id }),
+    );
   }
 
   @Get(':id/media')

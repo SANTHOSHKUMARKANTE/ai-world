@@ -9,6 +9,46 @@ export interface CreatorKnowledgeResource {
   readonly lifecycle: string;
 }
 
+export interface CreatorKnowledgeEntityFact {
+  readonly key: string;
+  readonly label: string;
+  readonly value: string;
+}
+
+export interface CreatorKnowledgeEntityRelation {
+  readonly targetResourceId: string;
+  readonly sectionKey: string;
+  readonly relationshipType: string;
+  readonly position: number;
+}
+
+export interface CreatorKnowledgeEntityConfiguration {
+  readonly resource: CreatorKnowledgeResource;
+  readonly resourceId: string;
+  readonly slug: string;
+  readonly displayName: string;
+  readonly nativeName: string | null;
+  readonly alternateNames: readonly string[];
+  readonly summary: string;
+  readonly overview: string | null;
+  readonly facts: readonly CreatorKnowledgeEntityFact[];
+  readonly relations: readonly CreatorKnowledgeEntityRelation[];
+  readonly updatedAt: string;
+}
+
+export interface CreatorKnowledgeEntityConfigurationInput {
+  readonly profile: {
+    readonly slug: string;
+    readonly displayName: string;
+    readonly nativeName: string | null;
+    readonly alternateNames: readonly string[];
+    readonly summary: string;
+    readonly overview: string | null;
+    readonly facts: readonly CreatorKnowledgeEntityFact[];
+  };
+  readonly relations: readonly CreatorKnowledgeEntityRelation[];
+}
+
 export interface CreatorMediaAsset {
   readonly id: string;
   readonly assetType: string;
@@ -135,6 +175,68 @@ function readKnowledgeResource(value: unknown): CreatorKnowledgeResource {
     universeKey: value.universeKey,
     resourceType: value.resourceType,
     lifecycle: value.lifecycle,
+  };
+}
+
+function readKnowledgeEntityConfiguration(value: unknown): CreatorKnowledgeEntityConfiguration {
+  if (
+    !isRecord(value) ||
+    !isRecord(value.resource) ||
+    !isString(value.resourceId) ||
+    !isString(value.slug) ||
+    !isString(value.displayName) ||
+    !(isString(value.nativeName) || value.nativeName === null) ||
+    !Array.isArray(value.alternateNames) ||
+    !value.alternateNames.every(isString) ||
+    !isString(value.summary) ||
+    !(isString(value.overview) || value.overview === null) ||
+    !Array.isArray(value.facts) ||
+    !Array.isArray(value.relations) ||
+    !isString(value.updatedAt)
+  ) {
+    throw new Error('Creator Knowledge Entity API response did not match the expected contract.');
+  }
+
+  const facts = value.facts.map((fact): CreatorKnowledgeEntityFact => {
+    if (!isRecord(fact) || !isString(fact.key) || !isString(fact.label) || !isString(fact.value)) {
+      throw new Error('Creator Knowledge Entity fact did not match the expected contract.');
+    }
+    return { key: fact.key, label: fact.label, value: fact.value };
+  });
+
+  const relations = value.relations.map((relation): CreatorKnowledgeEntityRelation => {
+    if (
+      !isRecord(relation) ||
+      !isString(relation.targetResourceId) ||
+      !isString(relation.sectionKey) ||
+      !isString(relation.relationshipType) ||
+      typeof relation.position !== 'number' ||
+      !Number.isInteger(relation.position) ||
+      relation.position < 0
+    ) {
+      throw new Error('Creator Knowledge Entity relation did not match the expected contract.');
+    }
+
+    return {
+      targetResourceId: relation.targetResourceId,
+      sectionKey: relation.sectionKey,
+      relationshipType: relation.relationshipType,
+      position: relation.position,
+    };
+  });
+
+  return {
+    resource: readKnowledgeResource(value.resource),
+    resourceId: value.resourceId,
+    slug: value.slug,
+    displayName: value.displayName,
+    nativeName: value.nativeName,
+    alternateNames: value.alternateNames,
+    summary: value.summary,
+    overview: value.overview,
+    facts,
+    relations,
+    updatedAt: value.updatedAt,
   };
 }
 
@@ -393,6 +495,44 @@ export async function uploadCreatorMediaAsset(file: File): Promise<CreatorMediaA
   body.append('file', file);
   const response = await apiRequest('/media/assets', { method: 'POST', body });
   return readMediaAsset(await readJson(response));
+}
+
+export async function getCreatorKnowledgeEntity(
+  id: string,
+): Promise<CreatorKnowledgeEntityConfiguration> {
+  const response = await apiRequest(`/knowledge/resources/${encodeURIComponent(id)}/entity`);
+  return readKnowledgeEntityConfiguration(await readJson(response));
+}
+
+export async function replaceCreatorKnowledgeEntity(
+  id: string,
+  input: CreatorKnowledgeEntityConfigurationInput,
+): Promise<CreatorKnowledgeEntityConfiguration> {
+  await apiRequest(`/knowledge/resources/${encodeURIComponent(id)}/entity`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
+  return getCreatorKnowledgeEntity(id);
+}
+
+export async function publishCreatorKnowledgeResource(
+  id: string,
+): Promise<CreatorKnowledgeResource> {
+  const response = await apiRequest(`/knowledge/resources/${encodeURIComponent(id)}/publish`, {
+    method: 'POST',
+  });
+  return readKnowledgeResource(await readJson(response));
+}
+
+export async function archiveCreatorKnowledgeResource(
+  id: string,
+): Promise<CreatorKnowledgeResource> {
+  const response = await apiRequest(`/knowledge/resources/${encodeURIComponent(id)}/archive`, {
+    method: 'POST',
+  });
+  return readKnowledgeResource(await readJson(response));
 }
 
 export async function getCreatorKnowledgeMedia(id: string): Promise<CreatorKnowledgeMediaResponse> {

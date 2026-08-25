@@ -2,8 +2,10 @@ import { ValidateSession } from '@ai-world/platform-identity-access';
 import {
   ConfigureKnowledgeEntityAsActor,
   GetKnowledgeEntityAsActor,
+  GetKnowledgeResource,
   type KnowledgeEntityConfiguration,
   type KnowledgeEntityProfile,
+  type KnowledgeResource,
 } from '@ai-world/platform-knowledge';
 import { Body, Controller, Get, Headers, Param, Put } from '@nestjs/common';
 
@@ -42,6 +44,12 @@ function toResponse(profile: KnowledgeEntityProfile): CreatorKnowledgeEntityProf
 }
 
 export interface CreatorKnowledgeEntityConfigurationResponse extends CreatorKnowledgeEntityProfileResponse {
+  readonly resource: {
+    readonly id: string;
+    readonly universeKey: string;
+    readonly resourceType: string;
+    readonly lifecycle: string;
+  };
   readonly relations: readonly {
     readonly targetResourceId: string;
     readonly sectionKey: string;
@@ -52,9 +60,16 @@ export interface CreatorKnowledgeEntityConfigurationResponse extends CreatorKnow
 
 function toConfigurationResponse(
   configuration: KnowledgeEntityConfiguration,
+  resource: KnowledgeResource,
 ): CreatorKnowledgeEntityConfigurationResponse {
   return {
     ...toResponse(configuration.profile),
+    resource: {
+      id: resource.id,
+      universeKey: resource.universeKey,
+      resourceType: resource.resourceType,
+      lifecycle: resource.lifecycle,
+    },
     relations: configuration.relations,
   };
 }
@@ -64,6 +79,7 @@ export class CreatorKnowledgeEntityController {
   public constructor(
     private readonly validateSession: ValidateSession,
     private readonly getKnowledgeEntityAsActor: GetKnowledgeEntityAsActor,
+    private readonly getKnowledgeResource: GetKnowledgeResource,
     private readonly configureKnowledgeEntityAsActor: ConfigureKnowledgeEntityAsActor,
     private readonly sessionCookie: SessionCookie,
   ) {}
@@ -75,9 +91,14 @@ export class CreatorKnowledgeEntityController {
   ): Promise<CreatorKnowledgeEntityConfigurationResponse> {
     const token = requireSessionToken(this.sessionCookie, cookieHeader);
     const session = await this.validateSession.execute({ token });
-    return toConfigurationResponse(
-      await this.getKnowledgeEntityAsActor.execute({ actingActorId: session.actorId, id }),
-    );
+    const configuration = await this.getKnowledgeEntityAsActor.execute({
+      actingActorId: session.actorId,
+      id,
+    });
+    const resource = await this.getKnowledgeResource.execute({
+      id: configuration.profile.knowledgeResourceId,
+    });
+    return toConfigurationResponse(configuration, resource);
   }
 
   @Put(':id/entity')

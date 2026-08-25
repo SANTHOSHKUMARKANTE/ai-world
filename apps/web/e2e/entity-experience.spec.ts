@@ -630,10 +630,10 @@ test.describe('WPR-M05 reusable Entity Experience', () => {
     await expect(page.getByRole('heading', { name: 'Forms & Transformations' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Training & Techniques' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Story Arcs & Knowledge' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Allies & Relationships' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Family & Relationships' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Places & Landmarks' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Quotes' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Experiences' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Related Experiences' })).toBeVisible();
 
     await expect(page.getByRole('link', { name: 'Sasuke Uchiha' })).toHaveAttribute(
       'href',

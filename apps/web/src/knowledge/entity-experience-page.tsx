@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { AnimeCharacterMediaViewer } from '../anime/anime-character-media-viewer';
+import { ANIME_CHARACTER_SECTION_KEYS } from '../anime/anime-character-sections';
 import { AnimeCharacterShareControls } from '../anime/anime-character-share-controls';
 import { ApiClientError } from '../api/api-client';
 import { ResourceEngagementControls } from '../engagement/resource-engagement-controls';
@@ -34,6 +35,12 @@ const SECTION_ORDER = [
   'entity.temples',
   'entity.quotes',
   'entity.experiences',
+] as const;
+
+const ANIME_LEGACY_SECTION_KEYS = [
+  'entity.meditation',
+  'entity.stories',
+  'entity.temples',
 ] as const;
 
 function entityKindLabel(resourceType: string): string {
@@ -388,7 +395,10 @@ export function EntityExperiencePage({
   const heroMedia = mediaHighlights.find((media) => media.role === 'HERO') ?? null;
   const fallbackImage = imageMedia[0] ?? null;
   const heroVisual = heroMedia ?? fallbackImage;
-  const availableSectionKeys = SECTION_ORDER.filter((sectionKey) => grouped.has(sectionKey));
+  const sectionOrder = animeCharacter
+    ? [...ANIME_CHARACTER_SECTION_KEYS, ...ANIME_LEGACY_SECTION_KEYS]
+    : SECTION_ORDER;
+  const availableSectionKeys = sectionOrder.filter((sectionKey) => grouped.has(sectionKey));
 
   return (
     <article

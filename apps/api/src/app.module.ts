@@ -110,18 +110,23 @@ import {
   SharpImageThumbnailProcessor,
 } from '@ai-world/platform-media/infrastructure';
 import {
+  ArchiveKnowledgeResource,
+  ArchiveKnowledgeResourceAsActor,
   ConfigureKnowledgeEntity,
   ConfigureKnowledgeEntityAsActor,
   CreateKnowledgeResource,
   CreateKnowledgeResourceAsActor,
   GetKnowledgeEntity,
   GetKnowledgeEntityAsActor,
+  GetKnowledgeResource,
   GetKnowledgeResourceMedia,
   GetKnowledgeResourceMediaAsActor,
   GetPublicKnowledgeEntity,
   GetPublicKnowledgeResource,
   ListPublicKnowledgeResourceAssets,
   ListPublicKnowledgeResources,
+  PublishKnowledgeResource,
+  PublishKnowledgeResourceAsActor,
   SetKnowledgeResourceMedia,
   SetKnowledgeResourceMediaAsActor,
   UpdateKnowledgeResource,
@@ -1111,6 +1116,58 @@ export class AppModule {
             updateKnowledgeResource: UpdateKnowledgeResource,
           ): UpdateKnowledgeResourceAsActor => {
             return new UpdateKnowledgeResourceAsActor(evaluatePermission, updateKnowledgeResource);
+          },
+        },
+
+        {
+          provide: GetKnowledgeResource,
+          inject: [PrismaKnowledgeResourceRepository],
+          useFactory: (repository: PrismaKnowledgeResourceRepository): GetKnowledgeResource => {
+            return new GetKnowledgeResource(repository);
+          },
+        },
+
+        {
+          provide: PublishKnowledgeResource,
+          inject: [PrismaKnowledgeResourceRepository],
+          useFactory: (repository: PrismaKnowledgeResourceRepository): PublishKnowledgeResource => {
+            return new PublishKnowledgeResource(repository, repository);
+          },
+        },
+
+        {
+          provide: PublishKnowledgeResourceAsActor,
+          inject: [EvaluatePermission, PublishKnowledgeResource],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            publishKnowledgeResource: PublishKnowledgeResource,
+          ): PublishKnowledgeResourceAsActor => {
+            return new PublishKnowledgeResourceAsActor(
+              evaluatePermission,
+              publishKnowledgeResource,
+            );
+          },
+        },
+
+        {
+          provide: ArchiveKnowledgeResource,
+          inject: [PrismaKnowledgeResourceRepository],
+          useFactory: (repository: PrismaKnowledgeResourceRepository): ArchiveKnowledgeResource => {
+            return new ArchiveKnowledgeResource(repository, repository);
+          },
+        },
+
+        {
+          provide: ArchiveKnowledgeResourceAsActor,
+          inject: [EvaluatePermission, ArchiveKnowledgeResource],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            archiveKnowledgeResource: ArchiveKnowledgeResource,
+          ): ArchiveKnowledgeResourceAsActor => {
+            return new ArchiveKnowledgeResourceAsActor(
+              evaluatePermission,
+              archiveKnowledgeResource,
+            );
           },
         },
 

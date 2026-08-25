@@ -1,8 +1,10 @@
+import { ANIME_CHARACTER_SECTION_KEYS } from '../anime/anime-character-sections';
+
 export type WebUniverseKey = 'universe.devotional' | 'universe.anime';
 export type WebUniverseTone = 'devotional' | 'anime';
 export type WebUniverseMotion = 'calm' | 'energetic';
 
-const ENTITY_SECTION_KEYS = [
+const LEGACY_ENTITY_SECTION_KEYS = [
   'entity.forms',
   'entity.meditation',
   'entity.stories',
@@ -10,6 +12,11 @@ const ENTITY_SECTION_KEYS = [
   'entity.temples',
   'entity.quotes',
   'entity.experiences',
+] as const;
+
+const ENTITY_SECTION_KEYS = [
+  ...LEGACY_ENTITY_SECTION_KEYS,
+  ...ANIME_CHARACTER_SECTION_KEYS,
 ] as const;
 
 export type WebEntitySectionKey = (typeof ENTITY_SECTION_KEYS)[number];
@@ -20,7 +27,7 @@ export type WebUniversePresentation = {
   readonly tone: WebUniverseTone;
   readonly motion: WebUniverseMotion;
   readonly description: string;
-  readonly entitySectionTitles: Readonly<Record<WebEntitySectionKey, string>>;
+  readonly entitySectionTitles: Readonly<Partial<Record<WebEntitySectionKey, string>>>;
 };
 
 export const WEB_UNIVERSE_PRESENTATIONS: readonly WebUniversePresentation[] = [
@@ -50,12 +57,20 @@ export const WEB_UNIVERSE_PRESENTATIONS: readonly WebUniversePresentation[] = [
       'Explore published Anime Knowledge without leaving the shared platform or learning a new product.',
     entitySectionTitles: {
       'entity.forms': 'Forms & Transformations',
+      'entity.techniques': 'Techniques & Abilities',
+      'entity.arcs': 'Story Arcs & Key Moments',
+      'entity.allies': 'Allies',
+      'entity.rivals': 'Rivals',
+      'entity.family': 'Family & Relationships',
+      'entity.affiliations': 'Affiliations',
+      'entity.places': 'Places',
+      'entity.quotes': 'Quotes',
+      'entity.experiences': 'Related Experiences',
+      'entity.characters': 'Related Characters',
+      'entity.series': 'Series & Appearances',
       'entity.meditation': 'Training & Techniques',
       'entity.stories': 'Story Arcs & Knowledge',
-      'entity.family': 'Allies & Relationships',
       'entity.temples': 'Places & Landmarks',
-      'entity.quotes': 'Quotes',
-      'entity.experiences': 'Experiences',
     },
   },
 ];
@@ -85,5 +100,6 @@ export function resolveEntitySectionTitle(
   }
 
   const entityName = displayName.replace(/^Lord\s+/u, '');
-  return presentation.entitySectionTitles[sectionKey].replace('{entity}', entityName);
+  const template = presentation.entitySectionTitles[sectionKey];
+  return template ? template.replace('{entity}', entityName) : fallbackSectionTitle(sectionKey);
 }
