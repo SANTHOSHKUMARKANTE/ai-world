@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-03 |
 | Area | Product / Web / Knowledge / Media / Discovery |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-03B ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-03C ACTIVE |
 | Created | 2026-08-25 |
 | Baseline | `3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -637,7 +637,7 @@ to UXP-03B.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 Production scope:
@@ -667,12 +667,61 @@ keyboard;
 reduced motion.
 ```
 
+Accepted implementation checkpoint:
+
+```text
+80c968b617991c31db9a046ec2c02e240c703fbe
+feat(web): finish anime landing character discovery
+```
+
+Accepted remote CI:
+
+```text
+GitHub CI run 227
+run id 32830038924
+completed successfully on 80c968b617991c31db9a046ec2c02e240c703fbe
+```
+
+Accepted validation evidence includes:
+
+```text
+finished Anime hero;
+Explore Characters action;
+Search Anime entry reusing existing /search;
+Recently Updated Characters driven by accepted discovery ordering;
+three reusable Character fixtures proving generic cards;
+canonical /anime/characters/[slug] links;
+IMAGE preview;
+SHORT_LOOP preview;
+no-Media fallback;
+visible loading state;
+accessible unexpected-error state with retry recovery;
+truthful empty Character state;
+390px mobile with no horizontal overflow;
+keyboard navigation through hero actions and a Character card;
+reduced-motion VIDEO poster fallback;
+Web lint;
+Web typecheck;
+root format / lint / typecheck;
+root unit pipeline 37 / 37 tasks;
+32 migrations applied on isolated PostgreSQL 18.4;
+full integration pipeline 29 / 29 tasks;
+API integration 26 / 26 files and 181 / 181 tests;
+focused UXP-03B browser acceptance 6 / 6;
+full browser E2E 52 / 52;
+production build 22 / 22;
+architecture validation with 0 violations across 739 modules / 2436 dependencies.
+```
+
+UXP-03B is therefore accepted. The finished visible Character-first landing shell
+is now the stable starting point for bounded Series/social identity integration.
+
 ## UXP-03C — Series + social identity integration
 
 Status:
 
 ```text
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
 
 Production scope:
@@ -890,36 +939,42 @@ feat(knowledge): add public discovery projection
 GitHub CI run 225 — success
 ```
 
+Accepted UXP-03B checkpoint:
+
+```text
+80c968b617991c31db9a046ec2c02e240c703fbe
+feat(web): finish anime landing character discovery
+GitHub CI run 227 — success
+```
+
 The active implementation slice is:
 
 ```text
-UXP-03B — Finished Anime landing shell + Character discovery
+UXP-03C — Series + social identity integration
 ```
 
-The next engineering objective is to turn the accepted `/anime` route foundation
-and public discovery contract into the finished visible Anime landing shell.
+The next engineering objective is to complete the bounded Series/social identity
+layer on top of the accepted Character-first Anime landing.
 
-UXP-03B is limited to:
+UXP-03C is limited to:
 
 ```text
-Anime hero;
-Explore Characters action;
-Search Anime entry using the existing Search capability;
-Recently Updated Characters;
-canonical /anime/characters/[slug] links;
-reusable Character cards driven by the accepted discovery projection;
-eligible preview Media treatment;
-loading;
-unexpected discovery error;
-no published Anime Characters;
-cards without preview Media;
-desktop/mobile composition;
-keyboard and reduced-motion behavior.
+optional real published anime.series discovery using the accepted generic
+Knowledge discovery projection;
+Series-present behavior;
+Series-absent behavior with no fake placeholders;
+generic /knowledge/resources/[resourceId] Series destination until UXP-04;
+canonical /anime metadata;
+Open Graph title / description / image projection using real landing identity;
+campaign-safe canonical identity;
+bounded Search preselection enhancement only if the existing /search consumer
+requires it for a truthful Anime entry;
+final landing information hierarchy required before UXP-03D.
 ```
 
-Do not begin UXP-03C Series/social identity integration, a finished Anime Series
-route, recommendation/ranking infrastructure, editorial curation, a landing CMS,
-or speculative persistence/infrastructure during UXP-03B.
+Do not create `/anime/series/[slug]` before UXP-04. Do not add fake Series data,
+ranking/recommendation semantics, editorial curation, a landing CMS, new Anime
+persistence, new roles/permissions, or speculative infrastructure during UXP-03C.
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Product Quality
 And Local User Acceptance gate, and P10-M04 remains sequencing-blocked until

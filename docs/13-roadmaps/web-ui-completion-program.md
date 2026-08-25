@@ -434,7 +434,7 @@ Current accepted routes now include:
 | --- | --- |
 | `/` | AI World landing |
 | `/account` | Account/profile |
-| `/anime` | Anime Universe route foundation; visible landing shell active in UXP-03B |
+| `/anime` | Anime landing shell + Character discovery accepted through UXP-03B; bounded Series/social identity integration active in UXP-03C |
 | `/anime/characters/[slug]` | Anime Character Entity Experience |
 | `/creator` | Creator workspace |
 | `/creator/preview/[id]` | Creator preview |
@@ -852,10 +852,10 @@ UXP-03A — Public discovery projection + route foundation
 CLOSED — a2d0dc9119b93b195bda17f072da23a664a945a5
 
 UXP-03B — Finished Anime landing shell + Character discovery
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — 80c968b617991c31db9a046ec2c02e240c703fbe
 
 UXP-03C — Series + social identity integration
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 
 UXP-03D — Reuse + full landing acceptance
 NOT STARTED
@@ -871,6 +871,19 @@ implementation checkpoint:
 ```text
 a2d0dc9119b93b195bda17f072da23a664a945a5
 feat(knowledge): add public discovery projection
+```
+
+UXP-03B accepted the finished Anime landing shell, real Character discovery,
+canonical Character navigation, safe IMAGE / SHORT_LOOP / no-Media cards,
+loading/error/empty behavior, 390px mobile composition, keyboard navigation and
+reduced-motion poster fallback.
+
+GitHub CI run 227 completed successfully on the exact UXP-03B
+implementation checkpoint:
+
+```text
+80c968b617991c31db9a046ec2c02e240c703fbe
+feat(web): finish anime landing character discovery
 ```
 
 ## UXP-04 — Anime Series
@@ -1170,17 +1183,25 @@ feat(knowledge): add public discovery projection
 GitHub CI run 225 — success
 ```
 
-The next engineering objective is UXP-03B:
+UXP-03B is accepted at:
 
 ```text
-Finished Anime landing shell + Character discovery
+80c968b617991c31db9a046ec2c02e240c703fbe
+feat(web): finish anime landing character discovery
+GitHub CI run 227 — success
 ```
 
-UXP-03B must consume the accepted public discovery projection to finish the
-visible `/anime` Character-first landing shell: Anime hero, Explore Characters,
-existing Search entry, Recently Updated Characters, canonical Character links,
-eligible preview Media treatment, loading/error/empty behavior, responsive
-composition, keyboard behavior and reduced-motion behavior.
+The next engineering objective is UXP-03C:
+
+```text
+Series + social identity integration
+```
+
+UXP-03C must build only on the accepted landing and discovery projection:
+truthful optional published Series discovery, generic Knowledge-detail Series
+navigation until UXP-04, canonical `/anime` identity, Open Graph projection,
+campaign-safe canonical behavior, and a bounded existing-Search preselection
+enhancement only if the current `/search` consumer requires it.
 
 The detailed frozen scope remains:
 
@@ -1188,7 +1209,7 @@ The detailed frozen scope remains:
 docs/13-roadmaps/uxp-03-anime-universe-landing.md
 ```
 
-Do not begin UXP-03C Series/social integration, the finished Anime Series page,
+Do not begin UXP-03D full acceptance, the finished Anime Series route,
 recommendation infrastructure, editorial curation, a landing CMS, a new Anime
 application, or speculative infrastructure.
 
