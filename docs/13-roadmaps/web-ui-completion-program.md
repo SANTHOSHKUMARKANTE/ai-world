@@ -728,68 +728,70 @@ The browser/UAT proof must include:
 | Social/deep-link entry | Yes |
 | Shiva/Hanuman regression | Yes |
 
-## 12.8 UXP-02 current slice status
+## 12.8 UXP-02 closure
 
-Current accepted slice state:
+UXP-02 is closed and accepted.
+
+Final accepted slice state:
 
 ```text
 UXP-02A — Character canonical depth + Creator read boundary
-CLOSED — ACCEPTED
-implementation checkpoint:
-a1df9afb749a4f3e3ece6a9e7709093ff174edc6
+CLOSED — a1df9afb749a4f3e3ece6a9e7709093ff174edc6
 
 UXP-02B — Finished Anime Character shell + social identity
-CLOSED — ACCEPTED
-implementation checkpoint:
-c7d754f6851d90d36aabaf62a6b139ede4b6e963
+CLOSED — c7d754f6851d90d36aabaf62a6b139ede4b6e963
 
 UXP-02C — Character Media viewer + deep link
-CLOSED — ACCEPTED
-implementation checkpoint:
-381a9ab9c47f4544f3a42c265ef6eea0c30f8723
+CLOSED — 381a9ab9c47f4544f3a42c265ef6eea0c30f8723
 
 UXP-02D — Anime relationships + Creator Character manager
-CLOSED — ACCEPTED
-implementation checkpoint:
-9fba11f72fc237a0a8ff305f873089fc4e5c6a68
-final CI compatibility checkpoint:
+CLOSED — 9fba11f72fc237a0a8ff305f873089fc4e5c6a68
+CI compatibility checkpoint:
 cbd6a447b688bb350fefd4e24f8617917ea6245d
 
 UXP-02E — Reuse + full Character acceptance
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — 3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a
 ```
 
-UXP-02A established the canonical/API depth required by the finished Character.
+UXP-02E completed the full Character Page Definition of Done.
 
-UXP-02B established the finished Anime Character shell and social identity.
-
-UXP-02C established the bounded page-owned Character Media viewer, safe
-current-Character media deep linking, explicit viewer VIDEO playback,
-keyboard/Escape/focus behavior and reduced-motion preservation.
-
-UXP-02D established the finished Anime relationship vocabulary and ordering,
-permissioned Creator Character profile/facts/relationship management, reuse of
-the existing Media manager, Creator-only DRAFT preview and the existing
-Knowledge publish/archive lifecycle controls.
-
-The accepted UXP-02D product implementation checkpoint is 9fba11f72fc237a0a8ff305f873089fc4e5c6a68.
-The follow-up cbd6a447b688bb350fefd4e24f8617917ea6245d checkpoint changed only the historical UXP-02A
-integration expectation for the additive authorized Creator Resource metadata;
-the final GitHub CI run was green.
-
-The immediate engineering objective is now UXP-02E: execute the complete
-Character acceptance matrix and prove that the accepted A/B/C/D capabilities
-form one reusable finished Character destination without production
-Character-specific branches.
-
-The detailed frozen scope and proof remain governed by:
+Accepted final evidence includes:
 
 ```text
-docs/13-roadmaps/uxp-02-anime-character-page.md
+Naruto desktop/mobile;
+second Anime Character reuse;
+anonymous/authenticated Engagement;
+authorized and unauthorized Creator paths;
+image-only and mixed bounded Media;
+missing optional sections;
+loading;
+error;
+not found / unpublished;
+keyboard-only;
+reduced motion;
+social/deep-link entry;
+Shiva/Hanuman regressions;
+Web unit 48 / 48;
+32 migrations;
+API integration 25 / 25 files and 179 / 179 tests;
+focused Character browser acceptance 25 / 25;
+full browser E2E 46 / 46;
+production build 22 / 22;
+architecture validation with no violations across 728 modules / 2391 dependencies;
+commit / push;
+GitHub CI run 223 green on 3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a.
 ```
 
-UXP-02 as a whole remains ACTIVE. UXP-03 does not begin until UXP-02E closes the
-complete Character Page Definition of Done.
+The first finished public page is therefore accepted.
+
+The active detailed implementation contract is now:
+
+```text
+docs/13-roadmaps/uxp-03-anime-universe-landing.md
+```
+
+UXP-03 may begin. UXP-04 does not begin until the finished Anime landing passes
+its complete applicable Page Definition of Done.
 
 ---
 
@@ -797,20 +799,50 @@ complete Character Page Definition of Done.
 
 ## UXP-03 — Anime Universe landing
 
-The Anime landing becomes the high-energy discovery front door.
-
-Likely content:
+Status:
 
 ```text
-featured Characters;
-featured Series;
-new Media;
-short motion highlights;
-trending/editorial rails if real data exists;
-search entry;
-latest Experiences;
-social campaign destinations;
-clear path into Character and Series pages.
+ACTIVE — NEXT PAGE
+```
+
+The Anime landing becomes the high-energy discovery front door.
+
+The frozen detailed implementation contract is:
+
+```text
+docs/13-roadmaps/uxp-03-anime-universe-landing.md
+```
+
+Accepted initial direction:
+
+```text
+new /anime route;
+generic Knowledge-owned published discovery-card projection;
+real Character identity + canonical Character links;
+eligible public preview Media;
+Recently Updated Characters;
+optional real Series discovery;
+existing Search reuse;
+typed Anime presentation;
+canonical/social identity;
+complete loading/error/empty/responsive/accessibility acceptance.
+```
+
+Important boundaries:
+
+```text
+no fake trending/popularity/recommendations;
+no editorial ranking or landing CMS;
+no finished Anime Series page before UXP-04;
+no new Anime persistence;
+no new Media/Search platform;
+no public Experience feed merely to fill space.
+```
+
+UXP-03 starts from the accepted UXP-02 closure baseline:
+
+```text
+3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a
 ```
 
 ## UXP-04 — Anime Series
@@ -1090,39 +1122,38 @@ CLOSED
 UXP-01 — Character-driven Universe/Media foundation
 CLOSED
         ↓
-UXP-02A — Character canonical depth + Creator read boundary
-CLOSED — a1df9afb749a4f3e3ece6a9e7709093ff174edc6
-        ↓
-UXP-02B — Finished Anime Character shell + social identity
-CLOSED — c7d754f6851d90d36aabaf62a6b139ede4b6e963
-        ↓
-UXP-02C — Character Media viewer + deep link
-CLOSED — 381a9ab9c47f4544f3a42c265ef6eea0c30f8723
-        ↓
-UXP-02D — Anime relationships + Creator Character manager
-CLOSED — 9fba11f72fc237a0a8ff305f873089fc4e5c6a68
-        ↓
-UXP-02E — Reuse + full Character acceptance
-ACTIVE
+UXP-02 — Anime Character
+CLOSED — 3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a
         ↓
 UXP-03 — Anime Universe landing
+ACTIVE
+        ↓
+UXP-04 — Anime Series
+NOT STARTED
 ```
 
-No additional Entity, Media or Creator-management implementation milestone is
-needed before the UXP-02 acceptance gate.
+UXP-02 is the first fully accepted page in the program.
 
-The next engineering objective is UXP-02E: run the complete reusable Character
-acceptance matrix across public, authenticated and authorized Creator states;
-Media variants; missing/error/not-found behavior; responsive/accessibility and
-reduced-motion behavior; social/deep-link entry; Devotional regressions; full
-integration/E2E/build/architecture validation; reviewed evidence; commit/push and
-green CI.
+The next engineering objective is UXP-03A:
 
-UXP-02E must treat the accepted A/B/C/D implementation as the system under test.
-It must not begin UXP-03, redesign the Creator Studio, create new Anime-only
-persistence, or add speculative infrastructure. A bounded implementation repair
-is allowed only when a concrete acceptance failure proves a real UXP-02 defect.
+```text
+Public discovery projection + route foundation
+```
 
-The Master Roadmap remains unchanged by this sub-slice transition. WPR-M05
-receives its roadmap closure update only when the entire accepted gate is ready
-to close.
+UXP-03A must add only the smallest generic Knowledge-owned public discovery
+projection needed to render real Anime landing cards, prove publication /
+Resource Type / ordering / preview-Media behavior, and add the `/anime` route
+foundation.
+
+The detailed frozen scope is:
+
+```text
+docs/13-roadmaps/uxp-03-anime-universe-landing.md
+```
+
+Do not begin the finished Series page, recommendation infrastructure, editorial
+curation, a landing CMS, a new Anime application, or speculative infrastructure.
+
+The Master Roadmap remains unchanged by this page transition. WPR-M05 receives
+its roadmap closure update only when the entire accepted Web Product Readiness
+gate is ready to close.

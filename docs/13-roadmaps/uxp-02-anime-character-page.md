@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-02 |
 | Area | Product / Web / Knowledge / Engagement / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-02E ACTIVE |
+| Status | CLOSED — ACCEPTED |
 | Created | 2026-08-24 |
 | Baseline | `573cc1b2e24345c2571698326eb4041bc493da0b` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -15,6 +15,8 @@
 | Governing Roadmap | `docs/13-roadmaps/master-roadmap.md` |
 | Scope | Fully finish `/anime/characters/[slug]` and the minimum creator-management path that drives it |
 | Roadmap Effect | None until WPR-M05 closes |
+| Closed | 2026-08-25 |
+| Closure Baseline | `3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a` |
 
 ---
 
@@ -838,7 +840,14 @@ DRAFT preview without public leakage.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
+```
+
+Accepted acceptance checkpoint:
+
+```text
+3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a
+test(web): prove full anime character acceptance
 ```
 
 Required evidence:
@@ -993,115 +1002,114 @@ UXP-03 — Anime Universe landing
 
 ---
 
-# 20. Current Slice Status
+# 20. Closure Record
 
-UXP-02A, UXP-02B, UXP-02C and UXP-02D are closed and accepted.
+UXP-02 is closed and accepted.
 
-Accepted implementation checkpoints:
+The accepted implementation / acceptance sequence is:
 
 ```text
-UXP-02A
+UXP-02A — Character canonical depth + Creator read boundary
 a1df9afb749a4f3e3ece6a9e7709093ff174edc6
 feat(knowledge): deepen character entity profiles
 
-UXP-02B
+UXP-02B — Finished Anime Character shell + social identity
 c7d754f6851d90d36aabaf62a6b139ede4b6e963
 feat(web): finish anime character shell
 
-UXP-02C
+UXP-02C — Character Media viewer + deep link
 381a9ab9c47f4544f3a42c265ef6eea0c30f8723
 feat(web): add character media viewer
 
-UXP-02D
-9fba11f72fc237a0a8ff305f873089fc4e5c6a68
-feat(creator): manage anime characters
-```
-
-Accepted UXP-02D evidence established:
-
-```text
-the Anime Character composition now recognizes the finished canonical section
-vocabulary for forms, techniques, arcs, allies, rivals, family, affiliations,
-places, quotes, Experiences, related Characters and series / appearances;
-
-public Character relationships continue through the generic Knowledge
-relationship contract and remain grouped and deterministically ordered by
-section position;
-
-the Creator workspace now loads and edits the existing Character Entity
-configuration for slug, display/native/alternate identity, summary, overview,
-quick facts and relationships without introducing a second Character write path;
-
-the authorized Creator Entity GET now includes the Resource identity,
-Universe/type and lifecycle metadata required by the Character manager while the
-existing PUT remains the authoritative profile / relationship write;
-
-the accepted Knowledge Media manager is reused through the same Knowledge
-Resource ID rather than duplicated inside the Character manager;
-
-the Creator-only Character preview can render a DRAFT profile, facts, Media and
-relationships without making that DRAFT Resource publicly readable;
-
-existing Knowledge publish/archive lifecycle use cases and permissions are
-exposed to the Creator Character workflow without a new Anime-admin role,
-Character-admin permission or lifecycle model;
-
-authorized Creator round-trip, ordinary-user 403 denial, DRAFT public 404,
-publish, public visibility after publication and archive/public-hide behavior
-were proven through the real API integration suite;
-
-the focused implementation validation passed API unit 24 / 24, Web unit 48 / 48,
-root build 22 / 22, the 32-migration baseline and the final focused Character /
-Creator / Media / Devotional browser regression run 23 / 23;
-
-the implementation was committed and pushed at:
-
+UXP-02D — Anime relationships + Creator Character manager
 9fba11f72fc237a0a8ff305f873089fc4e5c6a68
 feat(creator): manage anime characters
 
-the first remote CI run exposed only a stale UXP-02A exact response assertion;
-the new UXP-02D integration proof itself passed in that remote run;
-
-the compatibility repair changed only the historical UXP-02A integration
-expectation to accept the additive authorized Creator Resource metadata and was
-committed at:
-
+UXP-02D CI compatibility repair
 cbd6a447b688bb350fefd4e24f8617917ea6245d
 test(knowledge): accept creator resource metadata
 
-the complete local CI-equivalent validation after that repair passed all 25 / 25
-API integration files and 179 / 179 integration tests, all 44 / 44 browser E2E
-tests, root build 22 / 22 and architecture validation with no violations across
-727 modules / 2390 dependencies;
-
-GitHub CI run 221 completed successfully for the exact cbd6a447b688bb350fefd4e24f8617917ea6245d
-checkpoint on 2026-08-25;
-
-no production code changed after the accepted 9fba11f72fc237a0a8ff305f873089fc4e5c6a68
-UXP-02D implementation checkpoint.
+UXP-02E — Reuse + full Character acceptance
+3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a
+test(web): prove full anime character acceptance
 ```
 
-UXP-02D deliberately did not perform the final whole-Character acceptance gate
-or begin the Anime Universe landing.
-
-The active implementation slice is now:
+The accepted UXP-02E evidence established:
 
 ```text
-UXP-02E — Reuse + full Character acceptance
+Naruto desktop and 390px-class mobile Character behavior remained green;
+
+Sasuke proved second-Character reuse through the same production composition;
+
+anonymous engagement and authenticated Favorite / Collection behavior remained
+on the accepted shared Engagement path;
+
+authorized Creator profile / facts / relationship management, DRAFT preview and
+existing lifecycle controls remained green;
+
+unauthorized Creator configuration access remained denied;
+
+image-only and mixed IMAGE + bounded SHORT_LOOP VIDEO Character Media behavior
+remained green;
+
+keyboard viewer activation, Escape close, focus return and reduced-motion
+poster-first behavior remained green;
+
+canonical/campaign-safe Character identity and valid/invalid Media deep-link
+behavior remained green;
+
+not-found / unpublished and unexpected error behavior remained distinct;
+
+the final UXP-02E test added explicit visible loading-state proof and a sparse
+Character proof with no native name, alternate names, facts, Media or
+relationships;
+
+the sparse Character remained coherent at 390px with no horizontal overflow and
+without fake optional sections;
+
+Shiva and Hanuman protected regressions remained green;
+
+the complete local acceptance chain established Web unit 48 / 48, the 32
+migration baseline, API integration 25 / 25 files and 179 / 179 tests, focused
+Character browser acceptance 25 / 25, full browser E2E 46 / 46, root production
+build 22 / 22 and architecture validation with no violations across 728 modules
+/ 2391 dependencies;
+
+the final acceptance proof was committed and pushed at:
+
+3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a
+test(web): prove full anime character acceptance
+
+GitHub CI run 223 completed successfully for that exact checkpoint on
+2026-08-25.
 ```
 
-UXP-02E must prove the complete Character Page Definition of Done across Naruto,
-a second Anime Character, anonymous/authenticated/Creator states, Media variants,
-missing/error/not-found states, keyboard/reduced-motion behavior, social/deep
-link entry and the protected Shiva/Hanuman regressions.
+The Section 19 exit rule is therefore satisfied:
 
-UXP-02E is an acceptance/reuse gate. It must not expand into UXP-03 or introduce
-new product infrastructure unless a concrete acceptance failure proves a bounded
-UXP-02 defect that must be corrected before closure.
+```text
+Naruto is a finished canonical/API-driven Anime Character destination;
+a second Anime Character proves reuse without production branches;
+Character-management behavior is real and permissioned;
+the complete Character acceptance matrix is green;
+Devotional regressions remain green;
+evidence / commit / push / CI are accepted.
+```
 
-UXP-02 itself remains ACTIVE and does not close until the Section 19 exit rule
-and full UXP-02E acceptance chain are satisfied.
+The next active page is:
 
-This sub-slice closure does not change the Master Roadmap. WPR-M05 remains the
-active Product Quality And Local User Acceptance gate, and P10-M04 remains
-sequencing-blocked until that gate closes.
+```text
+UXP-03 — Anime Universe landing
+```
+
+Its governing detailed implementation contract is:
+
+```text
+docs/13-roadmaps/uxp-03-anime-universe-landing.md
+```
+
+UXP-02 must not be reopened merely to redesign the finished Character page.
+A later Character change requires evidence from a real downstream product need.
+
+The Master Roadmap remains unchanged. WPR-M05 remains the active Product Quality
+And Local User Acceptance gate, and P10-M04 remains sequencing-blocked until
+that gate closes.
