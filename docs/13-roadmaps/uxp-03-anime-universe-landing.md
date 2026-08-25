@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-03 |
 | Area | Product / Web / Knowledge / Media / Discovery |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-03C ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-03D ACTIVE |
 | Created | 2026-08-25 |
 | Baseline | `3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -721,7 +721,7 @@ is now the stable starting point for bounded Series/social identity integration.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 Production scope:
@@ -746,12 +746,66 @@ campaign-safe canonical identity;
 Anime Search entry.
 ```
 
+Accepted implementation checkpoint:
+
+```text
+e454ba3d602b8c05efb3eabde42a0ec2bf8a64ba
+feat(web): integrate anime series social identity
+```
+
+Accepted remote CI:
+
+```text
+GitHub CI run 229
+run id 32842592376
+completed successfully on e454ba3d602b8c05efb3eabde42a0ec2bf8a64ba
+```
+
+Accepted validation evidence includes:
+
+```text
+optional published anime.series discovery through the accepted generic Knowledge projection;
+Series-present and Series-absent behavior;
+two reusable Series fixtures in browser proof;
+Series IMAGE preview;
+Series no-Media fallback;
+generic /knowledge/resources/[resourceId] Series destinations;
+zero /anime/series/[slug] production links;
+existing /search reuse with native Anime Character and Series filters;
+canonical /anime identity;
+campaign parameters excluded from canonical identity;
+Open Graph title and description;
+generated /anime/opengraph-image;
+AI_WORLD_WEB_ORIGIN public Web metadata boundary;
+validated http(s)-origin-only metadata configuration;
+root-layout metadataBase inheritance;
+deterministic Playwright Web-origin configuration;
+Turbo build hashing for AI_WORLD_WEB_ORIGIN;
+production build with no metadataBase localhost fallback warning;
+production next-start proof of canonical and og:image on the configured Web origin;
+generated Open Graph image returned 200 image/png;
+focused UXP-03C metadata unit 2 / 2;
+Web unit regression 16 / 16 files and 52 / 52 tests;
+root unit pipeline 37 / 37 tasks;
+32 migrations applied on isolated PostgreSQL 18.4;
+full integration pipeline 29 / 29 tasks;
+API integration 26 / 26 files and 181 / 181 tests;
+focused UXP-03B + UXP-03C browser acceptance 10 / 10;
+full browser E2E 56 / 56;
+production build 22 / 22;
+architecture validation with 0 violations across 745 modules / 2446 dependencies.
+```
+
+UXP-03C is therefore accepted. The Character-first Anime landing now has truthful
+optional Series discovery and stable campaign-safe social identity. The remaining
+UXP-03 work is reuse and complete landing acceptance, not a new product capability.
+
 ## UXP-03D — Reuse + full landing acceptance
 
 Status:
 
 ```text
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
 
 Required evidence:
@@ -947,34 +1001,71 @@ feat(web): finish anime landing character discovery
 GitHub CI run 227 — success
 ```
 
+Accepted UXP-03C checkpoint:
+
+```text
+e454ba3d602b8c05efb3eabde42a0ec2bf8a64ba
+feat(web): integrate anime series social identity
+GitHub CI run 229 — success
+```
+
 The active implementation slice is:
 
 ```text
-UXP-03C — Series + social identity integration
+UXP-03D — Reuse + full landing acceptance
 ```
 
-The next engineering objective is to complete the bounded Series/social identity
-layer on top of the accepted Character-first Anime landing.
+The next engineering objective is to prove the finished Anime landing against its
+complete reusable Product Definition of Done. UXP-03D is an acceptance/quality
+slice rather than a planned new product-capability slice.
 
-UXP-03C is limited to:
+UXP-03D must prove:
 
 ```text
-optional real published anime.series discovery using the accepted generic
-Knowledge discovery projection;
-Series-present behavior;
-Series-absent behavior with no fake placeholders;
-generic /knowledge/resources/[resourceId] Series destination until UXP-04;
-canonical /anime metadata;
-Open Graph title / description / image projection using real landing identity;
-campaign-safe canonical identity;
-bounded Search preselection enhancement only if the existing /search consumer
-requires it for a truthful Anime entry;
-final landing information hierarchy required before UXP-03D.
+desktop;
+tablet;
+390px-class mobile;
+two or more reusable Characters;
+optional Series present;
+Series absent;
+IMAGE preview;
+bounded SHORT_LOOP preview when canonical;
+no-Media fallback;
+anonymous visitor;
+authenticated shared shell;
+loading;
+empty;
+unexpected error;
+keyboard-only;
+reduced motion;
+campaign-safe canonical/social entry;
+Character navigation;
+Search navigation;
+Shiva regression;
+Hanuman regression;
+finished Anime Character regressions;
+format;
+lint;
+typecheck;
+focused unit;
+migration status/deployment;
+integration;
+focused browser;
+full browser E2E;
+production build;
+architecture check;
+reviewed evidence ZIP;
+focused acceptance tests/evidence changes when required to prove the matrix;
+production code changes only when acceptance exposes a real defect;
+acceptance checkpoint commit/push;
+exact remote CI green.
 ```
 
-Do not create `/anime/series/[slug]` before UXP-04. Do not add fake Series data,
-ranking/recommendation semantics, editorial curation, a landing CMS, new Anime
-persistence, new roles/permissions, or speculative infrastructure during UXP-03C.
+Do not begin `/anime/series/[slug]`, UXP-04 implementation, recommendation/ranking
+semantics, editorial curation, a landing CMS, new Anime persistence, new
+roles/permissions, or speculative infrastructure during UXP-03D. Production code
+changes are justified only when this acceptance slice exposes a real landing or
+regression defect.
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Product Quality
 And Local User Acceptance gate, and P10-M04 remains sequencing-blocked until

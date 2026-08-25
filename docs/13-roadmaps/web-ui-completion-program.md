@@ -434,7 +434,7 @@ Current accepted routes now include:
 | --- | --- |
 | `/` | AI World landing |
 | `/account` | Account/profile |
-| `/anime` | Anime landing shell + Character discovery accepted through UXP-03B; bounded Series/social identity integration active in UXP-03C |
+| `/anime` | Anime landing Character + optional Series + social identity accepted through UXP-03C; reuse/full landing acceptance active in UXP-03D |
 | `/anime/characters/[slug]` | Anime Character Entity Experience |
 | `/creator` | Creator workspace |
 | `/creator/preview/[id]` | Creator preview |
@@ -855,10 +855,10 @@ UXP-03B — Finished Anime landing shell + Character discovery
 CLOSED — 80c968b617991c31db9a046ec2c02e240c703fbe
 
 UXP-03C — Series + social identity integration
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — e454ba3d602b8c05efb3eabde42a0ec2bf8a64ba
 
 UXP-03D — Reuse + full landing acceptance
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
 
 UXP-03A accepted the generic published Knowledge discovery projection, safe
@@ -884,6 +884,19 @@ implementation checkpoint:
 ```text
 80c968b617991c31db9a046ec2c02e240c703fbe
 feat(web): finish anime landing character discovery
+```
+
+UXP-03C accepted truthful optional published Series discovery, generic
+Knowledge-detail Series navigation, existing Search reuse, campaign-safe
+canonical `/anime` identity, generated Open Graph identity/image, and a validated
+configurable public Web-origin boundary.
+
+GitHub CI run 229 completed successfully on the exact UXP-03C
+implementation checkpoint:
+
+```text
+e454ba3d602b8c05efb3eabde42a0ec2bf8a64ba
+feat(web): integrate anime series social identity
 ```
 
 ## UXP-04 — Anime Series
@@ -1191,17 +1204,27 @@ feat(web): finish anime landing character discovery
 GitHub CI run 227 — success
 ```
 
-The next engineering objective is UXP-03C:
+UXP-03C is accepted at:
 
 ```text
-Series + social identity integration
+e454ba3d602b8c05efb3eabde42a0ec2bf8a64ba
+feat(web): integrate anime series social identity
+GitHub CI run 229 — success
 ```
 
-UXP-03C must build only on the accepted landing and discovery projection:
-truthful optional published Series discovery, generic Knowledge-detail Series
-navigation until UXP-04, canonical `/anime` identity, Open Graph projection,
-campaign-safe canonical behavior, and a bounded existing-Search preselection
-enhancement only if the current `/search` consumer requires it.
+The next engineering objective is UXP-03D:
+
+```text
+Reuse + full landing acceptance
+```
+
+UXP-03D must prove the now-finished Anime landing against the complete page
+Definition of Done: desktop/tablet/390px composition, reusable Character cards,
+Series present/absent, Media variants, anonymous/authenticated shared shell,
+loading/empty/error, keyboard/reduced motion, canonical/social entry,
+Character/Search navigation, Shiva/Hanuman and finished Character regressions,
+plus the full format/lint/typecheck/unit/migration/integration/browser/build/
+architecture/evidence/commit/push/CI chain.
 
 The detailed frozen scope remains:
 
@@ -1209,9 +1232,13 @@ The detailed frozen scope remains:
 docs/13-roadmaps/uxp-03-anime-universe-landing.md
 ```
 
-Do not begin UXP-03D full acceptance, the finished Anime Series route,
-recommendation infrastructure, editorial curation, a landing CMS, a new Anime
-application, or speculative infrastructure.
+UXP-03D should not invent new product capability merely to produce an
+implementation diff. Acceptance-test/evidence changes are expected when needed to
+prove the matrix, and the slice still requires a committed/pushed acceptance
+checkpoint with exact green CI. Production changes are allowed only when full
+acceptance reveals a real defect. Do not begin UXP-04 or `/anime/series/[slug]`
+until UXP-03 itself satisfies its exit rule and receives its own accepted closure
+transition.
 
 The Master Roadmap remains unchanged by this slice transition. WPR-M05 receives
 its roadmap closure update only when the entire accepted Web Product Readiness
