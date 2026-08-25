@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-03 |
 | Area | Product / Web / Knowledge / Media / Discovery |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-03A ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-03B ACTIVE |
 | Created | 2026-08-25 |
 | Baseline | `3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -66,7 +66,7 @@ UXP-02 A/B/C/D/E automated proofs;
 current roadmap and WPR-M05 constraints.
 ```
 
-Current repository facts are:
+At the UXP-03 freeze, repository facts were:
 
 ```text
 /apps/web/src/app/anime contains only the characters subtree;
@@ -555,7 +555,7 @@ justified by a later milestone rather than anticipated in UXP-03.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 Production scope:
@@ -585,12 +585,59 @@ no preview Media degrades to null;
 Devotional query remains generic/reusable.
 ```
 
+Accepted implementation checkpoint:
+
+```text
+a2d0dc9119b93b195bda17f072da23a664a945a5
+feat(knowledge): add public discovery projection
+```
+
+Accepted remote CI:
+
+```text
+GitHub CI run 225
+run id 32821766397
+completed successfully on a2d0dc9119b93b195bda17f072da23a664a945a5
+```
+
+Accepted validation evidence includes:
+
+```text
+generic GET /knowledge/discovery;
+published-only Resource filtering;
+public Entity profile requirement;
+optional Resource Type filtering;
+bounded query limit;
+updatedAt descending + resourceId ascending deterministic ordering;
+eligible public preview Media;
+unavailable preview skipped;
+no eligible preview degrades to null;
+Devotional reuse through the same generic projection;
+strict Web decoder;
+minimal /anime route foundation;
+route-to-discovery contract connection without visible UXP-03B UI;
+Knowledge unit 4 / 4;
+Web decoder unit 2 / 2;
+Web unit regression 15 / 15 files and 50 / 50 tests;
+32 migrations applied on isolated PostgreSQL 18.4;
+focused UXP-03A API integration 2 / 2;
+API integration 26 / 26 files and 181 / 181 tests;
+focused /anime browser 1 / 1;
+full browser E2E 47 / 47;
+production build 22 / 22;
+architecture validation with 0 violations across 739 modules / 2433 dependencies.
+```
+
+UXP-03A is therefore accepted. The `/anime` route remains intentionally
+foundation-only at this checkpoint; the finished visible landing shell belongs
+to UXP-03B.
+
 ## UXP-03B — Finished Anime landing shell + Character discovery
 
 Status:
 
 ```text
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
 
 Production scope:
@@ -835,17 +882,44 @@ closure baseline:
 test(web): prove full anime character acceptance
 ```
 
+Accepted UXP-03A checkpoint:
+
+```text
+a2d0dc9119b93b195bda17f072da23a664a945a5
+feat(knowledge): add public discovery projection
+GitHub CI run 225 — success
+```
+
 The active implementation slice is:
 
 ```text
-UXP-03A — Public discovery projection + route foundation
+UXP-03B — Finished Anime landing shell + Character discovery
 ```
 
-The first engineering objective is to add the smallest generic published
-discovery-card projection required by `/anime`, prove its publication/media
-boundaries, and add only the route foundation that consumes that real contract.
+The next engineering objective is to turn the accepted `/anime` route foundation
+and public discovery contract into the finished visible Anime landing shell.
 
-Do not begin the finished visual landing until UXP-03A's data contract is proven.
+UXP-03B is limited to:
+
+```text
+Anime hero;
+Explore Characters action;
+Search Anime entry using the existing Search capability;
+Recently Updated Characters;
+canonical /anime/characters/[slug] links;
+reusable Character cards driven by the accepted discovery projection;
+eligible preview Media treatment;
+loading;
+unexpected discovery error;
+no published Anime Characters;
+cards without preview Media;
+desktop/mobile composition;
+keyboard and reduced-motion behavior.
+```
+
+Do not begin UXP-03C Series/social identity integration, a finished Anime Series
+route, recommendation/ranking infrastructure, editorial curation, a landing CMS,
+or speculative persistence/infrastructure during UXP-03B.
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Product Quality
 And Local User Acceptance gate, and P10-M04 remains sequencing-blocked until

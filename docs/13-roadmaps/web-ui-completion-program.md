@@ -428,12 +428,13 @@ Hiding a control is not authorization.
 
 # 9. Current Public Web Route Inventory
 
-Current routes at baseline include:
+Current accepted routes now include:
 
 | Route | Current role in product |
 | --- | --- |
 | `/` | AI World landing |
 | `/account` | Account/profile |
+| `/anime` | Anime Universe route foundation; visible landing shell active in UXP-03B |
 | `/anime/characters/[slug]` | Anime Character Entity Experience |
 | `/creator` | Creator workspace |
 | `/creator/preview/[id]` | Creator preview |
@@ -449,10 +450,9 @@ Current routes at baseline include:
 | `/sign-in` | Sign in |
 | `/verify-email` | Email verification |
 
-Important missing destination pages that are justified by current product direction include:
+Important missing destination pages that remain justified by current product direction include:
 
 ```text
-/anime
 /anime/series/[slug]
 /devotional
 ```
@@ -845,6 +845,34 @@ UXP-03 starts from the accepted UXP-02 closure baseline:
 3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a
 ```
 
+Current UXP-03 slice state:
+
+```text
+UXP-03A — Public discovery projection + route foundation
+CLOSED — a2d0dc9119b93b195bda17f072da23a664a945a5
+
+UXP-03B — Finished Anime landing shell + Character discovery
+ACTIVE — NEXT IMPLEMENTATION SLICE
+
+UXP-03C — Series + social identity integration
+NOT STARTED
+
+UXP-03D — Reuse + full landing acceptance
+NOT STARTED
+```
+
+UXP-03A accepted the generic published Knowledge discovery projection, safe
+optional preview Media, strict Web decoder, `/anime` route foundation, and the
+non-visual route-to-discovery connection.
+
+GitHub CI run 225 completed successfully on the exact UXP-03A
+implementation checkpoint:
+
+```text
+a2d0dc9119b93b195bda17f072da23a664a945a5
+feat(knowledge): add public discovery projection
+```
+
 ## UXP-04 — Anime Series
 
 Series page should combine:
@@ -1134,26 +1162,36 @@ NOT STARTED
 
 UXP-02 is the first fully accepted page in the program.
 
-The next engineering objective is UXP-03A:
+UXP-03A is accepted at:
 
 ```text
-Public discovery projection + route foundation
+a2d0dc9119b93b195bda17f072da23a664a945a5
+feat(knowledge): add public discovery projection
+GitHub CI run 225 — success
 ```
 
-UXP-03A must add only the smallest generic Knowledge-owned public discovery
-projection needed to render real Anime landing cards, prove publication /
-Resource Type / ordering / preview-Media behavior, and add the `/anime` route
-foundation.
+The next engineering objective is UXP-03B:
 
-The detailed frozen scope is:
+```text
+Finished Anime landing shell + Character discovery
+```
+
+UXP-03B must consume the accepted public discovery projection to finish the
+visible `/anime` Character-first landing shell: Anime hero, Explore Characters,
+existing Search entry, Recently Updated Characters, canonical Character links,
+eligible preview Media treatment, loading/error/empty behavior, responsive
+composition, keyboard behavior and reduced-motion behavior.
+
+The detailed frozen scope remains:
 
 ```text
 docs/13-roadmaps/uxp-03-anime-universe-landing.md
 ```
 
-Do not begin the finished Series page, recommendation infrastructure, editorial
-curation, a landing CMS, a new Anime application, or speculative infrastructure.
+Do not begin UXP-03C Series/social integration, the finished Anime Series page,
+recommendation infrastructure, editorial curation, a landing CMS, a new Anime
+application, or speculative infrastructure.
 
-The Master Roadmap remains unchanged by this page transition. WPR-M05 receives
+The Master Roadmap remains unchanged by this slice transition. WPR-M05 receives
 its roadmap closure update only when the entire accepted Web Product Readiness
 gate is ready to close.
