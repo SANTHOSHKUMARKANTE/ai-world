@@ -749,10 +749,14 @@ implementation checkpoint:
 381a9ab9c47f4544f3a42c265ef6eea0c30f8723
 
 UXP-02D — Anime relationships + Creator Character manager
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
+implementation checkpoint:
+9fba11f72fc237a0a8ff305f873089fc4e5c6a68
+final CI compatibility checkpoint:
+cbd6a447b688bb350fefd4e24f8617917ea6245d
 
 UXP-02E — Reuse + full Character acceptance
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
 
 UXP-02A established the canonical/API depth required by the finished Character.
@@ -763,9 +767,20 @@ UXP-02C established the bounded page-owned Character Media viewer, safe
 current-Character media deep linking, explicit viewer VIDEO playback,
 keyboard/Escape/focus behavior and reduced-motion preservation.
 
-The immediate engineering objective is now UXP-02D: finish the Anime
-relationship vocabulary and the minimum permissioned Creator Character
-management path that drives the accepted public composition.
+UXP-02D established the finished Anime relationship vocabulary and ordering,
+permissioned Creator Character profile/facts/relationship management, reuse of
+the existing Media manager, Creator-only DRAFT preview and the existing
+Knowledge publish/archive lifecycle controls.
+
+The accepted UXP-02D product implementation checkpoint is 9fba11f72fc237a0a8ff305f873089fc4e5c6a68.
+The follow-up cbd6a447b688bb350fefd4e24f8617917ea6245d checkpoint changed only the historical UXP-02A
+integration expectation for the additive authorized Creator Resource metadata;
+the final GitHub CI run was green.
+
+The immediate engineering objective is now UXP-02E: execute the complete
+Character acceptance matrix and prove that the accepted A/B/C/D capabilities
+form one reusable finished Character destination without production
+Character-specific branches.
 
 The detailed frozen scope and proof remain governed by:
 
@@ -1085,23 +1100,28 @@ UXP-02C — Character Media viewer + deep link
 CLOSED — 381a9ab9c47f4544f3a42c265ef6eea0c30f8723
         ↓
 UXP-02D — Anime relationships + Creator Character manager
-ACTIVE
+CLOSED — 9fba11f72fc237a0a8ff305f873089fc4e5c6a68
         ↓
 UXP-02E — Reuse + full Character acceptance
+ACTIVE
         ↓
 UXP-03 — Anime Universe landing
 ```
 
-No additional Entity or Media proof milestone is needed.
+No additional Entity, Media or Creator-management implementation milestone is
+needed before the UXP-02 acceptance gate.
 
-The next engineering objective is UXP-02D: finish Anime relationship grouping /
-ordering and the minimum permissioned Creator Character profile, facts,
-relationship and preview workflow on top of the accepted A/B/C capabilities.
+The next engineering objective is UXP-02E: run the complete reusable Character
+acceptance matrix across public, authenticated and authorized Creator states;
+Media variants; missing/error/not-found behavior; responsive/accessibility and
+reduced-motion behavior; social/deep-link entry; Devotional regressions; full
+integration/E2E/build/architecture validation; reviewed evidence; commit/push and
+green CI.
 
-UXP-02D must reuse the existing Knowledge relationship contract, Creator Entity
-read/write boundary, existing Media manager and existing lifecycle behavior. It
-must not create Anime-only relationship persistence, a second Character write
-path, a new Character-admin permission, or a full Creator Studio redesign.
+UXP-02E must treat the accepted A/B/C/D implementation as the system under test.
+It must not begin UXP-03, redesign the Creator Studio, create new Anime-only
+persistence, or add speculative infrastructure. A bounded implementation repair
+is allowed only when a concrete acceptance failure proves a real UXP-02 defect.
 
 The Master Roadmap remains unchanged by this sub-slice transition. WPR-M05
 receives its roadmap closure update only when the entire accepted gate is ready
