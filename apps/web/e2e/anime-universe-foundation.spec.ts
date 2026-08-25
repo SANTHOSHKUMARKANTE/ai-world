@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page, type Route } from '@playwright/test';
 
 const NARUTO_ID = '93000000-0000-4000-8000-000000000001';
 const SASUKE_ID = '93000000-0000-4000-8000-000000000002';
@@ -81,13 +81,41 @@ async function mockMedia(page: Page): Promise<void> {
   });
 }
 
+async function fulfillOptionalSeries(route: Route): Promise<boolean> {
+  const url = new URL(route.request().url());
+
+  expect(url.searchParams.get('universeKey')).toBe('universe.anime');
+
+  if (url.searchParams.get('resourceType') !== 'anime.series') {
+    return false;
+  }
+
+  expect(url.searchParams.get('limit')).toBe('4');
+
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ items: [] }),
+  });
+
+  return true;
+}
+
+async function assertCharacterRequest(route: Route): Promise<void> {
+  const url = new URL(route.request().url());
+
+  expect(url.searchParams.get('universeKey')).toBe('universe.anime');
+  expect(url.searchParams.get('resourceType')).toBe('anime.character');
+  expect(url.searchParams.get('limit')).toBe('6');
+}
+
 async function mockDiscovery(page: Page, body = discoveryBody()): Promise<void> {
   await page.route('**/api/knowledge/discovery?*', async (route) => {
-    const url = new URL(route.request().url());
+    if (await fulfillOptionalSeries(route)) {
+      return;
+    }
 
-    expect(url.searchParams.get('universeKey')).toBe('universe.anime');
-    expect(url.searchParams.get('resourceType')).toBe('anime.character');
-    expect(url.searchParams.get('limit')).toBe('6');
+    await assertCharacterRequest(route);
 
     await route.fulfill({
       status: 200,
@@ -160,6 +188,12 @@ test.describe('UXP-03B Anime Universe landing + Character discovery', () => {
     let release: (() => void) | undefined;
 
     await page.route('**/api/knowledge/discovery?*', async (route) => {
+      if (await fulfillOptionalSeries(route)) {
+        return;
+      }
+
+      await assertCharacterRequest(route);
+
       await new Promise<void>((resolve) => {
         release = resolve;
       });
@@ -189,6 +223,11 @@ test.describe('UXP-03B Anime Universe landing + Character discovery', () => {
     let attempts = 0;
 
     await page.route('**/api/knowledge/discovery?*', async (route) => {
+      if (await fulfillOptionalSeries(route)) {
+        return;
+      }
+
+      await assertCharacterRequest(route);
       attempts += 1;
 
       if (attempts === 1) {

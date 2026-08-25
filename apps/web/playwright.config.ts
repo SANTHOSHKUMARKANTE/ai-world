@@ -92,6 +92,7 @@ export default defineConfig({
       stderr: 'pipe',
       env: {
         AI_WORLD_API_ORIGIN: apiOrigin,
+        AI_WORLD_WEB_ORIGIN: webOrigin,
       },
     },
   ],

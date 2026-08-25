@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 
+import { resolveWebMetadataBase } from '../metadata/web-metadata-origin';
 import { SessionProvider } from '../session/session-provider';
 import { ApplicationShell } from '../ui/application-shell';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: resolveWebMetadataBase(),
   title: {
     default: 'AI World',
     template: '%s · AI World',

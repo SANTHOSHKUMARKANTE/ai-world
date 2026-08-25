@@ -50,7 +50,55 @@ function useShortMotionAllowed(): boolean {
   return allowed;
 }
 
-function CharacterPreview({
+function useAnimeDiscovery(
+  resourceType: 'anime.character' | 'anime.series',
+  limit: number,
+): {
+  readonly state: DiscoveryState;
+  readonly retry: () => void;
+} {
+  const [state, setState] = useState<DiscoveryState>({ status: 'loading' });
+  const [requestVersion, setRequestVersion] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+
+    void listPublicKnowledgeDiscovery({
+      universeKey: 'universe.anime',
+      resourceType,
+      limit,
+    })
+      .then((items) => {
+        if (active) {
+          setState({
+            status: 'ready',
+            items,
+          });
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setState({
+            status: 'error',
+          });
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [limit, requestVersion, resourceType]);
+
+  return {
+    state,
+    retry: () => {
+      setState({ status: 'loading' });
+      setRequestVersion((version) => version + 1);
+    },
+  };
+}
+
+function DiscoveryPreview({
   item,
   motionAllowed,
 }: {
@@ -135,7 +183,7 @@ function CharacterCard({
         className="aw-anime-discovery-card"
         href={`/anime/characters/${encodeURIComponent(item.slug)}`}
       >
-        <CharacterPreview item={item} motionAllowed={motionAllowed} />
+        <DiscoveryPreview item={item} motionAllowed={motionAllowed} />
 
         <div className="aw-anime-discovery-card__body">
           <p className="aw-eyebrow">Character</p>
@@ -150,105 +198,163 @@ function CharacterCard({
   );
 }
 
-export function AnimeUniverseDiscoveryFoundation() {
-  const [state, setState] = useState<DiscoveryState>({
-    status: 'loading',
-  });
-  const [requestVersion, setRequestVersion] = useState(0);
-  const motionAllowed = useShortMotionAllowed();
+function SeriesCard({
+  item,
+  motionAllowed,
+}: {
+  readonly item: PublicKnowledgeDiscoveryItem;
+  readonly motionAllowed: boolean;
+}) {
+  return (
+    <li data-series-resource-id={item.resourceId}>
+      <Link
+        className="aw-anime-discovery-card aw-anime-series-card"
+        href={`/knowledge/resources/${encodeURIComponent(item.resourceId)}`}
+      >
+        <DiscoveryPreview item={item} motionAllowed={motionAllowed} />
 
-  useEffect(() => {
-    let active = true;
+        <div className="aw-anime-discovery-card__body">
+          <p className="aw-eyebrow">Series</p>
+          <h3>{item.displayName}</h3>
+          <p>{item.summary}</p>
+          <span className="aw-anime-discovery-card__cta" aria-hidden="true">
+            Open series knowledge <span>→</span>
+          </span>
+        </div>
+      </Link>
+    </li>
+  );
+}
 
-    void listPublicKnowledgeDiscovery({
-      universeKey: 'universe.anime',
-      resourceType: 'anime.character',
-      limit: 6,
-    })
-      .then((items) => {
-        if (active) {
-          setState({
-            status: 'ready',
-            items,
-          });
-        }
-      })
-      .catch(() => {
-        if (active) {
-          setState({
-            status: 'error',
-          });
-        }
-      });
+function SeriesDiscovery({
+  state,
+  motionAllowed,
+}: {
+  readonly state: DiscoveryState;
+  readonly motionAllowed: boolean;
+}) {
+  if (state.status === 'loading') {
+    return null;
+  }
 
-    return () => {
-      active = false;
-    };
-  }, [requestVersion]);
+  if (state.status === 'error') {
+    return (
+      <section
+        className="aw-anime-series"
+        aria-labelledby="anime-series-heading"
+        data-series-status="error"
+      >
+        <header className="aw-anime-discovery__heading">
+          <div>
+            <p className="aw-eyebrow">Series discovery</p>
+            <h2 id="anime-series-heading">Explore Series</h2>
+          </div>
+        </header>
+        <p className="aw-anime-series-note" role="status">
+          Published Series discovery is temporarily unavailable. Character discovery remains
+          available above.
+        </p>
+      </section>
+    );
+  }
+
+  if (state.items.length === 0) {
+    return null;
+  }
 
   return (
     <section
-      id="recently-updated-characters"
-      className="aw-anime-discovery"
-      aria-labelledby="recently-updated-characters-heading"
-      data-discovery-status={state.status}
+      className="aw-anime-series"
+      aria-labelledby="anime-series-heading"
+      data-series-status="ready"
     >
       <header className="aw-anime-discovery__heading">
         <div>
-          <p className="aw-eyebrow">Character discovery</p>
-          <h2 id="recently-updated-characters-heading">Recently Updated Characters</h2>
+          <p className="aw-eyebrow">Series discovery</p>
+          <h2 id="anime-series-heading">Explore Series</h2>
         </div>
-        <p>Published Anime Characters, ordered by their latest Knowledge updates.</p>
+        <p>Published Anime Series from the same public Knowledge catalog.</p>
       </header>
 
-      {state.status === 'loading' ? (
-        <div className="aw-anime-discovery-state" role="status">
-          <p>Loading recently updated characters…</p>
-          <div className="aw-anime-discovery-skeletons" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
-        </div>
-      ) : null}
-
-      {state.status === 'error' ? (
-        <div className="aw-anime-discovery-state aw-anime-discovery-state--error" role="alert">
-          <div>
-            <strong>Character discovery is temporarily unavailable.</strong>
-            <p>The Anime front door is still here. Try the published Character feed again.</p>
-          </div>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setState({ status: 'loading' });
-              setRequestVersion((version) => version + 1);
-            }}
-          >
-            Try again
-          </Button>
-        </div>
-      ) : null}
-
-      {state.status === 'ready' && state.items.length === 0 ? (
-        <div className="aw-anime-discovery-state aw-anime-discovery-state--empty">
-          <div>
-            <strong>No published Anime Characters yet.</strong>
-            <p>Search AI World while the first published Character pages arrive.</p>
-          </div>
-          <LinkButton href="/search" variant="secondary">
-            Search Anime
-          </LinkButton>
-        </div>
-      ) : null}
-
-      {state.status === 'ready' && state.items.length > 0 ? (
-        <ul className="aw-anime-discovery-grid" aria-label="Recently Updated Anime Characters">
-          {state.items.map((item) => (
-            <CharacterCard key={item.resourceId} item={item} motionAllowed={motionAllowed} />
-          ))}
-        </ul>
-      ) : null}
+      <ul
+        className="aw-anime-discovery-grid aw-anime-series-grid"
+        aria-label="Published Anime Series"
+      >
+        {state.items.map((item) => (
+          <SeriesCard key={item.resourceId} item={item} motionAllowed={motionAllowed} />
+        ))}
+      </ul>
     </section>
+  );
+}
+
+export function AnimeUniverseDiscoveryFoundation() {
+  const characterDiscovery = useAnimeDiscovery('anime.character', 6);
+  const seriesDiscovery = useAnimeDiscovery('anime.series', 4);
+  const motionAllowed = useShortMotionAllowed();
+  const state = characterDiscovery.state;
+
+  return (
+    <>
+      <section
+        id="recently-updated-characters"
+        className="aw-anime-discovery"
+        aria-labelledby="recently-updated-characters-heading"
+        data-discovery-status={state.status}
+      >
+        <header className="aw-anime-discovery__heading">
+          <div>
+            <p className="aw-eyebrow">Character discovery</p>
+            <h2 id="recently-updated-characters-heading">Recently Updated Characters</h2>
+          </div>
+          <p>Published Anime Characters, ordered by their latest Knowledge updates.</p>
+        </header>
+
+        {state.status === 'loading' ? (
+          <div className="aw-anime-discovery-state" role="status">
+            <p>Loading recently updated characters…</p>
+            <div className="aw-anime-discovery-skeletons" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        ) : null}
+
+        {state.status === 'error' ? (
+          <div className="aw-anime-discovery-state aw-anime-discovery-state--error" role="alert">
+            <div>
+              <strong>Character discovery is temporarily unavailable.</strong>
+              <p>The Anime front door is still here. Try the published Character feed again.</p>
+            </div>
+            <Button variant="secondary" onClick={characterDiscovery.retry}>
+              Try again
+            </Button>
+          </div>
+        ) : null}
+
+        {state.status === 'ready' && state.items.length === 0 ? (
+          <div className="aw-anime-discovery-state aw-anime-discovery-state--empty">
+            <div>
+              <strong>No published Anime Characters yet.</strong>
+              <p>Search AI World while the first published Character pages arrive.</p>
+            </div>
+            <LinkButton href="/search" variant="secondary">
+              Search Anime
+            </LinkButton>
+          </div>
+        ) : null}
+
+        {state.status === 'ready' && state.items.length > 0 ? (
+          <ul className="aw-anime-discovery-grid" aria-label="Recently Updated Anime Characters">
+            {state.items.map((item) => (
+              <CharacterCard key={item.resourceId} item={item} motionAllowed={motionAllowed} />
+            ))}
+          </ul>
+        ) : null}
+      </section>
+
+      <SeriesDiscovery state={seriesDiscovery.state} motionAllowed={motionAllowed} />
+    </>
   );
 }

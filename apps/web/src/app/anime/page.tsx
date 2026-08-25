@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
+
 import { AnimeUniverseDiscoveryFoundation } from '../../anime/anime-universe-discovery-foundation';
+import { buildAnimeUniverseMetadata } from '../../anime/anime-universe-metadata';
 import { LinkButton, PageContainer } from '../../ui/primitives';
 import { resolveWebUniversePresentation } from '../../universes/presentation';
+
+export const metadata: Metadata = buildAnimeUniverseMetadata();
 
 export default function AnimePage() {
   const anime = resolveWebUniversePresentation('universe.anime');
@@ -13,6 +18,7 @@ export default function AnimePage() {
     <main
       className="aw-public-page aw-anime-universe-route"
       data-uxp03b-landing="true"
+      data-uxp03c-series-social="true"
       data-universe={anime.universeKey}
       data-universe-tone={anime.tone}
       data-universe-motion={anime.motion}

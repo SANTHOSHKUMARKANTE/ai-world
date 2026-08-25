@@ -2679,3 +2679,42 @@ textarea {
     transform: none;
   }
 }
+
+/* UXP-03C — Series + social identity integration */
+.aw-anime-series {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid rgb(139 169 230 / 14%);
+  padding-top: clamp(3.5rem, 7vw, 5.5rem);
+}
+
+.aw-anime-series .aw-anime-discovery__heading .aw-eyebrow {
+  color: #78a8ff;
+}
+
+.aw-anime-series-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.aw-anime-series-card .aw-anime-discovery-card__media {
+  aspect-ratio: 16 / 9;
+}
+
+.aw-anime-series-card .aw-anime-discovery-card__fallback {
+  font-size: clamp(4rem, 9vw, 7rem);
+}
+
+.aw-anime-series-note {
+  margin: 1.5rem 0 0;
+  border: 1px solid rgb(139 169 230 / 18%);
+  border-radius: 1rem;
+  background: rgb(7 16 35 / 72%);
+  color: #aebbd3;
+  padding: 1rem 1.1rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 52rem) {
+  .aw-anime-series-grid {
+    grid-template-columns: 1fr;
+  }
+}
