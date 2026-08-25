@@ -204,6 +204,12 @@ describe('UXP-02A Character canonical depth', () => {
       .set('Cookie', editor)
       .expect(200);
     expect(creator.body).toEqual({
+      resource: {
+        id: narutoId,
+        universeKey: 'universe.anime',
+        resourceType: 'anime.character',
+        lifecycle: 'PUBLISHED',
+      },
       resourceId: narutoId,
       slug: 'naruto-uzumaki',
       displayName: 'Naruto Uzumaki',
