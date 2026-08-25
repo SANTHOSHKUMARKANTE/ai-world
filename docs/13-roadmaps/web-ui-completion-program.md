@@ -434,7 +434,7 @@ Current accepted routes now include:
 | --- | --- |
 | `/` | AI World landing |
 | `/account` | Account/profile |
-| `/anime` | Anime landing Character + optional Series + social identity accepted through UXP-03C; reuse/full landing acceptance active in UXP-03D |
+| `/anime` | Finished Anime Universe landing — UXP-03 CLOSED and accepted at `75d91ef7975e515c10b529c143641bad0d1d6055` |
 | `/anime/characters/[slug]` | Anime Character Entity Experience |
 | `/creator` | Creator workspace |
 | `/creator/preview/[id]` | Creator preview |
@@ -802,7 +802,7 @@ its complete applicable Page Definition of Done.
 Status:
 
 ```text
-ACTIVE — NEXT PAGE
+CLOSED — ACCEPTED
 ```
 
 The Anime landing becomes the high-energy discovery front door.
@@ -858,7 +858,7 @@ UXP-03C — Series + social identity integration
 CLOSED — e454ba3d602b8c05efb3eabde42a0ec2bf8a64ba
 
 UXP-03D — Reuse + full landing acceptance
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — 75d91ef7975e515c10b529c143641bad0d1d6055
 ```
 
 UXP-03A accepted the generic published Knowledge discovery projection, safe
@@ -899,7 +899,48 @@ e454ba3d602b8c05efb3eabde42a0ec2bf8a64ba
 feat(web): integrate anime series social identity
 ```
 
+UXP-03D accepted the complete landing Page Definition of Done without requiring a
+production feature change. The final acceptance checkpoint added the missing
+tablet, anonymous/authenticated shared-shell, reusable media-matrix and canonical
+Character-navigation proofs while retaining all accepted UXP-03B/03C behavior.
+
+Accepted UXP-03D evidence includes:
+
+```text
+focused Anime landing acceptance 14 / 14;
+finished Anime Character regressions 14 / 14;
+Shiva / Hanuman regressions 4 / 4;
+full browser E2E 60 / 60;
+Web unit 16 / 16 files and 52 / 52 tests;
+root unit pipeline 37 / 37 tasks;
+32 migrations on isolated PostgreSQL 18.4;
+full integration pipeline 29 / 29 tasks;
+API integration 26 / 26 files and 181 / 181 tests;
+production build 22 / 22;
+fresh-process canonical / Open Graph production smoke;
+architecture validation with 0 violations across 746 modules / 2447 dependencies.
+```
+
+GitHub CI run 231 completed successfully on the exact UXP-03D
+acceptance checkpoint:
+
+```text
+75d91ef7975e515c10b529c143641bad0d1d6055
+test(web): prove full anime landing acceptance
+```
+
+UXP-03 is therefore CLOSED — ACCEPTED.
+
 ## UXP-04 — Anime Series
+
+Status:
+
+```text
+ACTIVE — NEXT PAGE
+```
+
+The first UXP-04 action is repository/architecture inspection and detailed page
+contract freeze. Activation does not itself implement `/anime/series/[slug]`.
 
 Series page should combine:
 
@@ -1180,13 +1221,13 @@ UXP-02 — Anime Character
 CLOSED — 3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a
         ↓
 UXP-03 — Anime Universe landing
-ACTIVE
+CLOSED — 75d91ef7975e515c10b529c143641bad0d1d6055
         ↓
 UXP-04 — Anime Series
-NOT STARTED
+ACTIVE — NEXT PAGE
 ```
 
-UXP-02 is the first fully accepted page in the program.
+UXP-02 and UXP-03 are fully accepted pages in the program.
 
 UXP-03A is accepted at:
 
@@ -1212,34 +1253,32 @@ feat(web): integrate anime series social identity
 GitHub CI run 229 — success
 ```
 
-The next engineering objective is UXP-03D:
+UXP-03D and complete UXP-03 acceptance are accepted at:
 
 ```text
-Reuse + full landing acceptance
+75d91ef7975e515c10b529c143641bad0d1d6055
+test(web): prove full anime landing acceptance
+GitHub CI run 231 — success
 ```
 
-UXP-03D must prove the now-finished Anime landing against the complete page
-Definition of Done: desktop/tablet/390px composition, reusable Character cards,
-Series present/absent, Media variants, anonymous/authenticated shared shell,
-loading/empty/error, keyboard/reduced motion, canonical/social entry,
-Character/Search navigation, Shiva/Hanuman and finished Character regressions,
-plus the full format/lint/typecheck/unit/migration/integration/browser/build/
-architecture/evidence/commit/push/CI chain.
-
-The detailed frozen scope remains:
+The next engineering objective is UXP-04:
 
 ```text
-docs/13-roadmaps/uxp-03-anime-universe-landing.md
+Anime Series
 ```
 
-UXP-03D should not invent new product capability merely to produce an
-implementation diff. Acceptance-test/evidence changes are expected when needed to
-prove the matrix, and the slice still requires a committed/pushed acceptance
-checkpoint with exact green CI. Production changes are allowed only when full
-acceptance reveals a real defect. Do not begin UXP-04 or `/anime/series/[slug]`
-until UXP-03 itself satisfies its exit rule and receives its own accepted closure
-transition.
+The first UXP-04 action is to inspect current repository contracts and freeze the
+minimum detailed Series-page implementation contract. The review must build from
+existing Knowledge Resource/Entity semantics, public Media, relationships,
+Engagement, Creator permissions and the accepted Anime presentation rather than
+assuming new platform capability.
 
-The Master Roadmap remains unchanged by this slice transition. WPR-M05 receives
-its roadmap closure update only when the entire accepted Web Product Readiness
-gate is ready to close.
+This docs-only transition does not implement `/anime/series/[slug]`. Do not add
+episode infrastructure, streaming availability, staff/studio persistence,
+ranking/recommendation semantics, editorial curation, a Series CMS, new Anime
+persistence, new roles/permissions, or speculative infrastructure before current
+repository evidence justifies them.
+
+The Master Roadmap remains unchanged by this page transition. WPR-M05 remains the
+active Web Product Readiness gate, and P10-M04 remains sequencing-blocked until
+that gate closes.

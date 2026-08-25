@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-03 |
 | Area | Product / Web / Knowledge / Media / Discovery |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-03D ACTIVE |
+| Status | CLOSED — ACCEPTED |
 | Created | 2026-08-25 |
 | Baseline | `3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -805,7 +805,7 @@ UXP-03 work is reuse and complete landing acceptance, not a new product capabili
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 Required evidence:
@@ -848,7 +848,64 @@ commit/push;
 CI green.
 ```
 
-UXP-03 is not complete after a visual screenshot alone.
+Accepted acceptance checkpoint:
+
+```text
+75d91ef7975e515c10b529c143641bad0d1d6055
+test(web): prove full anime landing acceptance
+```
+
+Accepted remote CI:
+
+```text
+GitHub CI run 231
+run id 32861441865
+completed successfully on 75d91ef7975e515c10b529c143641bad0d1d6055
+```
+
+Accepted validation evidence includes:
+
+```text
+test-only UXP-03D acceptance checkpoint with no production behavior change;
+1024px tablet composition with no horizontal overflow;
+anonymous shared shell;
+authenticated shared shell;
+canonical landing-to-Character navigation;
+three reusable Anime Characters;
+Character IMAGE preview;
+Character SHORT_LOOP preview;
+Character no-Media fallback;
+two optional Series with IMAGE and no-Media variants;
+zero /anime/series/[slug] links before UXP-04;
+desktop and 390px landing regressions retained from accepted UXP-03B;
+loading / empty / unexpected-error + retry behavior;
+keyboard-only landing navigation;
+reduced-motion poster fallback;
+Series-present and Series-absent behavior;
+existing Anime Search navigation;
+campaign-safe canonical / Open Graph identity;
+focused Anime landing acceptance 14 / 14;
+finished Anime Character regressions 14 / 14;
+Shiva / Hanuman regressions 4 / 4;
+full browser E2E 60 / 60;
+Web unit regression 16 / 16 files and 52 / 52 tests;
+root unit pipeline 37 / 37 tasks;
+32 migrations applied on isolated PostgreSQL 18.4;
+full integration pipeline 29 / 29 tasks;
+API integration 26 / 26 files and 181 / 181 tests;
+production build 22 / 22;
+fresh-process production next-start proof on a dynamically reserved Web origin;
+fresh next-start process reported Ready and remained alive during canonical / Open Graph validation;
+generated Open Graph image returned 200 image/png with 51,580 bytes;
+fresh next-start process tree cleaned up and validation port proven released;
+architecture validation with 0 violations across 746 modules / 2447 dependencies;
+reviewed evidence ZIP;
+commit / push;
+exact GitHub CI green.
+```
+
+UXP-03D is therefore accepted. The complete Anime landing now satisfies the
+applicable reusable Page Definition of Done and the UXP-03 exit rule.
 
 ---
 
@@ -965,11 +1022,24 @@ Character and Devotional regressions remain green;
 the evidence/commit/push/CI chain is accepted.
 ```
 
-Only then may work begin on:
+UXP-03 satisfies this exit rule at:
+
+```text
+75d91ef7975e515c10b529c143641bad0d1d6055
+test(web): prove full anime landing acceptance
+GitHub CI run 231 — success
+```
+
+UXP-03 is therefore CLOSED — ACCEPTED.
+
+The next page may now become active:
 
 ```text
 UXP-04 — Anime Series
 ```
+
+Activation authorizes repository/architecture inspection and detailed UXP-04
+contract freeze. It does not itself implement `/anime/series/[slug]`.
 
 ---
 
@@ -1009,63 +1079,36 @@ feat(web): integrate anime series social identity
 GitHub CI run 229 — success
 ```
 
-The active implementation slice is:
+Accepted UXP-03D checkpoint:
 
 ```text
-UXP-03D — Reuse + full landing acceptance
+75d91ef7975e515c10b529c143641bad0d1d6055
+test(web): prove full anime landing acceptance
+GitHub CI run 231 — success
 ```
 
-The next engineering objective is to prove the finished Anime landing against its
-complete reusable Product Definition of Done. UXP-03D is an acceptance/quality
-slice rather than a planned new product-capability slice.
-
-UXP-03D must prove:
+UXP-03 is now:
 
 ```text
-desktop;
-tablet;
-390px-class mobile;
-two or more reusable Characters;
-optional Series present;
-Series absent;
-IMAGE preview;
-bounded SHORT_LOOP preview when canonical;
-no-Media fallback;
-anonymous visitor;
-authenticated shared shell;
-loading;
-empty;
-unexpected error;
-keyboard-only;
-reduced motion;
-campaign-safe canonical/social entry;
-Character navigation;
-Search navigation;
-Shiva regression;
-Hanuman regression;
-finished Anime Character regressions;
-format;
-lint;
-typecheck;
-focused unit;
-migration status/deployment;
-integration;
-focused browser;
-full browser E2E;
-production build;
-architecture check;
-reviewed evidence ZIP;
-focused acceptance tests/evidence changes when required to prove the matrix;
-production code changes only when acceptance exposes a real defect;
-acceptance checkpoint commit/push;
-exact remote CI green.
+CLOSED — ACCEPTED
 ```
 
-Do not begin `/anime/series/[slug]`, UXP-04 implementation, recommendation/ranking
-semantics, editorial curation, a landing CMS, new Anime persistence, new
-roles/permissions, or speculative infrastructure during UXP-03D. Production code
-changes are justified only when this acceptance slice exposes a real landing or
-regression defect.
+The next active page is:
+
+```text
+UXP-04 — Anime Series
+```
+
+The first UXP-04 action is repository/architecture inspection followed by a
+detailed Series-page contract freeze. That review must determine the minimum real
+Knowledge / Media / relationship / Creator behavior needed by
+`/anime/series/[slug]` from current repository evidence before implementation.
+
+Do not treat UXP-04 activation as permission to invent episode infrastructure,
+streaming availability, staff/studio models, ranking/recommendation semantics,
+editorial curation, a Series CMS, new Anime persistence, new roles/permissions,
+or speculative infrastructure. Do not implement `/anime/series/[slug]` inside
+this docs-only transition.
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Product Quality
 And Local User Acceptance gate, and P10-M04 remains sequencing-blocked until
