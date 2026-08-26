@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-04 |
 | Area | Product / Web / Knowledge / Media / Engagement / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-04B ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-04C ACTIVE |
 | Created | 2026-08-25 |
 | Baseline | `64435607011e0bc6d57c34fe7a5d439a4aef6a48` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -1038,7 +1038,7 @@ UXP-04A is therefore CLOSED — ACCEPTED.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 Scope:
@@ -1082,12 +1082,71 @@ keyboard media viewer;
 reduced-motion poster behavior.
 ```
 
+Accepted implementation checkpoint:
+
+```text
+3656cabc6018feb9c89fe389dd20412f56eb5094
+feat(web): finish anime series media navigation
+```
+
+Accepted remote CI:
+
+```text
+GitHub CI run 236
+run id 32981986570
+completed successfully on 3656cabc6018feb9c89fe389dd20412f56eb5094
+```
+
+Accepted UXP-04B evidence includes:
+
+```text
+bounded Anime Entity media viewer reused by Character + Series;
+existing Character media viewer compatibility preserved;
+Series IMAGE + STILL public Media;
+Series VIDEO + SHORT_LOOP + required poster public Media;
+reduced-motion poster-first behavior;
+Series ?media=<asset-id> deep-link;
+invalid media query removes only media while preserving campaign parameters;
+keyboard viewer open / Escape close / focus restoration;
+viewer video remains user-started with controls and no autoplay/loop;
+Series Characters rail;
+Series Related Series & Movies rail;
+relationship rendering filtered by sectionKey + relationshipType + target Resource Type;
+malformed Series relationship combinations remain hidden;
+Series -> Character canonical /anime/characters/[slug];
+Series -> Series canonical /anime/series/[slug];
+Character -> Series canonical regression;
+Anime landing Series cards -> /anime/series/[slug];
+UXP-03D tablet acceptance updated to require the exact canonical Series slugs;
+04A identity behavior remains coherent when optional Media / relations are absent;
+Search unchanged;
+Creator Series management not started;
+backend / schema / migrations / dependencies / roadmaps / CSS unchanged;
+Web lint / typecheck green;
+root format / lint / typecheck green;
+root unit pipeline 37 / 37 tasks;
+Web unit 17 / 17 files and 56 / 56 tests;
+32 migrations deployed on isolated PostgreSQL 18.4;
+isolated AI Creator integration 11 / 11 files and 24 / 24 tests;
+full serial integration pipeline 29 / 29 tasks;
+API integration 26 / 26 files and 181 / 181 tests;
+focused UXP-04B + updated UXP-03D browser acceptance 24 / 24;
+full browser E2E 71 / 71;
+production build 22 / 22;
+architecture validation with 0 violations across 755 modules / 2466 dependencies;
+reviewed evidence ZIP;
+commit / push;
+exact GitHub CI green.
+```
+
+UXP-04B is therefore CLOSED — ACCEPTED.
+
 ## UXP-04C — Creator Series manager + creator-only preview
 
 Status:
 
 ```text
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
 
 Scope:
@@ -1345,34 +1404,40 @@ feat(web): add anime series identity shell
 GitHub CI run 234 — success
 ```
 
+UXP-04B is accepted at:
+
+```text
+3656cabc6018feb9c89fe389dd20412f56eb5094
+feat(web): finish anime series media navigation
+GitHub CI run 236 — success
+```
+
 The active implementation slice is now:
 
 ```text
-UXP-04B — Media + Series relationships + canonical Anime navigation
+UXP-04C — Creator Series manager + creator-only preview
 ```
 
-UXP-04B is bounded to the already frozen scope:
+UXP-04C is bounded to the already frozen scope:
 
 ```text
-reusable Anime media viewer for Series;
-IMAGE;
-SHORT_LOOP;
-poster;
-reduced motion;
-media deep-link when canonical;
-Characters rail;
-Related Series & Movies rail;
-empty optional relation groups omitted;
-canonical Character targets;
-canonical Series targets;
-Anime landing Series cards -> /anime/series/[slug];
-shared related-Entity path recognizes anime.series.
+bounded anime.series Web manager;
+existing generic Creator Entity APIs;
+existing generic KnowledgeMediaManager;
+Series identity / summary / overview / quick facts;
+ordered Characters + related-Series relationships;
+publish / archive lifecycle;
+Creator-only /creator/series/[id]/preview;
+authorized Creator behavior;
+unauthorized Creator behavior;
+wrong Resource Type rejection.
 ```
 
-Do not begin UXP-04C Creator Series management or UXP-04D full acceptance until
-UXP-04B has an accepted implementation checkpoint and exact remote CI green.
+No new Creator backend endpoint, Series-specific persistence, permission vocabulary
+or Search expansion is expected.
 
-Do not expand Search projection/routing in UXP-04B.
+Do not begin UXP-04D full Series acceptance until UXP-04C has an accepted
+implementation checkpoint and exact remote CI green.
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Product Quality
 And Local User Acceptance gate, and P10-M04 remains sequencing-blocked until that
