@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-04 |
 | Area | Product / Web / Knowledge / Media / Engagement / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-04A ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-04B ACTIVE |
 | Created | 2026-08-25 |
 | Baseline | `64435607011e0bc6d57c34fe7a5d439a4aef6a48` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -926,7 +926,7 @@ Implementation proceeds in four bounded slices.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 Scope:
@@ -974,12 +974,71 @@ authenticated shell remains coherent;
 campaign-safe metadata.
 ```
 
+Accepted implementation checkpoint:
+
+```text
+e9cc98aa162687e2ee2d2af209d6a91809d57b11
+feat(web): add anime series identity shell
+```
+
+Accepted remote CI:
+
+```text
+GitHub CI run 234
+run id 32972017575
+completed successfully on e9cc98aa162687e2ee2d2af209d6a91809d57b11
+```
+
+Accepted UXP-04A evidence includes:
+
+```text
+canonical /anime/series/[slug] route;
+strict universe.anime + anime.series type guard;
+strengthened anime.character type guard on the existing Character route;
+published Series identity / native name / alternate names;
+summary / overview / generic facts;
+sparse Series fallback without fake optional identity or facts;
+existing anonymous / authenticated shared shell;
+existing Favorites / Collections Engagement behavior;
+Series share / copy-link controls;
+campaign-safe canonical URL;
+Open Graph title / description;
+shared Anime HERO-first social Media precedence;
+HERO SHORT_LOOP social image resolved through its required poster;
+Series public Media UI intentionally suppressed until UXP-04B;
+Series relationship rails intentionally suppressed until UXP-04B;
+Anime landing Series-link rewiring intentionally deferred until UXP-04B;
+Creator Series management intentionally deferred until UXP-04C;
+Search unchanged;
+backend / schema / migrations / dependencies / roadmaps unchanged;
+focused Character + Series social unit 2 / 2 files and 7 / 7 tests;
+root unit pipeline 37 / 37 tasks;
+Web unit 17 / 17 files and 56 / 56 tests;
+32 migrations deployed on isolated PostgreSQL 18.4;
+isolated AI Creator integration 11 / 11 files and 24 / 24 tests;
+full serial integration pipeline 29 / 29 tasks;
+API integration 26 / 26 files and 181 / 181 tests;
+focused Series + Character browser acceptance 11 / 11;
+full browser E2E 66 / 66;
+production build 22 / 22;
+fresh-process production Series canonical / Open Graph smoke;
+fresh Next.js process reported Ready and stayed alive during validation;
+campaign parameters excluded from canonical identity;
+fresh process tree cleaned up and validation port proven released;
+architecture validation with 0 violations across 752 modules / 2463 dependencies;
+reviewed evidence ZIP;
+commit / push;
+exact GitHub CI green.
+```
+
+UXP-04A is therefore CLOSED — ACCEPTED.
+
 ## UXP-04B — Media + Series relationships + canonical Anime navigation
 
 Status:
 
 ```text
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
 
 Scope:
@@ -1278,14 +1337,42 @@ GitHub CI run 232 — success
 
 Repository/architecture inspection is complete.
 
-The active implementation slice after this contract freeze is:
+UXP-04A is accepted at:
 
 ```text
-UXP-04A — Canonical route + identity / social shell
+e9cc98aa162687e2ee2d2af209d6a91809d57b11
+feat(web): add anime series identity shell
+GitHub CI run 234 — success
 ```
 
-Do not begin UXP-04B, UXP-04C or UXP-04D before the preceding slice has an
-accepted implementation checkpoint and exact remote CI green.
+The active implementation slice is now:
+
+```text
+UXP-04B — Media + Series relationships + canonical Anime navigation
+```
+
+UXP-04B is bounded to the already frozen scope:
+
+```text
+reusable Anime media viewer for Series;
+IMAGE;
+SHORT_LOOP;
+poster;
+reduced motion;
+media deep-link when canonical;
+Characters rail;
+Related Series & Movies rail;
+empty optional relation groups omitted;
+canonical Character targets;
+canonical Series targets;
+Anime landing Series cards -> /anime/series/[slug];
+shared related-Entity path recognizes anime.series.
+```
+
+Do not begin UXP-04C Creator Series management or UXP-04D full acceptance until
+UXP-04B has an accepted implementation checkpoint and exact remote CI green.
+
+Do not expand Search projection/routing in UXP-04B.
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Product Quality
 And Local User Acceptance gate, and P10-M04 remains sequencing-blocked until that

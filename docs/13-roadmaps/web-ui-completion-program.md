@@ -436,6 +436,7 @@ Current accepted routes now include:
 | `/account` | Account/profile |
 | `/anime` | Finished Anime Universe landing — UXP-03 CLOSED and accepted at `75d91ef7975e515c10b529c143641bad0d1d6055` |
 | `/anime/characters/[slug]` | Anime Character Entity Experience |
+| `/anime/series/[slug]` | Anime Series canonical identity/social shell accepted through UXP-04A at `e9cc98aa162687e2ee2d2af209d6a91809d57b11`; Media/relationships/navigation active in UXP-04B |
 | `/creator` | Creator workspace |
 | `/creator/preview/[id]` | Creator preview |
 | `/devotional/[slug]` | Devotional Entity Experience |
@@ -453,7 +454,6 @@ Current accepted routes now include:
 Important missing destination pages that remain justified by current product direction include:
 
 ```text
-/anime/series/[slug]
 /devotional
 ```
 
@@ -936,7 +936,7 @@ UXP-03 is therefore CLOSED — ACCEPTED.
 Status:
 
 ```text
-ACTIVE — UXP-04A NEXT IMPLEMENTATION SLICE
+ACTIVE — UXP-04B NEXT IMPLEMENTATION SLICE
 ```
 
 Repository/architecture inspection is complete.
@@ -978,14 +978,47 @@ direct Experience relationship infrastructure.
 Search remains regression-only in UXP-04. Its current public result contract has no
 Entity slug, and UXP-08 owns the finished Search experience.
 
+UXP-04A is accepted at:
+
+```text
+e9cc98aa162687e2ee2d2af209d6a91809d57b11
+feat(web): add anime series identity shell
+GitHub CI run 234 — success
+```
+
+Accepted UXP-04A evidence includes:
+
+```text
+strict canonical Series route / Resource Type guard;
+identity / native / alternate names;
+summary / overview / generic facts;
+anonymous + authenticated shared shell;
+existing Engagement;
+share / copy-link;
+campaign-safe canonical / Open Graph identity;
+shared Anime social Media precedence;
+focused social unit 7 / 7;
+root unit pipeline 37 / 37 tasks;
+Web unit 17 / 17 files and 56 / 56 tests;
+32 migrations on PostgreSQL 18.4;
+AI Creator integration 24 / 24;
+full serial integration 29 / 29 tasks;
+API integration 26 / 26 files and 181 / 181 tests;
+focused browser 11 / 11;
+full browser E2E 66 / 66;
+production build 22 / 22;
+fresh-process production social proof;
+architecture validation with 0 violations across 752 modules / 2463 dependencies.
+```
+
 Current UXP-04 slice state:
 
 ```text
 UXP-04A — Canonical route + identity / social shell
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — e9cc98aa162687e2ee2d2af209d6a91809d57b11
 
 UXP-04B — Media + Series relationships + canonical Anime navigation
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 
 UXP-04C — Creator Series manager + creator-only preview
 NOT STARTED
@@ -1304,28 +1337,44 @@ implementation contract is frozen at:
 docs/13-roadmaps/uxp-04-anime-series-page.md
 ```
 
+UXP-04A is accepted at:
+
+```text
+e9cc98aa162687e2ee2d2af209d6a91809d57b11
+feat(web): add anime series identity shell
+GitHub CI run 234 — success
+```
+
 The next engineering objective is:
 
 ```text
-UXP-04A — Canonical route + identity / social shell
+UXP-04B — Media + Series relationships + canonical Anime navigation
 ```
 
-UXP-04A must add the real `/anime/series/[slug]` route over the existing public
-Knowledge Entity contract with a strict `universe.anime + anime.series` guard,
-Series identity/facts/overview, existing Engagement, share/copy-link and
-campaign-safe canonical/Open Graph identity.
+UXP-04B must finish only the frozen second slice:
 
-Do not begin UXP-04B Media/relationships/navigation, UXP-04C Creator Series
-management, or UXP-04D full acceptance until the preceding slice has an accepted
-implementation checkpoint and exact remote CI green.
+```text
+reusable Anime media viewer for Series;
+IMAGE / SHORT_LOOP / poster;
+reduced-motion behavior;
+canonical media deep-link;
+Characters rail;
+Related Series & Movies rail;
+canonical Character targets;
+canonical Series targets;
+Anime landing Series cards -> /anime/series/[slug];
+shared related-Entity path recognizes anime.series.
+```
 
-Do not expand Search during UXP-04 merely to obtain a Series slug. UXP-08 owns the
-finished Search experience.
+Do not begin UXP-04C Creator Series management or UXP-04D full acceptance until
+UXP-04B has an accepted implementation checkpoint and exact remote CI green.
+
+Do not expand Search during UXP-04B. UXP-08 owns the finished Search experience.
 
 Do not add episode/staff/studio/streaming/Experience infrastructure, ranking or
 recommendations, editorial curation, a Series CMS, Series-specific persistence,
 new roles/permissions, or speculative platform work.
 
-The Master Roadmap remains unchanged by this contract freeze. WPR-M05 remains the
-active Web Product Readiness gate, and P10-M04 remains sequencing-blocked until
-that gate closes.
+The Master Roadmap remains unchanged by this slice transition. WPR-M05 remains
+the active Web Product Readiness gate, and P10-M04 remains sequencing-blocked
+until that gate closes.
