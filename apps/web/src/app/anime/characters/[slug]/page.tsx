@@ -32,6 +32,7 @@ export default async function AnimeCharacterEntityPage({ params, searchParams }:
         universeKey="universe.anime"
         slug={slug}
         initialMediaId={firstQueryValue(query.media)}
+        expectedResourceType="anime.character"
       />
     </main>
   );

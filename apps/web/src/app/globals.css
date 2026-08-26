@@ -2718,3 +2718,164 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+/* UXP-04A — Anime Series canonical identity / social shell */
+.aw-anime-series-route {
+  background:
+    radial-gradient(circle at 86% 7%, rgb(98 79 214 / 22%), transparent 31rem),
+    radial-gradient(circle at 12% 30%, rgb(29 167 188 / 12%), transparent 26rem),
+    linear-gradient(180deg, #020611 0%, #050a17 62%, #02050d 100%) !important;
+}
+
+.aw-anime-series {
+  --aw-series-violet: #a99cff;
+  --aw-series-cyan: #6bd8e8;
+  --aw-series-ink: #020611;
+}
+
+.aw-anime-series .aw-entity-hero {
+  min-height: clamp(34rem, 58vw, 46rem);
+  border-color: rgb(169 156 255 / 24%);
+  background:
+    radial-gradient(circle at 77% 24%, rgb(104 83 220 / 30%), transparent 24rem),
+    radial-gradient(circle at 72% 62%, rgb(58 194 211 / 16%), transparent 22rem),
+    linear-gradient(128deg, #020611 0%, #111337 48%, #08232a 100%);
+}
+
+.aw-anime-series .aw-entity-hero::after {
+  position: absolute;
+  z-index: 2;
+  inset: auto -10% 12% 50%;
+  height: 0.18rem;
+  content: '';
+  background: linear-gradient(90deg, transparent, rgb(107 216 232 / 70%), transparent);
+  opacity: 0.5;
+  transform: rotate(-6deg);
+  pointer-events: none;
+}
+
+.aw-anime-series .aw-entity-hero__copy {
+  width: min(48rem, 66%);
+}
+
+.aw-anime-series .aw-entity-context-link {
+  color: #e2e2ff;
+}
+
+.aw-anime-series .aw-entity-hero .aw-eyebrow,
+.aw-anime-series .aw-entity-overview .aw-eyebrow {
+  color: var(--aw-series-cyan);
+}
+
+.aw-anime-series__identity {
+  display: grid;
+  gap: 0.35rem;
+  margin: -0.1rem 0 1rem;
+}
+
+.aw-anime-series__native-name {
+  margin: 0;
+  color: #f2f1ff;
+  font-size: clamp(1.08rem, 2vw, 1.4rem);
+  font-weight: 720;
+  letter-spacing: 0.01em;
+}
+
+.aw-anime-series__alternate-names {
+  max-width: 40rem;
+  margin: 0;
+  color: #b7b6d7;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.aw-anime-series__share {
+  display: contents;
+}
+
+.aw-anime-series__share-status {
+  flex: 1 0 100%;
+  min-height: 1.25rem;
+  color: #c8c8e1;
+  font-size: 0.82rem;
+  text-shadow: none;
+}
+
+.aw-anime-series .aw-entity-hero__visual {
+  background:
+    radial-gradient(circle at 50% 34%, rgb(169 156 255 / 25%), transparent 24%),
+    radial-gradient(circle at 58% 60%, rgb(107 216 232 / 14%), transparent 32%),
+    linear-gradient(145deg, #090c23, #101839 48%, #09252c);
+}
+
+.aw-anime-series .aw-entity-hero__fallback {
+  background:
+    radial-gradient(circle at 52% 35%, rgb(255 255 255 / 10%), transparent 16%),
+    linear-gradient(135deg, transparent 38%, rgb(169 156 255 / 12%) 39% 46%, transparent 47%),
+    linear-gradient(145deg, #090c23, #101839 48%, #09252c);
+}
+
+.aw-anime-series .aw-entity-facts > div {
+  border-color: rgb(169 156 255 / 20%);
+  background: linear-gradient(145deg, rgb(12 17 49 / 94%), rgb(8 28 36 / 92%));
+}
+
+.aw-anime-series .aw-entity-facts > div:nth-child(3n + 1) {
+  box-shadow:
+    inset 0 2px 0 rgb(107 216 232 / 20%),
+    0 14px 32px rgb(0 0 0 / 24%);
+}
+
+.aw-anime-series .aw-entity-overview {
+  max-width: 68rem;
+  margin-block: clamp(2.5rem, 6vw, 5rem);
+  text-align: left;
+}
+
+.aw-anime-series .aw-entity-overview h2 {
+  max-width: 50rem;
+  font-size: clamp(2.15rem, 4vw, 3.6rem);
+}
+
+.aw-anime-series .aw-entity-overview p:last-child {
+  max-width: 56rem;
+  color: #c7c7dc;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.85;
+}
+
+@media (max-width: 980px) {
+  .aw-anime-series .aw-entity-hero__copy {
+    width: 80%;
+  }
+}
+
+@media (max-width: 700px) {
+  .aw-anime-series .aw-entity-hero {
+    min-height: 42rem;
+  }
+
+  .aw-anime-series .aw-entity-hero__copy {
+    width: 100%;
+    padding: 1.35rem;
+  }
+
+  .aw-anime-series .aw-entity-hero__actions > .aw-button {
+    flex: 1 1 9rem;
+    justify-content: center;
+  }
+
+  .aw-anime-series__share-status {
+    flex-basis: 100%;
+  }
+
+  .aw-anime-series .aw-entity-overview {
+    margin-block: 2.5rem;
+    padding-inline: 0.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aw-anime-series .aw-entity-hero::after {
+    opacity: 0.28;
+  }
+}

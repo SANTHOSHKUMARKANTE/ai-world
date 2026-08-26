@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimeCharacterMediaViewer } from '../anime/anime-character-media-viewer';
 import { ANIME_CHARACTER_SECTION_KEYS } from '../anime/anime-character-sections';
 import { AnimeCharacterShareControls } from '../anime/anime-character-share-controls';
+import { AnimeSeriesShareControls } from '../anime/anime-series-share-controls';
 import { ApiClientError } from '../api/api-client';
 import { ResourceEngagementControls } from '../engagement/resource-engagement-controls';
 import {
@@ -249,10 +250,12 @@ export function EntityExperiencePage({
   universeKey,
   slug,
   initialMediaId = null,
+  expectedResourceType,
 }: {
   readonly universeKey: string;
   readonly slug: string;
   readonly initialMediaId?: string | null;
+  readonly expectedResourceType?: string;
 }) {
   const [state, setState] = useState<State>({ status: 'loading' });
   const [selectedMediaId, setSelectedMediaId] = useState<string | null>(initialMediaId);
@@ -263,9 +266,20 @@ export function EntityExperiencePage({
 
     void getPublicKnowledgeEntity(universeKey, slug)
       .then((entity) => {
-        if (active) {
-          setState({ status: 'ready', entity });
+        if (!active) {
+          return;
         }
+
+        if (
+          entity.resource.universeKey !== universeKey ||
+          (expectedResourceType !== undefined &&
+            entity.resource.resourceType !== expectedResourceType)
+        ) {
+          setState({ status: 'not-found' });
+          return;
+        }
+
+        setState({ status: 'ready', entity });
       })
       .catch((error: unknown) => {
         if (active) {
@@ -280,7 +294,7 @@ export function EntityExperiencePage({
     return () => {
       active = false;
     };
-  }, [slug, universeKey]);
+  }, [expectedResourceType, slug, universeKey]);
 
   const motionAllowed = useShortMotionAllowed();
 
@@ -353,14 +367,20 @@ export function EntityExperiencePage({
   }
 
   if (state.status === 'not-found') {
+    const notFoundKind =
+      expectedResourceType === 'anime.series'
+        ? 'Series'
+        : expectedResourceType === 'anime.character'
+          ? 'Character'
+          : 'Entity';
+    const returnToAnime = expectedResourceType === 'anime.series';
+
     return (
       <div className="aw-entity-status aw-entity-status--not-found" role="status">
-        <strong>
-          {universeKey === 'universe.anime' ? 'Character not found' : 'Entity not found'}
-        </strong>
+        <strong>{notFoundKind} not found</strong>
         <span>This published page is not available.</span>
-        <Link href="/knowledge" className="aw-text-link">
-          Explore published Knowledge
+        <Link href={returnToAnime ? '/anime' : '/knowledge'} className="aw-text-link">
+          {returnToAnime ? 'Explore Anime' : 'Explore published Knowledge'}
         </Link>
       </div>
     );
@@ -378,6 +398,10 @@ export function EntityExperiencePage({
   const animeCharacter =
     entity.resource.universeKey === 'universe.anime' &&
     entity.resource.resourceType === 'anime.character';
+  const animeSeries =
+    entity.resource.universeKey === 'universe.anime' &&
+    entity.resource.resourceType === 'anime.series';
+  const animeIdentity = animeCharacter || animeSeries;
   const seriesFact = animeCharacter
     ? entity.profile.facts.find((fact) => fact.key === 'anime.series')
     : undefined;
@@ -389,27 +413,45 @@ export function EntityExperiencePage({
         media.playback === 'SHORT_LOOP' &&
         media.posterAssetId !== null),
   );
-  const imageMedia = mediaHighlights.filter((media) => media.assetType === 'IMAGE');
-  const viewerMedia = animeCharacter ? mediaHighlights.filter(isViewerEligibleMedia) : [];
+  const visibleMediaHighlights = animeSeries ? [] : mediaHighlights;
+  const imageMedia = visibleMediaHighlights.filter((media) => media.assetType === 'IMAGE');
+  const viewerMedia = animeCharacter ? visibleMediaHighlights.filter(isViewerEligibleMedia) : [];
   const selectedMedia = viewerMedia.find((media) => media.assetId === selectedMediaId) ?? null;
-  const heroMedia = mediaHighlights.find((media) => media.role === 'HERO') ?? null;
+  const heroMedia = visibleMediaHighlights.find((media) => media.role === 'HERO') ?? null;
   const fallbackImage = imageMedia[0] ?? null;
   const heroVisual = heroMedia ?? fallbackImage;
   const sectionOrder = animeCharacter
     ? [...ANIME_CHARACTER_SECTION_KEYS, ...ANIME_LEGACY_SECTION_KEYS]
     : SECTION_ORDER;
-  const availableSectionKeys = sectionOrder.filter((sectionKey) => grouped.has(sectionKey));
+  const availableSectionKeys = animeSeries
+    ? []
+    : sectionOrder.filter((sectionKey) => grouped.has(sectionKey));
+  const overviewEyebrow = animeCharacter
+    ? 'Character story'
+    : animeSeries
+      ? 'Series overview'
+      : 'Overview';
+  const overviewTitle =
+    animeCharacter || animeSeries
+      ? `About ${entity.profile.displayName}`
+      : `Discover ${entity.profile.displayName}`;
+  const overviewCopy = animeIdentity
+    ? (entity.profile.overview ?? entity.profile.summary)
+    : entity.profile.summary;
 
   return (
     <article
-      className={`aw-entity-experience ${animeCharacter ? 'aw-anime-character' : ''}`}
+      className={`aw-entity-experience ${animeCharacter ? 'aw-anime-character' : ''} ${
+        animeSeries ? 'aw-anime-series' : ''
+      }`}
       data-universe-tone={presentation?.tone}
       data-universe-motion={presentation?.motion}
       data-character-shell={animeCharacter ? 'anime' : undefined}
+      data-series-shell={animeSeries ? 'anime' : undefined}
     >
       <header className="aw-entity-hero">
         <div className="aw-entity-hero__copy">
-          <Link href="/knowledge" className="aw-entity-context-link">
+          <Link href={animeSeries ? '/anime' : '/knowledge'} className="aw-entity-context-link">
             ← {presentation?.label ?? 'Knowledge'} Universe
           </Link>
 
@@ -424,14 +466,33 @@ export function EntityExperiencePage({
 
           <h1>{entity.profile.displayName}</h1>
 
-          {animeCharacter &&
+          {animeIdentity &&
           (entity.profile.nativeName !== null || entity.profile.alternateNames.length > 0) ? (
-            <div className="aw-anime-character__identity" aria-label="Character identity">
+            <div
+              className={
+                animeCharacter ? 'aw-anime-character__identity' : 'aw-anime-series__identity'
+              }
+              aria-label={animeCharacter ? 'Character identity' : 'Series identity'}
+            >
               {entity.profile.nativeName ? (
-                <p className="aw-anime-character__native-name">{entity.profile.nativeName}</p>
+                <p
+                  className={
+                    animeCharacter
+                      ? 'aw-anime-character__native-name'
+                      : 'aw-anime-series__native-name'
+                  }
+                >
+                  {entity.profile.nativeName}
+                </p>
               ) : null}
               {entity.profile.alternateNames.length > 0 ? (
-                <p className="aw-anime-character__alternate-names">
+                <p
+                  className={
+                    animeCharacter
+                      ? 'aw-anime-character__alternate-names'
+                      : 'aw-anime-series__alternate-names'
+                  }
+                >
                   Also known as {entity.profile.alternateNames.join(' · ')}
                 </p>
               ) : null}
@@ -441,7 +502,7 @@ export function EntityExperiencePage({
           <p className="aw-entity-hero__summary">{entity.profile.summary}</p>
 
           <div className="aw-entity-hero__actions">
-            {mediaHighlights.length > 0 ? (
+            {visibleMediaHighlights.length > 0 ? (
               <a href="#entity-images" className="aw-button aw-button--primary">
                 Explore media
               </a>
@@ -451,6 +512,12 @@ export function EntityExperiencePage({
             </a>
             {animeCharacter ? (
               <AnimeCharacterShareControls
+                slug={entity.profile.slug}
+                displayName={entity.profile.displayName}
+                summary={entity.profile.summary}
+              />
+            ) : animeSeries ? (
+              <AnimeSeriesShareControls
                 slug={entity.profile.slug}
                 displayName={entity.profile.displayName}
                 summary={entity.profile.summary}
@@ -503,7 +570,7 @@ export function EntityExperiencePage({
 
       <nav className="aw-entity-section-nav" aria-label={`${entity.profile.displayName} sections`}>
         <a href="#entity-overview">Overview</a>
-        {mediaHighlights.length > 0 ? <a href="#entity-images">Media</a> : null}
+        {visibleMediaHighlights.length > 0 ? <a href="#entity-images">Media</a> : null}
         {availableSectionKeys.map((sectionKey) => (
           <a key={sectionKey} href={`#${sectionAnchor(sectionKey)}`}>
             {resolveEntitySectionTitle(presentation, sectionKey, entity.profile.displayName)}
@@ -516,20 +583,12 @@ export function EntityExperiencePage({
         className="aw-entity-overview"
         aria-labelledby="entity-overview-title"
       >
-        <p className="aw-eyebrow">{animeCharacter ? 'Character story' : 'Overview'}</p>
-        <h2 id="entity-overview-title">
-          {animeCharacter
-            ? `About ${entity.profile.displayName}`
-            : `Discover ${entity.profile.displayName}`}
-        </h2>
-        <p>
-          {animeCharacter
-            ? (entity.profile.overview ?? entity.profile.summary)
-            : entity.profile.summary}
-        </p>
+        <p className="aw-eyebrow">{overviewEyebrow}</p>
+        <h2 id="entity-overview-title">{overviewTitle}</h2>
+        <p>{overviewCopy}</p>
       </section>
 
-      {mediaHighlights.length > 0 ? (
+      {visibleMediaHighlights.length > 0 ? (
         <section
           id="entity-images"
           className="aw-entity-section aw-entity-section--images"
@@ -542,7 +601,7 @@ export function EntityExperiencePage({
             </div>
           </div>
           <ul className="aw-entity-image-rail">
-            {mediaHighlights.map((media) => {
+            {visibleMediaHighlights.map((media) => {
               const mediaName = mediaAltText(media, entity.profile.displayName);
               const card = (
                 <div className="aw-entity-image-card">

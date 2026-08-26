@@ -19,14 +19,14 @@ function resolveApiOrigin(): string {
   return url.origin;
 }
 
-export function animeCharacterCanonicalPath(slug: string): string {
-  return `/anime/characters/${encodeURIComponent(slug)}`;
+export function animeSeriesCanonicalPath(slug: string): string {
+  return `/anime/series/${encodeURIComponent(slug)}`;
 }
 
 function fallbackMetadata(slug: string): Metadata {
-  const canonical = animeCharacterCanonicalPath(slug);
-  const title = 'Anime Character';
-  const description = 'Explore this published Anime Character in AI World.';
+  const canonical = animeSeriesCanonicalPath(slug);
+  const title = 'Anime Series';
+  const description = 'Explore this published Anime Series in AI World.';
 
   return {
     title,
@@ -39,12 +39,12 @@ function fallbackMetadata(slug: string): Metadata {
   };
 }
 
-export function buildAnimeCharacterMetadata(
+export function buildAnimeSeriesMetadata(
   entity: PublicKnowledgeEntity,
   slug: string,
   apiOrigin: string,
 ): Metadata {
-  const canonical = animeCharacterCanonicalPath(slug);
+  const canonical = animeSeriesCanonicalPath(slug);
   const socialImage = animeEntitySocialImageUrl(entity, apiOrigin);
 
   return {
@@ -68,7 +68,7 @@ export function buildAnimeCharacterMetadata(
   };
 }
 
-export async function getAnimeCharacterMetadata(
+export async function getAnimeSeriesMetadata(
   slug: string,
   apiOrigin = resolveApiOrigin(),
 ): Promise<Metadata> {
@@ -87,12 +87,12 @@ export async function getAnimeCharacterMetadata(
     if (
       !entity ||
       entity.resource.universeKey !== 'universe.anime' ||
-      entity.resource.resourceType !== 'anime.character'
+      entity.resource.resourceType !== 'anime.series'
     ) {
       return fallbackMetadata(slug);
     }
 
-    return buildAnimeCharacterMetadata(entity, slug, apiOrigin);
+    return buildAnimeSeriesMetadata(entity, slug, apiOrigin);
   } catch {
     return fallbackMetadata(slug);
   }
