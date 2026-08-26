@@ -104,6 +104,11 @@ test.describe('UXP-02D finished Anime relationship vocabulary', () => {
     await expect(rivals.nth(0)).toContainText('First Rival');
     await expect(rivals.nth(1)).toContainText('Second Rival');
 
+    const seriesTarget = page.locator('#entity-entity-series').getByRole('link', {
+      name: 'Target 11',
+    });
+    await expect(seriesTarget).toHaveAttribute('href', '/anime/series/uxp-02d-target-11');
+
     await page.screenshot({
       path: '.playwright/uxp-02d-relationship-vocabulary.png',
       fullPage: true,

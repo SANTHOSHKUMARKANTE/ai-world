@@ -206,10 +206,10 @@ function SeriesCard({
   readonly motionAllowed: boolean;
 }) {
   return (
-    <li data-series-resource-id={item.resourceId}>
+    <li data-series-resource-id={item.resourceId} data-series-slug={item.slug}>
       <Link
         className="aw-anime-discovery-card aw-anime-series-card"
-        href={`/knowledge/resources/${encodeURIComponent(item.resourceId)}`}
+        href={`/anime/series/${encodeURIComponent(item.slug)}`}
       >
         <DiscoveryPreview item={item} motionAllowed={motionAllowed} />
 
@@ -218,7 +218,7 @@ function SeriesCard({
           <h3>{item.displayName}</h3>
           <p>{item.summary}</p>
           <span className="aw-anime-discovery-card__cta" aria-hidden="true">
-            Open series knowledge <span>→</span>
+            Explore series <span>→</span>
           </span>
         </div>
       </Link>

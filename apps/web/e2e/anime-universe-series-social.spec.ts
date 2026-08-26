@@ -104,7 +104,7 @@ async function mockDiscovery(
 }
 
 test.describe('UXP-03C Anime Series + social identity integration', () => {
-  test('renders optional real Series with generic Knowledge-detail destinations only', async ({
+  test('renders optional real Series with canonical Anime Series destinations', async ({
     page,
   }) => {
     await mockMedia(page);
@@ -121,10 +121,10 @@ test.describe('UXP-03C Anime Series + social identity integration', () => {
     const attackOnTitan = page.getByRole('link', { name: /Attack on Titan/ });
     const fullmetal = page.getByRole('link', { name: /Fullmetal Alchemist/ });
 
-    await expect(attackOnTitan).toHaveAttribute('href', `/knowledge/resources/${SERIES_ONE_ID}`);
-    await expect(fullmetal).toHaveAttribute('href', `/knowledge/resources/${SERIES_TWO_ID}`);
+    await expect(attackOnTitan).toHaveAttribute('href', '/anime/series/attack-on-titan');
+    await expect(fullmetal).toHaveAttribute('href', '/anime/series/fullmetal-alchemist');
 
-    await expect(page.locator('a[href^="/anime/series/"]')).toHaveCount(0);
+    await expect(page.locator('a[href^="/anime/series/"]')).toHaveCount(2);
 
     await expect(
       page.locator(`[data-series-resource-id="${SERIES_ONE_ID}"] [data-preview-kind="image"]`),

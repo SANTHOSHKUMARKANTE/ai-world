@@ -246,7 +246,12 @@ test.describe('UXP-03D full Anime landing acceptance gaps', () => {
       page.locator(`[data-series-resource-id="${SERIES_TWO_ID}"] [data-preview-kind="none"]`),
     ).toBeVisible();
 
-    await expect(page.locator('a[href^="/anime/series/"]')).toHaveCount(0);
+    const attackOnTitan = page.getByRole('link', { name: /Attack on Titan/ });
+    const fullmetal = page.getByRole('link', { name: /Fullmetal Alchemist/ });
+
+    await expect(attackOnTitan).toHaveAttribute('href', '/anime/series/attack-on-titan');
+    await expect(fullmetal).toHaveAttribute('href', '/anime/series/fullmetal-alchemist');
+    await expect(page.locator('a[href^="/anime/series/"]')).toHaveCount(2);
 
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),

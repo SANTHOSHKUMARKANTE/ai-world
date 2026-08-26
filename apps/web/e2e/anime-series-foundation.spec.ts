@@ -199,12 +199,12 @@ async function routeSeries(
 }
 
 test.describe('UXP-04A Anime Series canonical identity/social shell', () => {
-  test('renders a published Series desktop identity without leaking 04B Media or relationships', async ({
+  test('keeps the accepted Series identity shell coherent when optional Media and relationships are absent', async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await anonymous(page);
-    await routeSeries(page, featured);
+    await routeSeries(page, { ...featured, includeDeferredContent: false });
 
     const response = await page.goto(
       '/anime/series/fullmetal-alchemist-brotherhood?utm_source=instagram&utm_campaign=series-launch',

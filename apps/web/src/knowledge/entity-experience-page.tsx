@@ -4,8 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { AnimeCharacterMediaViewer } from '../anime/anime-character-media-viewer';
+import { AnimeEntityMediaViewer } from '../anime/anime-entity-media-viewer';
 import { ANIME_CHARACTER_SECTION_KEYS } from '../anime/anime-character-sections';
+import { ANIME_SERIES_SECTION_DEFINITIONS } from '../anime/anime-series-sections';
 import { AnimeCharacterShareControls } from '../anime/anime-character-share-controls';
 import { AnimeSeriesShareControls } from '../anime/anime-series-share-controls';
 import { ApiClientError } from '../api/api-client';
@@ -173,6 +174,10 @@ function entityPath(target: PublicKnowledgeEntityRelation['target']): string {
     return `/anime/characters/${encodeURIComponent(target.slug)}`;
   }
 
+  if (target.resourceType === 'anime.series') {
+    return `/anime/series/${encodeURIComponent(target.slug)}`;
+  }
+
   return `/knowledge/resources/${encodeURIComponent(target.id)}`;
 }
 
@@ -185,13 +190,15 @@ function EntityRail({
   items,
   displayName,
   presentation,
+  titleOverride,
 }: {
   readonly sectionKey: string;
   readonly items: readonly PublicKnowledgeEntityRelation[];
   readonly displayName: string;
   readonly presentation: WebUniversePresentation | undefined;
+  readonly titleOverride: string | undefined;
 }) {
-  const title = resolveEntitySectionTitle(presentation, sectionKey, displayName);
+  const title = titleOverride ?? resolveEntitySectionTitle(presentation, sectionKey, displayName);
   const quoteSection = sectionKey === 'entity.quotes';
 
   return (
@@ -323,11 +330,12 @@ export function EntityExperiencePage({
       return;
     }
 
-    const isAnimeCharacter =
+    const isAnimeEntity =
       state.entity.resource.universeKey === 'universe.anime' &&
-      state.entity.resource.resourceType === 'anime.character';
+      (state.entity.resource.resourceType === 'anime.character' ||
+        state.entity.resource.resourceType === 'anime.series');
 
-    if (!isAnimeCharacter) {
+    if (!isAnimeEntity) {
       return;
     }
 
@@ -413,9 +421,9 @@ export function EntityExperiencePage({
         media.playback === 'SHORT_LOOP' &&
         media.posterAssetId !== null),
   );
-  const visibleMediaHighlights = animeSeries ? [] : mediaHighlights;
+  const visibleMediaHighlights = mediaHighlights;
   const imageMedia = visibleMediaHighlights.filter((media) => media.assetType === 'IMAGE');
-  const viewerMedia = animeCharacter ? visibleMediaHighlights.filter(isViewerEligibleMedia) : [];
+  const viewerMedia = animeIdentity ? visibleMediaHighlights.filter(isViewerEligibleMedia) : [];
   const selectedMedia = viewerMedia.find((media) => media.assetId === selectedMediaId) ?? null;
   const heroMedia = visibleMediaHighlights.find((media) => media.role === 'HERO') ?? null;
   const fallbackImage = imageMedia[0] ?? null;
@@ -423,8 +431,19 @@ export function EntityExperiencePage({
   const sectionOrder = animeCharacter
     ? [...ANIME_CHARACTER_SECTION_KEYS, ...ANIME_LEGACY_SECTION_KEYS]
     : SECTION_ORDER;
+  const seriesSectionGroups = animeSeries
+    ? ANIME_SERIES_SECTION_DEFINITIONS.map((definition) => ({
+        definition,
+        items: (grouped.get(definition.sectionKey) ?? []).filter(
+          (relation) =>
+            relation.relationshipType === definition.relationshipType &&
+            relation.target.universeKey === 'universe.anime' &&
+            relation.target.resourceType === definition.targetResourceType,
+        ),
+      })).filter((group) => group.items.length > 0)
+    : [];
   const availableSectionKeys = animeSeries
-    ? []
+    ? seriesSectionGroups.map((group) => group.definition.sectionKey)
     : sectionOrder.filter((sectionKey) => grouped.has(sectionKey));
   const overviewEyebrow = animeCharacter
     ? 'Character story'
@@ -438,6 +457,28 @@ export function EntityExperiencePage({
   const overviewCopy = animeIdentity
     ? (entity.profile.overview ?? entity.profile.summary)
     : entity.profile.summary;
+
+  function sectionItems(sectionKey: string): readonly PublicKnowledgeEntityRelation[] {
+    if (!animeSeries) {
+      return grouped.get(sectionKey) ?? [];
+    }
+
+    return (
+      seriesSectionGroups.find((group) => group.definition.sectionKey === sectionKey)?.items ?? []
+    );
+  }
+
+  function sectionTitle(sectionKey: string): string {
+    if (animeSeries) {
+      const title = seriesSectionGroups.find((group) => group.definition.sectionKey === sectionKey)
+        ?.definition.title;
+      if (title) {
+        return title;
+      }
+    }
+
+    return resolveEntitySectionTitle(presentation, sectionKey, entity.profile.displayName);
+  }
 
   return (
     <article
@@ -573,7 +614,7 @@ export function EntityExperiencePage({
         {visibleMediaHighlights.length > 0 ? <a href="#entity-images">Media</a> : null}
         {availableSectionKeys.map((sectionKey) => (
           <a key={sectionKey} href={`#${sectionAnchor(sectionKey)}`}>
-            {resolveEntitySectionTitle(presentation, sectionKey, entity.profile.displayName)}
+            {sectionTitle(sectionKey)}
           </a>
         ))}
       </nav>
@@ -621,7 +662,7 @@ export function EntityExperiencePage({
                       sizes="(max-width: 700px) 70vw, 260px"
                     />
                   )}
-                  {animeCharacter ? (
+                  {animeIdentity ? (
                     <span className="aw-anime-media-trigger__kind" aria-hidden="true">
                       {media.assetType === 'VIDEO' ? 'Short motion' : 'Image'}
                     </span>
@@ -631,7 +672,7 @@ export function EntityExperiencePage({
 
               return (
                 <li key={media.assetId}>
-                  {animeCharacter ? (
+                  {animeIdentity ? (
                     isViewerEligibleMedia(media) ? (
                       <button
                         type="button"
@@ -652,7 +693,7 @@ export function EntityExperiencePage({
                     </a>
                   )}
 
-                  {animeCharacter && media.caption ? (
+                  {animeIdentity && media.caption ? (
                     <p className="aw-anime-media-caption">{media.caption}</p>
                   ) : null}
                 </li>
@@ -666,14 +707,15 @@ export function EntityExperiencePage({
         <EntityRail
           key={sectionKey}
           sectionKey={sectionKey}
-          items={grouped.get(sectionKey) ?? []}
+          items={sectionItems(sectionKey)}
           displayName={entity.profile.displayName}
           presentation={presentation}
+          titleOverride={animeSeries ? sectionTitle(sectionKey) : undefined}
         />
       ))}
 
-      {animeCharacter ? (
-        <AnimeCharacterMediaViewer
+      {animeIdentity ? (
+        <AnimeEntityMediaViewer
           media={selectedMedia}
           displayName={entity.profile.displayName}
           onRequestClose={closeMediaViewer}
