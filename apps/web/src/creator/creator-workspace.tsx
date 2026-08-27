@@ -23,6 +23,7 @@ import {
   type CreatorPage,
 } from './creator-api';
 import { AnimeCharacterManager } from './anime-character-manager';
+import { AnimeSeriesManager } from './anime-series-manager';
 import { KnowledgeMediaManager } from './knowledge-media-manager';
 
 interface ReferenceDraft {
@@ -81,6 +82,7 @@ function AuthenticatedCreatorWorkspace() {
   const [pageId, setPageId] = useState('');
   const [activePage, setActivePage] = useState<CreatorPage | null>(null);
   const [resourceType, setResourceType] = useState('devotional.deity');
+  const [animeEntityEditor, setAnimeEntityEditor] = useState<'character' | 'series'>('character');
   const [knowledgeResourceId, setKnowledgeResourceId] = useState('');
   const [activeKnowledgeResource, setActiveKnowledgeResource] =
     useState<CreatorKnowledgeResource | null>(null);
@@ -121,6 +123,21 @@ function AuthenticatedCreatorWorkspace() {
 
   function registerReference(reference: ReferenceDraft): void {
     setLibrary((current) => [reference, ...current]);
+  }
+
+  function selectAnimeEditorForResource(resource: CreatorKnowledgeResource): void {
+    if (resource.universeKey !== 'universe.anime') {
+      return;
+    }
+
+    if (resource.resourceType === 'anime.character') {
+      setAnimeEntityEditor('character');
+      return;
+    }
+
+    if (resource.resourceType === 'anime.series') {
+      setAnimeEntityEditor('series');
+    }
   }
 
   async function handleCreatePage(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -180,6 +197,7 @@ function AuthenticatedCreatorWorkspace() {
         });
         setKnowledgeResourceId(resource.id);
         setActiveKnowledgeResource(resource);
+        selectAnimeEditorForResource(resource);
         setKnowledgeMediaManagerRevision((revision) => revision + 1);
         setStatusMessage(`Knowledge draft “${resource.resourceType}” created.`);
       },
@@ -222,6 +240,7 @@ function AuthenticatedCreatorWorkspace() {
         });
         setKnowledgeResourceId(accepted.resource.id);
         setActiveKnowledgeResource(accepted.resource);
+        selectAnimeEditorForResource(accepted.resource);
         setKnowledgeMediaManagerRevision((revision) => revision + 1);
         setAiCandidate(null);
         setStatusMessage(
@@ -662,18 +681,69 @@ function AuthenticatedCreatorWorkspace() {
         </EditorCard>
       </div>
 
-      <AnimeCharacterManager
-        key={`character-${knowledgeMediaManagerRevision}`}
-        knowledgeResourceId={knowledgeResourceId}
-        initialResource={activeKnowledgeResource}
-        onKnowledgeResourceIdChange={(id) => {
-          setKnowledgeResourceId(id);
-          if (activeKnowledgeResource?.id !== id) {
-            setActiveKnowledgeResource(null);
-          }
-        }}
-        onResourceChange={setActiveKnowledgeResource}
-      />
+      <section
+        aria-labelledby="creator-anime-entity-editor-title"
+        className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/10"
+      >
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-300">
+          Anime · Entity editor
+        </p>
+        <h2 id="creator-anime-entity-editor-title" className="mt-2 text-xl font-semibold">
+          Choose the typed Anime manager
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+          Character and Series reuse the same Creator Knowledge APIs while keeping their accepted
+          Entity vocabulary explicit.
+        </p>
+        <label
+          className="mt-4 block max-w-sm text-sm font-medium"
+          htmlFor="creator-anime-entity-editor"
+        >
+          Anime Entity editor
+          <select
+            id="creator-anime-entity-editor"
+            className={inputClassName}
+            value={animeEntityEditor}
+            onChange={(event) => {
+              const editor = event.target.value === 'series' ? 'series' : 'character';
+              setAnimeEntityEditor(editor);
+              setUniverseKey('universe.anime');
+              setResourceType(editor === 'series' ? 'anime.series' : 'anime.character');
+            }}
+          >
+            <option value="character">Character</option>
+            <option value="series">Series</option>
+          </select>
+        </label>
+      </section>
+
+      {animeEntityEditor === 'character' ? (
+        <AnimeCharacterManager
+          key={`character-${knowledgeMediaManagerRevision}`}
+          knowledgeResourceId={knowledgeResourceId}
+          initialResource={activeKnowledgeResource}
+          onKnowledgeResourceIdChange={(id) => {
+            setKnowledgeResourceId(id);
+            if (activeKnowledgeResource?.id !== id) {
+              setActiveKnowledgeResource(null);
+            }
+          }}
+          onResourceChange={setActiveKnowledgeResource}
+        />
+      ) : (
+        <AnimeSeriesManager
+          key={`series-${knowledgeMediaManagerRevision}`}
+          knowledgeResourceId={knowledgeResourceId}
+          initialResource={activeKnowledgeResource}
+          onKnowledgeResourceIdChange={(id) => {
+            setKnowledgeResourceId(id);
+            if (activeKnowledgeResource?.id !== id) {
+              setActiveKnowledgeResource(null);
+            }
+          }}
+          onResourceChange={setActiveKnowledgeResource}
+        />
+      )}
 
       <KnowledgeMediaManager
         key={knowledgeMediaManagerRevision}
