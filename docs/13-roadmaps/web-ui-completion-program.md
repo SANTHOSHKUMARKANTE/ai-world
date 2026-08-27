@@ -1134,25 +1134,80 @@ CLOSED — ACCEPTED
 Status:
 
 ```text
-NOT STARTED — GATED ON UXP-04 CLOSURE REMOTE CI
+ACTIVE — UXP-05A NEXT IMPLEMENTATION SLICE
 ```
 
-UXP-05 is the next eligible page only after the docs-only UXP-04 closure
-transition is committed, pushed and exact remote CI is green. This transition
-does not activate UXP-05.
-
-This page becomes a major social landing unit for composed campaigns.
-
-It should be excellent for:
+The detailed frozen implementation contract is:
 
 ```text
-one image story;
-short motion story;
-image + user-started audio;
-multi-block story;
-Character/Deity references;
-campaign-specific presentation.
+docs/13-roadmaps/uxp-05-public-experience-page.md
 ```
+
+UXP-05 was activated only after UXP-04 closed and the exact UXP-04 closure
+checkpoint was remotely green:
+
+```text
+95836f344dbf523b20591cc20536f1517a1cb060
+docs(roadmap): close UXP-04
+GitHub CI run 241
+run id 33072679792
+success
+```
+
+Repository inspection confirms that `/experiences/[id]` is already a real
+published Composition consumer. Composition already owns Page lifecycle,
+ordered Blocks, Knowledge references, Media references, Creator preview and
+publish/archive behavior.
+
+Therefore UXP-05 finishes that existing consumer rather than creating an
+Experience platform.
+
+Frozen slice state:
+
+```text
+UXP-05A — Public projection + canonical/social shell
+ACTIVE — NEXT IMPLEMENTATION SLICE
+
+UXP-05B — Typed IMAGE / short-motion Media + Creator/public parity
+NOT STARTED — GATED ON UXP-05A ACCEPTANCE
+
+UXP-05C — User-started AUDIO capability gate
+NOT STARTED — CAPABILITY MICRO-FREEZE REQUIRED
+
+UXP-05D — Reuse + full Experience acceptance
+NOT STARTED — GATED ON UXP-05A/B/C ACCEPTANCE
+```
+
+Important boundaries:
+
+```text
+canonical route remains /experiences/[id];
+campaign parameters never change canonical identity;
+routePath does not become the public router;
+no Experience database/service/repository;
+no Experience-specific Engagement backend;
+no Creator Studio rewrite;
+no UXP-08 Search expansion;
+no speculative platform infrastructure.
+```
+
+The Media model recognizes AUDIO, but accepted authoring/ingestion currently
+proves image and bounded MP4 rather than general audio upload. UXP-05C therefore
+requires its own focused Media/security micro-freeze before any audio
+implementation chooses formats, limits or duration.
+
+Audio, when supported, is always user-started. No page depends on audible
+autoplay.
+
+UXP-05D is acceptance-first:
+
+```text
+Production changes in UXP-05D are allowed only when acceptance exposes a real
+defect.
+```
+
+UXP-06 remains blocked until complete UXP-05 acceptance and exact remote CI are
+green.
 
 ## UXP-06 / UXP-07 — Devotional
 
@@ -1408,10 +1463,12 @@ UXP-04 — Anime Series
 CLOSED — f14b984f34dd25855d709c2a5cb67806861f34d1
         ↓
 UXP-05 — Public Experience
-NOT STARTED — GATED ON UXP-04 CLOSURE REMOTE CI
+ACTIVE — UXP-05A NEXT IMPLEMENTATION SLICE
 ```
 
 UXP-02, UXP-03 and UXP-04 are fully accepted pages in the program.
+UXP-05 becomes the active page only after this docs-only activation checkpoint is
+manually committed/pushed and exact remote CI on that activation commit is green.
 
 UXP-03A is accepted at:
 
@@ -1486,16 +1543,29 @@ GitHub CI run 240 — success
 
 UXP-04 is therefore CLOSED — ACCEPTED.
 
-The next eligible program page is UXP-05 — Public Experience, but UXP-05 remains
-NOT STARTED until this docs-only UXP-04 closure transition is committed, pushed
-and exact remote CI is green.
+The UXP-05 repository/architecture inspection is complete and the frozen detailed
+implementation contract is:
 
-This transition does not freeze, activate or implement UXP-05.
+```text
+docs/13-roadmaps/uxp-05-public-experience-page.md
+```
 
-Do not add episode/staff/studio/streaming infrastructure, ranking,
-recommendations, editorial curation, a Series CMS, Search expansion, or
-speculative platform work as part of UXP-04 closure.
+This docs-only checkpoint activates UXP-05 in the Web UI program. The first
+production slice is:
 
-The Master Roadmap remains unchanged by this closure transition. WPR-M05 remains
-the active Web Product Readiness gate, and P10-M04 remains sequencing-blocked
-until that gate closes.
+```text
+UXP-05A — Public projection + canonical/social shell
+```
+
+Do not begin UXP-05 production implementation until this activation checkpoint is
+reviewed, manually committed/pushed, independently verified at the exact remote
+SHA, and GitHub CI on that exact commit is green.
+
+Do not pre-build UXP-05B, UXP-05C or UXP-05D. Do not introduce production AUDIO
+support in UXP-05A. Do not expand Search under UXP-05; UXP-08 continues to own
+finished Discovery + Engagement. UXP-06 remains blocked until complete UXP-05
+acceptance is remotely green.
+
+The Master Roadmap remains unchanged by this activation transition. WPR-M05
+remains the active Web Product Readiness gate, and P10-M04 remains
+sequencing-blocked until that gate closes.
