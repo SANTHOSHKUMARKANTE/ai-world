@@ -4,12 +4,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
+import { ApiClientError } from '../api/api-client';
 import { WEB_UNIVERSE_PRESENTATIONS } from '../universes/presentation';
 import { getPublicExperience, type CreatorPagePreview } from './creator-api';
 
 type PublicExperienceState =
   | { readonly status: 'loading' }
   | { readonly status: 'ready'; readonly experience: CreatorPagePreview }
+  | { readonly status: 'not-found' }
   | { readonly status: 'error' };
 
 function resourceLabel(resourceType: string): string {
@@ -34,10 +36,17 @@ export function PublicExperience({ pageId }: { readonly pageId: string }) {
           setState({ status: 'ready', experience });
         }
       })
-      .catch(() => {
-        if (active) {
-          setState({ status: 'error' });
+      .catch((error: unknown) => {
+        if (!active) {
+          return;
         }
+
+        if (error instanceof ApiClientError && error.status === 404) {
+          setState({ status: 'not-found' });
+          return;
+        }
+
+        setState({ status: 'error' });
       });
 
     return () => {
@@ -46,11 +55,35 @@ export function PublicExperience({ pageId }: { readonly pageId: string }) {
   }, [pageId]);
 
   if (state.status === 'loading') {
-    return <p role="status">Loading published Experience…</p>;
+    return (
+      <p role="status" aria-live="polite">
+        Loading published Experience…
+      </p>
+    );
+  }
+
+  if (state.status === 'not-found') {
+    return (
+      <section className="aw-experience" aria-labelledby="published-experience-not-found">
+        <header className="aw-experience__header">
+          <p className="aw-eyebrow">Published Experience</p>
+          <h1 id="published-experience-not-found">Experience not found</h1>
+        </header>
+        <p role="alert">This published Experience was not found.</p>
+      </section>
+    );
   }
 
   if (state.status === 'error') {
-    return <p role="alert">This published Experience is unavailable.</p>;
+    return (
+      <section className="aw-experience" aria-labelledby="published-experience-unavailable">
+        <header className="aw-experience__header">
+          <p className="aw-eyebrow">Published Experience</p>
+          <h1 id="published-experience-unavailable">Experience unavailable</h1>
+        </header>
+        <p role="alert">This published Experience is unavailable right now.</p>
+      </section>
+    );
   }
 
   const presentation = WEB_UNIVERSE_PRESENTATIONS.find(

@@ -15,8 +15,8 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('WPR-M04 public Experience', () => {
-  it('renders a published typed Composition without requiring a Session provider', async () => {
+describe('UXP-05A public Experience shell', () => {
+  it('renders published Block and Knowledge content without requiring a Session provider', async () => {
     const pageId = '11111111-1111-4111-8111-111111111111';
     const knowledgeId = '22222222-2222-4222-8222-222222222222';
     const fetchMock = vi.fn().mockResolvedValue(
@@ -67,7 +67,7 @@ describe('WPR-M04 public Experience', () => {
     });
   });
 
-  it('shows a safe unavailable state when a Page is not publicly visible', async () => {
+  it('distinguishes a missing published Page from an unexpected request failure', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue(
@@ -86,7 +86,56 @@ describe('WPR-M04 public Experience', () => {
 
     render(<PublicExperience pageId="44444444-4444-4444-8444-444444444444" />);
 
-    await screen.findByRole('alert');
-    expect(screen.getByText('This published Experience is unavailable.')).toBeTruthy();
+    await screen.findByRole('heading', { level: 1, name: 'Experience not found' });
+    expect(screen.getByRole('alert').textContent).toBe('This published Experience was not found.');
+  });
+
+  it('renders a bounded unexpected-error state', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse(
+          {
+            error: {
+              code: 'web.api.unexpected_error',
+              message: 'The request could not be completed.',
+              status: 500,
+            },
+          },
+          500,
+        ),
+      ),
+    );
+
+    render(<PublicExperience pageId="55555555-5555-4555-8555-555555555555" />);
+
+    await screen.findByRole('heading', { level: 1, name: 'Experience unavailable' });
+    expect(screen.getByRole('alert').textContent).toBe(
+      'This published Experience is unavailable right now.',
+    );
+  });
+
+  it('keeps an empty published Experience useful and explicit', async () => {
+    const pageId = '66666666-6666-4666-8666-666666666666';
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse({
+          page: {
+            id: pageId,
+            universeKey: 'universe.anime',
+            routePath: '/empty-proof',
+            title: 'Empty Experience',
+            lifecycle: 'PUBLISHED',
+          },
+          items: [],
+        }),
+      ),
+    );
+
+    render(<PublicExperience pageId={pageId} />);
+
+    await screen.findByRole('heading', { level: 1, name: 'Empty Experience' });
+    expect(screen.getByText('This published Experience has no content yet.')).toBeTruthy();
   });
 });
