@@ -436,8 +436,9 @@ Current accepted routes now include:
 | `/account` | Account/profile |
 | `/anime` | Finished Anime Universe landing — UXP-03 CLOSED and accepted at `75d91ef7975e515c10b529c143641bad0d1d6055` |
 | `/anime/characters/[slug]` | Anime Character Entity Experience |
-| `/anime/series/[slug]` | Anime Series public route accepted through UXP-04B at `3656cabc6018feb9c89fe389dd20412f56eb5094`; Creator Series management active in UXP-04C |
+| `/anime/series/[slug]` | Anime Series public route + Creator-driven content lifecycle accepted through UXP-04C at `1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07`; full Series acceptance active in UXP-04D |
 | `/creator` | Creator workspace |
+| `/creator/series/[id]/preview` | Creator-only Anime Series draft preview accepted through UXP-04C at `1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07` |
 | `/creator/preview/[id]` | Creator preview |
 | `/devotional/[slug]` | Devotional Entity Experience |
 | `/experiences/[id]` | Published composed Experience |
@@ -936,7 +937,7 @@ UXP-03 is therefore CLOSED — ACCEPTED.
 Status:
 
 ```text
-ACTIVE — UXP-04C NEXT IMPLEMENTATION SLICE
+ACTIVE — UXP-04D NEXT IMPLEMENTATION SLICE
 ```
 
 Repository/architecture inspection is complete.
@@ -1042,6 +1043,38 @@ production build 22 / 22;
 architecture validation with 0 violations across 755 modules / 2466 dependencies.
 ```
 
+UXP-04C is accepted at:
+
+```text
+1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07
+feat(creator): manage anime series
+GitHub CI run 238 — success
+```
+
+Accepted UXP-04C evidence includes:
+
+```text
+bounded anime.series Creator Web manager;
+generic Creator Entity API reuse;
+generic KnowledgeMediaManager reuse;
+preferred Series fact vocabulary;
+fixed Characters / related-Series relationship vocabulary;
+Creator-only Series DRAFT preview;
+publish / archive public lifecycle proof;
+wrong Resource Type rejection;
+403 authorization proof;
+anonymous preview boundary;
+Character Creator regressions preserved;
+remote Web unit 56 / 56;
+32 migrations;
+AI Creator integration 24 / 24;
+full integration pipeline 29 / 29 tasks;
+API integration 181 / 181;
+full browser E2E 75 / 75;
+production build 22 / 22 tasks;
+architecture validation with 0 violations across 759 modules / 2483 dependencies.
+```
+
 Current UXP-04 slice state:
 
 ```text
@@ -1052,10 +1085,10 @@ UXP-04B — Media + Series relationships + canonical Anime navigation
 CLOSED — 3656cabc6018feb9c89fe389dd20412f56eb5094
 
 UXP-04C — Creator Series manager + creator-only preview
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — 1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07
 
 UXP-04D — Reuse + full Series acceptance
-NOT STARTED
+ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
 
 ## UXP-05 — Public Experience
@@ -1384,35 +1417,51 @@ feat(web): finish anime series media navigation
 GitHub CI run 236 — success
 ```
 
+UXP-04C is accepted at:
+
+```text
+1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07
+feat(creator): manage anime series
+GitHub CI run 238 — success
+```
+
 The next engineering objective is:
 
 ```text
-UXP-04C — Creator Series manager + creator-only preview
+UXP-04D — Reuse + full Series acceptance
 ```
 
-UXP-04C must finish only the frozen third slice:
+UXP-04D must complete the frozen Series Definition-of-Done matrix, including:
 
 ```text
-bounded anime.series Creator Web manager;
-reuse existing generic Creator Entity APIs;
-reuse existing generic KnowledgeMediaManager;
-Series identity / summary / overview / quick facts;
-Characters + related-Series relationship editing;
-publish / archive lifecycle;
-Creator-only /creator/series/[id]/preview;
-authorized Creator behavior;
-unauthorized Creator behavior;
-wrong Resource Type rejection.
+desktop / tablet / 390px;
+two or more Series proving reuse;
+IMAGE / SHORT_LOOP / no Media;
+facts and relationship groups present / absent;
+anonymous / authenticated / Creator authorization states;
+loading / error / not found / wrong type / unpublished / archived;
+keyboard / focus restoration / reduced motion;
+canonical-social deep links + campaign preservation;
+landing and Character/Series relationship navigation;
+Search regression without UXP-08 expansion;
+Anime landing / Character / Shiva / Hanuman regressions;
+format / lint / typecheck / unit / migrations / integration;
+focused + full browser;
+production build;
+fresh-process production social proof;
+architecture;
+reviewed evidence / checkpoint / exact remote CI.
 ```
 
-Do not begin UXP-04D full acceptance until UXP-04C has an accepted implementation
+Production changes in UXP-04D are allowed only when acceptance exposes a real
+defect.
+
+Do not begin UXP-05 until UXP-04D and complete UXP-04 acceptance have an accepted
 checkpoint and exact remote CI green.
 
-No new Creator backend endpoint, Series-specific persistence, new role/permission
-vocabulary or Search expansion is expected.
-
 Do not add episode/staff/studio/streaming/Experience infrastructure, ranking or
-recommendations, editorial curation, a Series CMS, or speculative platform work.
+recommendations, editorial curation, a Series CMS, Search expansion, or
+speculative platform work merely to satisfy acceptance.
 
 The Master Roadmap remains unchanged by this slice transition. WPR-M05 remains
 the active Web Product Readiness gate, and P10-M04 remains sequencing-blocked
