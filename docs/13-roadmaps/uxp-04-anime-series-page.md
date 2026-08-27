@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-04 |
 | Area | Product / Web / Knowledge / Media / Engagement / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-04D ACTIVE |
+| Status | CLOSED — ACCEPTED |
 | Created | 2026-08-25 |
 | Baseline | `64435607011e0bc6d57c34fe7a5d439a4aef6a48` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -1241,7 +1241,7 @@ UXP-04C is therefore CLOSED — ACCEPTED.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 This is the complete page Definition-of-Done gate.
@@ -1302,6 +1302,62 @@ exact remote CI green.
 
 Production changes in UXP-04D are allowed only when acceptance exposes a real
 defect.
+
+Accepted UXP-04D checkpoint:
+
+```text
+f14b984f34dd25855d709c2a5cb67806861f34d1
+test(web): prove full anime series acceptance
+```
+
+Accepted remote CI:
+
+```text
+GitHub CI run 240
+run id 33068881365
+completed successfully on f14b984f34dd25855d709c2a5cb67806861f34d1
+```
+
+Accepted UXP-04D / complete UXP-04 evidence includes:
+
+```text
+acceptance-only implementation; no Series production change was required;
+three independent Series fixtures prove reuse;
+1440px rich IMAGE Series with complete facts, Characters and Related Series;
+834px SHORT_LOOP Series with poster, sparse facts, no Characters and Related Series;
+390px sparse Series with no Media, no facts, Characters and no Related Series;
+no horizontal overflow in the 390px acceptance case;
+existing UXP-04A / UXP-04B / UXP-04C Series behavior preserved;
+reviewed focused UXP-04D final matrix 3 / 3;
+reviewed focused Series UXP-04A / B / C regressions 15 / 15;
+reviewed Anime landing / canonical navigation regressions 9 / 9;
+reviewed Character full-acceptance gap proof 2 / 2;
+reviewed Search regression 1 / 1 without UXP-08 expansion;
+reviewed Shiva / Hanuman regressions 3 / 3;
+reviewed fresh-process production Series social / deep-link smoke;
+fresh production smoke used dynamic Web / API ports and proved cleanup;
+campaign + media deep-link request preserved a query-free canonical Series URL;
+SHORT_LOOP poster supplied the Open Graph social image;
+remote root unit pipeline 37 / 37 tasks;
+remote Web unit 17 / 17 files and 56 / 56 tests;
+32 migrations found and deployed in remote CI;
+remote AI Creator integration 11 / 11 files and 24 / 24 tests;
+remote full integration pipeline 29 / 29 tasks;
+remote API integration 26 / 26 files and 181 / 181 tests;
+remote full browser E2E 78 / 78;
+remote production build 22 / 22 tasks;
+remote architecture validation with 0 violations across 760 modules / 2484 dependencies;
+acceptance checkpoint commit / push;
+exact GitHub CI green.
+```
+
+UXP-04D is therefore CLOSED — ACCEPTED.
+
+UXP-04 is therefore CLOSED — ACCEPTED.
+
+UXP-05 remains NOT STARTED. It may not be activated or implemented until this
+UXP-04 closure transition itself is committed, pushed and exact remote CI is
+green.
 
 ---
 
@@ -1474,47 +1530,30 @@ feat(creator): manage anime series
 GitHub CI run 238 — success
 ```
 
-The active implementation slice is now:
+UXP-04D and complete UXP-04 acceptance are accepted at:
 
 ```text
-UXP-04D — Reuse + full Series acceptance
+f14b984f34dd25855d709c2a5cb67806861f34d1
+test(web): prove full anime series acceptance
+GitHub CI run 240 — success
 ```
 
-UXP-04D is the complete Series page Definition-of-Done gate.
-
-It must prove the already frozen acceptance matrix across:
+Final UXP-04 slice state:
 
 ```text
-desktop;
-tablet;
-390px-class mobile;
-two or more Series proving reuse;
-IMAGE / SHORT_LOOP / no-Media Series;
-facts present / sparse / absent;
-Characters present / absent;
-Related Series present / absent;
-anonymous / authenticated / authorized Creator / unauthorized Creator;
-loading / unexpected error / not found / wrong Resource Type / unpublished / archived;
-keyboard-only;
-media-viewer focus restoration;
-reduced motion;
-canonical/social deep-link + campaign parameters;
-landing -> Series;
-Character -> Series;
-Series -> Character;
-Series -> Series;
-Search regression without UXP-08 expansion;
-finished Anime landing regressions;
-finished Anime Character regressions;
-Shiva / Hanuman regressions;
-full validation / production / architecture / evidence chain.
+UXP-04A — CLOSED — ACCEPTED
+UXP-04B — CLOSED — ACCEPTED
+UXP-04C — CLOSED — ACCEPTED
+UXP-04D — CLOSED — ACCEPTED
+UXP-04 — CLOSED — ACCEPTED
 ```
 
-Production changes in UXP-04D are allowed only when acceptance exposes a real
-defect.
+The complete Series Definition of Done is satisfied without requiring a UXP-04D
+production feature change.
 
-Do not begin UXP-05 until UXP-04D and complete UXP-04 acceptance have an accepted
-checkpoint and exact remote CI green.
+UXP-05 remains NOT STARTED while this closure transition is uncommitted or lacks
+exact remote CI green. Do not activate or implement UXP-05 before that gate is
+satisfied.
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Product Quality
 And Local User Acceptance gate, and P10-M04 remains sequencing-blocked until that

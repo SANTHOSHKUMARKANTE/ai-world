@@ -436,7 +436,7 @@ Current accepted routes now include:
 | `/account` | Account/profile |
 | `/anime` | Finished Anime Universe landing — UXP-03 CLOSED and accepted at `75d91ef7975e515c10b529c143641bad0d1d6055` |
 | `/anime/characters/[slug]` | Anime Character Entity Experience |
-| `/anime/series/[slug]` | Anime Series public route + Creator-driven content lifecycle accepted through UXP-04C at `1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07`; full Series acceptance active in UXP-04D |
+| `/anime/series/[slug]` | Finished Anime Series destination — UXP-04 CLOSED and accepted at `f14b984f34dd25855d709c2a5cb67806861f34d1` |
 | `/creator` | Creator workspace |
 | `/creator/series/[id]/preview` | Creator-only Anime Series draft preview accepted through UXP-04C at `1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07` |
 | `/creator/preview/[id]` | Creator preview |
@@ -937,7 +937,7 @@ UXP-03 is therefore CLOSED — ACCEPTED.
 Status:
 
 ```text
-ACTIVE — UXP-04D NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 Repository/architecture inspection is complete.
@@ -1075,6 +1075,41 @@ production build 22 / 22 tasks;
 architecture validation with 0 violations across 759 modules / 2483 dependencies.
 ```
 
+UXP-04D and complete UXP-04 acceptance are accepted at:
+
+```text
+f14b984f34dd25855d709c2a5cb67806861f34d1
+test(web): prove full anime series acceptance
+GitHub CI run 240 — success
+```
+
+Accepted final UXP-04 evidence includes:
+
+```text
+three-Series responsive reuse matrix at 1440px / 834px / 390px;
+IMAGE / SHORT_LOOP / no-Media Series;
+facts and Character / related-Series relationship groups present / sparse / absent;
+existing anonymous / authenticated / Creator authorization states retained;
+loading / error / not-found / wrong-type / unpublished / archived states retained;
+keyboard / media-viewer focus / reduced-motion behavior retained;
+canonical/social deep links and campaign preservation retained;
+landing / Character / Series canonical navigation retained;
+Search regression without UXP-08 expansion;
+Anime landing / Character / Shiva / Hanuman regressions retained;
+acceptance-only UXP-04D with no production feature change;
+reviewed fresh-process production Series social / deep-link smoke;
+remote root unit 37 / 37 tasks;
+remote Web unit 17 / 17 files and 56 / 56 tests;
+32 migrations;
+remote AI Creator integration 24 / 24;
+remote full integration pipeline 29 / 29 tasks;
+remote API integration 181 / 181;
+remote full browser E2E 78 / 78;
+remote production build 22 / 22 tasks;
+remote architecture validation with 0 violations across 760 modules / 2484 dependencies;
+exact acceptance checkpoint / push / GitHub CI green.
+```
+
 Current UXP-04 slice state:
 
 ```text
@@ -1088,10 +1123,23 @@ UXP-04C — Creator Series manager + creator-only preview
 CLOSED — 1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07
 
 UXP-04D — Reuse + full Series acceptance
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — f14b984f34dd25855d709c2a5cb67806861f34d1
+
+UXP-04 — Anime Series
+CLOSED — ACCEPTED
 ```
 
 ## UXP-05 — Public Experience
+
+Status:
+
+```text
+NOT STARTED — GATED ON UXP-04 CLOSURE REMOTE CI
+```
+
+UXP-05 is the next eligible page only after the docs-only UXP-04 closure
+transition is committed, pushed and exact remote CI is green. This transition
+does not activate UXP-05.
 
 This page becomes a major social landing unit for composed campaigns.
 
@@ -1357,10 +1405,13 @@ UXP-03 — Anime Universe landing
 CLOSED — 75d91ef7975e515c10b529c143641bad0d1d6055
         ↓
 UXP-04 — Anime Series
-ACTIVE — NEXT PAGE
+CLOSED — f14b984f34dd25855d709c2a5cb67806861f34d1
+        ↓
+UXP-05 — Public Experience
+NOT STARTED — GATED ON UXP-04 CLOSURE REMOTE CI
 ```
 
-UXP-02 and UXP-03 are fully accepted pages in the program.
+UXP-02, UXP-03 and UXP-04 are fully accepted pages in the program.
 
 UXP-03A is accepted at:
 
@@ -1425,44 +1476,26 @@ feat(creator): manage anime series
 GitHub CI run 238 — success
 ```
 
-The next engineering objective is:
+UXP-04D and complete UXP-04 are accepted at:
 
 ```text
-UXP-04D — Reuse + full Series acceptance
+f14b984f34dd25855d709c2a5cb67806861f34d1
+test(web): prove full anime series acceptance
+GitHub CI run 240 — success
 ```
 
-UXP-04D must complete the frozen Series Definition-of-Done matrix, including:
+UXP-04 is therefore CLOSED — ACCEPTED.
 
-```text
-desktop / tablet / 390px;
-two or more Series proving reuse;
-IMAGE / SHORT_LOOP / no Media;
-facts and relationship groups present / absent;
-anonymous / authenticated / Creator authorization states;
-loading / error / not found / wrong type / unpublished / archived;
-keyboard / focus restoration / reduced motion;
-canonical-social deep links + campaign preservation;
-landing and Character/Series relationship navigation;
-Search regression without UXP-08 expansion;
-Anime landing / Character / Shiva / Hanuman regressions;
-format / lint / typecheck / unit / migrations / integration;
-focused + full browser;
-production build;
-fresh-process production social proof;
-architecture;
-reviewed evidence / checkpoint / exact remote CI.
-```
+The next eligible program page is UXP-05 — Public Experience, but UXP-05 remains
+NOT STARTED until this docs-only UXP-04 closure transition is committed, pushed
+and exact remote CI is green.
 
-Production changes in UXP-04D are allowed only when acceptance exposes a real
-defect.
+This transition does not freeze, activate or implement UXP-05.
 
-Do not begin UXP-05 until UXP-04D and complete UXP-04 acceptance have an accepted
-checkpoint and exact remote CI green.
-
-Do not add episode/staff/studio/streaming/Experience infrastructure, ranking or
+Do not add episode/staff/studio/streaming infrastructure, ranking,
 recommendations, editorial curation, a Series CMS, Search expansion, or
-speculative platform work merely to satisfy acceptance.
+speculative platform work as part of UXP-04 closure.
 
-The Master Roadmap remains unchanged by this slice transition. WPR-M05 remains
+The Master Roadmap remains unchanged by this closure transition. WPR-M05 remains
 the active Web Product Readiness gate, and P10-M04 remains sequencing-blocked
 until that gate closes.
