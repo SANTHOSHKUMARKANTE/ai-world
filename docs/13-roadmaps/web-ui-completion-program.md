@@ -1134,7 +1134,7 @@ CLOSED — ACCEPTED
 Status:
 
 ```text
-ACTIVE — UXP-05A NEXT IMPLEMENTATION SLICE
+ACTIVE — UXP-05B NEXT IMPLEMENTATION SLICE
 ```
 
 The detailed frozen implementation contract is:
@@ -1154,22 +1154,53 @@ run id 33072679792
 success
 ```
 
-Repository inspection confirms that `/experiences/[id]` is already a real
-published Composition consumer. Composition already owns Page lifecycle,
-ordered Blocks, Knowledge references, Media references, Creator preview and
-publish/archive behavior.
+UXP-05A is accepted at:
 
-Therefore UXP-05 finishes that existing consumer rather than creating an
-Experience platform.
+```text
+8da119f2aad069d8ee26e8a65f8631d7625fa950
+feat(web): finish public experience shell
+GitHub CI run 243
+run id 33098505327
+success
+```
 
-Frozen slice state:
+Accepted UXP-05A evidence includes:
+
+```text
+canonical query-free `/experiences/[id]`;
+campaign-safe canonical metadata;
+Page-title social identity;
+first-substantive-Block bounded description;
+bounded metadata fallback;
+explicit loading / not-found / unexpected-error / empty states;
+generic Knowledge navigation retained;
+existing pre-UXP-05B Media behavior retained;
+focused UXP-05A unit 7 / 7;
+full local Web unit 61 / 61;
+focused UXP-05A browser E2E 3 / 3;
+full remote Web E2E 80 / 80;
+remote root unit pipeline 37 / 37 tasks;
+remote Web unit 17 / 17 files and 61 / 61 tests;
+32 migrations with no pending migrations;
+remote AI Creator integration 11 / 11 files and 24 / 24 tests;
+remote full integration pipeline 29 / 29 tasks;
+remote API integration 26 / 26 files and 181 / 181 tests;
+remote production build 22 / 22 tasks;
+remote architecture validation with 0 violations across 762 modules / 2490 dependencies.
+```
+
+UXP-05A intentionally leaves Media-derived Open Graph image precedence to
+UXP-05B because the current public Composition projection does not yet provide a
+typed Media projection.
+
+Current slice state:
 
 ```text
 UXP-05A — Public projection + canonical/social shell
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — 8da119f2aad069d8ee26e8a65f8631d7625fa950
 
 UXP-05B — Typed IMAGE / short-motion Media + Creator/public parity
-NOT STARTED — GATED ON UXP-05A ACCEPTANCE
+ACTIVE — NEXT IMPLEMENTATION SLICE
 
 UXP-05C — User-started AUDIO capability gate
 NOT STARTED — CAPABILITY MICRO-FREEZE REQUIRED
@@ -1190,6 +1221,11 @@ no Creator Studio rewrite;
 no UXP-08 Search expansion;
 no speculative platform infrastructure.
 ```
+
+UXP-05B finishes only typed IMAGE / bounded short-motion Media presentation,
+poster/fallback/reduced-motion behavior, Creator/public rendering parity and
+eligible IMAGE social-image precedence where the typed public projection proves
+it. It does not implement AUDIO or a general video/transcoding platform.
 
 The Media model recognizes AUDIO, but accepted authoring/ingestion currently
 proves image and bounded MP4 rather than general audio upload. UXP-05C therefore
@@ -1463,12 +1499,14 @@ UXP-04 — Anime Series
 CLOSED — f14b984f34dd25855d709c2a5cb67806861f34d1
         ↓
 UXP-05 — Public Experience
-ACTIVE — UXP-05A NEXT IMPLEMENTATION SLICE
+ACTIVE — UXP-05B NEXT IMPLEMENTATION SLICE
 ```
 
 UXP-02, UXP-03 and UXP-04 are fully accepted pages in the program.
-UXP-05 becomes the active page only after this docs-only activation checkpoint is
-manually committed/pushed and exact remote CI on that activation commit is green.
+UXP-05A is CLOSED — ACCEPTED at
+`8da119f2aad069d8ee26e8a65f8631d7625fa950`. UXP-05B becomes the next
+implementation slice only after this docs-only transition is manually
+committed/pushed and exact remote CI on that transition commit is green.
 
 UXP-03A is accepted at:
 
@@ -1550,22 +1588,32 @@ implementation contract is:
 docs/13-roadmaps/uxp-05-public-experience-page.md
 ```
 
-This docs-only checkpoint activates UXP-05 in the Web UI program. The first
-production slice is:
+UXP-05A is accepted at:
 
 ```text
-UXP-05A — Public projection + canonical/social shell
+8da119f2aad069d8ee26e8a65f8631d7625fa950
+feat(web): finish public experience shell
+GitHub CI run 243
+run id 33098505327
+success
 ```
 
-Do not begin UXP-05 production implementation until this activation checkpoint is
-reviewed, manually committed/pushed, independently verified at the exact remote
-SHA, and GitHub CI on that exact commit is green.
+This docs-only checkpoint closes UXP-05A and activates the next bounded slice:
 
-Do not pre-build UXP-05B, UXP-05C or UXP-05D. Do not introduce production AUDIO
-support in UXP-05A. Do not expand Search under UXP-05; UXP-08 continues to own
+```text
+UXP-05B — Typed IMAGE / short-motion Media + Creator/public parity
+```
+
+Do not begin UXP-05B production implementation until this transition checkpoint
+is reviewed, manually committed/pushed, independently verified at the exact
+remote SHA, and GitHub CI on that exact transition commit is green.
+
+UXP-05B must not implement AUDIO or a generic transcoding/video platform. UXP-05C
+continues to own the focused AUDIO capability micro-freeze. Do not pre-build
+UXP-05C or UXP-05D. Do not expand Search under UXP-05; UXP-08 continues to own
 finished Discovery + Engagement. UXP-06 remains blocked until complete UXP-05
 acceptance is remotely green.
 
-The Master Roadmap remains unchanged by this activation transition. WPR-M05
-remains the active Web Product Readiness gate, and P10-M04 remains
-sequencing-blocked until that gate closes.
+The Master Roadmap remains unchanged by this UXP-05A closure / UXP-05B
+activation transition. WPR-M05 remains the active Web Product Readiness gate,
+and P10-M04 remains sequencing-blocked until that gate closes.

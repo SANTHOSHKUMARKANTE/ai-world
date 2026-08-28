@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-05 |
 | Area | Product / Web / Composition / Media / Knowledge / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-05A ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-05B ACTIVE |
 | Created | 2026-08-27 |
 | Activation Baseline | `95836f344dbf523b20591cc20536f1517a1cb060` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -181,30 +181,76 @@ commercial music is not automatically licensed.
 
 ## UXP-05A — Public projection + canonical/social shell
 
-Status: `ACTIVE — NEXT IMPLEMENTATION SLICE`
+Status: `CLOSED — ACCEPTED`
 
-Finish the minimum public projection and page shell required for a canonical
-social/content destination:
+Accepted implementation checkpoint:
 
 ```text
-strict published Page consumption;
-canonical `/experiences/[id]` identity;
-Page title and bounded description;
-campaign-safe canonical/Open Graph metadata;
-finished BLOCK rendering;
-finished Knowledge reference rendering/navigation;
-clear loading/error/not-found/empty behavior;
-responsive public shell;
-no invented Experience backend.
+8da119f2aad069d8ee26e8a65f8631d7625fa950
+feat(web): finish public experience shell
+GitHub CI run 243
+run id 33098505327
+success
 ```
 
-Reuse the existing public Composition projection before adding any API field.
-Backend/API change is allowed only if the real consumer proves a missing
-canonical projection. A backend rewrite is not allowed.
+Accepted UXP-05A behavior:
+
+```text
+strict published Composition Page consumption retained;
+canonical `/experiences/[id]` identity;
+campaign query parameters excluded from canonical metadata;
+Page title drives social title when the public projection is available;
+first substantive public text Block drives bounded social description;
+bounded metadata fallback when the public projection is unavailable;
+explicit loading / not-found / unexpected-error / empty public states;
+generic Knowledge Resource navigation retained;
+existing pre-UXP-05B MEDIA_ASSET rendering retained;
+390px campaign-entry proof with no horizontal overflow;
+no Experience-specific backend / database / migration / Search expansion.
+```
+
+Reviewed local validation evidence:
+
+```text
+focused UXP-05A Web unit 7 / 7;
+full Web unit 61 / 61;
+focused UXP-05A browser E2E 3 / 3;
+unchanged Anime Character regression isolated 1 / 1;
+full Web browser E2E 80 / 80;
+production build 22 / 22 tasks;
+architecture validation with 0 violations across 762 modules / 2490 dependencies.
+```
+
+Exact remote CI #243 on the accepted implementation checkpoint proved:
+
+```text
+root unit pipeline 37 / 37 tasks;
+Web unit 17 / 17 files and 61 / 61 tests;
+32 migrations found with no pending migrations;
+AI Creator integration 11 / 11 files and 24 / 24 tests;
+full integration pipeline 29 / 29 tasks;
+API integration 26 / 26 files and 181 / 181 tests;
+full Web browser E2E 80 / 80;
+production build 22 / 22 tasks;
+architecture validation with 0 violations across 762 modules / 2490 dependencies.
+```
+
+UXP-05A deliberately did not implement Media-derived Open Graph image
+precedence. The public Composition projection is still not a typed Media
+projection, so treating every `MEDIA_ASSET` as an eligible social IMAGE would be
+incorrect. Typed IMAGE / VIDEO projection and eligible social-image precedence
+remain UXP-05B work.
+
+No backend rewrite was required. UXP-05A is CLOSED — ACCEPTED.
 
 ## UXP-05B — Typed IMAGE / short-motion Media + Creator/public parity
 
-Status: `NOT STARTED — GATED ON UXP-05A ACCEPTANCE`
+Status: `ACTIVE — NEXT IMPLEMENTATION SLICE`
+
+UXP-05B implementation may begin only after this docs-only UXP-05A closure /
+UXP-05B activation checkpoint is reviewed, manually committed/pushed,
+independently verified at the exact remote SHA, and GitHub CI on that exact
+transition commit is green.
 
 Finish typed public Media behavior for already accepted authorable modes:
 
@@ -360,14 +406,14 @@ Master Roadmap.
 
 # 12. Current Position
 
-After this docs-only activation checkpoint is reviewed, manually committed/pushed
-and exact remote CI is green:
+After this docs-only UXP-05A closure / UXP-05B activation checkpoint is reviewed,
+manually committed/pushed and exact remote CI is green:
 
 ```text
 UXP-04 — CLOSED — ACCEPTED
 UXP-05 — ACTIVE
-UXP-05A — ACTIVE — NEXT IMPLEMENTATION SLICE
-UXP-05B — NOT STARTED
+UXP-05A — CLOSED — ACCEPTED — 8da119f2aad069d8ee26e8a65f8631d7625fa950
+UXP-05B — ACTIVE — NEXT IMPLEMENTATION SLICE
 UXP-05C — NOT STARTED — CAPABILITY MICRO-FREEZE REQUIRED
 UXP-05D — NOT STARTED
 UXP-06 — NOT STARTED — BLOCKED ON FULL UXP-05 ACCEPTANCE
@@ -376,22 +422,27 @@ WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
 ```
 
-No UXP-05 implementation begins before review, manual commit/push, independent
-exact-remote verification and green CI. The Master Roadmap is unchanged by this
-local Web UI program transition.
+No UXP-05B implementation begins before review, manual commit/push, independent
+exact-remote verification and green CI on this transition checkpoint. The Master
+Roadmap is unchanged by this local Web UI program transition.
 
 ---
 
 # 13. Next Action
 
-After activation is remotely green, inspect the exact accepted baseline for
-UXP-05A and implement only:
+After this UXP-05A closure / UXP-05B activation checkpoint is remotely green,
+inspect the exact accepted baseline for UXP-05B and implement only:
 
 ```text
-Public Experience projection
+typed public Media projection
 +
-canonical/social shell
+IMAGE / bounded short-motion presentation
++
+Creator-preview / public published rendering parity
++
+eligible IMAGE social-image precedence where the typed projection proves it
 ```
 
-Do not pre-build UXP-05B/C/D, do not introduce production AUDIO support in
-UXP-05A, and do not begin UXP-06.
+Do not implement AUDIO in UXP-05B. UXP-05C owns the focused AUDIO
+Media/security micro-freeze. Do not pre-build UXP-05C/05D, do not expand Search
+under UXP-05, and do not begin UXP-06.
