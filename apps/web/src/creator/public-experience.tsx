@@ -1,12 +1,12 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { ApiClientError } from '../api/api-client';
 import { WEB_UNIVERSE_PRESENTATIONS } from '../universes/presentation';
 import { getPublicExperience, type CreatorPagePreview } from './creator-api';
+import { ExperienceMediaContent } from './experience-media';
 
 type PublicExperienceState =
   | { readonly status: 'loading' }
@@ -132,11 +132,9 @@ export function PublicExperience({ pageId }: { readonly pageId: string }) {
               {item.kind === 'MEDIA_ASSET' ? (
                 <figure className="aw-experience-media">
                   <div className="aw-experience-media__frame">
-                    <Image
-                      src={`/api/media/assets/${encodeURIComponent(item.id)}/content`}
-                      alt={`Published media ${item.position + 1} in ${state.experience.page.title}`}
-                      fill
-                      unoptimized
+                    <ExperienceMediaContent
+                      item={item}
+                      label={`Published media ${item.position + 1} in ${state.experience.page.title}`}
                     />
                   </div>
                 </figure>

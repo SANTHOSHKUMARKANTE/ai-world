@@ -221,7 +221,7 @@ test.describe('Creator workspace', () => {
               resourceType: 'devotional.deity',
               lifecycle: 'DRAFT',
             },
-            { position: 2, kind: 'MEDIA_ASSET', id: assetId },
+            { position: 2, kind: 'MEDIA_ASSET', id: assetId, assetType: 'IMAGE' },
           ],
         }),
       });

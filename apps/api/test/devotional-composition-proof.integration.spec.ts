@@ -399,7 +399,12 @@ describe('P8-M08 Devotional Composition proof', () => {
               resourceType: DEVOTIONAL_SCRIPTURE_RESOURCE_TYPE,
               lifecycle: 'PUBLISHED',
             },
-            { position: 3, kind: 'MEDIA_ASSET', id: assetId },
+            {
+              position: 3,
+              kind: 'MEDIA_ASSET',
+              id: assetId,
+              assetType: 'IMAGE',
+            },
           ],
         });
       });

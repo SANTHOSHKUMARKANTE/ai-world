@@ -416,7 +416,12 @@ describe('Creator Composition API', () => {
             blockType: 'composition.block.text',
             text: 'A structured creator Block.',
           },
-          { position: 2, kind: 'MEDIA_ASSET', id: assetId },
+          {
+            position: 2,
+            kind: 'MEDIA_ASSET',
+            id: assetId,
+            assetType: 'IMAGE',
+          },
         ]);
         expect(JSON.stringify(body)).not.toContain(knowledgeId);
       });
@@ -508,7 +513,12 @@ describe('Creator Composition API', () => {
               resourceType: 'devotional.deity',
               lifecycle: 'DRAFT',
             },
-            { position: 2, kind: 'MEDIA_ASSET', id: assetId },
+            {
+              position: 2,
+              kind: 'MEDIA_ASSET',
+              id: assetId,
+              assetType: 'IMAGE',
+            },
           ],
         });
       });

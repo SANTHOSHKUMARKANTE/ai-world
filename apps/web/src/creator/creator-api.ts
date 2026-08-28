@@ -1,6 +1,7 @@
 import { apiRequest } from '../api/api-client';
 
 export type CreatorCompositionItemKind = 'BLOCK' | 'KNOWLEDGE_RESOURCE' | 'MEDIA_ASSET';
+export type CreatorPagePreviewMediaAssetType = 'IMAGE' | 'VIDEO' | 'AUDIO' | 'DOCUMENT';
 
 export interface CreatorKnowledgeResource {
   readonly id: string;
@@ -146,6 +147,8 @@ export type CreatorPagePreviewItem =
       readonly position: number;
       readonly kind: 'MEDIA_ASSET';
       readonly id: string;
+      readonly assetType: CreatorPagePreviewMediaAssetType;
+      readonly durationMs?: number;
     };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -158,6 +161,12 @@ function isString(value: unknown): value is string {
 
 function isCompositionItemKind(value: unknown): value is CreatorCompositionItemKind {
   return value === 'BLOCK' || value === 'KNOWLEDGE_RESOURCE' || value === 'MEDIA_ASSET';
+}
+
+function isCreatorPagePreviewMediaAssetType(
+  value: unknown,
+): value is CreatorPagePreviewMediaAssetType {
+  return value === 'IMAGE' || value === 'VIDEO' || value === 'AUDIO' || value === 'DOCUMENT';
 }
 
 function readKnowledgeResource(value: unknown): CreatorKnowledgeResource {
@@ -440,10 +449,23 @@ function readPagePreview(value: unknown): CreatorPagePreview {
           lifecycle: item.lifecycle,
         };
       case 'MEDIA_ASSET':
+        if (
+          !isCreatorPagePreviewMediaAssetType(item.assetType) ||
+          !(
+            item.durationMs === undefined ||
+            (typeof item.durationMs === 'number' &&
+              Number.isInteger(item.durationMs) &&
+              item.durationMs > 0)
+          )
+        ) {
+          throw new Error('Creator Preview Media item did not match the expected contract.');
+        }
         return {
           position: item.position,
           kind: item.kind,
           id: item.id,
+          assetType: item.assetType,
+          ...(item.durationMs === undefined ? {} : { durationMs: item.durationMs }),
         };
     }
   });

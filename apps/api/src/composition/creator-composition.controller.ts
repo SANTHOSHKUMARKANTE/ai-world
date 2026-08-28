@@ -19,6 +19,7 @@ import {
   type Page,
   type PageComposition,
   type PagePreview,
+  type PagePreviewMediaItem,
 } from '@ai-world/platform-composition';
 import { ValidateSession } from '@ai-world/platform-identity-access';
 import { Body, Controller, Get, Headers, Param, Post, Put } from '@nestjs/common';
@@ -86,6 +87,8 @@ export interface CreatorPagePreviewResponse {
         readonly position: number;
         readonly kind: 'MEDIA_ASSET';
         readonly id: string;
+        readonly assetType: PagePreviewMediaItem['assetType'];
+        readonly durationMs?: number;
       }
   )[];
 }
@@ -187,6 +190,8 @@ function toPreviewResponse(preview: PagePreview): CreatorPagePreviewResponse {
             position: item.position,
             kind: item.kind,
             id: item.id,
+            assetType: item.assetType,
+            ...(item.durationMs === undefined ? {} : { durationMs: item.durationMs }),
           };
       }
     }),

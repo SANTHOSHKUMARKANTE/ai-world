@@ -8,6 +8,7 @@ const MAX_DESCRIPTION_LENGTH = 180;
 export interface PublicExperienceMetadataProjection {
   readonly title: string;
   readonly description: string | null;
+  readonly socialImageAssetId: string | null;
 }
 
 function resolveApiOrigin(): string {
@@ -71,15 +72,30 @@ export function parsePublicExperienceMetadataProjection(
   }
 
   let description: string | null = null;
+  let socialImageAssetId: string | null = null;
 
   for (const item of value.items) {
-    if (!isRecord(item) || item.kind !== 'BLOCK' || typeof item.text !== 'string') {
+    if (!isRecord(item)) {
       continue;
     }
 
-    const candidate = normalizeText(item.text);
-    if (candidate) {
-      description = boundedDescription(candidate);
+    if (description === null && item.kind === 'BLOCK' && typeof item.text === 'string') {
+      const candidate = normalizeText(item.text);
+      if (candidate) {
+        description = boundedDescription(candidate);
+      }
+    }
+
+    if (
+      socialImageAssetId === null &&
+      item.kind === 'MEDIA_ASSET' &&
+      item.assetType === 'IMAGE' &&
+      typeof item.id === 'string'
+    ) {
+      socialImageAssetId = item.id;
+    }
+
+    if (description !== null && socialImageAssetId !== null) {
       break;
     }
   }
@@ -87,6 +103,7 @@ export function parsePublicExperienceMetadataProjection(
   return {
     title,
     description,
+    socialImageAssetId,
   };
 }
 
@@ -105,6 +122,9 @@ export function buildPublicExperienceMetadata(
   const canonical = publicExperienceCanonicalPath(id);
   const title = projection?.title ?? FALLBACK_TITLE;
   const description = projection?.description ?? fallbackDescription(title);
+  const socialImage = projection?.socialImageAssetId
+    ? `/api/media/assets/${encodeURIComponent(projection.socialImageAssetId)}/thumbnail`
+    : null;
 
   return {
     title,
@@ -115,6 +135,7 @@ export function buildPublicExperienceMetadata(
     openGraph: {
       title,
       description,
+      ...(socialImage ? { images: [{ url: socialImage, alt: title }] } : {}),
     },
   };
 }

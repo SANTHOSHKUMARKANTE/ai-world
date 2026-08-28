@@ -1,6 +1,7 @@
 import type { ResourceId } from '@ai-world/kernel-identifiers';
 import type { NamespacedKey } from '@ai-world/kernel-namespace';
 import type { KnowledgeResourceLifecycle, KnowledgeResource } from '@ai-world/platform-knowledge';
+import type { MediaAssetReference } from '@ai-world/platform-media';
 
 import type { BlockType } from './block';
 import type { Page, PageLifecycle, PagePresentationMetadata, PageRouteMetadata } from './page';
@@ -38,6 +39,8 @@ export interface PagePreviewMediaItem {
   readonly position: number;
   readonly kind: typeof PAGE_COMPOSITION_MEDIA_ITEM_KIND;
   readonly id: ResourceId;
+  readonly assetType: MediaAssetReference['assetType'];
+  readonly durationMs?: number;
 }
 
 export type PagePreviewItem =

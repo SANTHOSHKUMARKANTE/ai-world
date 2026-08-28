@@ -96,6 +96,8 @@ export class GetPagePreview {
           position: item.position,
           kind: item.reference.kind,
           id: asset.id,
+          assetType: asset.assetType,
+          ...(asset.durationMs === undefined ? {} : { durationMs: asset.durationMs }),
         };
       }
     }

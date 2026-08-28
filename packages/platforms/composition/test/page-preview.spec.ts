@@ -70,7 +70,7 @@ function createPreview(
     }),
   };
   const mediaAssets: MediaAssetReferenceResolver = {
-    resolve: async () => ({ id: assetId, assetType: 'IMAGE' }),
+    resolve: async () => ({ id: assetId, assetType: 'VIDEO', durationMs: 5000 }),
   };
   const compositions: PageCompositionStore = {
     listItems: async () => composition,
@@ -105,7 +105,13 @@ describe('Page draft preview', () => {
           resourceType: parseNamespacedKey('devotional.deity'),
           lifecycle: 'DRAFT',
         },
-        { position: 2, kind: 'MEDIA_ASSET', id: assetId },
+        {
+          position: 2,
+          kind: 'MEDIA_ASSET',
+          id: assetId,
+          assetType: 'VIDEO',
+          durationMs: 5000,
+        },
       ],
     });
   });

@@ -79,7 +79,7 @@ describe('Controlled draft preview', () => {
               resourceType: 'devotional.deity',
               lifecycle: 'DRAFT',
             },
-            { position: 2, kind: 'MEDIA_ASSET', id: assetId },
+            { position: 2, kind: 'MEDIA_ASSET', id: assetId, assetType: 'IMAGE' },
           ],
         }),
       );
@@ -109,5 +109,54 @@ describe('Controlled draft preview', () => {
       `/api/composition/pages/${pageId}/preview`,
       expect.objectContaining({ credentials: 'same-origin' }),
     );
+  });
+
+  it('uses the same user-started VIDEO semantics in controlled Creator preview', async () => {
+    const pageId = '77777777-7777-4777-8777-777777777777';
+    const videoId = '88888888-8888-4888-8888-888888888888';
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({
+          actorId: 'preview-actor',
+          expiresAt: '2026-08-22T12:00:00.000Z',
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          page: {
+            id: pageId,
+            universeKey: 'universe.anime',
+            routePath: '/preview-video-proof',
+            title: 'Draft video parity',
+            lifecycle: 'DRAFT',
+          },
+          items: [
+            {
+              position: 0,
+              kind: 'MEDIA_ASSET',
+              id: videoId,
+              assetType: 'VIDEO',
+              durationMs: 5000,
+            },
+          ],
+        }),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <SessionProvider>
+        <DraftPreview pageId={pageId} />
+      </SessionProvider>,
+    );
+
+    await screen.findByRole('heading', { name: 'Draft video parity' });
+    const video = screen.getByLabelText('Draft media 1 in Draft video parity') as HTMLVideoElement;
+    expect(video.getAttribute('src')).toBe(`/api/media/assets/${videoId}/content`);
+    expect(video.controls).toBe(true);
+    expect(video.autoplay).toBe(false);
+    expect(video.loop).toBe(false);
+    expect(video.preload).toBe('none');
+    expect(video.getAttribute('poster')).toBeNull();
   });
 });

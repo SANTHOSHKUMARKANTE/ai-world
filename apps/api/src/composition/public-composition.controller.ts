@@ -5,6 +5,7 @@ import {
   PAGE_PUBLISHED_LIFECYCLE,
   type PagePreview,
   type PagePreviewItem,
+  type PagePreviewMediaItem,
 } from '@ai-world/platform-composition';
 import { Controller, Get, Param } from '@nestjs/common';
 
@@ -35,6 +36,8 @@ export interface PublicPageExperienceResponse {
         readonly position: number;
         readonly kind: 'MEDIA_ASSET';
         readonly id: string;
+        readonly assetType: PagePreviewMediaItem['assetType'];
+        readonly durationMs?: number;
       }
   )[];
 }
@@ -75,6 +78,8 @@ function publicItem(item: PagePreviewItem): PublicPageExperienceResponse['items'
         position: item.position,
         kind: item.kind,
         id: item.id,
+        assetType: item.assetType,
+        ...(item.durationMs === undefined ? {} : { durationMs: item.durationMs }),
       };
   }
 }

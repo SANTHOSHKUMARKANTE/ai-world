@@ -414,7 +414,12 @@ describe('P8-M09 Anime Composition proof', () => {
               resourceType: ANIME_SERIES_RESOURCE_TYPE,
               lifecycle: 'PUBLISHED',
             },
-            { position: 3, kind: 'MEDIA_ASSET', id: assetId },
+            {
+              position: 3,
+              kind: 'MEDIA_ASSET',
+              id: assetId,
+              assetType: 'IMAGE',
+            },
           ],
         });
       });

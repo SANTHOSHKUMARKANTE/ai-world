@@ -19,9 +19,10 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('UXP-05A public Experience metadata', () => {
+describe('UXP-05B public Experience metadata', () => {
   it('uses Page identity and the first substantive Block for query-free social metadata', () => {
     const pageId = '11111111-1111-4111-8111-111111111111';
+    const imageId = '22222222-2222-4222-8222-222222222222';
     const projection = parsePublicExperienceMetadataProjection(
       {
         page: {
@@ -34,15 +35,28 @@ describe('UXP-05A public Experience metadata', () => {
         items: [
           {
             position: 0,
+            kind: 'MEDIA_ASSET',
+            id: '77777777-7777-4777-8777-777777777777',
+            assetType: 'VIDEO',
+            durationMs: 5000,
+          },
+          {
+            position: 1,
+            kind: 'MEDIA_ASSET',
+            id: imageId,
+            assetType: 'IMAGE',
+          },
+          {
+            position: 2,
             kind: 'BLOCK',
-            id: '22222222-2222-4222-8222-222222222222',
+            id: '33333333-3333-4333-8333-333333333333',
             blockType: 'composition.block.text',
             text: '  Follow   the hero\nthrough a published story.  ',
           },
           {
-            position: 1,
+            position: 3,
             kind: 'BLOCK',
-            id: '33333333-3333-4333-8333-333333333333',
+            id: '44444444-4444-4444-8444-444444444444',
             blockType: 'composition.block.text',
             text: 'This later Block must not replace the first description.',
           },
@@ -54,6 +68,7 @@ describe('UXP-05A public Experience metadata', () => {
     expect(projection).toEqual({
       title: 'Celestial Journey',
       description: 'Follow the hero through a published story.',
+      socialImageAssetId: imageId,
     });
 
     const metadata = buildPublicExperienceMetadata(projection, pageId);
@@ -67,9 +82,14 @@ describe('UXP-05A public Experience metadata', () => {
       openGraph: {
         title: 'Celestial Journey',
         description: 'Follow the hero through a published story.',
+        images: [
+          {
+            url: `/api/media/assets/${imageId}/thumbnail`,
+            alt: 'Celestial Journey',
+          },
+        ],
       },
     });
-    expect(metadata.openGraph).not.toHaveProperty('images');
   });
 
   it('falls back safely when the public projection is unavailable', async () => {
@@ -102,6 +122,7 @@ describe('UXP-05A public Experience metadata', () => {
       },
     });
 
+    expect(metadata.openGraph).not.toHaveProperty('images');
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(String(fetchMock.mock.calls[0]?.[0])).toBe(
       `https://api.example.test/composition/public/pages/${pageId}`,

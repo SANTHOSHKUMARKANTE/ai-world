@@ -1,12 +1,12 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { getApiErrorMessage } from '../api/api-error-message';
 import { useSession } from '../session/session-provider';
 import { getCreatorPagePreview, type CreatorPagePreview } from './creator-api';
+import { ExperienceMediaContent } from './experience-media';
 
 function AuthenticatedDraftPreview({ pageId }: { readonly pageId: string }) {
   const [preview, setPreview] = useState<CreatorPagePreview | null>(null);
@@ -98,12 +98,9 @@ function AuthenticatedDraftPreview({ pageId }: { readonly pageId: string }) {
               {item.kind === 'MEDIA_ASSET' ? (
                 <figure className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900">
                   <div className="relative aspect-video">
-                    <Image
-                      src={`/api/media/assets/${encodeURIComponent(item.id)}/content`}
-                      alt={`Media Asset ${item.position + 1} in ${preview.page.title}`}
-                      fill
-                      unoptimized
-                      className="object-contain"
+                    <ExperienceMediaContent
+                      item={item}
+                      label={`Draft media ${item.position + 1} in ${preview.page.title}`}
                     />
                   </div>
                 </figure>
