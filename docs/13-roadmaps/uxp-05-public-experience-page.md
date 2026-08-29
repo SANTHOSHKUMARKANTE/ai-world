@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-05 |
 | Area | Product / Web / Composition / Media / Knowledge / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-05B ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-05C MICRO-FREEZE ACTIVE |
 | Created | 2026-08-27 |
 | Activation Baseline | `95836f344dbf523b20591cc20536f1517a1cb060` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -245,49 +245,101 @@ No backend rewrite was required. UXP-05A is CLOSED — ACCEPTED.
 
 ## UXP-05B — Typed IMAGE / short-motion Media + Creator/public parity
 
-Status: `ACTIVE — NEXT IMPLEMENTATION SLICE`
+Status: `CLOSED — ACCEPTED`
 
-UXP-05B implementation may begin only after this docs-only UXP-05A closure /
-UXP-05B activation checkpoint is reviewed, manually committed/pushed,
-independently verified at the exact remote SHA, and GitHub CI on that exact
-transition commit is green.
-
-Finish typed public Media behavior for already accepted authorable modes:
+Accepted implementation checkpoint:
 
 ```text
-IMAGE as image content;
-bounded VIDEO as intentional user-started video or SHORT_LOOP;
-poster/fallback behavior;
-reduced motion;
-no audible autoplay;
-honest degradation for unsupported Media;
-Creator preview/public rendering parity without lifecycle bypass.
+403ac69198185a7cd35b85178e4342ed5f1f2a0f
+feat(composition): add typed experience media
+GitHub CI run 245
+run id 33195903383
+success
 ```
 
-No general video platform.
+Accepted UXP-05B behavior:
+
+```text
+Composition Page preview preserves canonical Media assetType + durationMs;
+public and Creator Composition responses expose the same typed Media projection;
+public Experience and Creator preview share the same typed Media renderer;
+IMAGE renders as image content;
+bounded VIDEO is user-started with controls and preload=none;
+VIDEO with missing duration or duration above the accepted 8000 ms bound degrades honestly;
+VIDEO does not autoplay or loop and no poster is fabricated;
+AUDIO and DOCUMENT degrade explicitly rather than pretending to be images;
+Creator preview/public rendering semantics remain aligned;
+first eligible IMAGE drives Experience social-image metadata;
+preceding VIDEO/AUDIO/DOCUMENT never fabricate an Open Graph image;
+no Experience backend/database/migration/Search expansion was introduced.
+```
+
+Reviewed implementation evidence:
+
+```text
+focused Composition preview unit 3 / 3;
+focused UXP-05B Web unit 11 / 11;
+full Web unit 63 / 63;
+root unit pipeline 37 / 37 tasks;
+32 migrations applied on a clean database;
+focused UXP-05B API integration 10 / 10;
+API integration 181 / 181;
+Creator preview regression isolated 1 / 1;
+focused UXP-05B browser E2E 4 / 4;
+full Web browser E2E 81 / 81;
+production build 22 / 22 tasks;
+architecture validation with 0 violations across 763 modules / 2494 dependencies.
+```
+
+Exact remote CI #245 on the accepted implementation checkpoint completed
+successfully. UXP-05B is CLOSED — ACCEPTED.
+
+UXP-05B did not implement AUDIO ingestion/playback, a generic transcoding
+platform, a poster model or a new SHORT_LOOP Asset type. Those boundaries remain
+protected.
 
 ## UXP-05C — User-started AUDIO capability gate
 
-Status: `NOT STARTED — CAPABILITY MICRO-FREEZE REQUIRED`
+Status: `ACTIVE — CAPABILITY MICRO-FREEZE NEXT`
 
-Before audio implementation, perform a focused Media/security inspection and
-freeze only the minimum real capability required by an Experience consumer. The
-micro-freeze must determine from evidence:
+This status activates only the focused Media/security capability micro-freeze.
+It does **not** activate production AUDIO implementation.
+
+After this UXP-05B closure / UXP-05C micro-freeze activation checkpoint is
+reviewed, manually committed/pushed, independently verified at the exact remote
+SHA and GitHub CI is green, inspect the exact accepted repository baseline and
+freeze only what real evidence supports.
+
+The micro-freeze must determine:
 
 ```text
-accepted MIME/container choices;
-bounded size;
-bounded duration if required;
-validation behavior;
-delivery headers;
-Creator upload/attach path;
+whether a real accepted AUDIO authoring/ingestion path exists;
+supported MIME/container choices, if any;
+maximum bytes, if any;
+maximum duration, if any;
+required byte/content inspection and validation;
+Asset lifecycle/storage/delivery behavior;
+public-delivery headers and browser support expectations;
+Creator upload/attach path and authorization boundary;
+security and abuse constraints;
+test fixtures and acceptance proof;
 rights/operator responsibility;
-browser support expectations;
-test fixtures/security proof.
+accessible user-started playback semantics.
 ```
 
-Do not choose codecs, limits or duration speculatively here. Audio playback must
-always require user intent. No audible autoplay. No generic transcoding platform.
+Do not preselect codecs, MIME types, byte limits or duration limits in this
+closure checkpoint. Those values must come from the Media/security inspection.
+
+Any eventual AUDIO capability remains restricted to original, owned, properly
+licensed, royalty-cleared or otherwise operator-verified audio. A short excerpt
+of commercial music is not automatically licensed.
+
+No audible autoplay. No generic transcoding platform. No Search expansion. No
+UXP-05D production work. No UXP-06 work.
+
+The capability micro-freeze must itself be reviewed, manually committed/pushed,
+independently verified at its exact remote SHA and have green CI before any
+production AUDIO implementation begins.
 
 ## UXP-05D — Reuse + full Experience acceptance
 
@@ -406,43 +458,50 @@ Master Roadmap.
 
 # 12. Current Position
 
-After this docs-only UXP-05A closure / UXP-05B activation checkpoint is reviewed,
-manually committed/pushed and exact remote CI is green:
+After this docs-only UXP-05B closure / UXP-05C capability-micro-freeze activation
+checkpoint is reviewed, manually committed/pushed and exact remote CI is green:
 
 ```text
 UXP-04 — CLOSED — ACCEPTED
 UXP-05 — ACTIVE
 UXP-05A — CLOSED — ACCEPTED — 8da119f2aad069d8ee26e8a65f8631d7625fa950
-UXP-05B — ACTIVE — NEXT IMPLEMENTATION SLICE
-UXP-05C — NOT STARTED — CAPABILITY MICRO-FREEZE REQUIRED
-UXP-05D — NOT STARTED
+UXP-05B — CLOSED — ACCEPTED — 403ac69198185a7cd35b85178e4342ed5f1f2a0f
+UXP-05C — ACTIVE — CAPABILITY MICRO-FREEZE NEXT
+UXP-05D — NOT STARTED — GATED ON UXP-05A/B/C ACCEPTANCE
 UXP-06 — NOT STARTED — BLOCKED ON FULL UXP-05 ACCEPTANCE
 UXP-08 Search expansion — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
 ```
 
-No UXP-05B implementation begins before review, manual commit/push, independent
-exact-remote verification and green CI on this transition checkpoint. The Master
-Roadmap is unchanged by this local Web UI program transition.
+No production AUDIO implementation begins from this transition. The next work is
+repository/security inspection and a separate evidence-backed UXP-05C capability
+micro-freeze checkpoint.
+
+The Master Roadmap is unchanged by this local Web UI program transition.
 
 ---
 
 # 13. Next Action
 
-After this UXP-05A closure / UXP-05B activation checkpoint is remotely green,
-inspect the exact accepted baseline for UXP-05B and implement only:
+After this UXP-05B closure / UXP-05C capability-micro-freeze activation
+checkpoint is remotely green, inspect the exact accepted baseline and freeze only
+the real AUDIO capability supported by repository and security evidence.
+
+The next checkpoint must answer, without speculative implementation:
 
 ```text
-typed public Media projection
-+
-IMAGE / bounded short-motion presentation
-+
-Creator-preview / public published rendering parity
-+
-eligible IMAGE social-image precedence where the typed projection proves it
+Does an accepted AUDIO ingestion/authoring path exist?
+Which MIME/container formats are actually supportable?
+What byte and duration bounds are justified?
+What validation/inspection is required?
+How do lifecycle, storage and public delivery behave?
+What Creator authorization/attach path is valid?
+What rights/operator rule is enforced?
+What accessibility/browser behavior is required?
+What focused tests prove the boundary?
 ```
 
-Do not implement AUDIO in UXP-05B. UXP-05C owns the focused AUDIO
-Media/security micro-freeze. Do not pre-build UXP-05C/05D, do not expand Search
-under UXP-05, and do not begin UXP-06.
+Do not implement AUDIO during the micro-freeze. Do not invent format/duration
+limits in advance. Do not introduce a generic transcoding platform, Search
+expansion, UXP-05D production work or UXP-06 work.

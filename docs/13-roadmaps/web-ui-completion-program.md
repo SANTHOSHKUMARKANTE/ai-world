@@ -1134,24 +1134,13 @@ CLOSED — ACCEPTED
 Status:
 
 ```text
-ACTIVE — UXP-05B NEXT IMPLEMENTATION SLICE
+ACTIVE — UXP-05C CAPABILITY MICRO-FREEZE NEXT
 ```
 
 The detailed frozen implementation contract is:
 
 ```text
 docs/13-roadmaps/uxp-05-public-experience-page.md
-```
-
-UXP-05 was activated only after UXP-04 closed and the exact UXP-04 closure
-checkpoint was remotely green:
-
-```text
-95836f344dbf523b20591cc20536f1517a1cb060
-docs(roadmap): close UXP-04
-GitHub CI run 241
-run id 33072679792
-success
 ```
 
 UXP-05A is accepted at:
@@ -1164,34 +1153,46 @@ run id 33098505327
 success
 ```
 
-Accepted UXP-05A evidence includes:
+UXP-05B is accepted at:
 
 ```text
-canonical query-free `/experiences/[id]`;
-campaign-safe canonical metadata;
-Page-title social identity;
-first-substantive-Block bounded description;
-bounded metadata fallback;
-explicit loading / not-found / unexpected-error / empty states;
-generic Knowledge navigation retained;
-existing pre-UXP-05B Media behavior retained;
-focused UXP-05A unit 7 / 7;
-full local Web unit 61 / 61;
-focused UXP-05A browser E2E 3 / 3;
-full remote Web E2E 80 / 80;
-remote root unit pipeline 37 / 37 tasks;
-remote Web unit 17 / 17 files and 61 / 61 tests;
-32 migrations with no pending migrations;
-remote AI Creator integration 11 / 11 files and 24 / 24 tests;
-remote full integration pipeline 29 / 29 tasks;
-remote API integration 26 / 26 files and 181 / 181 tests;
-remote production build 22 / 22 tasks;
-remote architecture validation with 0 violations across 762 modules / 2490 dependencies.
+403ac69198185a7cd35b85178e4342ed5f1f2a0f
+feat(composition): add typed experience media
+GitHub CI run 245
+run id 33195903383
+success
 ```
 
-UXP-05A intentionally leaves Media-derived Open Graph image precedence to
-UXP-05B because the current public Composition projection does not yet provide a
-typed Media projection.
+Accepted UXP-05B behavior includes:
+
+```text
+typed Media assetType + durationMs in Composition preview;
+public/Creator typed Media projection parity;
+shared public/Creator Experience Media rendering;
+IMAGE presentation;
+bounded user-started VIDEO with honest unsupported fallback;
+no autoplay / no loop / no fabricated poster;
+AUDIO and DOCUMENT unsupported states;
+eligible IMAGE social-image precedence;
+no Experience backend/database/migration/Search expansion.
+```
+
+Reviewed UXP-05B evidence includes:
+
+```text
+focused Composition unit 3 / 3;
+focused UXP-05B Web unit 11 / 11;
+full Web unit 63 / 63;
+root unit 37 / 37 tasks;
+32 clean-database migrations;
+focused UXP-05B API integration 10 / 10;
+API integration 181 / 181;
+Creator preview regression 1 / 1;
+focused UXP-05B browser 4 / 4;
+full Web browser 81 / 81;
+production build 22 / 22 tasks;
+architecture 0 violations across 763 modules / 2494 dependencies.
+```
 
 Current slice state:
 
@@ -1200,50 +1201,32 @@ UXP-05A — Public projection + canonical/social shell
 CLOSED — ACCEPTED — 8da119f2aad069d8ee26e8a65f8631d7625fa950
 
 UXP-05B — Typed IMAGE / short-motion Media + Creator/public parity
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — 403ac69198185a7cd35b85178e4342ed5f1f2a0f
 
 UXP-05C — User-started AUDIO capability gate
-NOT STARTED — CAPABILITY MICRO-FREEZE REQUIRED
+ACTIVE — CAPABILITY MICRO-FREEZE NEXT
 
 UXP-05D — Reuse + full Experience acceptance
 NOT STARTED — GATED ON UXP-05A/B/C ACCEPTANCE
 ```
 
-Important boundaries:
+UXP-05C is active only for the Media/security capability micro-freeze. No AUDIO
+implementation is authorized by this transition.
 
-```text
-canonical route remains /experiences/[id];
-campaign parameters never change canonical identity;
-routePath does not become the public router;
-no Experience database/service/repository;
-no Experience-specific Engagement backend;
-no Creator Studio rewrite;
-no UXP-08 Search expansion;
-no speculative platform infrastructure.
-```
+The micro-freeze must derive any supported MIME/container, byte limit, duration
+limit, validation rule, delivery behavior and Creator authoring path from the
+accepted repository/security evidence. It must not preselect those values.
 
-UXP-05B finishes only typed IMAGE / bounded short-motion Media presentation,
-poster/fallback/reduced-motion behavior, Creator/public rendering parity and
-eligible IMAGE social-image precedence where the typed public projection proves
-it. It does not implement AUDIO or a general video/transcoding platform.
+Audio rights remain limited to original, owned, properly licensed,
+royalty-cleared or otherwise operator-verified content. Playback, if capability
+is later accepted, must be user-started; no page may depend on audible autoplay.
 
-The Media model recognizes AUDIO, but accepted authoring/ingestion currently
-proves image and bounded MP4 rather than general audio upload. UXP-05C therefore
-requires its own focused Media/security micro-freeze before any audio
-implementation chooses formats, limits or duration.
+No generic transcoding platform, UXP-08 Search expansion, UXP-05D production work
+or UXP-06 work is introduced here.
 
-Audio, when supported, is always user-started. No page depends on audible
-autoplay.
-
-UXP-05D is acceptance-first:
-
-```text
-Production changes in UXP-05D are allowed only when acceptance exposes a real
-defect.
-```
-
-UXP-06 remains blocked until complete UXP-05 acceptance and exact remote CI are
-green.
+The UXP-05C capability micro-freeze must be separately reviewed,
+committed/pushed, independently exact-remote verified and green in CI before any
+production AUDIO implementation begins.
 
 ## UXP-06 / UXP-07 — Devotional
 
@@ -1480,140 +1463,45 @@ WPR-M05 receives its roadmap closure update only when the entire accepted gate i
 
 # 16. Immediate Next Work
 
-The accepted execution position is:
+The accepted execution position is now:
 
 ```text
-UXP-00 — Program contract
-CLOSED
-        ↓
-UXP-01 — Character-driven Universe/Media foundation
-CLOSED
-        ↓
-UXP-02 — Anime Character
-CLOSED — 3ddb3fcd4c42e94efaedfb2f444e09b93ab16a4a
-        ↓
-UXP-03 — Anime Universe landing
-CLOSED — 75d91ef7975e515c10b529c143641bad0d1d6055
-        ↓
 UXP-04 — Anime Series
-CLOSED — f14b984f34dd25855d709c2a5cb67806861f34d1
+CLOSED — ACCEPTED
         ↓
 UXP-05 — Public Experience
-ACTIVE — UXP-05B NEXT IMPLEMENTATION SLICE
+ACTIVE — UXP-05C CAPABILITY MICRO-FREEZE NEXT
 ```
 
-UXP-02, UXP-03 and UXP-04 are fully accepted pages in the program.
 UXP-05A is CLOSED — ACCEPTED at
-`8da119f2aad069d8ee26e8a65f8631d7625fa950`. UXP-05B becomes the next
-implementation slice only after this docs-only transition is manually
-committed/pushed and exact remote CI on that transition commit is green.
+`8da119f2aad069d8ee26e8a65f8631d7625fa950`.
 
-UXP-03A is accepted at:
+UXP-05B is CLOSED — ACCEPTED at:
 
 ```text
-a2d0dc9119b93b195bda17f072da23a664a945a5
-feat(knowledge): add public discovery projection
-GitHub CI run 225 — success
-```
-
-UXP-03B is accepted at:
-
-```text
-80c968b617991c31db9a046ec2c02e240c703fbe
-feat(web): finish anime landing character discovery
-GitHub CI run 227 — success
-```
-
-UXP-03C is accepted at:
-
-```text
-e454ba3d602b8c05efb3eabde42a0ec2bf8a64ba
-feat(web): integrate anime series social identity
-GitHub CI run 229 — success
-```
-
-UXP-03D and complete UXP-03 acceptance are accepted at:
-
-```text
-75d91ef7975e515c10b529c143641bad0d1d6055
-test(web): prove full anime landing acceptance
-GitHub CI run 231 — success
-```
-
-The detailed UXP-04 repository/architecture inspection is complete and the
-implementation contract is frozen at:
-
-```text
-docs/13-roadmaps/uxp-04-anime-series-page.md
-```
-
-UXP-04A is accepted at:
-
-```text
-e9cc98aa162687e2ee2d2af209d6a91809d57b11
-feat(web): add anime series identity shell
-GitHub CI run 234 — success
-```
-
-UXP-04B is accepted at:
-
-```text
-3656cabc6018feb9c89fe389dd20412f56eb5094
-feat(web): finish anime series media navigation
-GitHub CI run 236 — success
-```
-
-UXP-04C is accepted at:
-
-```text
-1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07
-feat(creator): manage anime series
-GitHub CI run 238 — success
-```
-
-UXP-04D and complete UXP-04 are accepted at:
-
-```text
-f14b984f34dd25855d709c2a5cb67806861f34d1
-test(web): prove full anime series acceptance
-GitHub CI run 240 — success
-```
-
-UXP-04 is therefore CLOSED — ACCEPTED.
-
-The UXP-05 repository/architecture inspection is complete and the frozen detailed
-implementation contract is:
-
-```text
-docs/13-roadmaps/uxp-05-public-experience-page.md
-```
-
-UXP-05A is accepted at:
-
-```text
-8da119f2aad069d8ee26e8a65f8631d7625fa950
-feat(web): finish public experience shell
-GitHub CI run 243
-run id 33098505327
+403ac69198185a7cd35b85178e4342ed5f1f2a0f
+feat(composition): add typed experience media
+GitHub CI run 245
+run id 33195903383
 success
 ```
 
-This docs-only checkpoint closes UXP-05A and activates the next bounded slice:
+This docs-only checkpoint closes UXP-05B and activates only:
 
 ```text
-UXP-05B — Typed IMAGE / short-motion Media + Creator/public parity
+UXP-05C — Media/security AUDIO capability micro-freeze
 ```
 
-Do not begin UXP-05B production implementation until this transition checkpoint
-is reviewed, manually committed/pushed, independently verified at the exact
-remote SHA, and GitHub CI on that exact transition commit is green.
+After this transition is manually committed/pushed, independently verified at
+the exact remote SHA and green in CI, inspect the exact accepted repository
+baseline and produce the separate evidence-backed UXP-05C capability freeze.
 
-UXP-05B must not implement AUDIO or a generic transcoding/video platform. UXP-05C
-continues to own the focused AUDIO capability micro-freeze. Do not pre-build
-UXP-05C or UXP-05D. Do not expand Search under UXP-05; UXP-08 continues to own
-finished Discovery + Engagement. UXP-06 remains blocked until complete UXP-05
-acceptance is remotely green.
+Do not implement AUDIO during that inspection. Do not preselect MIME/container,
+byte or duration limits. Do not introduce a generic transcoding platform.
 
-The Master Roadmap remains unchanged by this UXP-05A closure / UXP-05B
-activation transition. WPR-M05 remains the active Web Product Readiness gate,
-and P10-M04 remains sequencing-blocked until that gate closes.
+UXP-05D remains blocked on UXP-05C acceptance. UXP-08 Search expansion remains
+not started. UXP-06 remains blocked until complete UXP-05 acceptance is remotely
+green.
+
+The Master Roadmap remains unchanged. WPR-M05 remains the active Web Product
+Readiness gate, and P10-M04 remains sequencing-blocked.
