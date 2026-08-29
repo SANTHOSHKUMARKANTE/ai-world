@@ -1134,7 +1134,7 @@ CLOSED — ACCEPTED
 Status:
 
 ```text
-ACTIVE — UXP-05C CAPABILITY MICRO-FREEZE NEXT
+ACTIVE — UXP-05C FROZEN IMPLEMENTATION NEXT AFTER FREEZE CI
 ```
 
 The detailed frozen implementation contract is:
@@ -1204,29 +1204,57 @@ UXP-05B — Typed IMAGE / short-motion Media + Creator/public parity
 CLOSED — ACCEPTED — 403ac69198185a7cd35b85178e4342ed5f1f2a0f
 
 UXP-05C — User-started AUDIO capability gate
-ACTIVE — CAPABILITY MICRO-FREEZE NEXT
+FROZEN — IMPLEMENTATION NEXT AFTER MICRO-FREEZE CHECKPOINT IS REMOTE-GREEN
 
 UXP-05D — Reuse + full Experience acceptance
 NOT STARTED — GATED ON UXP-05A/B/C ACCEPTANCE
 ```
 
-UXP-05C is active only for the Media/security capability micro-freeze. No AUDIO
-implementation is authorized by this transition.
+UXP-05C repository/security inspection is complete at exact baseline:
 
-The micro-freeze must derive any supported MIME/container, byte limit, duration
-limit, validation rule, delivery behavior and Creator authoring path from the
-accepted repository/security evidence. It must not preselect those values.
+```text
+ad6590ea87fd6b94941554ace7950827b1b0c72b
+docs(roadmap): close UXP-05B
+GitHub CI run 246
+run id 33229789932
+success
+```
 
-Audio rights remain limited to original, owned, properly licensed,
-royalty-cleared or otherwise operator-verified content. Playback, if capability
-is later accepted, must be user-started; no page may depend on audible autoplay.
+The evidence-backed initial AUDIO capability is now frozen to:
 
-No generic transcoding platform, UXP-08 Search expansion, UXP-05D production work
-or UXP-06 work is introduced here.
+```text
+Asset type AUDIO;
+one declared MIME: audio/mp4;
+ISO-BMFF/MPEG-4 with an audio soun track + mp4a sample entry;
+AAC-LC / MPEG-4 Audio Object Type 2 is the accepted codec profile and must be byte-validated;
+AAC-LC acceptance fixture;
+existing 10 MiB upload hard limit;
+positive durationMs, with no invented AUDIO duration ceiling;
+server-side container/audio-track inspection rather than MIME/extension trust;
+existing POST /media/assets + media.asset.upload + audit/storage transaction;
+existing GET /media/assets/:id/content + ACTIVE public-by-ID visibility;
+existing Composition MEDIA_ASSET reference;
+Creator Page/Experience authoring only, not KnowledgeMediaManager;
+shared Creator/public native <audio controls preload="none"> rendering;
+no autoplay / loop / fabricated social image;
+explicit rights-cleared-content and public-by-ID Creator disclosure.
+```
 
-The UXP-05C capability micro-freeze must be separately reviewed,
-committed/pushed, independently exact-remote verified and green in CI before any
-production AUDIO implementation begins.
+The exact Media model and Prisma persistence already accommodate AUDIO, but the
+accepted upload/delivery implementation does not yet author or serve it. No
+database migration is required by the inspected baseline. The existing bounded
+MP4 parser, Media authorization/audit path, whole-object Storage contract,
+generic Composition reference and shared Experience renderer are reused rather
+than replaced.
+
+The micro-freeze does not authorize a generic codec matrix, ffmpeg/ffprobe,
+transcoding, HTTP Range/streaming architecture, signed/private Media, a rights
+engine, AUDIO Knowledge placements, Search expansion, UXP-05D production work or
+UXP-06 work.
+
+This docs-only capability freeze must be separately reviewed, manually
+committed/pushed, independently exact-remote verified and green in CI. Only then
+may the frozen UXP-05C AUDIO implementation begin.
 
 ## UXP-06 / UXP-07 — Devotional
 
@@ -1470,34 +1498,32 @@ UXP-04 — Anime Series
 CLOSED — ACCEPTED
         ↓
 UXP-05 — Public Experience
-ACTIVE — UXP-05C CAPABILITY MICRO-FREEZE NEXT
+ACTIVE — UXP-05C FROZEN IMPLEMENTATION NEXT AFTER FREEZE CI
 ```
 
 UXP-05A is CLOSED — ACCEPTED at
 `8da119f2aad069d8ee26e8a65f8631d7625fa950`.
 
-UXP-05B is CLOSED — ACCEPTED at:
+UXP-05B is CLOSED — ACCEPTED at
+`403ac69198185a7cd35b85178e4342ed5f1f2a0f`.
+
+The UXP-05C Media/security micro-freeze inspected exact baseline
+`ad6590ea87fd6b94941554ace7950827b1b0c72b` and froze only the bounded
+`audio/mp4`/`mp4a`/AAC-LC user-started AUDIO path described in the detailed UXP-05
+contract.
+
+This checkpoint remains docs-only. After it is manually committed/pushed,
+independently verified at the exact remote SHA and green in CI, the next
+implementation is only:
 
 ```text
-403ac69198185a7cd35b85178e4342ed5f1f2a0f
-feat(composition): add typed experience media
-GitHub CI run 245
-run id 33195903383
-success
+UXP-05C — frozen user-started AUDIO capability
 ```
 
-This docs-only checkpoint closes UXP-05B and activates only:
-
-```text
-UXP-05C — Media/security AUDIO capability micro-freeze
-```
-
-After this transition is manually committed/pushed, independently verified at
-the exact remote SHA and green in CI, inspect the exact accepted repository
-baseline and produce the separate evidence-backed UXP-05C capability freeze.
-
-Do not implement AUDIO during that inspection. Do not preselect MIME/container,
-byte or duration limits. Do not introduce a generic transcoding platform.
+No AUDIO implementation starts before that remote-green freeze checkpoint. No
+AUDIO Knowledge placement, generic transcoding/probing platform, HTTP Range
+storage expansion, signed/private Media, rights engine, Search expansion,
+UXP-05D production work or UXP-06 work is authorized.
 
 UXP-05D remains blocked on UXP-05C acceptance. UXP-08 Search expansion remains
 not started. UXP-06 remains blocked until complete UXP-05 acceptance is remotely

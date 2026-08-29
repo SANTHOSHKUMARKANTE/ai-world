@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-05 |
 | Area | Product / Web / Composition / Media / Knowledge / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-05C MICRO-FREEZE ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-05C FROZEN; IMPLEMENTATION NEXT AFTER FREEZE CI |
 | Created | 2026-08-27 |
 | Activation Baseline | `95836f344dbf523b20591cc20536f1517a1cb060` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -300,46 +300,257 @@ protected.
 
 ## UXP-05C — User-started AUDIO capability gate
 
-Status: `ACTIVE — CAPABILITY MICRO-FREEZE NEXT`
+Status: `FROZEN — IMPLEMENTATION NEXT AFTER MICRO-FREEZE CHECKPOINT IS REMOTE-GREEN`
 
-This status activates only the focused Media/security capability micro-freeze.
-It does **not** activate production AUDIO implementation.
+This checkpoint is the focused Media/security capability micro-freeze. It changes
+no production implementation and does not by itself authorize AUDIO code before
+this docs-only checkpoint is reviewed, manually committed/pushed, independently
+verified at its exact remote SHA and green in GitHub CI.
 
-After this UXP-05B closure / UXP-05C micro-freeze activation checkpoint is
-reviewed, manually committed/pushed, independently verified at the exact remote
-SHA and GitHub CI is green, inspect the exact accepted repository baseline and
-freeze only what real evidence supports.
-
-The micro-freeze must determine:
+Inspection baseline:
 
 ```text
-whether a real accepted AUDIO authoring/ingestion path exists;
-supported MIME/container choices, if any;
-maximum bytes, if any;
-maximum duration, if any;
-required byte/content inspection and validation;
-Asset lifecycle/storage/delivery behavior;
-public-delivery headers and browser support expectations;
-Creator upload/attach path and authorization boundary;
-security and abuse constraints;
-test fixtures and acceptance proof;
-rights/operator responsibility;
-accessible user-started playback semantics.
+ad6590ea87fd6b94941554ace7950827b1b0c72b
+docs(roadmap): close UXP-05B
+GitHub CI run 246
+run id 33229789932
+success
 ```
 
-Do not preselect codecs, MIME types, byte limits or duration limits in this
-closure checkpoint. Those values must come from the Media/security inspection.
+### Evidence-backed inspection result
 
-Any eventual AUDIO capability remains restricted to original, owned, properly
-licensed, royalty-cleared or otherwise operator-verified audio. A short excerpt
-of commercial music is not automatically licensed.
+The exact accepted baseline proves:
 
-No audible autoplay. No generic transcoding platform. No Search expansion. No
-UXP-05D production work. No UXP-06 work.
+```text
+AssetType already recognizes IMAGE / VIDEO / AUDIO / DOCUMENT;
+Asset technical metadata already carries mimeType / sizeBytes / optional durationMs;
+Prisma persists assetType as a string and durationMs as an optional integer;
+PrismaAssetRepository validates persisted assetType through the canonical isAssetType guard;
+AUDIO therefore already fits the canonical persistence shape with no schema migration required;
+AUDIO is modeled/persistable but is not currently authorable through accepted upload validation;
 
-The capability micro-freeze must itself be reviewed, manually committed/pushed,
-independently verified at its exact remote SHA and have green CI before any
-production AUDIO implementation begins.
+canonical upload validation currently accepts only image/png, image/jpeg and bounded video/mp4;
+canonical upload has a 10 MiB hard limit and rejects empty/invalid content;
+Media upload already uses the permission media.asset.upload;
+session/permission preauthorization occurs before the upload handler;
+upload persistence/storage/audit already use the shared Media transaction path;
+
+public raw Media delivery already uses GET /media/assets/:id/content;
+public delivery currently allows ACTIVE IMAGE and bounded supported VIDEO only;
+StorageObjectStore reads/writes whole objects and has no byte-range contract;
+currently deliverable ACTIVE IMAGE/VIDEO Media is retrievable by Asset ID under the accepted visibility contract;
+once UXP-05C admits the frozen AUDIO delivery profile, ACTIVE AUDIO will inherit the same public-by-ID visibility;
+Page publication is not a privacy boundary for raw Media;
+
+Composition already accepts MEDIA_ASSET references by canonical Asset ID;
+Composition resolves ACTIVE Asset type + optional duration server-side;
+Creator and public Page preview already preserve typed AUDIO projection;
+
+Creator Page composition already has the correct generic upload/reference seam;
+the current Page workspace file picker is image-only and may be extended minimally;
+KnowledgeMediaManager is intentionally IMAGE / VIDEO STILL / SHORT_LOOP only and is not an AUDIO surface;
+
+ExperienceMediaContent is already shared by public Experience and Creator preview;
+its current AUDIO branch degrades explicitly and is the bounded presentation seam to evolve;
+
+no ffmpeg / ffprobe / generic Media probing dependency exists;
+the accepted Media package already contains a bounded ISO-BMFF/MP4 parser pattern for short VIDEO.
+```
+
+### Frozen initial AUDIO profile
+
+UXP-05C implementation is limited to one initial browser-oriented AUDIO profile:
+
+```text
+canonical Asset type: AUDIO
+accepted declared MIME: audio/mp4
+container: ISO Base Media File Format / MPEG-4
+required audio track: hdlr=soun with an mp4a sample entry
+accepted codec profile: AAC-LC (MPEG-4 Audio Object Type 2)
+acceptance fixture: AAC-LC in the accepted mp4a track
+maximum bytes: existing MEDIA_UPLOAD_MAX_BYTES = 10 MiB
+required duration: positive integer durationMs derived from the accepted audio track mdhd metadata
+product maximum duration: none is invented by UXP-05C beyond the existing 10 MiB byte bound
+```
+
+Do not reuse the VIDEO `8000 ms` ceiling for AUDIO. That limit belongs to the
+bounded VIDEO/SHORT_LOOP contract and has no accepted AUDIO product basis.
+
+The file name or extension is never authoritative. `audio/mp4` is accepted only
+when server-side byte inspection proves the bounded ISO-BMFF audio shape and the
+accepted AAC-LC codec profile. The parser must validate the relevant `esds` /
+AudioSpecificConfig metadata strongly enough to prove MPEG-4 Audio Object Type 2
+(AAC-LC); an `mp4a` sample-entry marker alone is not sufficient. Other `mp4a`
+audio object types remain outside the initial UXP-05C profile.
+
+### Frozen byte/content validation
+
+The server must extend the accepted bounded MP4 inspection style rather than
+trusting the multipart MIME string alone.
+
+For initial AUDIO acceptance it must safely prove, with boundary-checked parsing:
+
+```text
+non-empty bytes;
+<= 10 MiB;
+declared MIME is exactly audio/mp4;
+first/top-level ISO-BMFF structure is plausible and includes ftyp;
+moov metadata exists;
+an audio track is present and identified as soun;
+the accepted audio sample entry is mp4a;
+the mp4a codec configuration proves AAC-LC / MPEG-4 Audio Object Type 2;
+a positive finite/safe durationMs is derivable;
+the initial AUDIO profile does not contain a VIDEO track;
+truncated/impossible box sizes and malformed metadata are rejected safely.
+```
+
+A video-only MP4 renamed or declared as `audio/mp4` must be rejected. A mixed
+AUDIO+VIDEO file is outside this initial AUDIO profile. Do not add transcoding,
+codec normalization, waveform analysis or a generic probe service.
+
+### Frozen upload, authorization and audit path
+
+AUDIO must reuse the existing canonical route and Media ownership:
+
+```text
+POST /media/assets
+session validation
+media.asset.upload Permission
+MediaUploadPreauthorizationGuard
+UploadAssetAsActor
+Media upload transaction
+audit record
+media/assets/{id}/original storage reference
+ACTIVE initial lifecycle
+```
+
+No AUDIO-specific upload endpoint, permission, repository, table or storage
+abstraction is authorized.
+
+The existing audit context already carries Asset type, MIME, size, optional
+duration and lifecycle. AUDIO uses that same evidence path.
+
+### Frozen Creator authoring/attach path
+
+UXP-05C extends only the existing Page/Experience Creator path:
+
+```text
+Creator workspace accepts the frozen audio/mp4 profile;
+upload uses the existing generic Media upload API;
+success returns the canonical AUDIO Asset ID;
+Page composition attaches it as kind=MEDIA_ASSET with that ID;
+server-side Media resolution remains the source of assetType/duration truth;
+Creator preview uses the shared Experience Media renderer.
+```
+
+Do not add AUDIO to `KnowledgeMediaManager`; its accepted STILL/SHORT_LOOP model
+remains IMAGE/VIDEO-only. Do not create a Creator Studio redesign or a second
+AUDIO authoring workflow.
+
+### Frozen public delivery and visibility
+
+Initial AUDIO delivery extends the existing Media content route only:
+
+```text
+GET /media/assets/:id/content
+ACTIVE AUDIO only for the accepted audio/mp4 profile
+Content-Type: audio/mp4
+correct Content-Length
+stored-byte length must still match canonical technical metadata
+```
+
+No signed URL, new public AUDIO endpoint, streaming service or range-read Storage
+contract is introduced. HTTP Range/seekable long-form streaming is not promised
+by UXP-05C. If real implementation/acceptance evidence proves Range is required,
+stop and re-freeze that capability rather than silently expanding Storage.
+
+The accepted Media visibility implication remains explicit: after upload creates
+an ACTIVE Asset, anyone who knows its Asset ID may retrieve it through the public
+Media content route even before a Page referencing it is published. Creator UI
+for AUDIO must state this public-by-ID behavior before upload.
+
+### Frozen Web/accessibility behavior
+
+Public Experience and Creator preview must continue to share one renderer.
+Accepted AUDIO presentation is native, user-started playback:
+
+```text
+<audio controls preload="none">
+meaningful accessible label tied to the Experience context;
+no autoplay;
+no loop;
+no hidden background playback;
+no page understanding that depends on audio;
+honest unavailable/error fallback without failing the whole Experience.
+```
+
+Do not add a custom Web Audio player, waveform, playlist, visualization or
+background-audio subsystem. AUDIO never supplies an Open Graph image; UXP-05B
+eligible-IMAGE social precedence remains unchanged.
+
+### Frozen rights/operator boundary
+
+UXP-05C does not pretend to perform automated copyright/licensing verification.
+The operational content rule remains:
+
+```text
+original audio;
+owned audio;
+properly licensed audio;
+royalty-cleared audio;
+otherwise operator-verified usage rights.
+```
+
+A short commercial excerpt is not automatically licensed. The Creator AUDIO
+surface must communicate both the rights rule and the public-by-ID visibility
+before upload. The acceptance fixture must be original/generated or otherwise
+clearly rights-safe. Permission to upload is not evidence of copyright ownership,
+and no speculative rights database/policy engine is introduced here.
+
+### Frozen implementation proof
+
+The later UXP-05C implementation checkpoint must prove, at minimum:
+
+```text
+Media unit:
+- valid audio/mp4 acceptance fixture resolves to AUDIO with positive durationMs;
+- malformed/truncated/spoofed audio/mp4 is rejected;
+- mp4a content whose codec configuration is not AAC-LC / Audio Object Type 2 is rejected;
+- video-only or mixed VIDEO content declared as AUDIO is rejected;
+- empty/wrong-MIME/oversize content is rejected;
+- parser boundary/size safety is covered;
+
+API/integration:
+- unauthorized upload is rejected through the existing authorization boundary;
+- authorized AUDIO upload returns AUDIO + audio/mp4 + size + duration + ACTIVE;
+- audit retains AUDIO/MIME/size/duration/lifecycle evidence;
+- public delivery returns exact bytes with audio/mp4 and correct length;
+- non-deliverable lifecycle/not-found behavior remains safe;
+
+Composition:
+- an ACTIVE AUDIO Asset attaches through the existing MEDIA_ASSET reference;
+- Creator preview and published projection preserve AUDIO + durationMs;
+
+Web:
+- shared Creator/public renderer exposes native user-started controls;
+- preload=none and no autoplay/loop are proven;
+- load failure degrades without page failure;
+- AUDIO never becomes social-image metadata;
+- 390px and desktop presentation do not overflow;
+
+Regression/governance:
+- accepted IMAGE/VIDEO Experience behavior remains green;
+- KnowledgeMediaManager remains IMAGE/VIDEO-only;
+- no database migration is introduced; if implementation evidence claims one is required, stop and re-freeze;
+- no Search/UXP-05D/UXP-06 expansion;
+- format/lint/typecheck/unit/integration/focused browser/full browser/build/architecture evidence;
+- reviewed evidence ZIP;
+- manual checkpoint commit/push;
+- exact remote SHA + exact GitHub CI green.
+```
+
+If implementation evidence contradicts any frozen assumption, classify the
+mismatch and return to this capability contract. Do not silently expand scope.
 
 ## UXP-05D — Reuse + full Experience acceptance
 
@@ -458,15 +669,16 @@ Master Roadmap.
 
 # 12. Current Position
 
-After this docs-only UXP-05B closure / UXP-05C capability-micro-freeze activation
-checkpoint is reviewed, manually committed/pushed and exact remote CI is green:
+After this docs-only UXP-05C capability micro-freeze checkpoint is reviewed,
+manually committed/pushed, independently verified at its exact remote SHA and
+GitHub CI is green:
 
 ```text
 UXP-04 — CLOSED — ACCEPTED
 UXP-05 — ACTIVE
 UXP-05A — CLOSED — ACCEPTED — 8da119f2aad069d8ee26e8a65f8631d7625fa950
 UXP-05B — CLOSED — ACCEPTED — 403ac69198185a7cd35b85178e4342ed5f1f2a0f
-UXP-05C — ACTIVE — CAPABILITY MICRO-FREEZE NEXT
+UXP-05C — ACTIVE — FROZEN IMPLEMENTATION NEXT
 UXP-05D — NOT STARTED — GATED ON UXP-05A/B/C ACCEPTANCE
 UXP-06 — NOT STARTED — BLOCKED ON FULL UXP-05 ACCEPTANCE
 UXP-08 Search expansion — NOT STARTED
@@ -474,34 +686,32 @@ WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
 ```
 
-No production AUDIO implementation begins from this transition. The next work is
-repository/security inspection and a separate evidence-backed UXP-05C capability
-micro-freeze checkpoint.
-
-The Master Roadmap is unchanged by this local Web UI program transition.
+The Master Roadmap remains unchanged. This micro-freeze authorizes no production
+AUDIO work until the micro-freeze checkpoint itself is exact-remote verified and
+green in CI.
 
 ---
 
 # 13. Next Action
 
-After this UXP-05B closure / UXP-05C capability-micro-freeze activation
-checkpoint is remotely green, inspect the exact accepted baseline and freeze only
-the real AUDIO capability supported by repository and security evidence.
-
-The next checkpoint must answer, without speculative implementation:
+After this micro-freeze checkpoint is remotely green, implement only the frozen
+UXP-05C AUDIO capability:
 
 ```text
-Does an accepted AUDIO ingestion/authoring path exist?
-Which MIME/container formats are actually supportable?
-What byte and duration bounds are justified?
-What validation/inspection is required?
-How do lifecycle, storage and public delivery behave?
-What Creator authorization/attach path is valid?
-What rights/operator rule is enforced?
-What accessibility/browser behavior is required?
-What focused tests prove the boundary?
+audio/mp4 initial profile with mp4a + AAC-LC / Audio Object Type 2 validation;
+existing 10 MiB upload bound;
+positive durationMs with no invented AUDIO duration ceiling;
+bounded server-side ISO-BMFF audio inspection;
+existing Media upload/auth/audit/storage path;
+existing public Media content route;
+existing Composition MEDIA_ASSET reference;
+Creator Page/Experience upload + attach only;
+shared Creator/public native user-started AUDIO rendering;
+rights/public-by-ID disclosure;
+focused security/accessibility/regression proof.
 ```
 
-Do not implement AUDIO during the micro-freeze. Do not invent format/duration
-limits in advance. Do not introduce a generic transcoding platform, Search
-expansion, UXP-05D production work or UXP-06 work.
+Do not add AUDIO to Knowledge media. Do not introduce HTTP Range, a generic
+transcoding/probing platform, signed delivery, a rights engine, Search expansion,
+UXP-05D production work or UXP-06 work unless new acceptance evidence forces a
+separate explicitly reviewed architecture decision.
