@@ -2879,3 +2879,39 @@ textarea {
     opacity: 0.28;
   }
 }
+
+/* UXP-06A — finished Devotional Deity identity + canonical sharing */
+.aw-devotional-deity__identity {
+  display: grid;
+  gap: 0.35rem;
+  margin: -0.1rem 0 1rem;
+}
+
+.aw-devotional-deity__native-name {
+  margin: 0;
+  color: var(--aw-universe-text);
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  font-weight: 720;
+  letter-spacing: 0.01em;
+}
+
+.aw-devotional-deity__alternate-names {
+  margin: 0;
+  color: var(--aw-universe-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.aw-devotional-deity__share {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.aw-devotional-deity__share-status {
+  flex-basis: 100%;
+  color: var(--aw-universe-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}

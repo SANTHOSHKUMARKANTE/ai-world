@@ -10,6 +10,7 @@ import { ANIME_SERIES_SECTION_DEFINITIONS } from '../anime/anime-series-sections
 import { AnimeCharacterShareControls } from '../anime/anime-character-share-controls';
 import { AnimeSeriesShareControls } from '../anime/anime-series-share-controls';
 import { ApiClientError } from '../api/api-client';
+import { DevotionalDeityShareControls } from '../devotional/devotional-deity-share-controls';
 import { ResourceEngagementControls } from '../engagement/resource-engagement-controls';
 import {
   resolveEntitySectionTitle,
@@ -380,7 +381,9 @@ export function EntityExperiencePage({
         ? 'Series'
         : expectedResourceType === 'anime.character'
           ? 'Character'
-          : 'Entity';
+          : expectedResourceType === 'devotional.deity'
+            ? 'Deity'
+            : 'Entity';
     const returnToAnime = expectedResourceType === 'anime.series';
 
     return (
@@ -409,6 +412,9 @@ export function EntityExperiencePage({
   const animeSeries =
     entity.resource.universeKey === 'universe.anime' &&
     entity.resource.resourceType === 'anime.series';
+  const devotionalDeity =
+    entity.resource.universeKey === 'universe.devotional' &&
+    entity.resource.resourceType === 'devotional.deity';
   const animeIdentity = animeCharacter || animeSeries;
   const seriesFact = animeCharacter
     ? entity.profile.facts.find((fact) => fact.key === 'anime.series')
@@ -449,14 +455,17 @@ export function EntityExperiencePage({
     ? 'Character story'
     : animeSeries
       ? 'Series overview'
-      : 'Overview';
+      : devotionalDeity
+        ? 'Deity overview'
+        : 'Overview';
   const overviewTitle =
-    animeCharacter || animeSeries
+    animeIdentity || devotionalDeity
       ? `About ${entity.profile.displayName}`
       : `Discover ${entity.profile.displayName}`;
-  const overviewCopy = animeIdentity
-    ? (entity.profile.overview ?? entity.profile.summary)
-    : entity.profile.summary;
+  const overviewCopy =
+    animeIdentity || devotionalDeity
+      ? (entity.profile.overview ?? entity.profile.summary)
+      : entity.profile.summary;
 
   function sectionItems(sectionKey: string): readonly PublicKnowledgeEntityRelation[] {
     if (!animeSeries) {
@@ -484,11 +493,12 @@ export function EntityExperiencePage({
     <article
       className={`aw-entity-experience ${animeCharacter ? 'aw-anime-character' : ''} ${
         animeSeries ? 'aw-anime-series' : ''
-      }`}
+      } ${devotionalDeity ? 'aw-devotional-deity' : ''}`}
       data-universe-tone={presentation?.tone}
       data-universe-motion={presentation?.motion}
       data-character-shell={animeCharacter ? 'anime' : undefined}
       data-series-shell={animeSeries ? 'anime' : undefined}
+      data-deity-shell={devotionalDeity ? 'devotional' : undefined}
     >
       <header className="aw-entity-hero">
         <div className="aw-entity-hero__copy">
@@ -507,20 +517,32 @@ export function EntityExperiencePage({
 
           <h1>{entity.profile.displayName}</h1>
 
-          {animeIdentity &&
+          {(animeIdentity || devotionalDeity) &&
           (entity.profile.nativeName !== null || entity.profile.alternateNames.length > 0) ? (
             <div
               className={
-                animeCharacter ? 'aw-anime-character__identity' : 'aw-anime-series__identity'
+                animeCharacter
+                  ? 'aw-anime-character__identity'
+                  : animeSeries
+                    ? 'aw-anime-series__identity'
+                    : 'aw-devotional-deity__identity'
               }
-              aria-label={animeCharacter ? 'Character identity' : 'Series identity'}
+              aria-label={
+                animeCharacter
+                  ? 'Character identity'
+                  : animeSeries
+                    ? 'Series identity'
+                    : 'Deity identity'
+              }
             >
               {entity.profile.nativeName ? (
                 <p
                   className={
                     animeCharacter
                       ? 'aw-anime-character__native-name'
-                      : 'aw-anime-series__native-name'
+                      : animeSeries
+                        ? 'aw-anime-series__native-name'
+                        : 'aw-devotional-deity__native-name'
                   }
                 >
                   {entity.profile.nativeName}
@@ -531,7 +553,9 @@ export function EntityExperiencePage({
                   className={
                     animeCharacter
                       ? 'aw-anime-character__alternate-names'
-                      : 'aw-anime-series__alternate-names'
+                      : animeSeries
+                        ? 'aw-anime-series__alternate-names'
+                        : 'aw-devotional-deity__alternate-names'
                   }
                 >
                   Also known as {entity.profile.alternateNames.join(' · ')}
@@ -559,6 +583,12 @@ export function EntityExperiencePage({
               />
             ) : animeSeries ? (
               <AnimeSeriesShareControls
+                slug={entity.profile.slug}
+                displayName={entity.profile.displayName}
+                summary={entity.profile.summary}
+              />
+            ) : devotionalDeity ? (
+              <DevotionalDeityShareControls
                 slug={entity.profile.slug}
                 displayName={entity.profile.displayName}
                 summary={entity.profile.summary}
