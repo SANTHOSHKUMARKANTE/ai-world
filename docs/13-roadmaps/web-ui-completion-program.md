@@ -440,7 +440,7 @@ Current accepted routes now include:
 | `/creator` | Creator workspace |
 | `/creator/series/[id]/preview` | Creator-only Anime Series draft preview accepted through UXP-04C at `1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07` |
 | `/creator/preview/[id]` | Creator preview |
-| `/devotional/[slug]` | Devotional Entity Experience |
+| `/devotional/[slug]` | Existing Devotional Deity destination — UXP-06 ACTIVE; finishing begins with UXP-06A after activation CI is green |
 | `/experiences/[id]` | Finished Public Experience destination — UXP-05 CLOSED and accepted at `527921f3587b3c5d011a8c9ef0565bc4fc39c5ce` |
 | `/forgot-password` | Identity recovery |
 | `/knowledge` | Knowledge browse |
@@ -1270,17 +1270,94 @@ UXP-05 closure transition is itself committed, pushed and exact remote CI is
 green. This closure checkpoint does not activate or implement UXP-06.
 
 ## UXP-06 / UXP-07 — Devotional
-Current state:
+Status:
 
 ```text
-UXP-06 — NOT STARTED — GATED ON UXP-05 CLOSURE REMOTE CI
-UXP-07 — NOT STARTED — GATED ON UXP-06 ACCEPTANCE
+UXP-06 — ACTIVE — UXP-06A NEXT IMPLEMENTATION SLICE
+UXP-07 — NOT STARTED — GATED ON FULL UXP-06 ACCEPTANCE
 ```
 
+The detailed frozen UXP-06 implementation/acceptance contract is:
 
-Devotional pages reuse shared Platform behavior but switch composition and visual cadence toward calm, reverence and breathing room.
+```text
+docs/13-roadmaps/uxp-06-devotional-deity-page.md
+```
 
-The Deity page remains connected and media-rich without inheriting Anime intensity.
+UXP-06 was activated only after UXP-05 was fully accepted and the docs-only
+UXP-05 closure checkpoint was remotely green:
+
+```text
+cc0018ede0a02925cac654f00f10c913f01894c4
+docs(roadmap): close UXP-05
+GitHub CI run 252
+run id 33254945103
+success
+```
+
+Repository inspection confirms that `/devotional/[slug]` is already a real
+shared Knowledge Entity consumer. Existing Shiva and Hanuman browser proof
+already demonstrates reusable Devotional presentation, facts, relationships,
+Media, Engagement, keyboard focus and mobile no-overflow behavior.
+
+UXP-06 therefore finishes the existing Deity consumer rather than creating a new
+Devotional platform.
+
+Frozen minimum direction:
+
+```text
+strict universe.devotional + devotional.deity route guard;
+existing generic Entity profile depth;
+native / alternate identity and overview on the Devotional page;
+existing Resource Engagement;
+existing IMAGE / bounded SHORT_LOOP Knowledge Media;
+page-owned Deity Media viewer;
+canonical /devotional/[slug] metadata;
+campaign-safe Open Graph identity;
+Share / Copy canonical link;
+existing Devotional section vocabulary;
+canonical relationship navigation without fabricated routes;
+bounded devotional.deity Creator Web manager;
+generic Creator Entity API reuse;
+generic KnowledgeMediaManager reuse;
+Creator-only Deity preview;
+existing Knowledge publish/archive lifecycle;
+no backend/schema migration expected.
+```
+
+Frozen UXP-06 slices:
+
+```text
+UXP-06A — Strict Deity identity + canonical/social shell
+ACTIVE — NEXT IMPLEMENTATION SLICE
+
+UXP-06B — Deity Media viewer + canonical relationship navigation
+NOT STARTED — GATED ON UXP-06A ACCEPTANCE
+
+UXP-06C — Creator Deity manager + Creator-only preview
+NOT STARTED — GATED ON UXP-06B ACCEPTANCE
+
+UXP-06D — Reuse + full Deity acceptance
+NOT STARTED — GATED ON UXP-06A/B/C ACCEPTANCE
+```
+
+Important boundaries:
+
+```text
+no /devotional landing in UXP-06;
+no UXP-07 work;
+no UXP-08 Search expansion;
+no AUDIO Knowledge placement;
+no Deity database/repository/service;
+no Devotional-specific Media or Engagement platform;
+no generic theme engine;
+no generic page builder;
+no Creator Studio rewrite;
+no speculative transcoding/workflow/policy/recommendation infrastructure.
+```
+
+This activation checkpoint is docs-only. No UXP-06 production implementation
+begins before this activation commit itself is reviewed, manually committed,
+pushed and exact remote CI is green.
 
 ## UXP-08 — Discovery + Engagement
 
@@ -1513,50 +1590,50 @@ WPR-M05 receives its roadmap closure update only when the entire accepted gate i
 The accepted execution position is now:
 
 ```text
-UXP-04 — Anime Series
+UXP-05 — Public Experience
 CLOSED — ACCEPTED
         ↓
-UXP-05 — Public Experience
-CLOSED — ACCEPTED — 527921f3587b3c5d011a8c9ef0565bc4fc39c5ce
-        ↓
 UXP-06 — Devotional Deity
-NOT STARTED — GATED ON UXP-05 CLOSURE REMOTE CI
+ACTIVE — UXP-06A NEXT IMPLEMENTATION SLICE
 ```
 
-Complete UXP-05 accepted checkpoints:
+The detailed frozen UXP-06 contract is:
 
 ```text
-UXP-05A — CLOSED — ACCEPTED
-8da119f2aad069d8ee26e8a65f8631d7625fa950
-
-UXP-05B — CLOSED — ACCEPTED
-403ac69198185a7cd35b85178e4342ed5f1f2a0f
-
-UXP-05C — CLOSED — ACCEPTED
-0cb1548541cc3f57164cb25a739b2fa1ee75d522
-
-UXP-05D / complete UXP-05 — CLOSED — ACCEPTED
-527921f3587b3c5d011a8c9ef0565bc4fc39c5ce
-GitHub CI #251 / run 33252939400 — success
+docs/13-roadmaps/uxp-06-devotional-deity-page.md
 ```
 
-This docs-only checkpoint closes UXP-05. It does not activate UXP-06.
-
-After this closure transition is reviewed, manually committed/pushed and exact
-remote CI is green, the next page workflow is:
+Activation baseline:
 
 ```text
-inspect the exact accepted UXP-05 closure baseline
-        ↓
-freeze the detailed UXP-06 Devotional Deity contract
-        ↓
-activate only the first bounded UXP-06 slice
-        ↓
-then begin implementation
+cc0018ede0a02925cac654f00f10c913f01894c4
+docs(roadmap): close UXP-05
+GitHub CI #252 / run 33254945103 — success
 ```
 
-Do not begin UXP-06 production work before that separate activation checkpoint.
-UXP-07 remains later. UXP-08 Search expansion remains not started.
+Next execute only after this docs-only activation checkpoint is independently
+reviewed, manually committed/pushed and exact remote CI is green:
+
+```text
+UXP-06A — Strict Deity identity + canonical/social shell
+```
+
+UXP-06A finishes the minimum identity/social layer over the existing shared
+Devotional Entity proof. It does not pre-build Media-viewer, Creator-manager or
+full-acceptance slices.
+
+Do not begin:
+
+```text
+UXP-06B;
+UXP-06C;
+UXP-06D;
+UXP-07;
+UXP-08 Search expansion;
+AUDIO Knowledge placement;
+new Devotional backend/schema architecture;
+speculative platform work.
+```
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Web Product
 Readiness gate, and P10-M04 remains sequencing-blocked.
