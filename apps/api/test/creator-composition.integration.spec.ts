@@ -529,6 +529,77 @@ describe('Creator Composition API', () => {
       .expect(404);
   });
 
+  it('preserves ACTIVE AUDIO type and duration through draft and published projection', async () => {
+    const administrator = await signInAdministrator('audio-projection-administrator');
+    const page = await request(app.getHttpServer())
+      .post('/composition/pages')
+      .set('Cookie', administrator.cookiePair)
+      .send({
+        universeKey: 'universe.devotional',
+        routePath: `/audio-${randomUUID()}`,
+        title: 'Audio projection proof',
+      })
+      .expect(201);
+    const pageId = page.body.id as string;
+    pageIds.add(pageId);
+
+    const assetId = randomUUID();
+    assetIds.add(assetId);
+    await database.asset.create({
+      data: {
+        id: assetId,
+        assetType: 'AUDIO',
+        mimeType: 'audio/mp4',
+        sizeBytes: 1971,
+        durationMs: 273,
+        storageReference: `${runMarker}/${assetId}.m4a`,
+        lifecycle: 'ACTIVE',
+      },
+    });
+
+    await request(app.getHttpServer())
+      .put(`/composition/pages/${pageId}/composition`)
+      .set('Cookie', administrator.cookiePair)
+      .send({ items: [{ kind: 'MEDIA_ASSET', id: assetId }] })
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .get(`/composition/pages/${pageId}/preview`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body.items).toEqual([
+          {
+            position: 0,
+            kind: 'MEDIA_ASSET',
+            id: assetId,
+            assetType: 'AUDIO',
+            durationMs: 273,
+          },
+        ]);
+      });
+
+    await request(app.getHttpServer())
+      .post(`/composition/pages/${pageId}/publish`)
+      .set('Cookie', administrator.cookiePair)
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .get(`/composition/public/pages/${pageId}`)
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body.items).toEqual([
+          {
+            position: 0,
+            kind: 'MEDIA_ASSET',
+            id: assetId,
+            assetType: 'AUDIO',
+            durationMs: 273,
+          },
+        ]);
+      });
+  });
+
   it('returns safe validation semantics for authenticated malformed requests', async () => {
     const administrator = await signInAdministrator('invalid-request');
     const response = await request(app.getHttpServer())

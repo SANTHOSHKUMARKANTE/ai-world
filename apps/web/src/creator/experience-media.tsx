@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 import type { CreatorPagePreviewItem } from './creator-api';
 
@@ -20,6 +20,27 @@ function UnsupportedMedia({ children }: { readonly children: ReactNode }) {
     >
       {children}
     </div>
+  );
+}
+
+function ExperienceAudio({ source, label }: { readonly source: string; readonly label: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return <UnsupportedMedia>This audio is not available for this Experience.</UnsupportedMedia>;
+  }
+
+  return (
+    <audio
+      src={source}
+      aria-label={label}
+      className="w-full"
+      controls
+      preload="none"
+      onError={() => setFailed(true)}
+    >
+      Your browser does not support audio playback.
+    </audio>
   );
 }
 
@@ -50,9 +71,11 @@ export function ExperienceMediaContent({ item, label }: ExperienceMediaContentPr
   }
 
   if (item.assetType === 'AUDIO') {
-    return (
-      <UnsupportedMedia>Audio playback is not available for this Experience.</UnsupportedMedia>
-    );
+    if (item.durationMs === undefined) {
+      return <UnsupportedMedia>This audio is not available for this Experience.</UnsupportedMedia>;
+    }
+
+    return <ExperienceAudio source={source} label={label} />;
   }
 
   return <UnsupportedMedia>This media type is not available for this Experience.</UnsupportedMedia>;

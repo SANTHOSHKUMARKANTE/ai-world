@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   ASSET_ARCHIVED_LIFECYCLE,
+  ASSET_AUDIO_TYPE,
   ASSET_IMAGE_TYPE,
   ASSET_INITIAL_LIFECYCLE,
   ASSET_VIDEO_TYPE,
@@ -141,6 +142,47 @@ describe('DeliverAsset', () => {
       content: CONTENT,
     });
     expect(storage.readReferences).toEqual([asset.storageReference]);
+  });
+
+  it('delivers ACTIVE audio/mp4 AUDIO with positive duration through the same path', async () => {
+    const asset = createAsset({
+      assetType: ASSET_AUDIO_TYPE,
+      technicalMetadata: {
+        mimeType: 'audio/mp4',
+        sizeBytes: CONTENT.byteLength,
+        durationMs: 273,
+      },
+    });
+    const storage = new RecordingStorage(CONTENT);
+    const deliver = new DeliverAsset(new RecordingAssetReader(asset), storage);
+
+    await expect(deliver.execute({ id: ASSET_ID })).resolves.toEqual({
+      id: asset.id,
+      technicalMetadata: asset.technicalMetadata,
+      content: CONTENT,
+    });
+    expect(storage.readReferences).toEqual([asset.storageReference]);
+  });
+
+  it.each([
+    { mimeType: 'video/mp4', durationMs: 273 },
+    { mimeType: 'audio/mp4', durationMs: undefined },
+  ])('does not deliver AUDIO outside the frozen profile (%o)', async (technical) => {
+    const asset = createAsset({
+      assetType: ASSET_AUDIO_TYPE,
+      technicalMetadata: {
+        mimeType: technical.mimeType,
+        sizeBytes: CONTENT.byteLength,
+        ...(technical.durationMs === undefined ? {} : { durationMs: technical.durationMs }),
+      },
+    });
+    const storage = new RecordingStorage(CONTENT);
+    const deliver = new DeliverAsset(new RecordingAssetReader(asset), storage);
+
+    await expect(deliver.execute({ id: ASSET_ID })).rejects.toMatchObject({
+      code: 'media.asset.delivery.not_found',
+    });
+    expect(storage.readReferences).toEqual([]);
   });
 
   it('rejects malformed Resource IDs before repository or Storage access', async () => {

@@ -270,7 +270,7 @@ function AuthenticatedCreatorWorkspace() {
   async function handleUploadMedia(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (!mediaFile) {
-      setErrorMessage('Choose an image file before uploading.');
+      setErrorMessage('Choose an image or Experience audio file before uploading.');
       return;
     }
     await perform(
@@ -636,14 +636,19 @@ function AuthenticatedCreatorWorkspace() {
           title="Upload a Media Asset"
           description="Binary storage and Asset lifecycle remain Media-owned. The workspace receives only the canonical Asset ID."
         >
+          <p className="mb-4 rounded-xl border border-amber-400/25 bg-amber-400/10 p-3 text-sm leading-6 text-amber-100/85">
+            Experience audio must be original, owned, properly licensed, royalty-cleared, or
+            otherwise rights-verified. Uploaded ACTIVE Media is public by Asset ID immediately, even
+            before a Page is published.
+          </p>
           <form onSubmit={handleUploadMedia} className="space-y-4">
             <label className="block text-sm font-medium" htmlFor="creator-media-file">
-              Image file
+              Image or Experience audio file
               <input
                 id="creator-media-file"
                 className={inputClassName}
                 type="file"
-                accept="image/png,image/jpeg"
+                accept="image/png,image/jpeg,audio/mp4"
                 disabled={busy}
                 onChange={(event) => setMediaFile(event.target.files?.[0] ?? null)}
               />

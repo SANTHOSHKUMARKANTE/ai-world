@@ -71,7 +71,7 @@ test.describe('Creator workspace', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           id: assetId,
-          assetType: 'IMAGE',
+          assetType: 'AUDIO',
           lifecycle: 'ACTIVE',
         }),
       });
@@ -137,10 +137,17 @@ test.describe('Creator workspace', () => {
     await page.getByRole('button', { name: 'Create Text Block' }).click();
     await expect(page.getByRole('button', { name: /Add Block/ })).toBeVisible();
 
-    await page.getByLabel('Image file').setInputFiles({
-      name: 'creator-proof.png',
-      mimeType: 'image/png',
-      buffer: Buffer.from('creator-media-proof'),
+    const mediaInput = page.getByLabel('Image or Experience audio file');
+    await expect(mediaInput).toHaveAttribute('accept', 'image/png,image/jpeg,audio/mp4');
+    await expect(
+      page.getByText(/Experience audio must be original, owned, properly licensed/),
+    ).toBeVisible();
+    await expect(page.getByText(/public by Asset ID immediately/)).toBeVisible();
+
+    await mediaInput.setInputFiles({
+      name: 'creator-proof.m4a',
+      mimeType: 'audio/mp4',
+      buffer: Buffer.from('creator-audio-proof'),
     });
     await page.getByRole('button', { name: 'Upload Media Asset' }).click();
     await expect(page.getByRole('button', { name: /Add Media/ })).toBeVisible();
@@ -221,7 +228,13 @@ test.describe('Creator workspace', () => {
               resourceType: 'devotional.deity',
               lifecycle: 'DRAFT',
             },
-            { position: 2, kind: 'MEDIA_ASSET', id: assetId, assetType: 'IMAGE' },
+            {
+              position: 2,
+              kind: 'MEDIA_ASSET',
+              id: assetId,
+              assetType: 'AUDIO',
+              durationMs: 273,
+            },
           ],
         }),
       });
@@ -230,9 +243,9 @@ test.describe('Creator workspace', () => {
     await page.route(`**/api/media/assets/${assetId}/content`, async (route) => {
       await route.fulfill({
         status: 200,
-        contentType: 'image/png',
+        contentType: 'audio/mp4',
         body: Buffer.from(
-          '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',
+          'AAAAHGZ0eXBNNEEgAAACAE00QSBpc29taXNvMgAAAyptb292AAAAbG12aGQAAAAAAAAAAAAAAAAAAAPoAAAA+gABAAABAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAACVXRyYWsAAABcdGtoZAAAAAMAAAAAAAAAAAAAAAEAAAAAAAAA+gAAAAAAAAAAAAAAAQEAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAACRlZHRzAAAAHGVsc3QAAAAAAAAAAQAAAPoAAAQAAAEAAAAAAc1tZGlhAAAAIG1kaGQAAAAAAAAAAAAAAAAAAKxEAAAvEVXEAAAAAAAtaGRscgAAAAAAAAAAc291bgAAAAAAAAAAAAAAAFNvdW5kSGFuZGxlcgAAAAF4bWluZgAAABBzbWhkAAAAAAAAAAAAAAAkZGluZgAAABxkcmVmAAAAAAAAAAEAAAAMdXJsIAAAAAEAAAE8c3RibAAAAGpzdHNkAAAAAAAAAAEAAABabXA0YQAAAAAAAAABAAAAAAAAAAAAAQAQAAAAAKxEAAAAAAA2ZXNkcwAAAAADgICAJQABAASAgIAXQBUAAAAAAH/CAAB/wgWAgIAFEghW5QAGgICAAQIAAAAgc3R0cwAAAAAAAAACAAAACwAABAAAAAABAAADEQAAABxzdHNjAAAAAAAAAAEAAAABAAAADAAAAAEAAABEc3RzegAAAAAAAAAAAAAADAAAAJkAAAChAAAAPQAAAEYAAABNAAAARQAAAE4AAABrAAAAUgAAAFgAAABOAAAAXQAAABRzdGNvAAAAAAAAAAEAAANWAAAAGnNncGQBAAAAcm9sbAAAAAIAAAAB//8AAAAcc2JncAAAAAByb2xsAAAAAQAAAAwAAAABAAAAYXVkdGEAAABZbWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAbWRpcmFwcGwAAAAAAAAAAAAAAAAsaWxzdAAAACSpdG9vAAAAHGRhdGEAAAABAAAAAExhdmY2MS43LjEwMwAAAAhmcmVlAAAEZW1kYXTeAgBMYXZjNjEuMTkuMTAxAAJgpVSQ2nIy88ennjVecuWq6yRHlJIvzCQbdwPwXqvYu+4bLalpH+PS83ver8ngbUxVY2zWmvPrJSaaqmK5iqMmlLJSyWmlJoyUKUZKMlEmtDaG0MDGzYMDIkQMbNmzaJEilNmzcUUUUUUUUUUUUUUUSIooooookREREhEUURFFEiKKIoooouABOJTayV2UU6sp1ZLpz/Ptxps8av/61+/XGuNXr/+14/nzxrjV6//i9/588a61qw3+tjR9FBgLoEywhZ+p1m8pjbnAZzgMDO4TMDAzuEhIMDO4SEgwMDO7hISsGBgZ3cJCTkJsJd/hCrDdT5y5XpSt6UJvZm5QkqSzBpQkJJXgaUJCSV5wY3KEhJUlm4MDGwkJKscvENRRRQaiiijXuM3QbgE68osa1457/Z+/t8W6aaXqpcjjkkki6kDuf3zpuzZjZ/chk+DDP7gZPgwz+8I+Pgwz+4HD4Az+4GT4A4ABCDKR4p0Ih1as+f/p/H/r/1l8XrWTPj8/E+367du6SqgmCaabGD1eqaZc00y5spsJl2jY/n68xKY/Ncpm2/8p+HXLEGzgAQYyiiJ9CIdMIdEIdC29f/37//X73ONdbnVZ6+s7+Md+ytVWmLHNPOc6innVPPOedQnnOqLmqb6XHnzp+V4BzxZJ4plAsMRWyzVCsXABCjKSAo0Ih1as9//r+f/X/e741cuuO/X3r5/fbt8TJeKvLwA0suHfev1yyyyyyymzZvGXGVVqr1iU01U0pkPbQ7fUBfgBBDKIljGekEOmZXv/07/x/ma4u731OfX33z8VzTvo6FQEvMdU5TFzUeXhr16/y1y1tbPNu7VyrZYDZnX2th26NXfT95ZYKLIi5BN0y8ABDDKQljKehEOhEOiEWhIOhHv/f5/8vver1Liol/p++DsyuDcACQkJjUZ9HxBdoAfT6fT6UfT6fSiDXA95wXtwUHzhiVhsbwoBtjZPG7TpYsPdB4zAfyxii0KwbvkUs4F7601axqd9JkHY3wD8MqTogV6ERahznf/17/0/6y+JxNVvr+P15zpXh6X1GSZeBExMNKvbPrMbAYemPTTLwrJBF8M52jS228SX0J2nqOqU3fxMsCNQVFhu3/JfW4ABCjKQljKOiEOiEOiEOkHr/44/n8S+Lksv8/fX7f47dmXUXmEAGBgaBl30TORxzUPlPzfL5fKecc1WUuYiHNckgDo2Vq4BgCofIlFCBicjRCs7WD2rQXrwATwyixqCDoxCVv+v6f+31cu7uXJJcW4VrSfESDHpkXIY3ZfVtjuNjX3dMmHZfVfvuj014192EmFV+/bHdHjXj092EkWEgqvqYtXbVfrwAVAyixoyFoiDoSDo1VXdzrV3cuXJLkkcUnEuauSA1m0c/u+abdl3P53GnNDcLfNBNuyuvtONZtDcPPNBNufdyNONZoW4YMrr7qGnGm4W+aDdldfacacfdfacaZDw',
           'base64',
         ),
       });
@@ -246,7 +259,12 @@ test.describe('Creator workspace', () => {
     await expect(items).toHaveCount(3);
     await expect(items.nth(0)).toContainText('First saved preview item.');
     await expect(items.nth(1)).toContainText('devotional.deity');
-    await expect(items.nth(2).getByRole('img')).toBeVisible();
+    const audio = items.nth(2).getByLabel('Draft media 3 in Controlled preview E2E');
+    await expect(audio).toBeVisible();
+    await expect(audio).toHaveAttribute('controls', '');
+    await expect(audio).toHaveAttribute('preload', 'none');
+    expect(await audio.getAttribute('autoplay')).toBeNull();
+    expect(await audio.getAttribute('loop')).toBeNull();
   });
 
   test('reviews an AI suggestion before accepting canonical Knowledge', async ({ page }) => {

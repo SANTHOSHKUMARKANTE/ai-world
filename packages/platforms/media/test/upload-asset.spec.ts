@@ -4,8 +4,10 @@ import { EvaluatePermission } from '@ai-world/platform-identity-access';
 import { describe, expect, it } from 'vitest';
 
 import {
+  ASSET_AUDIO_TYPE,
   ASSET_IMAGE_TYPE,
   ASSET_INITIAL_LIFECYCLE,
+  MEDIA_UPLOAD_AUDIO_MP4_MIME_TYPE,
   MEDIA_UPLOAD_MAX_BYTES,
   MEDIA_UPLOAD_PNG_MIME_TYPE,
   UploadAsset,
@@ -15,6 +17,7 @@ import {
   type AssetWriter,
   type CreateAssetRecordInput,
 } from '../src';
+import { AAC_LC_AUDIO_MP4 } from './audio-mp4-fixture';
 
 const PNG_BYTES = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]);
 
@@ -118,6 +121,45 @@ describe('UploadAsset', () => {
     expect(storage.writes[0]?.reference).toBe(asset.storageReference);
     expect(storage.writes[0]?.content).toEqual(PNG_BYTES);
     expect(writer.creates).toHaveLength(1);
+  });
+
+  it('stores validated AAC-LC audio/mp4 and persists canonical AUDIO duration', async () => {
+    const storage = new RecordingStorage();
+    const writer = new RecordingAssetWriter();
+    const upload = new UploadAsset(writer, storage);
+
+    const asset = await upload.execute({
+      content: AAC_LC_AUDIO_MP4,
+      mimeType: MEDIA_UPLOAD_AUDIO_MP4_MIME_TYPE,
+    });
+
+    expect(asset.assetType).toBe(ASSET_AUDIO_TYPE);
+    expect(asset.lifecycle).toBe(ASSET_INITIAL_LIFECYCLE);
+    expect(asset.technicalMetadata).toEqual({
+      mimeType: 'audio/mp4',
+      sizeBytes: AAC_LC_AUDIO_MP4.byteLength,
+      durationMs: 273,
+    });
+    expect(storage.writes[0]?.content).toEqual(AAC_LC_AUDIO_MP4);
+    expect(writer.creates).toHaveLength(1);
+  });
+
+  it('rejects AAC-LC bytes when declared as video/mp4', async () => {
+    const storage = new RecordingStorage();
+    const writer = new RecordingAssetWriter();
+    const upload = new UploadAsset(writer, storage);
+
+    await expect(
+      upload.execute({
+        content: AAC_LC_AUDIO_MP4,
+        mimeType: 'video/mp4',
+      }),
+    ).rejects.toMatchObject({
+      code: 'media.asset.upload.invalid_input',
+    });
+
+    expect(storage.writes).toHaveLength(0);
+    expect(writer.creates).toHaveLength(0);
   });
 
   it('rejects unsupported media before touching Storage or persistence', async () => {

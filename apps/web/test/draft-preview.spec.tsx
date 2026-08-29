@@ -159,4 +159,52 @@ describe('Controlled draft preview', () => {
     expect(video.preload).toBe('none');
     expect(video.getAttribute('poster')).toBeNull();
   });
+
+  it('uses the same user-started AUDIO semantics in controlled Creator preview', async () => {
+    const pageId = '99999999-9999-4999-8999-999999999999';
+    const audioId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({
+          actorId: 'preview-actor',
+          expiresAt: '2026-08-22T12:00:00.000Z',
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          page: {
+            id: pageId,
+            universeKey: 'universe.devotional',
+            routePath: '/preview-audio-proof',
+            title: 'Draft audio parity',
+            lifecycle: 'DRAFT',
+          },
+          items: [
+            {
+              position: 0,
+              kind: 'MEDIA_ASSET',
+              id: audioId,
+              assetType: 'AUDIO',
+              durationMs: 273,
+            },
+          ],
+        }),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <SessionProvider>
+        <DraftPreview pageId={pageId} />
+      </SessionProvider>,
+    );
+
+    await screen.findByRole('heading', { name: 'Draft audio parity' });
+    const audio = screen.getByLabelText('Draft media 1 in Draft audio parity') as HTMLAudioElement;
+    expect(audio.getAttribute('src')).toBe(`/api/media/assets/${audioId}/content`);
+    expect(audio.controls).toBe(true);
+    expect(audio.autoplay).toBe(false);
+    expect(audio.loop).toBe(false);
+    expect(audio.preload).toBe('none');
+  });
 });

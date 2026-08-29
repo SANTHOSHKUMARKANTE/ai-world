@@ -27,6 +27,25 @@ const VALID_PNG = Buffer.from(
   'base64',
 );
 
+const VALID_AAC_LC_AUDIO = Buffer.from(
+  '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',
+  'base64',
+);
+
+function nonAacLcAudio(): Buffer {
+  const result = Buffer.from(VALID_AAC_LC_AUDIO);
+  const marker = Buffer.from([0x05, 0x80, 0x80, 0x80, 0x05]);
+  const markerIndex = result.indexOf(marker);
+
+  if (markerIndex < 0) {
+    throw new Error('AAC-LC integration fixture DecoderSpecificInfo marker was not found.');
+  }
+
+  const configIndex = markerIndex + marker.byteLength;
+  result[configIndex] = (5 << 3) | (result[configIndex]! & 0x07);
+  return result;
+}
+
 function mp4Box(type: string, payload: Buffer): Buffer {
   const result = Buffer.alloc(8 + payload.byteLength);
   result.writeUInt32BE(result.byteLength, 0);
@@ -459,6 +478,75 @@ describe('Media Upload API', () => {
 
     const stored = await readFile(join(storageRoot, 'media', 'assets', id, 'original'));
     expect(stored).toEqual(video);
+  });
+
+  it('stores AAC-LC audio/mp4 as canonical AUDIO with duration and audit evidence', async () => {
+    const actor = await signInAdministrator('audio-success');
+
+    const response = await request(app.getHttpServer())
+      .post('/media/assets')
+      .set('Cookie', actor.cookiePair)
+      .attach('file', VALID_AAC_LC_AUDIO, {
+        filename: 'rights-safe-audio.m4a',
+        contentType: 'audio/mp4',
+      })
+      .expect(201);
+
+    const id = response.body.id as string;
+    createdAssetIds.add(id);
+
+    expect(response.body).toMatchObject({
+      id,
+      assetType: 'AUDIO',
+      technicalMetadata: {
+        mimeType: 'audio/mp4',
+        sizeBytes: VALID_AAC_LC_AUDIO.byteLength,
+        durationMs: 273,
+      },
+      lifecycle: 'ACTIVE',
+    });
+
+    const persisted = await database.asset.findUniqueOrThrow({ where: { id } });
+    expect(persisted.assetType).toBe('AUDIO');
+    expect(persisted.mimeType).toBe('audio/mp4');
+    expect(persisted.durationMs).toBe(273);
+
+    const auditRecord = await database.auditRecord.findFirstOrThrow({
+      where: {
+        actorId: actor.actorId,
+        action: 'media.asset.upload',
+        resourceType: 'media.asset',
+        resourceId: id,
+        result: 'media.asset.created',
+      },
+    });
+    expect(auditRecord.context).toMatchObject({
+      assetType: 'AUDIO',
+      mimeType: 'audio/mp4',
+      sizeBytes: VALID_AAC_LC_AUDIO.byteLength,
+      durationMs: 273,
+      lifecycle: 'ACTIVE',
+    });
+
+    const stored = await readFile(join(storageRoot, 'media', 'assets', id, 'original'));
+    expect(stored).toEqual(VALID_AAC_LC_AUDIO);
+  });
+
+  it('rejects non-AAC-LC mp4a content before persistence or Storage', async () => {
+    const actor = await signInAdministrator('audio-non-lc');
+    const before = await currentAssetCount();
+
+    const response = await request(app.getHttpServer())
+      .post('/media/assets')
+      .set('Cookie', actor.cookiePair)
+      .attach('file', nonAacLcAudio(), {
+        filename: 'unsupported-audio.m4a',
+        contentType: 'audio/mp4',
+      })
+      .expect(400);
+
+    expect(response.body.error.code).toBe('media.asset.upload.invalid_input');
+    expect(await currentAssetCount()).toBe(before);
   });
 
   it('rejects an overlong MP4 before creating an Asset or stored object', async () => {

@@ -3,6 +3,7 @@ import type { StorageObjectStore } from '@ai-world/foundation-storage';
 import { parseResourceId } from '@ai-world/kernel-identifiers';
 
 import {
+  ASSET_AUDIO_TYPE,
   ASSET_IMAGE_TYPE,
   ASSET_INITIAL_LIFECYCLE,
   ASSET_VIDEO_TYPE,
@@ -12,6 +13,7 @@ import {
 import type { AssetReader } from './asset-reader';
 import {
   MEDIA_SHORT_VIDEO_MAX_DURATION_MS,
+  MEDIA_UPLOAD_AUDIO_MP4_MIME_TYPE,
   MEDIA_UPLOAD_MP4_MIME_TYPE,
 } from './media-upload-policy';
 
@@ -45,14 +47,26 @@ function assetNotDeliverable(): ApplicationError {
   });
 }
 
+function isPositiveIntegerDuration(value: number | undefined): value is number {
+  return value !== undefined && Number.isInteger(value) && value > 0;
+}
+
 function isBoundedDeliverableVideo(asset: Asset): boolean {
+  const durationMs = asset.technicalMetadata.durationMs;
+
   return (
     asset.assetType === ASSET_VIDEO_TYPE &&
     asset.technicalMetadata.mimeType === MEDIA_UPLOAD_MP4_MIME_TYPE &&
-    asset.technicalMetadata.durationMs !== undefined &&
-    Number.isInteger(asset.technicalMetadata.durationMs) &&
-    asset.technicalMetadata.durationMs > 0 &&
-    asset.technicalMetadata.durationMs <= MEDIA_SHORT_VIDEO_MAX_DURATION_MS
+    isPositiveIntegerDuration(durationMs) &&
+    durationMs <= MEDIA_SHORT_VIDEO_MAX_DURATION_MS
+  );
+}
+
+function isDeliverableAudio(asset: Asset): boolean {
+  return (
+    asset.assetType === ASSET_AUDIO_TYPE &&
+    asset.technicalMetadata.mimeType === MEDIA_UPLOAD_AUDIO_MP4_MIME_TYPE &&
+    isPositiveIntegerDuration(asset.technicalMetadata.durationMs)
   );
 }
 
@@ -76,7 +90,9 @@ export class DeliverAsset {
     if (
       !asset ||
       asset.lifecycle !== ASSET_INITIAL_LIFECYCLE ||
-      (asset.assetType !== ASSET_IMAGE_TYPE && !isBoundedDeliverableVideo(asset))
+      (asset.assetType !== ASSET_IMAGE_TYPE &&
+        !isBoundedDeliverableVideo(asset) &&
+        !isDeliverableAudio(asset))
     ) {
       throw assetNotDeliverable();
     }

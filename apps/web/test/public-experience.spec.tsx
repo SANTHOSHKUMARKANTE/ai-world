@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { PublicExperience } from '../src/creator/public-experience';
@@ -15,7 +15,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('UXP-05B public Experience Media', () => {
+describe('UXP-05C public Experience Media', () => {
   it('renders published Block and Knowledge content without requiring a Session provider', async () => {
     const pageId = '11111111-1111-4111-8111-111111111111';
     const knowledgeId = '22222222-2222-4222-8222-222222222222';
@@ -96,6 +96,7 @@ describe('UXP-05B public Experience Media', () => {
               kind: 'MEDIA_ASSET',
               id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
               assetType: 'AUDIO',
+              durationMs: 273,
             },
             {
               position: 3,
@@ -128,7 +129,19 @@ describe('UXP-05B public Experience Media', () => {
     expect(video.preload).toBe('none');
     expect(video.getAttribute('poster')).toBeNull();
 
-    expect(screen.getByText('Audio playback is not available for this Experience.')).toBeTruthy();
+    const audio = screen.getByLabelText(
+      'Published media 3 in Typed Media proof',
+    ) as HTMLAudioElement;
+    expect(audio.getAttribute('src')).toBe(
+      '/api/media/assets/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa/content',
+    );
+    expect(audio.controls).toBe(true);
+    expect(audio.autoplay).toBe(false);
+    expect(audio.loop).toBe(false);
+    expect(audio.preload).toBe('none');
+
+    fireEvent.error(audio);
+    expect(screen.getByText('This audio is not available for this Experience.')).toBeTruthy();
     expect(screen.getByText('This video is not available for this Experience.')).toBeTruthy();
   });
 

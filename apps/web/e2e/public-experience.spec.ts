@@ -16,7 +16,7 @@ async function mockAnonymousSession(page: Page): Promise<void> {
   });
 }
 
-test.describe('UXP-05B published Experience Media', () => {
+test.describe('UXP-05C published Experience Media', () => {
   test('renders the published seam and keeps campaign entry canonical', async ({
     page,
   }, testInfo) => {
@@ -115,9 +115,7 @@ test.describe('UXP-05B published Experience Media', () => {
     });
   });
 
-  test('renders user-started VIDEO controls and degrades unsupported Media at 390px', async ({
-    page,
-  }) => {
+  test('renders user-started VIDEO and AUDIO controls without overflow', async ({ page }) => {
     const pageId = '77777777-7777-4777-8777-777777777777';
     const videoId = '88888888-8888-4888-8888-888888888888';
     await page.setViewportSize({ width: 390, height: 844 });
@@ -148,6 +146,7 @@ test.describe('UXP-05B published Experience Media', () => {
               kind: 'MEDIA_ASSET',
               id: '99999999-9999-4999-8999-999999999999',
               assetType: 'AUDIO',
+              durationMs: 273,
             },
             {
               position: 2,
@@ -169,15 +168,24 @@ test.describe('UXP-05B published Experience Media', () => {
     expect(await video.getAttribute('autoplay')).toBeNull();
     expect(await video.getAttribute('loop')).toBeNull();
     expect(await video.getAttribute('poster')).toBeNull();
-    await expect(
-      page.getByText('Audio playback is not available for this Experience.'),
-    ).toBeVisible();
+    const audio = page.getByLabel('Published media 2 in Typed Media proof');
+    await expect(audio).toBeVisible();
+    await expect(audio).toHaveAttribute('controls', '');
+    await expect(audio).toHaveAttribute('preload', 'none');
+    expect(await audio.getAttribute('autoplay')).toBeNull();
+    expect(await audio.getAttribute('loop')).toBeNull();
     await expect(page.getByText('This video is not available for this Experience.')).toBeVisible();
 
-    const overflow = await page.evaluate(
+    const mobileOverflow = await page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
     );
-    expect(overflow).toBe(false);
+    expect(mobileOverflow).toBe(false);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    const desktopOverflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    );
+    expect(desktopOverflow).toBe(false);
   });
 
   test('renders a clear public not-found state without creator controls', async ({ page }) => {

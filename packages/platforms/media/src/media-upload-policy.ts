@@ -1,9 +1,11 @@
 import {
+  ASSET_AUDIO_TYPE,
   ASSET_IMAGE_TYPE,
   ASSET_VIDEO_TYPE,
   type AssetTechnicalMetadata,
   type AssetType,
 } from './asset';
+import { inspectMp4Audio } from './mp4-audio';
 import { inspectShortMp4Video } from './mp4-short-video';
 
 export const MEDIA_UPLOAD_MAX_BYTES = 10 * 1024 * 1024;
@@ -12,12 +14,15 @@ export const MEDIA_SHORT_VIDEO_MAX_DURATION_MS = 8000;
 export const MEDIA_UPLOAD_PNG_MIME_TYPE = 'image/png' as const;
 export const MEDIA_UPLOAD_JPEG_MIME_TYPE = 'image/jpeg' as const;
 export const MEDIA_UPLOAD_MP4_MIME_TYPE = 'video/mp4' as const;
+export const MEDIA_UPLOAD_AUDIO_MP4_MIME_TYPE = 'audio/mp4' as const;
 
 export type SupportedImageUploadMimeType =
   typeof MEDIA_UPLOAD_PNG_MIME_TYPE | typeof MEDIA_UPLOAD_JPEG_MIME_TYPE;
 
 export type SupportedMediaUploadMimeType =
-  SupportedImageUploadMimeType | typeof MEDIA_UPLOAD_MP4_MIME_TYPE;
+  | SupportedImageUploadMimeType
+  | typeof MEDIA_UPLOAD_MP4_MIME_TYPE
+  | typeof MEDIA_UPLOAD_AUDIO_MP4_MIME_TYPE;
 
 export interface ValidatedMediaUpload {
   readonly assetType: AssetType;
@@ -74,10 +79,11 @@ export function validateMediaUpload(
   if (
     declaredMimeType !== MEDIA_UPLOAD_PNG_MIME_TYPE &&
     declaredMimeType !== MEDIA_UPLOAD_JPEG_MIME_TYPE &&
-    declaredMimeType !== MEDIA_UPLOAD_MP4_MIME_TYPE
+    declaredMimeType !== MEDIA_UPLOAD_MP4_MIME_TYPE &&
+    declaredMimeType !== MEDIA_UPLOAD_AUDIO_MP4_MIME_TYPE
   ) {
     throw new TypeError(
-      'Uploaded media type is not supported. Upload supports image/png, image/jpeg and bounded video/mp4.',
+      'Uploaded media type is not supported. Upload supports image/png, image/jpeg, bounded video/mp4 and AAC-LC audio/mp4.',
     );
   }
 
@@ -94,6 +100,19 @@ export function validateMediaUpload(
       assetType: ASSET_VIDEO_TYPE,
       technicalMetadata: {
         mimeType: MEDIA_UPLOAD_MP4_MIME_TYPE,
+        sizeBytes: content.byteLength,
+        durationMs: inspection.durationMs,
+      },
+    };
+  }
+
+  if (declaredMimeType === MEDIA_UPLOAD_AUDIO_MP4_MIME_TYPE) {
+    const inspection = inspectMp4Audio(content);
+
+    return {
+      assetType: ASSET_AUDIO_TYPE,
+      technicalMetadata: {
+        mimeType: MEDIA_UPLOAD_AUDIO_MP4_MIME_TYPE,
         sizeBytes: content.byteLength,
         durationMs: inspection.durationMs,
       },
