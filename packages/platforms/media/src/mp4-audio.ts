@@ -291,6 +291,147 @@ function esDescriptorChildrenStart(content: Uint8Array, descriptor: IsoDescripto
   return cursor;
 }
 
+class AudioSpecificConfigBitReader {
+  private bitOffset = 0;
+
+  public constructor(
+    private readonly content: Uint8Array,
+    private readonly start: number,
+    private readonly end: number,
+  ) {
+    if (start < 0 || end < start || end > content.byteLength) {
+      throw invalidAudioMp4('AudioSpecificConfig bounds are invalid.');
+    }
+  }
+
+  public get remainingBits(): number {
+    return (this.end - this.start) * 8 - this.bitOffset;
+  }
+
+  public readBits(count: number, label: string): number {
+    if (!Number.isInteger(count) || count <= 0 || count > 24) {
+      throw invalidAudioMp4(`unsupported AudioSpecificConfig bit read for ${label}.`);
+    }
+
+    if (this.remainingBits < count) {
+      throw invalidAudioMp4(`AudioSpecificConfig is truncated while reading ${label}.`);
+    }
+
+    let value = 0;
+
+    for (let index = 0; index < count; index += 1) {
+      const absoluteBit = this.bitOffset + index;
+      const byte = this.content[this.start + Math.floor(absoluteBit / 8)]!;
+      const bit = (byte >> (7 - (absoluteBit % 8))) & 1;
+      value = value * 2 + bit;
+    }
+
+    this.bitOffset += count;
+    return value;
+  }
+
+  public consumeZeroPadding(): void {
+    while (this.remainingBits > 0) {
+      if (this.readBits(1, 'zero padding') !== 0) {
+        throw invalidAudioMp4('unsupported non-zero AudioSpecificConfig trailing bits.');
+      }
+    }
+  }
+}
+
+function readAudioObjectType(reader: AudioSpecificConfigBitReader): number {
+  const audioObjectType = reader.readBits(5, 'audioObjectType');
+
+  if (audioObjectType !== 31) {
+    return audioObjectType;
+  }
+
+  return 32 + reader.readBits(6, 'extended audioObjectType');
+}
+
+function assertAacLcAudioSpecificConfig(content: Uint8Array, decoderSpecific: IsoDescriptor): void {
+  const reader = new AudioSpecificConfigBitReader(
+    content,
+    decoderSpecific.payloadStart,
+    decoderSpecific.end,
+  );
+  const audioObjectType = readAudioObjectType(reader);
+
+  if (audioObjectType !== 2) {
+    throw invalidAudioMp4(
+      `AAC-LC Audio Object Type 2 is required; found ${String(audioObjectType)}.`,
+    );
+  }
+
+  const samplingFrequencyIndex = reader.readBits(4, 'samplingFrequencyIndex');
+
+  if (samplingFrequencyIndex === 0x0f) {
+    const explicitSamplingFrequency = reader.readBits(24, 'explicit sampling frequency');
+    if (explicitSamplingFrequency <= 0) {
+      throw invalidAudioMp4('AAC-LC explicit sampling frequency must be positive.');
+    }
+  } else if (samplingFrequencyIndex > 12) {
+    throw invalidAudioMp4(
+      `AAC-LC samplingFrequencyIndex ${String(samplingFrequencyIndex)} is reserved.`,
+    );
+  }
+
+  const channelConfiguration = reader.readBits(4, 'channelConfiguration');
+  if (channelConfiguration < 1 || channelConfiguration > 7) {
+    throw invalidAudioMp4('Initial AAC-LC profile requires channelConfiguration between 1 and 7.');
+  }
+
+  reader.readBits(1, 'frameLengthFlag');
+
+  if (reader.readBits(1, 'dependsOnCoreCoder') === 1) {
+    reader.readBits(14, 'coreCoderDelay');
+  }
+
+  const extensionFlag = reader.readBits(1, 'extensionFlag');
+
+  if (extensionFlag === 1) {
+    const extensionFlag3 = reader.readBits(1, 'extensionFlag3');
+    if (extensionFlag3 !== 0) {
+      throw invalidAudioMp4('AAC-LC extensionFlag3 must be zero.');
+    }
+  }
+
+  if (reader.remainingBits === 0) {
+    return;
+  }
+
+  if (reader.remainingBits < 11) {
+    reader.consumeZeroPadding();
+    return;
+  }
+
+  const syncExtensionType = reader.readBits(11, 'syncExtensionType');
+
+  if (syncExtensionType === 0) {
+    reader.consumeZeroPadding();
+    return;
+  }
+
+  if (syncExtensionType !== 0x2b7) {
+    throw invalidAudioMp4(
+      `unsupported AudioSpecificConfig sync extension 0x${syncExtensionType.toString(16)}.`,
+    );
+  }
+
+  const extensionAudioObjectType = readAudioObjectType(reader);
+  if (extensionAudioObjectType !== 5) {
+    throw invalidAudioMp4(
+      `unsupported AudioSpecificConfig extension Audio Object Type ${String(extensionAudioObjectType)}.`,
+    );
+  }
+
+  if (reader.readBits(1, 'sbrPresentFlag') !== 0) {
+    throw invalidAudioMp4('SBR/HE-AAC is outside the initial AAC-LC profile.');
+  }
+
+  reader.consumeZeroPadding();
+}
+
 function assertAacLcCodecConfiguration(content: Uint8Array, esds: IsoBox): void {
   if (esds.end - esds.payloadStart < 5) {
     throw invalidAudioMp4('esds metadata is truncated.');
@@ -330,12 +471,7 @@ function assertAacLcCodecConfiguration(content: Uint8Array, esds: IsoBox): void 
     throw invalidAudioMp4('AudioSpecificConfig is empty.');
   }
 
-  const audioObjectType = content[decoderSpecific.payloadStart]! >> 3;
-  if (audioObjectType !== 2) {
-    throw invalidAudioMp4(
-      `AAC-LC Audio Object Type 2 is required; found ${String(audioObjectType)}.`,
-    );
-  }
+  assertAacLcAudioSpecificConfig(content, decoderSpecific);
 }
 
 function audioSampleEntryChildrenStart(content: Uint8Array, entry: IsoBox): number {

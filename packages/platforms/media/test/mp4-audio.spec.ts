@@ -21,6 +21,62 @@ describe('inspectMp4Audio', () => {
     );
   });
 
+  it('rejects truncated AudioSpecificConfig even when the first AOT bits say AAC-LC', () => {
+    const result = Buffer.from(AAC_LC_AUDIO_MP4);
+    const marker = Buffer.from([0x05, 0x80, 0x80, 0x80, 0x05]);
+    const markerIndex = result.indexOf(marker);
+
+    expect(markerIndex).toBeGreaterThanOrEqual(0);
+    result[markerIndex + 4] = 1;
+
+    expect(() => inspectMp4Audio(result)).toThrow(
+      'AudioSpecificConfig is truncated while reading samplingFrequencyIndex',
+    );
+  });
+
+  it('rejects extensionFlag metadata truncated before mandatory extensionFlag3', () => {
+    const result = Buffer.from(AAC_LC_AUDIO_MP4);
+    const marker = Buffer.from([0x05, 0x80, 0x80, 0x80, 0x05]);
+    const markerIndex = result.indexOf(marker);
+
+    expect(markerIndex).toBeGreaterThanOrEqual(0);
+    result[markerIndex + 4] = 2;
+    const configIndex = markerIndex + marker.byteLength;
+    result[configIndex + 1] = result[configIndex + 1]! | 0x01;
+
+    expect(() => inspectMp4Audio(result)).toThrow(
+      'AudioSpecificConfig is truncated while reading extensionFlag3',
+    );
+  });
+
+  it('rejects non-zero AAC-LC extensionFlag3', () => {
+    const result = Buffer.from(AAC_LC_AUDIO_MP4);
+    const marker = Buffer.from([0x05, 0x80, 0x80, 0x80, 0x05]);
+    const markerIndex = result.indexOf(marker);
+
+    expect(markerIndex).toBeGreaterThanOrEqual(0);
+    result[markerIndex + 4] = 3;
+    const configIndex = markerIndex + marker.byteLength;
+    result[configIndex + 1] = result[configIndex + 1]! | 0x01;
+    result[configIndex + 2] = result[configIndex + 2]! | 0x80;
+
+    expect(() => inspectMp4Audio(result)).toThrow('AAC-LC extensionFlag3 must be zero');
+  });
+
+  it('rejects implicit SBR/HE-AAC signalled through the AAC sync extension', () => {
+    const result = Buffer.from(AAC_LC_AUDIO_MP4);
+    const marker = Buffer.from([0x05, 0x80, 0x80, 0x80, 0x05]);
+    const markerIndex = result.indexOf(marker);
+
+    expect(markerIndex).toBeGreaterThanOrEqual(0);
+    const configIndex = markerIndex + marker.byteLength;
+    result[configIndex + 4] = result[configIndex + 4]! | 0x80;
+
+    expect(() => inspectMp4Audio(result)).toThrow(
+      'SBR/HE-AAC is outside the initial AAC-LC profile',
+    );
+  });
+
   it('rejects video-only and mixed audio/video MP4 content', () => {
     expect(() => inspectMp4Audio(asVideoOnly(AAC_LC_AUDIO_MP4))).toThrow(
       'VIDEO tracks are not permitted',
