@@ -441,7 +441,7 @@ Current accepted routes now include:
 | `/creator/series/[id]/preview` | Creator-only Anime Series draft preview accepted through UXP-04C at `1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07` |
 | `/creator/preview/[id]` | Creator preview |
 | `/devotional/[slug]` | Devotional Entity Experience |
-| `/experiences/[id]` | Published composed Experience |
+| `/experiences/[id]` | Finished Public Experience destination — UXP-05 CLOSED and accepted at `527921f3587b3c5d011a8c9ef0565bc4fc39c5ce` |
 | `/forgot-password` | Identity recovery |
 | `/knowledge` | Knowledge browse |
 | `/knowledge/resources/[id]` | Generic Knowledge detail |
@@ -1134,7 +1134,7 @@ CLOSED — ACCEPTED
 Status:
 
 ```text
-ACTIVE — UXP-05D ACCEPTANCE NEXT
+CLOSED — ACCEPTED
 ```
 
 The detailed frozen implementation/acceptance contract is:
@@ -1156,7 +1156,7 @@ UXP-05C — User-started AUDIO capability gate
 CLOSED — ACCEPTED — 0cb1548541cc3f57164cb25a739b2fa1ee75d522
 
 UXP-05D — Reuse + full Experience acceptance
-ACTIVE — ACCEPTANCE NEXT
+CLOSED — ACCEPTED — 527921f3587b3c5d011a8c9ef0565bc4fc39c5ce
 ```
 
 UXP-05C implementation history:
@@ -1219,16 +1219,64 @@ architecture 0 violations across 767 modules / 2500 dependencies;
 exact final hardening checkpoint CI #249 green.
 ```
 
-UXP-05D is now the active final acceptance gate. It must execute the existing
-detailed acceptance matrix across reusable Experience compositions, responsive
-breakpoints, lifecycle/role states, Media/accessibility behavior,
-canonical/social behavior and protected regressions.
+UXP-05D and complete UXP-05 acceptance are accepted at:
 
-UXP-05D is acceptance-first. Production changes are allowed only when acceptance
-exposes a real defect. It does not authorize Search expansion, a new Experience
-backend, AUDIO Knowledge placement, generic Media infrastructure or UXP-06 work.
+```text
+527921f3587b3c5d011a8c9ef0565bc4fc39c5ce
+test(web): prove full experience acceptance
+GitHub CI run 251
+run id 33252939400
+success
+```
+
+Accepted final UXP-05 evidence includes:
+
+```text
+UXP-05D acceptance-only checkpoint with no Public Experience production change;
+Devotional + Anime reusable Experience proof;
+1440px / 834px / 390px responsive matrix;
+single IMAGE, bounded VIDEO, user-started AUDIO, multi-Block and Knowledge compositions;
+mixed Block + Knowledge + Media composition;
+anonymous / authenticated / Creator authorization boundaries;
+DRAFT / ARCHIVED non-public and PUBLISHED public behavior;
+Creator-preview / public composition parity;
+loading / error / not-found / degraded Media / sparse content behavior;
+missing referenced public content omission retained through API integration;
+keyboard focus / semantic structure / reduced motion / no audible autoplay;
+390px no-horizontal-overflow proof;
+campaign-safe canonical identity;
+Open Graph title / description and eligible IMAGE precedence;
+no fabricated VIDEO / AUDIO social image;
+focused Web unit 12 / 12;
+root unit pipeline 37 / 37 tasks;
+32 migrations and schema up to date;
+focused API integration 29 / 29;
+full API integration 185 / 185;
+focused browser acceptance 13 / 13;
+full Web browser E2E 87 / 87;
+production build 22 / 22 tasks;
+fresh-process production canonical/social proof;
+architecture 0 violations across 768 modules / 2501 dependencies;
+reviewed evidence ZIP;
+exact acceptance checkpoint / push / GitHub CI #251 green.
+```
+
+UXP-05D is CLOSED — ACCEPTED.
+
+UXP-05 is CLOSED — ACCEPTED.
+
+UXP-06 is the next eligible page but remains NOT STARTED until this docs-only
+UXP-05 closure transition is itself committed, pushed and exact remote CI is
+green. This closure checkpoint does not activate or implement UXP-06.
 
 ## UXP-06 / UXP-07 — Devotional
+Current state:
+
+```text
+UXP-06 — NOT STARTED — GATED ON UXP-05 CLOSURE REMOTE CI
+UXP-07 — NOT STARTED — GATED ON UXP-06 ACCEPTANCE
+```
+
 
 Devotional pages reuse shared Platform behavior but switch composition and visual cadence toward calm, reverence and breathing room.
 
@@ -1462,7 +1510,6 @@ WPR-M05 receives its roadmap closure update only when the entire accepted gate i
 ---
 
 # 16. Immediate Next Work
-
 The accepted execution position is now:
 
 ```text
@@ -1470,10 +1517,13 @@ UXP-04 — Anime Series
 CLOSED — ACCEPTED
         ↓
 UXP-05 — Public Experience
-ACTIVE — UXP-05D ACCEPTANCE NEXT
+CLOSED — ACCEPTED — 527921f3587b3c5d011a8c9ef0565bc4fc39c5ce
+        ↓
+UXP-06 — Devotional Deity
+NOT STARTED — GATED ON UXP-05 CLOSURE REMOTE CI
 ```
 
-Accepted UXP-05 checkpoints:
+Complete UXP-05 accepted checkpoints:
 
 ```text
 UXP-05A — CLOSED — ACCEPTED
@@ -1484,26 +1534,29 @@ UXP-05B — CLOSED — ACCEPTED
 
 UXP-05C — CLOSED — ACCEPTED
 0cb1548541cc3f57164cb25a739b2fa1ee75d522
-GitHub CI #249 / run 33247968029 — success
+
+UXP-05D / complete UXP-05 — CLOSED — ACCEPTED
+527921f3587b3c5d011a8c9ef0565bc4fc39c5ce
+GitHub CI #251 / run 33252939400 — success
 ```
 
-Next execute only:
+This docs-only checkpoint closes UXP-05. It does not activate UXP-06.
+
+After this closure transition is reviewed, manually committed/pushed and exact
+remote CI is green, the next page workflow is:
 
 ```text
-UXP-05D — Reuse + full Experience acceptance
+inspect the exact accepted UXP-05 closure baseline
+        ↓
+freeze the detailed UXP-06 Devotional Deity contract
+        ↓
+activate only the first bounded UXP-06 slice
+        ↓
+then begin implementation
 ```
 
-This is acceptance-first work. Use the detailed UXP-05D Frozen Acceptance Matrix
-to prove reusable Experience composition, responsive behavior, lifecycle/role
-states, canonical/social behavior, user-started Media/accessibility and protected
-regressions.
-
-Do not add production behavior unless acceptance exposes a real defect. Do not
-start Search expansion, AUDIO Knowledge placement, generic Media/transcoding
-work, a new Experience backend, UXP-06 or any later milestone.
-
-UXP-08 Search expansion remains not started. UXP-06 remains blocked until the
-complete UXP-05 milestone is accepted at an exact remote-green checkpoint.
+Do not begin UXP-06 production work before that separate activation checkpoint.
+UXP-07 remains later. UXP-08 Search expansion remains not started.
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Web Product
 Readiness gate, and P10-M04 remains sequencing-blocked.

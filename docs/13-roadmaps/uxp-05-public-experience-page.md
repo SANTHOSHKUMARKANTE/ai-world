@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-05 |
 | Area | Product / Web / Composition / Media / Knowledge / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-05D ACCEPTANCE ACTIVE |
+| Status | CLOSED — ACCEPTED |
 | Created | 2026-08-27 |
 | Activation Baseline | `95836f344dbf523b20591cc20536f1517a1cb060` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -403,7 +403,7 @@ UXP-05C is CLOSED — ACCEPTED.
 
 ## UXP-05D — Reuse + full Experience acceptance
 
-Status: `ACTIVE — ACCEPTANCE NEXT`
+Status: `CLOSED — ACCEPTED`
 
 UXP-05D is acceptance-first. No new production feature is planned by this
 transition. The existing UXP-05D Frozen Acceptance Matrix remains the governing
@@ -414,6 +414,73 @@ shapes and applicable product states.
 
 **Production changes in UXP-05D are allowed only when acceptance exposes a real
 defect.**
+
+Accepted UXP-05D / complete UXP-05 checkpoint:
+
+```text
+527921f3587b3c5d011a8c9ef0565bc4fc39c5ce
+test(web): prove full experience acceptance
+GitHub CI run 251
+run id 33252939400
+success
+```
+
+Accepted UXP-05D / complete UXP-05 evidence includes:
+
+```text
+acceptance-only checkpoint; no Public Experience production change was required;
+reusable Devotional and Anime Experience compositions;
+desktop 1440px, tablet 834px and 390px-class mobile proof;
+single IMAGE composition;
+bounded short-motion VIDEO composition;
+IMAGE + user-started AUDIO composition;
+multi-Block composition;
+Knowledge reference;
+mixed Block + Knowledge + Media composition;
+minimal / empty valid published composition retained through existing regression coverage;
+anonymous public visitor;
+authenticated shared shell;
+authorized Creator preview;
+unauthorized Creator preview rejection;
+DRAFT and ARCHIVED non-public behavior;
+PUBLISHED public behavior;
+Creator-preview / public composition parity;
+loading, unexpected-error and not-found states;
+missing referenced public Knowledge omission retained through focused API integration;
+unsupported/degraded Media behavior;
+sparse optional content;
+no eligible social-image production proof;
+keyboard-first focus proof and semantic content structure;
+reduced-motion proof;
+native keyboard-accessible media controls;
+no audible autoplay;
+no 390px horizontal overflow;
+campaign-safe canonical /experiences/[id] identity;
+Open Graph title / description;
+first eligible IMAGE social precedence;
+VIDEO / AUDIO never fabricate a social image;
+focused Experience Web unit 3 files / 12 tests;
+root unit pipeline 37 / 37 tasks;
+32 canonical migrations with schema up to date;
+focused Composition / Media API integration 3 files / 29 tests;
+full API integration 26 files / 185 tests;
+focused browser acceptance 13 / 13;
+full Web browser E2E 87 / 87;
+production build 22 / 22 tasks;
+fresh-process production canonical/social proof;
+architecture validation with 0 violations across 768 modules / 2501 dependencies;
+reviewed UXP-05D evidence ZIP;
+exact acceptance checkpoint committed and pushed;
+GitHub CI #251 / run 33252939400 green on the exact checkpoint.
+```
+
+UXP-05D is therefore CLOSED — ACCEPTED.
+
+UXP-05 is therefore CLOSED — ACCEPTED.
+
+UXP-06 remains NOT STARTED. It may not be activated or implemented until this
+UXP-05 closure transition itself is reviewed, manually committed/pushed,
+independently verified at its exact remote SHA and green in GitHub CI.
 
 ---
 
@@ -521,102 +588,56 @@ Master Roadmap.
 ---
 
 # 12. Current Position
-
-After the UXP-05C AUDIO implementation and final AAC validation hardening are
-independently verified at exact remote checkpoint
-`0cb1548541cc3f57164cb25a739b2fa1ee75d522` with GitHub CI #249 green:
+After the complete UXP-05D acceptance checkpoint is independently verified at
+exact remote checkpoint `527921f3587b3c5d011a8c9ef0565bc4fc39c5ce` with GitHub CI #251 green:
 
 ```text
 UXP-04 — CLOSED — ACCEPTED
-UXP-05 — ACTIVE
+UXP-05 — CLOSED — ACCEPTED — 527921f3587b3c5d011a8c9ef0565bc4fc39c5ce
 UXP-05A — CLOSED — ACCEPTED — 8da119f2aad069d8ee26e8a65f8631d7625fa950
 UXP-05B — CLOSED — ACCEPTED — 403ac69198185a7cd35b85178e4342ed5f1f2a0f
 UXP-05C — CLOSED — ACCEPTED — 0cb1548541cc3f57164cb25a739b2fa1ee75d522
-UXP-05D — ACTIVE — ACCEPTANCE NEXT
-UXP-06 — NOT STARTED — BLOCKED ON FULL UXP-05 ACCEPTANCE
+UXP-05D — CLOSED — ACCEPTED — 527921f3587b3c5d011a8c9ef0565bc4fc39c5ce
+UXP-06 — NOT STARTED — GATED ON UXP-05 CLOSURE REMOTE CI
 UXP-08 Search expansion — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
 ```
 
+The complete Public Experience Definition of Done is satisfied without requiring
+a UXP-05D production feature change.
+
 The Master Roadmap remains unchanged.
 
-UXP-05D is not a new feature slice. It is the final Public Experience acceptance
-gate. Production code changes are permitted only when acceptance exposes a real
-defect that cannot be resolved through fixture/test correction.
+UXP-06 is the next eligible page in the Web UI Completion Program, but it remains
+NOT STARTED while this docs-only UXP-05 closure transition is uncommitted or lacks
+exact remote-green CI. This checkpoint closes UXP-05 only; it does not freeze,
+activate or implement UXP-06.
 
 ---
 
 # 13. Next Action
+Review this docs-only UXP-05 closure transition, then manually commit and push it.
 
-Execute only `UXP-05D — Reuse + full Experience acceptance` against the frozen
-matrix in this contract.
+Only after the exact UXP-05 closure checkpoint is independently verified on
+`origin/main` and GitHub CI is green may the next docs-only transition inspect
+that exact accepted baseline, freeze the detailed UXP-06 Devotional Deity
+implementation contract and activate its first bounded slice.
 
-Required acceptance emphasis:
+Until that separate activation checkpoint is accepted:
 
 ```text
-2+ reusable real Experience compositions;
-desktop / tablet / 390px-class mobile;
-single IMAGE;
-bounded short-motion VIDEO;
-IMAGE + user-started AUDIO;
-multi-Block;
-Knowledge reference;
-mixed Block + Knowledge + Media;
-minimal/empty valid composition where lifecycle permits;
-
-anonymous public visitor;
-authenticated shared shell;
-authorized Creator preview;
-unauthorized Creator attempt;
-DRAFT non-public;
-ARCHIVED non-public;
-PUBLISHED public;
-Creator-preview/public parity;
-
-loading / unexpected error / not found;
-missing referenced public content;
-unsupported/degraded Media;
-sparse optional content;
-no eligible social image;
-
-keyboard-only and focus behavior;
-semantic structure;
-keyboard media controls;
-reduced motion;
-no audible autoplay;
-no 390px horizontal overflow;
-
-canonical /experiences/[id];
-campaign-safe entry;
-eligible IMAGE social precedence;
-no fabricated VIDEO/AUDIO social image;
-
-Anime landing / Character / Series;
-Shiva / Hanuman;
-current Search without UXP-08 expansion;
-Creator Composition regression;
-
-format / lint / typecheck / unit;
-clean migration status;
-integration;
-focused browser;
-full browser;
-production build;
-fresh-process production canonical/social proof;
-architecture check;
-reviewed evidence ZIP;
-manual acceptance checkpoint commit/push;
-exact remote CI green.
+UXP-06 remains NOT STARTED;
+do not change /devotional/[slug] production behavior for UXP-06;
+do not create the /devotional Universe landing owned by UXP-07;
+do not expand Search / Knowledge / Saved behavior owned by UXP-08;
+do not redesign Creator Studio;
+do not introduce new generic Media, theme, workflow or policy infrastructure;
+do not change the Master Roadmap;
+WPR-M05 remains ACTIVE;
+P10-M04 remains SEQUENCING-BLOCKED.
 ```
 
-Do not introduce new Experience backend/database architecture, Search expansion,
-AUDIO Knowledge placement, a Creator Studio redesign, generic Media/transcoding
-infrastructure, or UXP-06 work during acceptance.
-
-If acceptance exposes a real production defect, fix only that bounded defect and
-rerun the applicable acceptance evidence. Otherwise UXP-05D should remain
-acceptance/test/documentation work.
-
-UXP-06 stays blocked until UXP-05D and the complete UXP-05 milestone are accepted
-at an exact remote-green checkpoint.
+The next engineering step after a remote-green UXP-05 closure is repository and
+architecture inspection for UXP-06, followed by a separate docs-only activation
+contract. No UXP-06 production implementation begins before that activation gate.
