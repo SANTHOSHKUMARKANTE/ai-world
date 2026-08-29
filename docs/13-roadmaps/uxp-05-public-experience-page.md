@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-05 |
 | Area | Product / Web / Composition / Media / Knowledge / Creator |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-05C FROZEN; IMPLEMENTATION NEXT AFTER FREEZE CI |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-05D ACCEPTANCE ACTIVE |
 | Created | 2026-08-27 |
 | Activation Baseline | `95836f344dbf523b20591cc20536f1517a1cb060` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -300,261 +300,114 @@ protected.
 
 ## UXP-05C — User-started AUDIO capability gate
 
-Status: `FROZEN — IMPLEMENTATION NEXT AFTER MICRO-FREEZE CHECKPOINT IS REMOTE-GREEN`
+Status: `CLOSED — ACCEPTED`
 
-This checkpoint is the focused Media/security capability micro-freeze. It changes
-no production implementation and does not by itself authorize AUDIO code before
-this docs-only checkpoint is reviewed, manually committed/pushed, independently
-verified at its exact remote SHA and green in GitHub CI.
-
-Inspection baseline:
+Accepted final checkpoint:
 
 ```text
-ad6590ea87fd6b94941554ace7950827b1b0c72b
-docs(roadmap): close UXP-05B
-GitHub CI run 246
-run id 33229789932
+0cb1548541cc3f57164cb25a739b2fa1ee75d522
+fix(media): harden AAC audio validation
+GitHub CI run 249
+run id 33247968029
 success
 ```
 
-### Evidence-backed inspection result
-
-The exact accepted baseline proves:
+Primary bounded AUDIO implementation checkpoint:
 
 ```text
-AssetType already recognizes IMAGE / VIDEO / AUDIO / DOCUMENT;
-Asset technical metadata already carries mimeType / sizeBytes / optional durationMs;
-Prisma persists assetType as a string and durationMs as an optional integer;
-PrismaAssetRepository validates persisted assetType through the canonical isAssetType guard;
-AUDIO therefore already fits the canonical persistence shape with no schema migration required;
-AUDIO is modeled/persistable but is not currently authorable through accepted upload validation;
-
-canonical upload validation currently accepts only image/png, image/jpeg and bounded video/mp4;
-canonical upload has a 10 MiB hard limit and rejects empty/invalid content;
-Media upload already uses the permission media.asset.upload;
-session/permission preauthorization occurs before the upload handler;
-upload persistence/storage/audit already use the shared Media transaction path;
-
-public raw Media delivery already uses GET /media/assets/:id/content;
-public delivery currently allows ACTIVE IMAGE and bounded supported VIDEO only;
-StorageObjectStore reads/writes whole objects and has no byte-range contract;
-currently deliverable ACTIVE IMAGE/VIDEO Media is retrievable by Asset ID under the accepted visibility contract;
-once UXP-05C admits the frozen AUDIO delivery profile, ACTIVE AUDIO will inherit the same public-by-ID visibility;
-Page publication is not a privacy boundary for raw Media;
-
-Composition already accepts MEDIA_ASSET references by canonical Asset ID;
-Composition resolves ACTIVE Asset type + optional duration server-side;
-Creator and public Page preview already preserve typed AUDIO projection;
-
-Creator Page composition already has the correct generic upload/reference seam;
-the current Page workspace file picker is image-only and may be extended minimally;
-KnowledgeMediaManager is intentionally IMAGE / VIDEO STILL / SHORT_LOOP only and is not an AUDIO surface;
-
-ExperienceMediaContent is already shared by public Experience and Creator preview;
-its current AUDIO branch degrades explicitly and is the bounded presentation seam to evolve;
-
-no ffmpeg / ffprobe / generic Media probing dependency exists;
-the accepted Media package already contains a bounded ISO-BMFF/MP4 parser pattern for short VIDEO.
+ad2c72881995e68d0680a4594073aab60110e39c
+feat(media): add bounded experience audio
+GitHub CI run 248
+run id 33244423316
+success
 ```
 
-### Frozen initial AUDIO profile
+UXP-05C is accepted only for the frozen initial Experience AUDIO capability.
+The accepted implementation did not create a general audio/media platform.
 
-UXP-05C implementation is limited to one initial browser-oriented AUDIO profile:
+Accepted behavior:
 
 ```text
-canonical Asset type: AUDIO
-accepted declared MIME: audio/mp4
-container: ISO Base Media File Format / MPEG-4
-required audio track: hdlr=soun with an mp4a sample entry
-accepted codec profile: AAC-LC (MPEG-4 Audio Object Type 2)
-acceptance fixture: AAC-LC in the accepted mp4a track
-maximum bytes: existing MEDIA_UPLOAD_MAX_BYTES = 10 MiB
-required duration: positive integer durationMs derived from the accepted audio track mdhd metadata
-product maximum duration: none is invented by UXP-05C beyond the existing 10 MiB byte bound
+canonical AUDIO upload reuses POST /media/assets;
+accepted MIME is audio/mp4;
+server-side ISO-BMFF inspection requires an audio soun track with mp4a;
+AAC-LC / MPEG-4 Audio Object Type 2 is byte-validated from AudioSpecificConfig;
+truncated/malformed AudioSpecificConfig is rejected;
+reserved/invalid sampling-frequency and channel configuration are rejected;
+implicit SBR / HE-AAC signaling is rejected;
+AAC-LC GASpecificConfig extensionFlag3 is consumed and unsupported non-zero values are rejected;
+VIDEO-only and mixed AUDIO+VIDEO files are rejected for this initial AUDIO profile;
+streaming box/descriptor traversal avoids retaining attacker-controlled metadata arrays;
+the existing 10 MiB upload ceiling is retained;
+positive durationMs is derived without inventing an AUDIO duration ceiling;
+
+existing media.asset.upload authorization is reused;
+existing UploadAssetAsActor / audit / Storage transaction is reused;
+existing GET /media/assets/:id/content delivery is extended to accepted ACTIVE AUDIO;
+whole-object delivery remains the contract; no HTTP Range architecture is introduced;
+
+existing Composition MEDIA_ASSET references attach AUDIO by canonical Asset ID;
+Creator and published projections preserve AUDIO + durationMs;
+Creator Page/Experience upload accepts the frozen audio/mp4 path;
+Creator states rights/operator responsibility and public-by-ID visibility before upload;
+KnowledgeMediaManager remains IMAGE/VIDEO-only;
+
+public Experience and Creator preview continue sharing one Media renderer;
+AUDIO uses native user-started <audio controls preload="none">;
+AUDIO does not autoplay or loop;
+load failure degrades honestly without failing the Experience;
+AUDIO never supplies an Open Graph image;
+eligible IMAGE social precedence remains unchanged.
 ```
 
-Do not reuse the VIDEO `8000 ms` ceiling for AUDIO. That limit belongs to the
-bounded VIDEO/SHORT_LOOP contract and has no accepted AUDIO product basis.
-
-The file name or extension is never authoritative. `audio/mp4` is accepted only
-when server-side byte inspection proves the bounded ISO-BMFF audio shape and the
-accepted AAC-LC codec profile. The parser must validate the relevant `esds` /
-AudioSpecificConfig metadata strongly enough to prove MPEG-4 Audio Object Type 2
-(AAC-LC); an `mp4a` sample-entry marker alone is not sufficient. Other `mp4a`
-audio object types remain outside the initial UXP-05C profile.
-
-### Frozen byte/content validation
-
-The server must extend the accepted bounded MP4 inspection style rather than
-trusting the multipart MIME string alone.
-
-For initial AUDIO acceptance it must safely prove, with boundary-checked parsing:
+Accepted boundaries:
 
 ```text
-non-empty bytes;
-<= 10 MiB;
-declared MIME is exactly audio/mp4;
-first/top-level ISO-BMFF structure is plausible and includes ftyp;
-moov metadata exists;
-an audio track is present and identified as soun;
-the accepted audio sample entry is mp4a;
-the mp4a codec configuration proves AAC-LC / MPEG-4 Audio Object Type 2;
-a positive finite/safe durationMs is derivable;
-the initial AUDIO profile does not contain a VIDEO track;
-truncated/impossible box sizes and malformed metadata are rejected safely.
+no database schema or migration;
+no AUDIO-specific endpoint, permission, repository or table;
+no ffmpeg / ffprobe;
+no transcoding/probing platform;
+no waveform/player/playlist subsystem;
+no Storage Range/streaming expansion;
+no signed/private delivery architecture;
+no rights database/policy engine;
+no AUDIO Knowledge placement;
+no Search expansion;
+no UXP-05D production work;
+no UXP-06 work.
 ```
 
-A video-only MP4 renamed or declared as `audio/mp4` must be rejected. A mixed
-AUDIO+VIDEO file is outside this initial AUDIO profile. Do not add transcoding,
-codec normalization, waveform analysis or a generic probe service.
-
-### Frozen upload, authorization and audit path
-
-AUDIO must reuse the existing canonical route and Media ownership:
+Reviewed final implementation/hardening evidence:
 
 ```text
-POST /media/assets
-session validation
-media.asset.upload Permission
-MediaUploadPreauthorizationGuard
-UploadAssetAsActor
-Media upload transaction
-audit record
-media/assets/{id}/original storage reference
-ACTIVE initial lifecycle
+focused Media AUDIO unit 28 / 28;
+root format/lint/typecheck green;
+root unit pipeline 37 / 37 tasks;
+32 migrations applied on a clean database;
+focused UXP-05C API integration 29 / 29;
+full integration pipeline 29 / 29 tasks;
+API integration 185 / 185;
+focused Creator/public browser proof 7 / 7;
+full Web browser E2E 81 / 81;
+production build 22 / 22 tasks;
+architecture validation with 0 violations across 767 modules / 2500 dependencies;
+reviewed staged evidence ZIP;
+exact implementation checkpoint pushed and CI #248 green;
+exact final hardening checkpoint pushed and CI #249 green.
 ```
 
-No AUDIO-specific upload endpoint, permission, repository, table or storage
-abstraction is authorized.
+The final hardening checkpoint is the accepted UXP-05C checkpoint because it
+contains the complete bounded AAC-LC validation used by the accepted capability.
 
-The existing audit context already carries Asset type, MIME, size, optional
-duration and lifecycle. AUDIO uses that same evidence path.
-
-### Frozen Creator authoring/attach path
-
-UXP-05C extends only the existing Page/Experience Creator path:
-
-```text
-Creator workspace accepts the frozen audio/mp4 profile;
-upload uses the existing generic Media upload API;
-success returns the canonical AUDIO Asset ID;
-Page composition attaches it as kind=MEDIA_ASSET with that ID;
-server-side Media resolution remains the source of assetType/duration truth;
-Creator preview uses the shared Experience Media renderer.
-```
-
-Do not add AUDIO to `KnowledgeMediaManager`; its accepted STILL/SHORT_LOOP model
-remains IMAGE/VIDEO-only. Do not create a Creator Studio redesign or a second
-AUDIO authoring workflow.
-
-### Frozen public delivery and visibility
-
-Initial AUDIO delivery extends the existing Media content route only:
-
-```text
-GET /media/assets/:id/content
-ACTIVE AUDIO only for the accepted audio/mp4 profile
-Content-Type: audio/mp4
-correct Content-Length
-stored-byte length must still match canonical technical metadata
-```
-
-No signed URL, new public AUDIO endpoint, streaming service or range-read Storage
-contract is introduced. HTTP Range/seekable long-form streaming is not promised
-by UXP-05C. If real implementation/acceptance evidence proves Range is required,
-stop and re-freeze that capability rather than silently expanding Storage.
-
-The accepted Media visibility implication remains explicit: after upload creates
-an ACTIVE Asset, anyone who knows its Asset ID may retrieve it through the public
-Media content route even before a Page referencing it is published. Creator UI
-for AUDIO must state this public-by-ID behavior before upload.
-
-### Frozen Web/accessibility behavior
-
-Public Experience and Creator preview must continue to share one renderer.
-Accepted AUDIO presentation is native, user-started playback:
-
-```text
-<audio controls preload="none">
-meaningful accessible label tied to the Experience context;
-no autoplay;
-no loop;
-no hidden background playback;
-no page understanding that depends on audio;
-honest unavailable/error fallback without failing the whole Experience.
-```
-
-Do not add a custom Web Audio player, waveform, playlist, visualization or
-background-audio subsystem. AUDIO never supplies an Open Graph image; UXP-05B
-eligible-IMAGE social precedence remains unchanged.
-
-### Frozen rights/operator boundary
-
-UXP-05C does not pretend to perform automated copyright/licensing verification.
-The operational content rule remains:
-
-```text
-original audio;
-owned audio;
-properly licensed audio;
-royalty-cleared audio;
-otherwise operator-verified usage rights.
-```
-
-A short commercial excerpt is not automatically licensed. The Creator AUDIO
-surface must communicate both the rights rule and the public-by-ID visibility
-before upload. The acceptance fixture must be original/generated or otherwise
-clearly rights-safe. Permission to upload is not evidence of copyright ownership,
-and no speculative rights database/policy engine is introduced here.
-
-### Frozen implementation proof
-
-The later UXP-05C implementation checkpoint must prove, at minimum:
-
-```text
-Media unit:
-- valid audio/mp4 acceptance fixture resolves to AUDIO with positive durationMs;
-- malformed/truncated/spoofed audio/mp4 is rejected;
-- mp4a content whose codec configuration is not AAC-LC / Audio Object Type 2 is rejected;
-- video-only or mixed VIDEO content declared as AUDIO is rejected;
-- empty/wrong-MIME/oversize content is rejected;
-- parser boundary/size safety is covered;
-
-API/integration:
-- unauthorized upload is rejected through the existing authorization boundary;
-- authorized AUDIO upload returns AUDIO + audio/mp4 + size + duration + ACTIVE;
-- audit retains AUDIO/MIME/size/duration/lifecycle evidence;
-- public delivery returns exact bytes with audio/mp4 and correct length;
-- non-deliverable lifecycle/not-found behavior remains safe;
-
-Composition:
-- an ACTIVE AUDIO Asset attaches through the existing MEDIA_ASSET reference;
-- Creator preview and published projection preserve AUDIO + durationMs;
-
-Web:
-- shared Creator/public renderer exposes native user-started controls;
-- preload=none and no autoplay/loop are proven;
-- load failure degrades without page failure;
-- AUDIO never becomes social-image metadata;
-- 390px and desktop presentation do not overflow;
-
-Regression/governance:
-- accepted IMAGE/VIDEO Experience behavior remains green;
-- KnowledgeMediaManager remains IMAGE/VIDEO-only;
-- no database migration is introduced; if implementation evidence claims one is required, stop and re-freeze;
-- no Search/UXP-05D/UXP-06 expansion;
-- format/lint/typecheck/unit/integration/focused browser/full browser/build/architecture evidence;
-- reviewed evidence ZIP;
-- manual checkpoint commit/push;
-- exact remote SHA + exact GitHub CI green.
-```
-
-If implementation evidence contradicts any frozen assumption, classify the
-mismatch and return to this capability contract. Do not silently expand scope.
+UXP-05C is CLOSED — ACCEPTED.
 
 ## UXP-05D — Reuse + full Experience acceptance
 
-Status: `NOT STARTED — GATED ON UXP-05A/B/C ACCEPTANCE`
+Status: `ACTIVE — ACCEPTANCE NEXT`
+
+UXP-05D is acceptance-first. No new production feature is planned by this
+transition. The existing UXP-05D Frozen Acceptance Matrix remains the governing
+proof matrix.
 
 Prove complete Public Experience acceptance through multiple real composition
 shapes and applicable product states.
@@ -669,49 +522,101 @@ Master Roadmap.
 
 # 12. Current Position
 
-After this docs-only UXP-05C capability micro-freeze checkpoint is reviewed,
-manually committed/pushed, independently verified at its exact remote SHA and
-GitHub CI is green:
+After the UXP-05C AUDIO implementation and final AAC validation hardening are
+independently verified at exact remote checkpoint
+`0cb1548541cc3f57164cb25a739b2fa1ee75d522` with GitHub CI #249 green:
 
 ```text
 UXP-04 — CLOSED — ACCEPTED
 UXP-05 — ACTIVE
 UXP-05A — CLOSED — ACCEPTED — 8da119f2aad069d8ee26e8a65f8631d7625fa950
 UXP-05B — CLOSED — ACCEPTED — 403ac69198185a7cd35b85178e4342ed5f1f2a0f
-UXP-05C — ACTIVE — FROZEN IMPLEMENTATION NEXT
-UXP-05D — NOT STARTED — GATED ON UXP-05A/B/C ACCEPTANCE
+UXP-05C — CLOSED — ACCEPTED — 0cb1548541cc3f57164cb25a739b2fa1ee75d522
+UXP-05D — ACTIVE — ACCEPTANCE NEXT
 UXP-06 — NOT STARTED — BLOCKED ON FULL UXP-05 ACCEPTANCE
 UXP-08 Search expansion — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
 ```
 
-The Master Roadmap remains unchanged. This micro-freeze authorizes no production
-AUDIO work until the micro-freeze checkpoint itself is exact-remote verified and
-green in CI.
+The Master Roadmap remains unchanged.
+
+UXP-05D is not a new feature slice. It is the final Public Experience acceptance
+gate. Production code changes are permitted only when acceptance exposes a real
+defect that cannot be resolved through fixture/test correction.
 
 ---
 
 # 13. Next Action
 
-After this micro-freeze checkpoint is remotely green, implement only the frozen
-UXP-05C AUDIO capability:
+Execute only `UXP-05D — Reuse + full Experience acceptance` against the frozen
+matrix in this contract.
+
+Required acceptance emphasis:
 
 ```text
-audio/mp4 initial profile with mp4a + AAC-LC / Audio Object Type 2 validation;
-existing 10 MiB upload bound;
-positive durationMs with no invented AUDIO duration ceiling;
-bounded server-side ISO-BMFF audio inspection;
-existing Media upload/auth/audit/storage path;
-existing public Media content route;
-existing Composition MEDIA_ASSET reference;
-Creator Page/Experience upload + attach only;
-shared Creator/public native user-started AUDIO rendering;
-rights/public-by-ID disclosure;
-focused security/accessibility/regression proof.
+2+ reusable real Experience compositions;
+desktop / tablet / 390px-class mobile;
+single IMAGE;
+bounded short-motion VIDEO;
+IMAGE + user-started AUDIO;
+multi-Block;
+Knowledge reference;
+mixed Block + Knowledge + Media;
+minimal/empty valid composition where lifecycle permits;
+
+anonymous public visitor;
+authenticated shared shell;
+authorized Creator preview;
+unauthorized Creator attempt;
+DRAFT non-public;
+ARCHIVED non-public;
+PUBLISHED public;
+Creator-preview/public parity;
+
+loading / unexpected error / not found;
+missing referenced public content;
+unsupported/degraded Media;
+sparse optional content;
+no eligible social image;
+
+keyboard-only and focus behavior;
+semantic structure;
+keyboard media controls;
+reduced motion;
+no audible autoplay;
+no 390px horizontal overflow;
+
+canonical /experiences/[id];
+campaign-safe entry;
+eligible IMAGE social precedence;
+no fabricated VIDEO/AUDIO social image;
+
+Anime landing / Character / Series;
+Shiva / Hanuman;
+current Search without UXP-08 expansion;
+Creator Composition regression;
+
+format / lint / typecheck / unit;
+clean migration status;
+integration;
+focused browser;
+full browser;
+production build;
+fresh-process production canonical/social proof;
+architecture check;
+reviewed evidence ZIP;
+manual acceptance checkpoint commit/push;
+exact remote CI green.
 ```
 
-Do not add AUDIO to Knowledge media. Do not introduce HTTP Range, a generic
-transcoding/probing platform, signed delivery, a rights engine, Search expansion,
-UXP-05D production work or UXP-06 work unless new acceptance evidence forces a
-separate explicitly reviewed architecture decision.
+Do not introduce new Experience backend/database architecture, Search expansion,
+AUDIO Knowledge placement, a Creator Studio redesign, generic Media/transcoding
+infrastructure, or UXP-06 work during acceptance.
+
+If acceptance exposes a real production defect, fix only that bounded defect and
+rerun the applicable acceptance evidence. Otherwise UXP-05D should remain
+acceptance/test/documentation work.
+
+UXP-06 stays blocked until UXP-05D and the complete UXP-05 milestone are accepted
+at an exact remote-green checkpoint.

@@ -1134,67 +1134,16 @@ CLOSED — ACCEPTED
 Status:
 
 ```text
-ACTIVE — UXP-05C FROZEN IMPLEMENTATION NEXT AFTER FREEZE CI
+ACTIVE — UXP-05D ACCEPTANCE NEXT
 ```
 
-The detailed frozen implementation contract is:
+The detailed frozen implementation/acceptance contract is:
 
 ```text
 docs/13-roadmaps/uxp-05-public-experience-page.md
 ```
 
-UXP-05A is accepted at:
-
-```text
-8da119f2aad069d8ee26e8a65f8631d7625fa950
-feat(web): finish public experience shell
-GitHub CI run 243
-run id 33098505327
-success
-```
-
-UXP-05B is accepted at:
-
-```text
-403ac69198185a7cd35b85178e4342ed5f1f2a0f
-feat(composition): add typed experience media
-GitHub CI run 245
-run id 33195903383
-success
-```
-
-Accepted UXP-05B behavior includes:
-
-```text
-typed Media assetType + durationMs in Composition preview;
-public/Creator typed Media projection parity;
-shared public/Creator Experience Media rendering;
-IMAGE presentation;
-bounded user-started VIDEO with honest unsupported fallback;
-no autoplay / no loop / no fabricated poster;
-AUDIO and DOCUMENT unsupported states;
-eligible IMAGE social-image precedence;
-no Experience backend/database/migration/Search expansion.
-```
-
-Reviewed UXP-05B evidence includes:
-
-```text
-focused Composition unit 3 / 3;
-focused UXP-05B Web unit 11 / 11;
-full Web unit 63 / 63;
-root unit 37 / 37 tasks;
-32 clean-database migrations;
-focused UXP-05B API integration 10 / 10;
-API integration 181 / 181;
-Creator preview regression 1 / 1;
-focused UXP-05B browser 4 / 4;
-full Web browser 81 / 81;
-production build 22 / 22 tasks;
-architecture 0 violations across 763 modules / 2494 dependencies.
-```
-
-Current slice state:
+Accepted slice checkpoints:
 
 ```text
 UXP-05A — Public projection + canonical/social shell
@@ -1204,57 +1153,80 @@ UXP-05B — Typed IMAGE / short-motion Media + Creator/public parity
 CLOSED — ACCEPTED — 403ac69198185a7cd35b85178e4342ed5f1f2a0f
 
 UXP-05C — User-started AUDIO capability gate
-FROZEN — IMPLEMENTATION NEXT AFTER MICRO-FREEZE CHECKPOINT IS REMOTE-GREEN
+CLOSED — ACCEPTED — 0cb1548541cc3f57164cb25a739b2fa1ee75d522
 
 UXP-05D — Reuse + full Experience acceptance
-NOT STARTED — GATED ON UXP-05A/B/C ACCEPTANCE
+ACTIVE — ACCEPTANCE NEXT
 ```
 
-UXP-05C repository/security inspection is complete at exact baseline:
+UXP-05C implementation history:
 
 ```text
-ad6590ea87fd6b94941554ace7950827b1b0c72b
-docs(roadmap): close UXP-05B
-GitHub CI run 246
-run id 33229789932
+065a35523dcf391949652721d26b4e1e91a05877
+docs(roadmap): freeze UXP-05C audio capability
+GitHub CI run 247
+run id 33239861317
+success
+
+ad2c72881995e68d0680a4594073aab60110e39c
+feat(media): add bounded experience audio
+GitHub CI run 248
+run id 33244423316
+success
+
+0cb1548541cc3f57164cb25a739b2fa1ee75d522
+fix(media): harden AAC audio validation
+GitHub CI run 249
+run id 33247968029
 success
 ```
 
-The evidence-backed initial AUDIO capability is now frozen to:
+Accepted UXP-05C behavior includes:
 
 ```text
-Asset type AUDIO;
-one declared MIME: audio/mp4;
-ISO-BMFF/MPEG-4 with an audio soun track + mp4a sample entry;
-AAC-LC / MPEG-4 Audio Object Type 2 is the accepted codec profile and must be byte-validated;
-AAC-LC acceptance fixture;
-existing 10 MiB upload hard limit;
-positive durationMs, with no invented AUDIO duration ceiling;
-server-side container/audio-track inspection rather than MIME/extension trust;
-existing POST /media/assets + media.asset.upload + audit/storage transaction;
-existing GET /media/assets/:id/content + ACTIVE public-by-ID visibility;
+bounded audio/mp4 AUDIO upload through existing Media ownership;
+mp4a + AAC-LC / MPEG-4 Audio Object Type 2 byte validation;
+complete bounded AudioSpecificConfig validation;
+truncated/malformed config rejection;
+implicit SBR / HE-AAC rejection;
+streaming ISO box/descriptor traversal;
+existing 10 MiB upload ceiling with positive durationMs and no invented AUDIO duration ceiling;
+existing authorization/audit/Storage path;
+existing whole-object public Media delivery;
 existing Composition MEDIA_ASSET reference;
-Creator Page/Experience authoring only, not KnowledgeMediaManager;
-shared Creator/public native <audio controls preload="none"> rendering;
-no autoplay / loop / fabricated social image;
-explicit rights-cleared-content and public-by-ID Creator disclosure.
+Creator Page/Experience AUDIO upload + rights/public-by-ID disclosure;
+shared Creator/public native user-started AUDIO controls;
+preload=none with no autoplay/loop;
+honest load fallback;
+AUDIO excluded from social-image precedence;
+KnowledgeMediaManager remains IMAGE/VIDEO-only;
+no schema/migration/Range/transcoding/Search expansion.
 ```
 
-The exact Media model and Prisma persistence already accommodate AUDIO, but the
-accepted upload/delivery implementation does not yet author or serve it. No
-database migration is required by the inspected baseline. The existing bounded
-MP4 parser, Media authorization/audit path, whole-object Storage contract,
-generic Composition reference and shared Experience renderer are reused rather
-than replaced.
+Reviewed final UXP-05C evidence includes:
 
-The micro-freeze does not authorize a generic codec matrix, ffmpeg/ffprobe,
-transcoding, HTTP Range/streaming architecture, signed/private Media, a rights
-engine, AUDIO Knowledge placements, Search expansion, UXP-05D production work or
-UXP-06 work.
+```text
+focused Media AUDIO unit 28 / 28;
+root unit pipeline 37 / 37 tasks;
+32 clean-database migrations;
+focused UXP-05C API integration 29 / 29;
+full integration pipeline 29 / 29 tasks;
+API integration 185 / 185;
+focused Creator/public browser 7 / 7;
+full Web browser 81 / 81;
+production build 22 / 22 tasks;
+architecture 0 violations across 767 modules / 2500 dependencies;
+exact final hardening checkpoint CI #249 green.
+```
 
-This docs-only capability freeze must be separately reviewed, manually
-committed/pushed, independently exact-remote verified and green in CI. Only then
-may the frozen UXP-05C AUDIO implementation begin.
+UXP-05D is now the active final acceptance gate. It must execute the existing
+detailed acceptance matrix across reusable Experience compositions, responsive
+breakpoints, lifecycle/role states, Media/accessibility behavior,
+canonical/social behavior and protected regressions.
+
+UXP-05D is acceptance-first. Production changes are allowed only when acceptance
+exposes a real defect. It does not authorize Search expansion, a new Experience
+backend, AUDIO Knowledge placement, generic Media infrastructure or UXP-06 work.
 
 ## UXP-06 / UXP-07 — Devotional
 
@@ -1498,36 +1470,40 @@ UXP-04 — Anime Series
 CLOSED — ACCEPTED
         ↓
 UXP-05 — Public Experience
-ACTIVE — UXP-05C FROZEN IMPLEMENTATION NEXT AFTER FREEZE CI
+ACTIVE — UXP-05D ACCEPTANCE NEXT
 ```
 
-UXP-05A is CLOSED — ACCEPTED at
-`8da119f2aad069d8ee26e8a65f8631d7625fa950`.
-
-UXP-05B is CLOSED — ACCEPTED at
-`403ac69198185a7cd35b85178e4342ed5f1f2a0f`.
-
-The UXP-05C Media/security micro-freeze inspected exact baseline
-`ad6590ea87fd6b94941554ace7950827b1b0c72b` and froze only the bounded
-`audio/mp4`/`mp4a`/AAC-LC user-started AUDIO path described in the detailed UXP-05
-contract.
-
-This checkpoint remains docs-only. After it is manually committed/pushed,
-independently verified at the exact remote SHA and green in CI, the next
-implementation is only:
+Accepted UXP-05 checkpoints:
 
 ```text
-UXP-05C — frozen user-started AUDIO capability
+UXP-05A — CLOSED — ACCEPTED
+8da119f2aad069d8ee26e8a65f8631d7625fa950
+
+UXP-05B — CLOSED — ACCEPTED
+403ac69198185a7cd35b85178e4342ed5f1f2a0f
+
+UXP-05C — CLOSED — ACCEPTED
+0cb1548541cc3f57164cb25a739b2fa1ee75d522
+GitHub CI #249 / run 33247968029 — success
 ```
 
-No AUDIO implementation starts before that remote-green freeze checkpoint. No
-AUDIO Knowledge placement, generic transcoding/probing platform, HTTP Range
-storage expansion, signed/private Media, rights engine, Search expansion,
-UXP-05D production work or UXP-06 work is authorized.
+Next execute only:
 
-UXP-05D remains blocked on UXP-05C acceptance. UXP-08 Search expansion remains
-not started. UXP-06 remains blocked until complete UXP-05 acceptance is remotely
-green.
+```text
+UXP-05D — Reuse + full Experience acceptance
+```
+
+This is acceptance-first work. Use the detailed UXP-05D Frozen Acceptance Matrix
+to prove reusable Experience composition, responsive behavior, lifecycle/role
+states, canonical/social behavior, user-started Media/accessibility and protected
+regressions.
+
+Do not add production behavior unless acceptance exposes a real defect. Do not
+start Search expansion, AUDIO Knowledge placement, generic Media/transcoding
+work, a new Experience backend, UXP-06 or any later milestone.
+
+UXP-08 Search expansion remains not started. UXP-06 remains blocked until the
+complete UXP-05 milestone is accepted at an exact remote-green checkpoint.
 
 The Master Roadmap remains unchanged. WPR-M05 remains the active Web Product
 Readiness gate, and P10-M04 remains sequencing-blocked.
