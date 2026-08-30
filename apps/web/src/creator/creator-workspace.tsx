@@ -24,6 +24,7 @@ import {
 } from './creator-api';
 import { AnimeCharacterManager } from './anime-character-manager';
 import { AnimeSeriesManager } from './anime-series-manager';
+import { DevotionalDeityManager } from './devotional-deity-manager';
 import { KnowledgeMediaManager } from './knowledge-media-manager';
 
 interface ReferenceDraft {
@@ -82,6 +83,7 @@ function AuthenticatedCreatorWorkspace() {
   const [pageId, setPageId] = useState('');
   const [activePage, setActivePage] = useState<CreatorPage | null>(null);
   const [resourceType, setResourceType] = useState('devotional.deity');
+  const [typedEntityEditor, setTypedEntityEditor] = useState<'anime' | 'deity'>('deity');
   const [animeEntityEditor, setAnimeEntityEditor] = useState<'character' | 'series'>('character');
   const [knowledgeResourceId, setKnowledgeResourceId] = useState('');
   const [activeKnowledgeResource, setActiveKnowledgeResource] =
@@ -125,10 +127,20 @@ function AuthenticatedCreatorWorkspace() {
     setLibrary((current) => [reference, ...current]);
   }
 
-  function selectAnimeEditorForResource(resource: CreatorKnowledgeResource): void {
+  function selectTypedEditorForResource(resource: CreatorKnowledgeResource): void {
+    if (
+      resource.universeKey === 'universe.devotional' &&
+      resource.resourceType === 'devotional.deity'
+    ) {
+      setTypedEntityEditor('deity');
+      return;
+    }
+
     if (resource.universeKey !== 'universe.anime') {
       return;
     }
+
+    setTypedEntityEditor('anime');
 
     if (resource.resourceType === 'anime.character') {
       setAnimeEntityEditor('character');
@@ -197,7 +209,7 @@ function AuthenticatedCreatorWorkspace() {
         });
         setKnowledgeResourceId(resource.id);
         setActiveKnowledgeResource(resource);
-        selectAnimeEditorForResource(resource);
+        selectTypedEditorForResource(resource);
         setKnowledgeMediaManagerRevision((revision) => revision + 1);
         setStatusMessage(`Knowledge draft “${resource.resourceType}” created.`);
       },
@@ -240,7 +252,7 @@ function AuthenticatedCreatorWorkspace() {
         });
         setKnowledgeResourceId(accepted.resource.id);
         setActiveKnowledgeResource(accepted.resource);
-        selectAnimeEditorForResource(accepted.resource);
+        selectTypedEditorForResource(accepted.resource);
         setKnowledgeMediaManagerRevision((revision) => revision + 1);
         setAiCandidate(null);
         setStatusMessage(
@@ -687,6 +699,32 @@ function AuthenticatedCreatorWorkspace() {
       </div>
 
       <section
+        aria-labelledby="creator-devotional-deity-editor-title"
+        className="mt-6 rounded-2xl border border-amber-400/20 bg-slate-900/80 p-5 shadow-xl shadow-black/10"
+      >
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">
+          Devotional · Entity editor
+        </p>
+        <h2 id="creator-devotional-deity-editor-title" className="mt-2 text-xl font-semibold">
+          Devotional Deity manager
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+          Deity management reuses the existing generic Creator Entity and Knowledge Media APIs.
+        </p>
+        <button
+          className={`${secondaryButtonClassName} mt-4`}
+          type="button"
+          onClick={() => {
+            setTypedEntityEditor('deity');
+            setUniverseKey('universe.devotional');
+            setResourceType('devotional.deity');
+          }}
+        >
+          Use Deity manager
+        </button>
+      </section>
+
+      <section
         aria-labelledby="creator-anime-entity-editor-title"
         className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/10"
       >
@@ -711,6 +749,7 @@ function AuthenticatedCreatorWorkspace() {
             value={animeEntityEditor}
             onChange={(event) => {
               const editor = event.target.value === 'series' ? 'series' : 'character';
+              setTypedEntityEditor('anime');
               setAnimeEntityEditor(editor);
               setUniverseKey('universe.anime');
               setResourceType(editor === 'series' ? 'anime.series' : 'anime.character');
@@ -720,9 +759,33 @@ function AuthenticatedCreatorWorkspace() {
             <option value="series">Series</option>
           </select>
         </label>
+        <button
+          className={`${secondaryButtonClassName} mt-3`}
+          type="button"
+          onClick={() => {
+            setTypedEntityEditor('anime');
+            setUniverseKey('universe.anime');
+            setResourceType(animeEntityEditor === 'series' ? 'anime.series' : 'anime.character');
+          }}
+        >
+          Use selected Anime manager
+        </button>
       </section>
 
-      {animeEntityEditor === 'character' ? (
+      {typedEntityEditor === 'deity' ? (
+        <DevotionalDeityManager
+          key={`deity-${knowledgeMediaManagerRevision}`}
+          knowledgeResourceId={knowledgeResourceId}
+          initialResource={activeKnowledgeResource}
+          onKnowledgeResourceIdChange={(id) => {
+            setKnowledgeResourceId(id);
+            if (activeKnowledgeResource?.id !== id) {
+              setActiveKnowledgeResource(null);
+            }
+          }}
+          onResourceChange={setActiveKnowledgeResource}
+        />
+      ) : animeEntityEditor === 'character' ? (
         <AnimeCharacterManager
           key={`character-${knowledgeMediaManagerRevision}`}
           knowledgeResourceId={knowledgeResourceId}

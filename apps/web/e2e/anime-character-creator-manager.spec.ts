@@ -165,6 +165,12 @@ test.describe('UXP-02D Creator Character manager', () => {
 
     await page.goto('/creator');
 
+    await page.getByRole('button', { name: 'Use selected Anime manager' }).click();
+    await expect(page.getByLabel('Active Universe')).toHaveValue('universe.anime');
+    await expect(page.getByRole('textbox', { name: 'Resource type', exact: true })).toHaveValue(
+      'anime.character',
+    );
+
     await page.getByLabel('Character Knowledge Resource ID').fill(RESOURCE_ID);
     await expect(page.getByLabel('Active Knowledge Resource ID')).toHaveValue(RESOURCE_ID);
 
@@ -245,6 +251,11 @@ test.describe('UXP-02D Creator Character manager', () => {
     });
 
     await page.goto('/creator');
+    await page.getByRole('button', { name: 'Use selected Anime manager' }).click();
+    await expect(page.getByLabel('Active Universe')).toHaveValue('universe.anime');
+    await expect(page.getByRole('textbox', { name: 'Resource type', exact: true })).toHaveValue(
+      'anime.character',
+    );
     await page.getByLabel('Character Knowledge Resource ID').fill(RESOURCE_ID);
     await page.getByRole('button', { name: 'Load Character configuration' }).click();
 
@@ -276,6 +287,11 @@ test.describe('UXP-02D Creator Character manager', () => {
     });
 
     await page.goto('/creator');
+    await page.getByRole('button', { name: 'Use selected Anime manager' }).click();
+    await expect(page.getByLabel('Active Universe')).toHaveValue('universe.anime');
+    await expect(page.getByRole('textbox', { name: 'Resource type', exact: true })).toHaveValue(
+      'anime.character',
+    );
     await page.getByLabel('Character Knowledge Resource ID').fill(RESOURCE_ID);
     await page.getByRole('button', { name: 'Load Character configuration' }).click();
 
