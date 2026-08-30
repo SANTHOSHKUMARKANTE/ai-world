@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { AnimeEntityMediaViewer } from '../anime/anime-entity-media-viewer';
 import { ANIME_CHARACTER_SECTION_KEYS } from '../anime/anime-character-sections';
 import { ANIME_SERIES_SECTION_DEFINITIONS } from '../anime/anime-series-sections';
 import { AnimeCharacterShareControls } from '../anime/anime-character-share-controls';
@@ -17,6 +16,7 @@ import {
   resolveWebUniversePresentation,
   type WebUniversePresentation,
 } from '../universes/presentation';
+import { EntityMediaViewer } from './entity-media-viewer';
 import {
   getPublicKnowledgeEntity,
   type PublicKnowledgeEntity,
@@ -109,6 +109,16 @@ function isViewerEligibleMedia(media: PublicKnowledgeEntityMedia): boolean {
   );
 }
 
+function supportsEntityMediaViewer(entity: PublicKnowledgeEntity): boolean {
+  return (
+    (entity.resource.universeKey === 'universe.anime' &&
+      (entity.resource.resourceType === 'anime.character' ||
+        entity.resource.resourceType === 'anime.series')) ||
+    (entity.resource.universeKey === 'universe.devotional' &&
+      entity.resource.resourceType === 'devotional.deity')
+  );
+}
+
 function updateMediaSelectionQuery(assetId: string | null): void {
   const url = new URL(window.location.href);
 
@@ -167,15 +177,15 @@ function ShortLoopVisual({
 }
 
 function entityPath(target: PublicKnowledgeEntityRelation['target']): string {
-  if (target.resourceType === 'devotional.deity') {
+  if (target.universeKey === 'universe.devotional' && target.resourceType === 'devotional.deity') {
     return `/devotional/${encodeURIComponent(target.slug)}`;
   }
 
-  if (target.resourceType === 'anime.character') {
+  if (target.universeKey === 'universe.anime' && target.resourceType === 'anime.character') {
     return `/anime/characters/${encodeURIComponent(target.slug)}`;
   }
 
-  if (target.resourceType === 'anime.series') {
+  if (target.universeKey === 'universe.anime' && target.resourceType === 'anime.series') {
     return `/anime/series/${encodeURIComponent(target.slug)}`;
   }
 
@@ -331,12 +341,7 @@ export function EntityExperiencePage({
       return;
     }
 
-    const isAnimeEntity =
-      state.entity.resource.universeKey === 'universe.anime' &&
-      (state.entity.resource.resourceType === 'anime.character' ||
-        state.entity.resource.resourceType === 'anime.series');
-
-    if (!isAnimeEntity) {
+    if (!supportsEntityMediaViewer(state.entity)) {
       return;
     }
 
@@ -416,6 +421,7 @@ export function EntityExperiencePage({
     entity.resource.universeKey === 'universe.devotional' &&
     entity.resource.resourceType === 'devotional.deity';
   const animeIdentity = animeCharacter || animeSeries;
+  const mediaViewerEnabled = animeIdentity || devotionalDeity;
   const seriesFact = animeCharacter
     ? entity.profile.facts.find((fact) => fact.key === 'anime.series')
     : undefined;
@@ -429,7 +435,9 @@ export function EntityExperiencePage({
   );
   const visibleMediaHighlights = mediaHighlights;
   const imageMedia = visibleMediaHighlights.filter((media) => media.assetType === 'IMAGE');
-  const viewerMedia = animeIdentity ? visibleMediaHighlights.filter(isViewerEligibleMedia) : [];
+  const viewerMedia = mediaViewerEnabled
+    ? visibleMediaHighlights.filter(isViewerEligibleMedia)
+    : [];
   const selectedMedia = viewerMedia.find((media) => media.assetId === selectedMediaId) ?? null;
   const heroMedia = visibleMediaHighlights.find((media) => media.role === 'HERO') ?? null;
   const fallbackImage = imageMedia[0] ?? null;
@@ -692,7 +700,7 @@ export function EntityExperiencePage({
                       sizes="(max-width: 700px) 70vw, 260px"
                     />
                   )}
-                  {animeIdentity ? (
+                  {mediaViewerEnabled ? (
                     <span className="aw-anime-media-trigger__kind" aria-hidden="true">
                       {media.assetType === 'VIDEO' ? 'Short motion' : 'Image'}
                     </span>
@@ -702,11 +710,11 @@ export function EntityExperiencePage({
 
               return (
                 <li key={media.assetId}>
-                  {animeIdentity ? (
+                  {mediaViewerEnabled ? (
                     isViewerEligibleMedia(media) ? (
                       <button
                         type="button"
-                        className="aw-anime-media-trigger"
+                        className="aw-anime-media-trigger aw-entity-media-trigger"
                         aria-label={`Open ${mediaName} in media viewer`}
                         onClick={(event) => openMediaViewer(media, event.currentTarget)}
                       >
@@ -723,7 +731,7 @@ export function EntityExperiencePage({
                     </a>
                   )}
 
-                  {animeIdentity && media.caption ? (
+                  {mediaViewerEnabled && media.caption ? (
                     <p className="aw-anime-media-caption">{media.caption}</p>
                   ) : null}
                 </li>
@@ -744,10 +752,11 @@ export function EntityExperiencePage({
         />
       ))}
 
-      {animeIdentity ? (
-        <AnimeEntityMediaViewer
+      {mediaViewerEnabled ? (
+        <EntityMediaViewer
           media={selectedMedia}
           displayName={entity.profile.displayName}
+          viewerKind={devotionalDeity ? 'devotional' : 'anime'}
           onRequestClose={closeMediaViewer}
         />
       ) : null}
