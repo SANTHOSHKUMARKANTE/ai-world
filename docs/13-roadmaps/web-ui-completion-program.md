@@ -452,11 +452,14 @@ Current accepted routes now include:
 | `/sign-in` | Sign in |
 | `/verify-email` | Email verification |
 
-Important missing destination pages that remain justified by current product direction include:
+The next missing destination is now governed by the active UXP-07 contract:
 
 ```text
 /devotional
 ```
+
+The route is still physically absent at this activation checkpoint. UXP-07A may
+add it only after this docs-only activation is remotely green.
 
 New routes remain eligible only when a real page milestone requires them.
 
@@ -1274,13 +1277,29 @@ Status:
 
 ```text
 UXP-06 — CLOSED — ACCEPTED
-UXP-07 — NOT STARTED — NEXT ELIGIBLE AFTER UXP-06 CLOSURE CI
+UXP-07 — ACTIVE — UXP-07A NEXT IMPLEMENTATION SLICE
 ```
 
-The detailed frozen UXP-06 implementation/acceptance contract is:
+The closed UXP-06 implementation/acceptance contract is:
 
 ```text
 docs/13-roadmaps/uxp-06-devotional-deity-page.md
+```
+
+The active frozen UXP-07 implementation/acceptance contract is:
+
+```text
+docs/13-roadmaps/uxp-07-devotional-universe-landing.md
+```
+
+Frozen UXP-07 slices:
+
+```text
+UXP-07A — Devotional landing shell + Deity discovery + social identity
+ACTIVE — NEXT IMPLEMENTATION SLICE
+
+UXP-07B — Reuse + full Devotional landing acceptance
+NOT STARTED — GATED ON UXP-07A ACCEPTANCE
 ```
 
 UXP-06 was activated only after UXP-05 was fully accepted and the docs-only
@@ -1634,12 +1653,17 @@ UXP-06 is therefore CLOSED — ACCEPTED.
 
 UXP-07 remains NOT STARTED in this closure checkpoint.
 
-UXP-07 is the next eligible Web completion page, but remains NOT STARTED until
-this docs-only UXP-06 closure checkpoint itself is independently reviewed,
-manually committed/pushed and exact remote CI is green.
+UXP-07 is now ACTIVE at the planning/implementation-contract level.
 
-This closure checkpoint does not create the UXP-07 detailed contract and does
-not implement `/devotional`.
+This activation checkpoint creates the detailed UXP-07 contract but remains
+docs-only. `/devotional` production implementation begins only after this
+activation checkpoint is independently reviewed, manually committed/pushed and
+exact remote CI is green.
+
+The generic public Knowledge discovery capability is already accepted and is
+reused by UXP-07. No new discovery backend is planned.
+
+UXP-08 remains NOT STARTED.
 
 Important boundaries:
 
@@ -1893,62 +1917,62 @@ WPR-M05 receives its roadmap closure update only when the entire accepted gate i
 The accepted execution position is now:
 
 ```text
-UXP-05 — Public Experience
-CLOSED — ACCEPTED
-        ↓
 UXP-06 — Devotional Deity
 CLOSED — ACCEPTED — 563e48a57d0b95b83db674b0838aac879d48b61b
         ↓
+UXP-06 closure
+CLOSED — ACCEPTED — ae9bfb8a5d504f71c703c82e835de207a62c9e66
+        ↓
 UXP-07 — Devotional Universe landing
-NOT STARTED — NEXT ELIGIBLE AFTER UXP-06 CLOSURE CI
+ACTIVE — UXP-07A NEXT IMPLEMENTATION SLICE
 ```
 
-Complete UXP-06 acceptance checkpoint:
+Active detailed contract:
 
 ```text
-563e48a57d0b95b83db674b0838aac879d48b61b
-test(web): prove full devotional deity acceptance
-GitHub CI #260 / run 33306100558 — success
+docs/13-roadmaps/uxp-07-devotional-universe-landing.md
 ```
 
-UXP-06 is closed with:
+After this docs-only activation checkpoint is independently reviewed, manually
+committed/pushed and exact remote CI is green, implement only:
 
 ```text
-strict Deity identity/canonical/social shell;
-Deity Media viewer + typed relationship navigation;
-Creator Deity manager + Creator-only preview;
-full acceptance-only final slice;
-25 / 25 focused browser acceptance;
-106 / 106 full Web E2E;
-20 Web unit files / 70 tests;
-26 API integration files / 185 tests;
-29 / 29 integration tasks;
-32 migrations up to date;
-production build 22 / 22;
-fresh-process production canonical/social proof;
-architecture 0 violations across 782 modules / 2539 dependencies;
-0 production changes in UXP-06D;
-GitHub CI #260 green on exact checkpoint.
+UXP-07A — Devotional landing shell + Deity discovery + social identity
 ```
 
-Next, only after this docs-only UXP-06 closure checkpoint is itself reviewed,
-manually committed/pushed and exact remote CI is green:
+Frozen implementation direction:
 
 ```text
-inspect remote-green repository;
-create/freeze detailed UXP-07 contract;
-activate UXP-07 — Devotional Universe landing;
-keep activation docs-only.
+new /devotional first-party Web route;
+typed Devotional presentation;
+existing generic listPublicKnowledgeDiscovery;
+universe.devotional + devotional.deity + limit 6;
+Recently Updated Deities;
+canonical /devotional/[slug] links;
+IMAGE / SHORT_LOOP / no-Media cards;
+loading / error+retry / empty;
+plain existing /search entry;
+canonical /devotional metadata;
+stable presentation-owned Devotional Open Graph image;
+responsive/keyboard/reduced-motion baseline.
 ```
 
-Do not begin `/devotional` implementation in this closure checkpoint.
+Expected backend/schema/migration scope:
+
+```text
+none
+```
+
+UXP-07B remains acceptance-first and gated on UXP-07A acceptance.
 
 Do not begin:
 
 ```text
 UXP-08 Search expansion;
-new Devotional backend;
-new generic Search/index architecture;
+new Search/index/recommendation/ranking;
+new Devotional discovery API;
+new Devotional backend/database;
+landing CMS/manual featured ordering;
 AUDIO Knowledge placement;
 Creator Studio redesign;
 speculative platform work.
