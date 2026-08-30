@@ -440,7 +440,7 @@ Current accepted routes now include:
 | `/creator` | Creator workspace |
 | `/creator/series/[id]/preview` | Creator-only Anime Series draft preview accepted through UXP-04C at `1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07` |
 | `/creator/preview/[id]` | Creator preview |
-| `/devotional/[slug]` | Devotional Deity destination — UXP-06A accepted at `77bde1a35ad50fc67a20b778f44d2cda52662cff`; UXP-06B is the next active slice after transition CI is green |
+| `/devotional/[slug]` | Devotional Deity destination — UXP-06A + UXP-06B accepted; UXP-06B checkpoint `c5f5a68e143adc3800f297a1b7ffbfebab239d5b`; UXP-06C is next after transition CI is green |
 | `/experiences/[id]` | Finished Public Experience destination — UXP-05 CLOSED and accepted at `527921f3587b3c5d011a8c9ef0565bc4fc39c5ce` |
 | `/forgot-password` | Identity recovery |
 | `/knowledge` | Knowledge browse |
@@ -1273,7 +1273,7 @@ green. This closure checkpoint does not activate or implement UXP-06.
 Status:
 
 ```text
-UXP-06 — ACTIVE — UXP-06B NEXT IMPLEMENTATION SLICE
+UXP-06 — ACTIVE — UXP-06C NEXT IMPLEMENTATION SLICE
 UXP-07 — NOT STARTED — GATED ON FULL UXP-06 ACCEPTANCE
 ```
 
@@ -1331,10 +1331,10 @@ UXP-06A — Strict Deity identity + canonical/social shell
 CLOSED — ACCEPTED — 77bde1a35ad50fc67a20b778f44d2cda52662cff
 
 UXP-06B — Deity Media viewer + canonical relationship navigation
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — c5f5a68e143adc3800f297a1b7ffbfebab239d5b
 
 UXP-06C — Creator Deity manager + Creator-only preview
-NOT STARTED — GATED ON UXP-06B ACCEPTANCE
+ACTIVE — NEXT IMPLEMENTATION SLICE
 
 UXP-06D — Reuse + full Deity acceptance
 NOT STARTED — GATED ON UXP-06A/B/C ACCEPTANCE
@@ -1380,10 +1380,8 @@ exact checkpoint / push / GitHub CI #254 green.
 
 UXP-06A is CLOSED — ACCEPTED.
 
-UXP-06B is the next active implementation slice after this docs-only transition
-itself is committed, pushed and exact remote CI is green.
-
-Current UXP-06B repository evidence supports a bounded shared implementation:
+Before UXP-06B implementation, the accepted UXP-06A transition recorded this
+repository evidence for the bounded shared implementation:
 
 ```text
 the Anime Entity media viewer already supplies the required dialog/focus/video behavior;
@@ -1393,6 +1391,53 @@ typed relationship routing already exists;
 generic Knowledge detail fallback already exists;
 no new Media or relationship backend is justified.
 ```
+
+UXP-06B is accepted at:
+
+```text
+c5f5a68e143adc3800f297a1b7ffbfebab239d5b
+feat(web): add devotional deity media navigation
+GitHub CI run 256
+run id 33293220962
+success
+```
+
+Accepted UXP-06B evidence includes:
+
+```text
+shared Knowledge-owned Entity Media viewer extraction;
+Anime compatibility export retained;
+Devotional IMAGE + bounded SHORT_LOOP viewer;
+poster / caption / alt;
+explicit user-started VIDEO controls;
+no viewer autoplay / loop;
+reduced-motion ambient still/poster behavior;
+Escape close + focus restoration;
+valid/invalid media= deep-link behavior with campaign preservation;
+deterministic Devotional relationship order;
+strict Universe + Resource Type typed routes;
+wrong-Universe typed target generic fallback;
+safe non-typed /knowledge/resources/[id] fallback;
+Shiva rich proof + Hanuman sparse 390px proof;
+focused Web unit 3 files / 11 tests;
+Web unit suite 19 files / 68 tests;
+root unit pipeline 37 / 37 tasks;
+32 migrations and schema up to date;
+focused API integration 2 files / 11 tests;
+full API integration 26 files / 185 tests;
+integration pipeline 29 / 29 tasks;
+focused browser 17 / 17;
+full Web E2E 95 / 95;
+production build 22 / 22 tasks;
+architecture 0 violations across 775 modules / 2517 dependencies;
+reviewed five-file evidence ZIP;
+exact implementation checkpoint / push / GitHub CI #256 green.
+```
+
+UXP-06B is CLOSED — ACCEPTED.
+
+UXP-06C is the next active implementation slice after this docs-only transition
+itself is committed, pushed and exact remote CI is green.
 
 Important boundaries:
 
@@ -1409,9 +1454,9 @@ no Creator Studio rewrite;
 no speculative transcoding/workflow/policy/recommendation infrastructure.
 ```
 
-This activation checkpoint is docs-only. No UXP-06 production implementation
-begins before this activation commit itself is reviewed, manually committed,
-pushed and exact remote CI is green.
+This UXP-06B close / UXP-06C activation checkpoint is docs-only. No UXP-06C
+production implementation begins before this transition commit itself is reviewed,
+manually committed, pushed and exact remote CI is green.
 
 ## UXP-08 — Discovery + Engagement
 
@@ -1654,51 +1699,51 @@ UXP-06A — Strict Deity identity + canonical/social shell
 CLOSED — ACCEPTED — 77bde1a35ad50fc67a20b778f44d2cda52662cff
         ↓
 UXP-06B — Deity Media viewer + canonical relationship navigation
+CLOSED — ACCEPTED — c5f5a68e143adc3800f297a1b7ffbfebab239d5b
+        ↓
+UXP-06C — Creator Deity manager + Creator-only preview
 ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
 
-Accepted UXP-06A checkpoint:
+Accepted UXP-06B checkpoint:
 
 ```text
-77bde1a35ad50fc67a20b778f44d2cda52662cff
-feat(web): finish devotional deity identity
-GitHub CI #254 / run 33259321923 — success
+c5f5a68e143adc3800f297a1b7ffbfebab239d5b
+feat(web): add devotional deity media navigation
+GitHub CI #256 / run 33293220962 — success
 ```
 
-Next execute only after this docs-only UXP-06A close / UXP-06B activation
+Next execute only after this docs-only UXP-06B close / UXP-06C activation
 checkpoint is independently reviewed, manually committed/pushed and exact remote
 CI is green:
 
 ```text
-UXP-06B — Deity Media viewer + canonical relationship navigation
+UXP-06C — Creator Deity manager + Creator-only preview
 ```
 
-Minimum UXP-06B direction:
+Minimum UXP-06C direction:
 
 ```text
-reuse/extract the accepted Entity Media viewer for the second Devotional consumer;
-IMAGE + bounded SHORT_LOOP only;
-user-started viewer VIDEO;
-poster / caption / alt;
-Escape / focus return;
-reduced motion;
-deterministic Devotional relation sections;
-strict canonical Deity-to-Deity routing only for
-universe.devotional + devotional.deity;
-accepted Anime Character / Series routes retained;
-safe /knowledge/resources/[id] fallback for other targets.
+bounded devotional.deity Creator Web manager;
+generic Creator Entity API reuse;
+generic KnowledgeMediaManager reuse;
+preferred Devotional fact + relation vocabulary;
+ordered relationships;
+strict Deity manager type guard;
+Creator-only DRAFT preview;
+existing publish/archive lifecycle;
+public/preview presentation parity;
+no backend/schema migration expected.
 ```
 
 Do not begin:
 
 ```text
-UXP-06C;
 UXP-06D;
 UXP-07;
 UXP-08 Search expansion;
 AUDIO Knowledge placement;
-new relationship or Media backend;
-new schema/migrations;
+new Deity/Media/relationship backend;
 Creator Studio redesign;
 speculative platform work.
 ```
