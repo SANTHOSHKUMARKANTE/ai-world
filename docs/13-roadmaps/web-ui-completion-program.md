@@ -440,7 +440,7 @@ Current accepted routes now include:
 | `/creator` | Creator workspace |
 | `/creator/series/[id]/preview` | Creator-only Anime Series draft preview accepted through UXP-04C at `1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07` |
 | `/creator/preview/[id]` | Creator preview |
-| `/devotional/[slug]` | Devotional Deity destination — UXP-06A/B/C accepted; UXP-06C checkpoint `a79b5f2252ed10636743d499f163f37bd44129cc`; UXP-06D full Deity acceptance is next after transition CI is green |
+| `/devotional/[slug]` | Finished Devotional Deity destination — UXP-06 CLOSED and accepted at `563e48a57d0b95b83db674b0838aac879d48b61b` |
 | `/experiences/[id]` | Finished Public Experience destination — UXP-05 CLOSED and accepted at `527921f3587b3c5d011a8c9ef0565bc4fc39c5ce` |
 | `/forgot-password` | Identity recovery |
 | `/knowledge` | Knowledge browse |
@@ -1273,8 +1273,8 @@ green. This closure checkpoint does not activate or implement UXP-06.
 Status:
 
 ```text
-UXP-06 — ACTIVE — UXP-06D ACCEPTANCE-FIRST
-UXP-07 — NOT STARTED — GATED ON FULL UXP-06 ACCEPTANCE
+UXP-06 — CLOSED — ACCEPTED
+UXP-07 — NOT STARTED — NEXT ELIGIBLE AFTER UXP-06 CLOSURE CI
 ```
 
 The detailed frozen UXP-06 implementation/acceptance contract is:
@@ -1337,7 +1337,7 @@ UXP-06C — Creator Deity manager + Creator-only preview
 CLOSED — ACCEPTED — a79b5f2252ed10636743d499f163f37bd44129cc
 
 UXP-06D — Reuse + full Deity acceptance
-ACTIVE — ACCEPTANCE-FIRST
+CLOSED — ACCEPTED — 563e48a57d0b95b83db674b0838aac879d48b61b
 ```
 
 UXP-06A is accepted at:
@@ -1497,12 +1497,149 @@ UXP-06C is therefore CLOSED — ACCEPTED.
 The accepted Creator Deity management and preview implementation is now a
 protected regression surface for UXP-06D.
 
-UXP-06D is the next active slice only after this docs-only UXP-06C close /
-UXP-06D activation checkpoint is independently reviewed, manually committed,
-pushed and exact remote CI is green.
+Accepted UXP-06D / complete UXP-06 checkpoint:
 
-UXP-06D is acceptance-first. It begins with the frozen full Deity acceptance
-matrix. No production change is planned by this transition.
+```text
+563e48a57d0b95b83db674b0838aac879d48b61b
+test(web): prove full devotional deity acceptance
+GitHub CI #260
+run id 33306100558
+completed / success
+```
+
+UXP-06D remained acceptance-first. No Deity production change was required.
+
+Reviewed final acceptance evidence includes:
+
+```text
+exact two test-only acceptance files;
+523 test-only insertions;
+0 production changes;
+0 docs changes in the acceptance checkpoint;
+0 API/schema/migration/dependency/CI changes;
+
+responsive/reuse:
+1440px desktop through accepted UXP-06A/B/C regression;
+834px sparse tablet proof;
+390px-class mobile proof;
+Shiva;
+Hanuman;
+sparse/no-Media Deity;
+no Deity-name-specific production branching;
+no horizontal overflow;
+
+identity/content:
+native name present/absent;
+alternate names present/absent;
+overview present/absent;
+facts rich/sparse/absent;
+IMAGE;
+bounded SHORT_LOOP;
+no Media;
+relationship groups present/sparse/absent;
+
+lifecycle/roles:
+anonymous visitor;
+authenticated shared shell;
+Favorite add/remove;
+Collection membership mutation;
+authorized Creator;
+unauthorized Creator;
+DRAFT non-public;
+PUBLISHED public;
+ARCHIVED non-public;
+Creator preview/public composition parity;
+
+failure/route states:
+loading -> ready;
+unexpected error;
+not found;
+explicit malformed invalid slug -> API 404 + bounded Deity not-found UI;
+wrong Resource Type;
+unpublished;
+archived;
+sparse valid Deity;
+
+Media/accessibility:
+page-owned viewer;
+poster;
+reduced motion;
+keyboard controls;
+Escape close;
+focus restoration;
+caption/alt;
+no audible autoplay;
+direct AUDIO Knowledge placement omitted;
+no Media delivery request for rejected direct AUDIO placement;
+
+canonical/social:
+canonical /devotional/[slug];
+campaign-safe entry;
+Open Graph title/description;
+eligible STILL IMAGE;
+SHORT_LOOP poster precedence;
+raw VIDEO without poster cannot fabricate social image;
+no eligible social image fallback retained through accepted regression;
+Share / Copy canonical link;
+
+navigation/regression:
+Deity -> Deity relationship navigation;
+safe non-Deity relationship destinations;
+current /knowledge context;
+no /devotional landing before UXP-07;
+Search regression without UXP-08 expansion;
+Anime landing / Character / Series regressions;
+Public Experience regressions;
+Creator Character / Series regressions;
+
+engineering:
+root lint 21 / 21 tasks;
+root typecheck 41 / 41 tasks;
+focused UXP-06D Web unit 4 files / 11 tests;
+Web unit suite 20 files / 70 tests;
+root unit pipeline 37 / 37 tasks;
+32 canonical migrations with schema up to date;
+focused UXP-06D API integration 5 files / 27 tests;
+isolated Media integration 3 / 3;
+isolated Knowledge integration 15 / 15;
+isolated Identity Access integration 41 / 41;
+isolated AI Creator integration 24 / 24;
+full integration pipeline 29 / 29 tasks;
+full API integration 26 files / 185 tests;
+focused browser acceptance 25 / 25;
+full Web browser E2E 106 / 106;
+production build 22 / 22 tasks;
+fresh-process production canonical/social proof;
+architecture validation with 0 violations across 782 modules / 2539 dependencies;
+reviewed Resume 4 evidence ZIP;
+exact candidate/worktree/staged blob identity;
+0 unstaged tracked files / 0 untracked files;
+exact acceptance checkpoint committed and pushed;
+GitHub CI #260 / run 33306100558 green on the exact acceptance SHA.
+```
+
+Final accepted UXP-06D proof blobs:
+
+```text
+apps/web/e2e/devotional-deity-full-acceptance.spec.ts
+f851f5243378f21bf202e286251ee936578cdcbb
+
+apps/web/test/devotional-deity-full-acceptance.spec.ts
+0e2f11079e93d846460508175b775a0affa4b39d
+```
+
+UXP-06D is therefore CLOSED — ACCEPTED.
+
+UXP-06 is therefore CLOSED — ACCEPTED.
+
+UXP-07 remains NOT STARTED in this closure checkpoint.
+
+UXP-07 is the next eligible Web completion page, but remains NOT STARTED until
+this docs-only UXP-06 closure checkpoint itself is independently reviewed,
+manually committed/pushed and exact remote CI is green.
+
+This closure checkpoint does not create the UXP-07 detailed contract and does
+not implement `/devotional`.
 
 Important boundaries:
 
@@ -1760,80 +1897,63 @@ UXP-05 — Public Experience
 CLOSED — ACCEPTED
         ↓
 UXP-06 — Devotional Deity
-ACTIVE
+CLOSED — ACCEPTED — 563e48a57d0b95b83db674b0838aac879d48b61b
         ↓
-UXP-06A — Strict Deity identity + canonical/social shell
-CLOSED — ACCEPTED — 77bde1a35ad50fc67a20b778f44d2cda52662cff
-        ↓
-UXP-06B — Deity Media viewer + canonical relationship navigation
-CLOSED — ACCEPTED — c5f5a68e143adc3800f297a1b7ffbfebab239d5b
-        ↓
-UXP-06C — Creator Deity manager + Creator-only preview
-CLOSED — ACCEPTED — a79b5f2252ed10636743d499f163f37bd44129cc
-        ↓
-UXP-06D — Reuse + full Deity acceptance
-ACTIVE — ACCEPTANCE-FIRST
+UXP-07 — Devotional Universe landing
+NOT STARTED — NEXT ELIGIBLE AFTER UXP-06 CLOSURE CI
 ```
 
-Accepted UXP-06C checkpoint:
+Complete UXP-06 acceptance checkpoint:
 
 ```text
-a79b5f2252ed10636743d499f163f37bd44129cc
-feat(web): add devotional deity creator management
-GitHub CI #258 / run 33300488072 — success
+563e48a57d0b95b83db674b0838aac879d48b61b
+test(web): prove full devotional deity acceptance
+GitHub CI #260 / run 33306100558 — success
 ```
 
-Accepted UXP-06C proof includes:
+UXP-06 is closed with:
 
 ```text
-bounded Creator Deity manager;
-generic Creator Entity API reuse;
-unchanged KnowledgeMediaManager reuse;
-preferred Web-only Devotional fact/relation vocabulary;
-strict Universe + Resource Type guard;
-Creator-only DRAFT preview;
-anonymous + unauthorized boundaries;
-direct DRAFT public rejection;
-publish -> canonical public Deity;
-archive -> canonical non-public Deity;
-Creator preview/public saved-data parity;
-Anime Character/Series Creator regressions;
-focused browser 19 / 19;
-full Web E2E 100 / 100;
-full API integration 185 / 185;
-32 migrations;
+strict Deity identity/canonical/social shell;
+Deity Media viewer + typed relationship navigation;
+Creator Deity manager + Creator-only preview;
+full acceptance-only final slice;
+25 / 25 focused browser acceptance;
+106 / 106 full Web E2E;
+20 Web unit files / 70 tests;
+26 API integration files / 185 tests;
+29 / 29 integration tasks;
+32 migrations up to date;
 production build 22 / 22;
-architecture 0 violations across 780 modules / 2535 dependencies;
-GitHub CI #258 green on the exact implementation checkpoint.
+fresh-process production canonical/social proof;
+architecture 0 violations across 782 modules / 2539 dependencies;
+0 production changes in UXP-06D;
+GitHub CI #260 green on exact checkpoint.
 ```
 
-Next, only after this docs-only transition is independently reviewed, manually
-committed/pushed and exact remote CI is green:
+Next, only after this docs-only UXP-06 closure checkpoint is itself reviewed,
+manually committed/pushed and exact remote CI is green:
 
 ```text
-UXP-06D — Reuse + full Deity acceptance
+inspect remote-green repository;
+create/freeze detailed UXP-07 contract;
+activate UXP-07 — Devotional Universe landing;
+keep activation docs-only.
 ```
 
-UXP-06D is acceptance-first:
-
-```text
-execute the frozen UXP-06D acceptance matrix;
-do not make planned production changes;
-if acceptance exposes a real defect, correct only the minimum real defect;
-rerun the relevant/full acceptance chain;
-protect all accepted UXP-06A/B/C surfaces.
-```
+Do not begin `/devotional` implementation in this closure checkpoint.
 
 Do not begin:
 
 ```text
-UXP-07;
 UXP-08 Search expansion;
+new Devotional backend;
+new generic Search/index architecture;
 AUDIO Knowledge placement;
-new Deity/Media/relationship backend;
 Creator Studio redesign;
 speculative platform work.
 ```
 
-The Master Roadmap remains unchanged. WPR-M05 remains the active Web Product
-Readiness gate, and P10-M04 remains sequencing-blocked.
+WPR-M05 remains ACTIVE.
+P10-M04 remains SEQUENCING-BLOCKED.
+The Master Roadmap remains unchanged.
