@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-07 |
 | Area | Product / Web / Knowledge / Media / Discovery |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-07A ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-07B ACCEPTANCE-FIRST |
 | Created | 2026-08-30 |
 | Activation Baseline | `ae9bfb8a5d504f71c703c82e835de207a62c9e66` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -676,7 +676,7 @@ exists.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — efe50f0d2f921990a22dc3c0a1395745696fe1ed
 ```
 
 Production scope:
@@ -731,12 +731,95 @@ no UXP-08 Search expansion;
 no backend/schema/migration.
 ```
 
+Accepted UXP-07A implementation checkpoint:
+
+```text
+efe50f0d2f921990a22dc3c0a1395745696fe1ed
+feat(web): add devotional universe landing
+GitHub CI #263
+run id 33312976028
+completed / success
+```
+
+UXP-07A is therefore:
+
+```text
+CLOSED — ACCEPTED — efe50f0d2f921990a22dc3c0a1395745696fe1ed
+```
+
+Reviewed UXP-07A evidence includes:
+
+```text
+exact eight-file implementation/test scope;
+1421 insertions / 5 deletions;
+/devotional first-party Web route;
+typed universe.devotional presentation;
+generic listPublicKnowledgeDiscovery reuse;
+universe.devotional + devotional.deity + limit 6;
+truthful Recently Updated Deities;
+canonical /devotional/[slug] child navigation;
+IMAGE / bounded SHORT_LOOP / no-Media cards;
+loading / error+retry / empty;
+plain /search entry without UXP-08 expansion;
+/knowledge continuation;
+canonical /devotional metadata;
+stable presentation-owned Devotional Open Graph image;
+campaign-safe canonical identity;
+anonymous + authenticated shared shell;
+reduced motion;
+keyboard navigation;
+390px no-horizontal-overflow;
+rendered mobile H1 text-bound containment;
+manual desktop + corrected 390px screenshot review;
+obsolete pre-UXP-07 /devotional=404 regression removed;
+no backend/schema/migration/dependency/CI/docs change in implementation checkpoint;
+root lint 21 / 21;
+root typecheck 41 / 41;
+focused Web unit 4 files / 9 tests;
+Web unit 21 files / 71 tests;
+root unit 37 / 37 tasks;
+32 migrations / schema up to date;
+focused API 3 files / 11 tests;
+integration 29 / 29 tasks;
+full API integration 26 files / 185 tests;
+focused browser 27 / 27;
+full Web E2E 113 / 113;
+production build 22 / 22;
+fresh-process /devotional canonical/social proof;
+architecture 0 violations / 788 modules / 2555 dependencies;
+reviewed Resume 3 evidence ZIP;
+exact candidate/worktree/staged blob identity;
+0 unstaged / 0 untracked;
+GitHub CI #263 / run 33312976028 green on the exact checkpoint.
+```
+
+Final accepted UXP-07A blobs:
+
+```text
+apps/web/src/app/devotional/page.tsx
+aa89e23dc1c27f54f79af67656208c863a9a7ba4
+apps/web/src/app/devotional/opengraph-image.tsx
+3ddc4d9833deb0ce48a45260a9a237b135d7e21f
+apps/web/src/devotional/devotional-universe-discovery-foundation.tsx
+7396f0757636fde9e8084b838c33f37909240dae
+apps/web/src/devotional/devotional-universe-metadata.ts
+9d1a29a40011a6a6ea9d7e05e2845ad21f13b5d8
+apps/web/src/app/globals.css
+9b549a47caa3b258ceb0f01af5a15295a367fca1
+apps/web/e2e/devotional-universe-foundation.spec.ts
+1181370b62e969753067a34afecf4009c1afafe8
+apps/web/test/devotional-universe-social-identity.spec.ts
+906b997b88eb1add9c44ad5170f92d18bb1a3459
+apps/web/e2e/devotional-deity-full-acceptance.spec.ts
+839009566482477f205dc604600aafa298e1861d
+```
+
 ## UXP-07B — Reuse + full Devotional landing acceptance
 
 Status:
 
 ```text
-NOT STARTED — GATED ON UXP-07A ACCEPTANCE
+ACTIVE — ACCEPTANCE-FIRST
 ```
 
 UXP-07B is acceptance-first.
@@ -885,56 +968,84 @@ closure is recorded separately.
 ---
 
 # 19. Current Position
+UXP-07A is accepted at:
 
-After this docs-only activation checkpoint is independently reviewed, manually
-committed/pushed and exact remote CI is green:
+```text
+efe50f0d2f921990a22dc3c0a1395745696fe1ed
+feat(web): add devotional universe landing
+GitHub CI #263 / run 33312976028
+completed / success
+```
+
+Current execution state:
 
 ```text
 UXP-06 — CLOSED — ACCEPTED
 UXP-07 — ACTIVE
-UXP-07A — ACTIVE — NEXT IMPLEMENTATION SLICE
-UXP-07B — NOT STARTED — GATED ON UXP-07A ACCEPTANCE
+UXP-07A — CLOSED — ACCEPTED — efe50f0d2f921990a22dc3c0a1395745696fe1ed
+UXP-07B — ACTIVE — ACCEPTANCE-FIRST
 UXP-08 — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
 Master Roadmap — UNCHANGED
 ```
 
-This activation does not implement `/devotional`.
+This transition is docs-only. UXP-07B has no planned production feature.
+Production changes are permitted only if the frozen acceptance matrix exposes a
+real defect, and then only the minimum bounded correction may be made before
+rerunning the complete acceptance matrix.
 
 ---
 
 # 20. Next Action
-
-After the activation checkpoint is remotely green, implement only:
-
-```text
-UXP-07A — Devotional landing shell + Deity discovery + social identity
-```
-
-Start from the exact activation SHA.
-
-Expected architecture:
+After this docs-only transition is independently reviewed, manually
+committed/pushed and exact remote CI is green, execute only:
 
 ```text
-apps/web route/composition
-        |
-        v
-existing typed Devotional presentation
-        |
-        v
-existing Web public Knowledge discovery client
-        |
-        v
-existing generic Knowledge discovery API/platform
-        |
-        v
-published devotional.deity cards
-        |
-        v
-/devotional/[slug]
+UXP-07B — Reuse + full Devotional landing acceptance
+ACTIVE — ACCEPTANCE-FIRST
 ```
 
-Do not pre-build UXP-07B production work.
+Protected implementation baseline:
+
+```text
+efe50f0d2f921990a22dc3c0a1395745696fe1ed
+feat(web): add devotional universe landing
+```
+
+Run the complete frozen Section 17 acceptance matrix, including:
+
+```text
+1440px desktop;
+834px tablet;
+390px-class mobile;
+200% zoom hierarchy;
+multiple Deities;
+IMAGE / SHORT_LOOP / no Media;
+loading / error / retry / empty / populated;
+anonymous + authenticated shared shell;
+published-only discovery;
+DRAFT + ARCHIVED hidden API regressions;
+canonical /devotional;
+campaign-safe social identity;
+stable Universe Open Graph image;
+landing -> finished Deity;
+Knowledge continuation;
+Search regression without UXP-08 expansion;
+finished Deity regression;
+Anime landing / Character / Series regressions;
+Public Experience regression;
+full engineering / build / fresh-production / architecture proof.
+```
+
+Expected production scope:
+
+```text
+none
+```
+
+If acceptance exposes a real defect, make only the minimum bounded correction
+and rerun the complete matrix.
 
 Do not begin UXP-08.
+Do not close full UXP-07 until UXP-07B is remotely accepted.
