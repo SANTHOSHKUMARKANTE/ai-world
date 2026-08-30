@@ -2915,3 +2915,427 @@ textarea {
   font-size: 0.82rem;
   line-height: 1.5;
 }
+
+/* UXP-07A — Devotional Universe landing + Deity discovery */
+.aw-public-page.aw-devotional-universe-route {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: clip;
+  --aw-brand: #9a5a22;
+  --aw-brand-strong: #7b451b;
+  --aw-focus: #2f6f63;
+}
+
+.aw-devotional-universe {
+  padding-block: clamp(1.25rem, 3vw, 2.5rem) clamp(4rem, 9vw, 7rem);
+}
+
+.aw-devotional-universe-hero {
+  position: relative;
+  display: grid;
+  min-height: clamp(29rem, 48vw, 38rem);
+  overflow: hidden;
+  align-items: center;
+  border: 1px solid #eadac2;
+  border-radius: clamp(1rem, 2vw, 1.6rem);
+  background:
+    radial-gradient(circle at 82% 28%, rgb(196 122 44 / 16%), transparent 15rem),
+    linear-gradient(135deg, #fffaf0 0%, #f8edda 54%, #eef5ef 100%);
+  box-shadow: 0 28px 80px rgb(72 50 27 / 12%);
+  grid-template-columns: minmax(0, 1.08fr) minmax(17rem, 0.92fr);
+}
+
+.aw-devotional-universe-hero__copy {
+  position: relative;
+  z-index: 3;
+  max-width: 48rem;
+  padding: clamp(2rem, 5vw, 4.5rem);
+}
+
+.aw-devotional-universe-hero__promise {
+  width: fit-content;
+  margin: 1rem 0 0;
+  border: 1px solid rgb(154 90 34 / 18%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 58%);
+  color: #6e5035;
+  font-size: 0.82rem;
+  font-weight: 740;
+  line-height: 1.4;
+  padding: 0.55rem 0.8rem;
+}
+
+.aw-devotional-universe-hero h1 {
+  margin: 0.85rem 0 1rem;
+  color: #2e251d;
+  font-size: clamp(3.7rem, 9vw, 7.2rem);
+  font-weight: 810;
+  letter-spacing: -0.065em;
+  line-height: 0.9;
+}
+
+.aw-devotional-universe-hero__description {
+  max-width: 40rem;
+  margin: 0;
+  color: #665e56;
+  font-size: clamp(1rem, 1.7vw, 1.18rem);
+  line-height: 1.75;
+}
+
+.aw-devotional-universe-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.8rem;
+}
+
+.aw-devotional-universe-route .aw-button--primary {
+  background: #8f5420;
+  color: #fffaf3;
+}
+
+.aw-devotional-universe-route .aw-button--primary:hover {
+  background: #754219;
+}
+
+.aw-devotional-universe-route .aw-button--secondary {
+  border-color: rgb(117 79 45 / 24%);
+  background: rgb(255 255 255 / 68%);
+  color: #3c3025;
+}
+
+.aw-devotional-universe-route .aw-button--secondary:hover {
+  border-color: rgb(117 79 45 / 38%);
+  background: #fffdf8;
+}
+
+.aw-devotional-universe-hero__visual {
+  position: relative;
+  min-height: 24rem;
+  align-self: stretch;
+  overflow: hidden;
+}
+
+.aw-devotional-universe-hero__halo,
+.aw-devotional-universe-hero__light {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.aw-devotional-universe-hero__halo {
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.aw-devotional-universe-hero__halo--outer {
+  width: clamp(15rem, 29vw, 25rem);
+  top: 12%;
+  right: 3%;
+  border: 1px solid rgb(154 90 34 / 22%);
+  box-shadow:
+    0 0 70px rgb(196 122 44 / 12%),
+    inset 0 0 80px rgb(255 255 255 / 48%);
+}
+
+.aw-devotional-universe-hero__halo--inner {
+  width: clamp(9rem, 17vw, 14rem);
+  top: 25%;
+  right: 15%;
+  border: 1px solid rgb(47 111 99 / 20%);
+  background: radial-gradient(circle, rgb(255 245 221 / 90%), rgb(219 232 222 / 32%) 70%);
+}
+
+.aw-devotional-universe-hero__light {
+  width: 64%;
+  height: 0.12rem;
+  right: -8%;
+  bottom: 26%;
+  background: linear-gradient(90deg, transparent, rgb(154 90 34 / 28%), transparent);
+  transform: rotate(-8deg);
+}
+
+.aw-devotional-discovery {
+  padding-top: clamp(4rem, 9vw, 7rem);
+}
+
+.aw-devotional-discovery__heading {
+  display: flex;
+  align-items: end;
+  gap: 1.5rem 3rem;
+  justify-content: space-between;
+}
+
+.aw-devotional-discovery__heading h2,
+.aw-devotional-continue h2 {
+  margin: 0.55rem 0 0;
+  color: #312820;
+  font-size: clamp(2rem, 5vw, 3.35rem);
+  font-weight: 790;
+  letter-spacing: -0.045em;
+}
+
+.aw-devotional-discovery__heading > p,
+.aw-devotional-continue > div > p:last-child {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--aw-text-muted);
+  line-height: 1.65;
+}
+
+.aw-devotional-discovery-grid {
+  display: grid;
+  gap: 1.25rem;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.aw-devotional-discovery-card {
+  display: grid;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #e7ddd0;
+  border-radius: 1.15rem;
+  background: #fffdf9;
+  box-shadow: 0 16px 48px rgb(75 52 30 / 8%);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.aw-devotional-discovery-card:hover,
+.aw-devotional-discovery-card:focus-visible {
+  border-color: #cfb28f;
+  box-shadow: 0 20px 54px rgb(75 52 30 / 13%);
+  transform: translateY(-2px);
+}
+
+.aw-devotional-discovery-card__media {
+  position: relative;
+  display: grid;
+  min-height: 14rem;
+  overflow: hidden;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background:
+    radial-gradient(circle at 50% 35%, rgb(196 122 44 / 20%), transparent 46%),
+    linear-gradient(145deg, #f8ead5, #e8f0e9);
+}
+
+.aw-devotional-discovery-card__media img,
+.aw-devotional-discovery-card__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aw-devotional-discovery-card__fallback {
+  display: grid;
+  width: 4.5rem;
+  height: 4.5rem;
+  place-items: center;
+  border: 1px solid rgb(143 84 32 / 22%);
+  border-radius: 50%;
+  background: rgb(255 253 249 / 70%);
+  color: #8f5420;
+  font-size: 1.65rem;
+  font-weight: 780;
+}
+
+.aw-devotional-discovery-card__body {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding: 1.2rem;
+}
+
+.aw-devotional-discovery-card__body h3 {
+  margin: 0;
+  color: #312820;
+  font-size: 1.22rem;
+  letter-spacing: -0.025em;
+}
+
+.aw-devotional-discovery-card__body > p:not(.aw-eyebrow) {
+  margin: 0;
+  color: var(--aw-text-muted);
+  line-height: 1.65;
+}
+
+.aw-devotional-discovery-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.25rem;
+  color: #87501f;
+  font-size: 0.9rem;
+  font-weight: 760;
+}
+
+.aw-devotional-discovery-state {
+  display: grid;
+  min-height: 13rem;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.8rem;
+  border: 1px solid #e8ddd0;
+  border-radius: 1.15rem;
+  background: #fffdf9;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.aw-devotional-discovery-state strong {
+  color: #312820;
+}
+
+.aw-devotional-discovery-state p {
+  margin: 0.45rem 0 0;
+  color: var(--aw-text-muted);
+  line-height: 1.6;
+}
+
+.aw-devotional-discovery-state--error {
+  border-color: rgb(165 61 61 / 28%);
+  background: #fff9f7;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.aw-devotional-discovery-state--empty {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.aw-devotional-discovery-skeletons {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.aw-devotional-discovery-skeletons span {
+  min-height: 5rem;
+  border-radius: 0.8rem;
+  background: linear-gradient(120deg, #f4e6d2, #edf3ee);
+}
+
+.aw-devotional-continue {
+  display: flex;
+  align-items: end;
+  gap: 1.5rem 3rem;
+  justify-content: space-between;
+  margin-top: clamp(4rem, 8vw, 6rem);
+  border-top: 1px solid #e5d9c9;
+  padding-top: clamp(2rem, 5vw, 3.5rem);
+}
+
+.aw-devotional-continue__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+@media (max-width: 70rem) {
+  .aw-devotional-universe-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(13rem, 0.65fr);
+  }
+
+  .aw-devotional-discovery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 52rem) {
+  .aw-devotional-universe-hero {
+    min-height: 36rem;
+    align-items: end;
+    grid-template-columns: 1fr;
+  }
+
+  .aw-devotional-universe-hero__copy {
+    z-index: 4;
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  .aw-devotional-universe-hero__visual {
+    position: absolute;
+    inset: 0;
+  }
+
+  .aw-devotional-universe-hero__visual::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      0deg,
+      rgb(255 250 240 / 98%) 0%,
+      rgb(255 250 240 / 74%) 48%,
+      transparent 82%
+    );
+    content: '';
+  }
+
+  .aw-devotional-discovery__heading,
+  .aw-devotional-continue {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .aw-devotional-discovery-state--error,
+  .aw-devotional-discovery-state--empty {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 38rem) {
+  .aw-devotional-universe {
+    width: min(calc(100% - 1rem), var(--aw-content-width));
+    padding-top: 0.75rem;
+  }
+
+  .aw-devotional-universe-hero {
+    min-height: 34rem;
+    border-radius: 1rem;
+  }
+
+  .aw-devotional-universe-hero h1 {
+    font-size: clamp(2.9rem, 15vw, 4.1rem);
+    line-height: 0.94;
+  }
+
+  .aw-devotional-universe-hero__actions,
+  .aw-devotional-continue__actions {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .aw-devotional-universe-hero__actions .aw-button,
+  .aw-devotional-continue__actions .aw-button {
+    width: 100%;
+  }
+
+  .aw-devotional-discovery {
+    padding-top: 3.5rem;
+  }
+
+  .aw-devotional-discovery-grid,
+  .aw-devotional-discovery-skeletons {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aw-devotional-discovery-card:hover,
+  .aw-devotional-discovery-card:focus-visible {
+    transform: none;
+  }
+
+  .aw-devotional-universe-hero__light {
+    opacity: 0.5;
+  }
+}

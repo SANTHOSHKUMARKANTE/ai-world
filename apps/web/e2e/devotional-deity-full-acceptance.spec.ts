@@ -433,9 +433,4 @@ test.describe('UXP-06D full Devotional Deity acceptance gaps', () => {
 
     expect(mediaDeliveryRequests).toBe(0);
   });
-
-  test('keeps the /devotional Universe landing absent until UXP-07', async ({ page }) => {
-    const response = await page.goto('/devotional');
-    expect(response?.status()).toBe(404);
-  });
 });
