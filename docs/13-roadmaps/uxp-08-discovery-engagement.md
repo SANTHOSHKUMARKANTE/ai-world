@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-08 |
 | Area | Product / Web / Knowledge / Discovery / Engagement |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-08A ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-08B ACTIVE |
 | Created | 2026-08-31 |
 | Activation Baseline | `2c5a9a1bfd4f2813c961ff9a95e463d85f6ed665` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -536,8 +536,174 @@ library content from becoming a public indexing/social surface.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
 ```
+
+Accepted UXP-08A implementation checkpoint:
+
+```text
+0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
+feat(web): finish knowledge browse
+GitHub CI #268
+run id 33364121387
+completed / success
+```
+
+Reviewed UXP-08A evidence includes:
+
+```text
+exactly 9 Web/test files;
+1519 insertions / 603 deletions;
+0 API/platform/schema/migration/dependency changes;
+typed Devotional + Anime Knowledge browse;
+real display identity;
+IMAGE / bounded SHORT_LOOP / no-Media;
+typed canonical destinations + generic fallback;
+loading / error / retry / empty;
+anonymous + authenticated shared shell;
+1440 / 834 / 390 / effective-200%-zoom;
+campaign-safe /knowledge metadata;
+lint 21 / 21;
+typecheck 41 / 41;
+focused Knowledge units 2 files / 8 tests;
+root unit 37 / 37 tasks;
+Web unit 22 files / 73 tests;
+32 migrations / schema up to date;
+focused API 2 files / 5 tests;
+integration 29 / 29 tasks;
+full API 27 files / 188 tests;
+focused browser 38 / 38;
+full Web E2E 136 / 136;
+build 22 / 22;
+fresh production proof;
+architecture 0 violations / 794 modules / 2570 dependencies;
+exact reviewed candidate blobs;
+GitHub CI #268 green.
+```
+
+Accepted UXP-08A implementation checkpoint:
+
+```text
+0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
+feat(web): finish knowledge browse
+GitHub CI #268
+run id 33364121387
+completed / success
+```
+
+UXP-08A is therefore:
+
+```text
+CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
+```
+
+Reviewed implementation and acceptance evidence:
+
+```text
+exactly 9 Web/test files;
+1519 insertions / 603 deletions;
+5 production files + 4 test files;
+0 API changes;
+0 Knowledge-platform changes;
+0 schema changes;
+0 migration changes;
+0 dependency changes;
+0 roadmap changes in the implementation checkpoint;
+
+Knowledge browse:
+existing /knowledge route retained;
+typed Devotional + Anime presentation;
+existing listPublicKnowledgeDiscovery reused;
+Universe query + bounded limit 8;
+real displayName identity;
+friendly Resource Type vocabulary;
+summary + updated context;
+IMAGE;
+bounded muted SHORT_LOOP;
+no-Media fallback;
+reduced-motion poster behavior;
+known Anime Character / Anime Series / Devotional Deity canonical destinations;
+generic /knowledge/resources/[resourceId] fallback;
+loading;
+unexpected error;
+local retry;
+per-Universe empty;
+independent Universe failure isolation;
+anonymous shared shell;
+authenticated shared shell;
+Search continuation;
+stable /knowledge metadata;
+campaign-safe canonical;
+stable /knowledge/opengraph-image;
+
+responsive/accessibility:
+1440 desktop;
+834 tablet;
+390 mobile;
+effective-200%-zoom / 720 CSS-pixel hierarchy;
+no horizontal overflow;
+semantic headings;
+keyboard;
+visible focus;
+meaningful links;
+alt text;
+reduced motion;
+manual review of all four captured screenshots;
+
+engineering:
+root lint 21 / 21;
+root typecheck 41 / 41;
+focused Knowledge units 2 files / 8 tests;
+canonical root unit pipeline 37 / 37 tasks;
+Web unit suite 22 files / 73 tests;
+32 canonical migrations / schema up to date;
+focused public Knowledge discovery API 2 files / 5 tests;
+full integration 29 / 29 tasks;
+full API integration 27 files / 188 tests;
+focused browser + finished-page regressions 38 / 38;
+full Web E2E 136 / 136;
+production build 22 / 22;
+fresh-process /knowledge production proof;
+architecture validation 0 violations across 794 modules / 2570 dependencies;
+reviewed Resume 1 full-validation evidence;
+reviewed Resume 2 exact staged-identity evidence;
+expected = evidence = worktree = staged for all 9 blobs;
+0 unstaged / 0 untracked;
+manual commit/push;
+exact GitHub CI #268 success on the accepted SHA.
+```
+
+Final accepted UXP-08A blobs:
+
+```text
+apps/web/src/app/knowledge/page.tsx
+36eb51e78c9fc3d3057464feab62c44327bbef33
+
+apps/web/src/app/knowledge/opengraph-image.tsx
+eeb5ee4fc3c6b9dfaf8977b9f5f8240acfa4dfb1
+
+apps/web/src/knowledge/knowledge-universe-section.tsx
+3ee0f5358cd6bbed7e76d44a9749f78d212b387e
+
+apps/web/src/knowledge/public-knowledge-destination.ts
+0ac054d60869451c43c26d8122a7ed75d14d894c
+
+apps/web/src/app/globals.css
+da402c81d6e2ec613206126401e10630c272045c
+
+apps/web/e2e/knowledge.spec.ts
+cd97ca7110c0a5be18d48c4b2b92e11d001fadd5
+
+apps/web/e2e/knowledge-browse-full-acceptance.spec.ts
+d00a6e4fea0bf9913eaf8edfbac0bc35b79daaf4
+
+apps/web/test/knowledge-browse-foundation.spec.ts
+b84f4298450f3a14c26a8d5760740ee8d28e474a
+
+apps/web/test/knowledge-experience.spec.tsx
+f757377f807e77da8c3e06105d0a4f59e9f3df48
+```
+
 
 Canonical route:
 
@@ -621,8 +787,94 @@ Anime / Devotional landing + Entity regressions.
 Status:
 
 ```text
-NOT STARTED — GATED ON UXP-08A ACCEPTANCE
+ACTIVE — NEXT IMPLEMENTATION SLICE
 ```
+
+UXP-08B activation baseline:
+
+```text
+0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
+feat(web): finish knowledge browse
+GitHub CI #268 / run 33364121387
+completed / success
+```
+
+Exact Generic Knowledge Detail starting surfaces:
+
+```text
+apps/web/src/app/knowledge/resources/[id]/page.tsx
+0927b193331386137ecb33f43c94fcf7755f8c52
+
+apps/web/src/knowledge/public-knowledge-resource-detail.tsx
+bf82eedeaa7ebe605c1bac29e17215a13afed0c0
+
+apps/web/src/knowledge/public-knowledge-api.ts
+fc2d53a982ccf073c67c434aa0e4b74403111936
+
+apps/web/src/engagement/resource-engagement-controls.tsx
+5607a1027b20fa39172f9dfb6d79d4441f47449c
+
+apps/api/src/knowledge/public-knowledge.controller.ts
+aedbd1cc10c0f94b8907199ddda4351fa5dd1179
+
+apps/api/src/knowledge/public-knowledge-entity.controller.ts
+0a995a653b14186187e80f3448943fd480e0694a
+
+apps/web/src/knowledge/public-knowledge-destination.ts
+0ac054d60869451c43c26d8122a7ed75d14d894c
+
+apps/web/src/universes/presentation.ts
+f1f85727fc2712b50c31e637f0bbe2934db46842
+```
+
+Activation inspection confirms:
+
+```text
+generic /knowledge/resources/[id] already exists;
+the page already composes real ResourceEngagementControls;
+the base public Resource payload remains intentionally thin:
+  id + universeKey + resourceType + timestamps;
+the public Knowledge Entity projection already exposes:
+  slug + displayName + nativeName + alternateNames + summary + overview + facts
+  + Media + relations;
+the Web-owned canonical destination resolver accepted in UXP-08A already exists;
+
+important bridge constraint:
+the generic route starts from canonical Resource ID;
+the current public Entity Web/API contract is keyed by universeKey + slug;
+the thin public Resource response does not expose slug;
+the public published-Entity store currently exposes route-key lookup, not
+Resource-ID lookup;
+a direct public Resource-ID -> published Entity/profile bridge is therefore not
+proven at this transition checkpoint.
+```
+
+Therefore the expected UXP-08B architecture is:
+
+```text
+finish the generic fallback page by composing accepted Web/Knowledge/Engagement capabilities;
+reuse existing public Entity/profile identity when a public-safe bridge can be resolved;
+preserve specialized canonical destinations when identity proves one;
+preserve /knowledge/resources/[id] only as the truthful generic fallback;
+retain existing Engagement ownership;
+do not create an Engagement -> Knowledge platform dependency;
+
+first prove whether an already-accepted public-safe Resource-ID -> Entity/profile
+bridge exists on the exact transition baseline;
+
+if no such bridge exists, one bounded Knowledge-owned public read correction is
+eligible:
+  resolve a PUBLISHED Entity/profile from canonical Resource ID;
+  or make the minimum semantically equivalent public projection adjustment;
+
+the correction must reuse existing Knowledge ownership and publication rules;
+do not duplicate Entity/profile data into a new model merely for display;
+do not create a new backend/service family;
+no new persistence/storage;
+no schema migration expected.
+```
+
+No UXP-08B product file changes in this transition.
 
 Canonical route:
 
@@ -943,10 +1195,10 @@ The frozen UXP-08 sequence is:
 
 ```text
 UXP-08A — Finished Knowledge Browse
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
 
 UXP-08B — Finished Generic Knowledge Detail
-NOT STARTED — GATED ON UXP-08A ACCEPTANCE
+ACTIVE — NEXT IMPLEMENTATION SLICE
 
 UXP-08C — Finished Cross-Universe Search
 NOT STARTED — GATED ON UXP-08B ACCEPTANCE
@@ -962,7 +1214,7 @@ Each slice requires:
 
 ```text
 implementation/evidence runner;
-independent ZIP review;
+independent evidence review;
 manual commit;
 manual push;
 exact remote SHA verification;
@@ -976,13 +1228,13 @@ No slice is activated merely because the next design is obvious.
 
 # 17. Current Position
 
-At this activation checkpoint:
+Current execution state:
 
 ```text
 UXP-07 — CLOSED — ACCEPTED
 UXP-08 — ACTIVE
-UXP-08A — ACTIVE — NEXT IMPLEMENTATION SLICE
-UXP-08B — NOT STARTED
+UXP-08A — CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
+UXP-08B — ACTIVE — NEXT IMPLEMENTATION SLICE
 UXP-08C — NOT STARTED
 UXP-08D — NOT STARTED
 UXP-08E — NOT STARTED
@@ -992,34 +1244,58 @@ P10-M04 — SEQUENCING-BLOCKED
 Master Roadmap — UNCHANGED
 ```
 
-This activation is docs-only.
+UXP-08A is remotely accepted.
 
-No UXP-08 product file belongs in this checkpoint.
+This A→B checkpoint is docs-only.
+
+No UXP-08B product file belongs in this transition.
+
+UXP-08C/D/E and UXP-09 remain not started.
 
 ---
 
 # 18. Next Action
 
-After this UXP-08 activation/freeze checkpoint is independently reviewed,
+After this docs-only A→B transition is independently reviewed,
 manually committed/pushed and exact remote CI is green, execute only:
 
 ```text
-UXP-08A — Finished Knowledge Browse
+UXP-08B — Finished Generic Knowledge Detail
 ```
 
-Start UXP-08A from the exact remotely-green activation SHA.
+Start UXP-08B from the exact remotely-green transition SHA.
 
-Before writing production code:
+Before production changes:
 
 ```text
-re-inspect the exact activation baseline;
-lock current /knowledge implementation and generic discovery projection;
-freeze exact file allowlist;
-prove whether existing public discovery data is sufficient;
-keep backend/schema/migrations unchanged unless implementation evidence proves a
-real defect.
+re-inspect the exact transition baseline;
+lock the generic detail route/component;
+lock the public Resource and public Entity/profile projections;
+lock existing Resource Engagement controls;
+lock the UXP-08A canonical destination resolver;
+inspect existing generic-detail unit/browser regressions;
+freeze an exact implementation allowlist.
 ```
 
-Do not begin UXP-08B, UXP-08C, UXP-08D or UXP-08E.
+Primary direction remains:
+
+```text
+finish the existing /knowledge/resources/[id] fallback;
+reuse accepted public Knowledge identity/profile data;
+reuse typed Universe presentation;
+reuse published Media;
+retain existing Resource Engagement controls;
+preserve specialized canonical destination precedence;
+keep generic detail as the truthful fallback;
+provide loading/error/not-found/unpublished behavior;
+finish metadata/social identity only where the generic route is canonical;
+responsive/accessibility acceptance;
+minimum architecture only.
+```
+
+No new Knowledge backend, Search work, Saved/Collection expansion, ranking,
+recommendation system, schema migration or generic page builder is pre-authorized.
+
+Do not begin UXP-08C/D/E.
 
 Do not begin UXP-09.
