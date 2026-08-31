@@ -427,7 +427,6 @@ Hiding a control is not authorization.
 ---
 
 # 9. Current Public Web Route Inventory
-
 Current accepted routes now include:
 
 | Route | Current role in product |
@@ -435,33 +434,32 @@ Current accepted routes now include:
 | `/` | AI World landing |
 | `/account` | Account/profile |
 | `/anime` | Finished Anime Universe landing — UXP-03 CLOSED and accepted at `75d91ef7975e515c10b529c143641bad0d1d6055` |
-| `/anime/characters/[slug]` | Anime Character Entity Experience |
+| `/anime/characters/[slug]` | Finished Anime Character destination |
 | `/anime/series/[slug]` | Finished Anime Series destination — UXP-04 CLOSED and accepted at `f14b984f34dd25855d709c2a5cb67806861f34d1` |
 | `/creator` | Creator workspace |
-| `/creator/series/[id]/preview` | Creator-only Anime Series draft preview accepted through UXP-04C at `1cc5f6c2d764a2fa5fb426baeb3ee4bdbce34b07` |
+| `/creator/series/[id]/preview` | Creator-only Anime Series draft preview accepted through UXP-04C |
 | `/creator/preview/[id]` | Creator preview |
-| `/devotional/[slug]` | Finished Devotional Deity destination — UXP-06 CLOSED and accepted at `563e48a57d0b95b83db674b0838aac879d48b61b` |
-| `/experiences/[id]` | Finished Public Experience destination — UXP-05 CLOSED and accepted at `527921f3587b3c5d011a8c9ef0565bc4fc39c5ce` |
+| `/devotional` | Finished Devotional Universe landing — UXP-07 CLOSED — ACCEPTED |
+| `/devotional/[slug]` | Finished Devotional Deity destination — UXP-06 CLOSED — ACCEPTED |
+| `/experiences/[id]` | Finished Public Experience destination — UXP-05 CLOSED — ACCEPTED |
 | `/forgot-password` | Identity recovery |
-| `/knowledge` | Knowledge browse |
-| `/knowledge/resources/[id]` | Generic Knowledge detail |
+| `/knowledge` | Existing Knowledge browse — UXP-08A active page-completion target |
+| `/knowledge/resources/[id]` | Existing generic Knowledge detail — UXP-08B gated page-completion target |
 | `/register` | Registration |
 | `/reset-password` | Password reset |
-| `/saved` | Favorites / Collections |
-| `/search` | Cross-Universe search |
+| `/saved` | Existing Favorites / Collections — UXP-08D gated page-completion target |
+| `/search` | Existing Cross-Universe Search — UXP-08C gated page-completion target |
 | `/sign-in` | Sign in |
 | `/verify-email` | Email verification |
 
-The next missing destination is now governed by the active UXP-07 contract:
+All four UXP-08 target routes already physically exist.
 
-```text
-/devotional
-```
+UXP-08 finishes them one route at a time.
 
-The route is still physically absent at this activation checkpoint. UXP-07A may
-add it only after this docs-only activation is remotely green.
+No parallel Discovery application and no new top-level UXP-08 route is introduced by
+this activation.
 
-New routes remain eligible only when a real page milestone requires them.
+New routes remain eligible only when a real later page milestone requires them.
 
 ---
 
@@ -1910,15 +1908,81 @@ acceptance-first; production changes are permitted only if acceptance exposes a
 real defect.
 
 ## UXP-08 — Discovery + Engagement
-
-Finish these pages individually:
+Status:
 
 ```text
-Knowledge browse;
-Knowledge detail;
-Search;
-Saved / Favorites / Collections.
+ACTIVE — UXP-08A NEXT IMPLEMENTATION SLICE
 ```
+
+The frozen detailed implementation/acceptance contract is:
+
+```text
+docs/13-roadmaps/uxp-08-discovery-engagement.md
+```
+
+UXP-08 starts only from the remotely-green UXP-07 closure:
+
+```text
+2c5a9a1bfd4f2813c961ff9a95e463d85f6ed665
+docs(roadmap): close UXP-07
+GitHub CI #266
+run id 33357837339
+success
+```
+
+Repository inspection confirms that all four target routes already exist:
+
+```text
+/knowledge
+/knowledge/resources/[id]
+/search
+/saved
+```
+
+The frozen slice sequence is:
+
+```text
+UXP-08A — Finished Knowledge Browse
+ACTIVE — NEXT IMPLEMENTATION SLICE
+
+UXP-08B — Finished Generic Knowledge Detail
+NOT STARTED — GATED ON UXP-08A ACCEPTANCE
+
+UXP-08C — Finished Cross-Universe Search
+NOT STARTED — GATED ON UXP-08B ACCEPTANCE
+
+UXP-08D — Finished Saved / Favorites / Collections
+NOT STARTED — GATED ON UXP-08C ACCEPTANCE
+
+UXP-08E — Reuse + Full Discovery / Engagement Acceptance
+NOT STARTED — GATED ON UXP-08A/B/C/D ACCEPTANCE
+```
+
+Frozen architectural direction:
+
+```text
+finish existing pages, not platforms;
+preserve typed Universe identity;
+stop using raw Resource IDs as primary product identity;
+reuse public Knowledge discovery/profile data;
+preserve specialized canonical routes + generic Knowledge fallback;
+reuse existing Search semantics;
+allow only minimal public Search projection enrichment when proven necessary;
+reuse existing authenticated Favorites/Collections ownership;
+compose Knowledge identity with Engagement in Web/application layer;
+never add Engagement -> Knowledge platform dependency;
+no new Search index/ranking/recommendation architecture;
+no new Knowledge backend;
+no new Engagement database;
+no schema migration expected for UXP-08A/B/C;
+Collection delete is the only pre-eligible missing Engagement lifecycle in UXP-08D;
+UXP-08E is acceptance-first with no planned production feature.
+```
+
+This activation checkpoint is docs-only.
+
+No UXP-08 product implementation begins until this activation is independently
+reviewed, manually committed/pushed and exact remote CI is green.
 
 Discovery must preserve Universe identity in results.
 
@@ -2140,88 +2204,73 @@ WPR-M05 receives its roadmap closure update only when the entire accepted gate i
 The accepted execution position is now:
 
 ```text
-UXP-06 — CLOSED — ACCEPTED
-        ↓
-UXP-07 activation — 3f52c5bc4cf163a8d537d40a8012234ed3ec45a7
-        ↓
-UXP-07A — CLOSED — ACCEPTED — efe50f0d2f921990a22dc3c0a1395745696fe1ed
-        ↓
-UXP-07B — CLOSED — ACCEPTED — 9959c9ea4490ad71e91f04760d123fad65ea5b3d
-        ↓
 UXP-07 — CLOSED — ACCEPTED
+        ↓
+UXP-07 closure — 2c5a9a1bfd4f2813c961ff9a95e463d85f6ed665
+        ↓
+UXP-08 — ACTIVE
+UXP-08A — ACTIVE — NEXT IMPLEMENTATION SLICE
+UXP-08B — NOT STARTED
+UXP-08C — NOT STARTED
+UXP-08D — NOT STARTED
+UXP-08E — NOT STARTED
+UXP-09 — NOT STARTED
 ```
 
-Closed accepted detailed contract:
+Active detailed contract:
 
 ```text
-docs/13-roadmaps/uxp-07-devotional-universe-landing.md
+docs/13-roadmaps/uxp-08-discovery-engagement.md
 ```
 
-Final UXP-07B / complete UXP-07 acceptance checkpoint:
+The UXP-08 activation baseline is:
 
 ```text
-9959c9ea4490ad71e91f04760d123fad65ea5b3d
-test(web): prove full devotional landing acceptance
-GitHub CI #265 / run 33356451179
+2c5a9a1bfd4f2813c961ff9a95e463d85f6ed665
+docs(roadmap): close UXP-07
+GitHub CI #266 / run 33357837339
 completed / success
 ```
 
-Final UXP-07 acceptance evidence includes:
+This activation checkpoint is docs-only.
+
+After this activation itself is independently reviewed, manually committed/pushed
+and exact remote CI is green, execute only:
 
 ```text
-UXP-07A implementation accepted at efe50f0d2f921990a22dc3c0a1395745696fe1ed;
-UXP-07B acceptance-only checkpoint with 2 test files / 851 additions;
-0 UXP-07B production changes;
-Devotional-specific PUBLISHED/DRAFT/ARCHIVED discovery proof;
-1440 / 834 / 390 / effective-200%-zoom responsive acceptance;
-IMAGE / SHORT_LOOP / no-Media;
-loading / error / retry / empty / populated;
-thumbnail-failure resilience;
-anonymous / authenticated shared shell;
-no fake landing Creator/Admin controls;
-keyboard / visible focus / alt / reduced motion / no audible autoplay;
-canonical /devotional;
-campaign-safe stable Universe Open Graph identity;
-canonical Deity / Knowledge / existing Search navigation;
-Deity / Anime / Public Experience / shared-shell regressions;
-root lint 21 / 21;
-root typecheck 41 / 41;
-isolated Creator workspace unit 1 file / 4 tests;
-root unit 37 / 37 tasks;
-Web unit 21 files / 71 tests;
-32 migrations / schema up to date;
-focused UXP-07B API 3 files / 6 tests;
-new lifecycle proof 3 / 3;
-integration 29 / 29 tasks;
-full API 27 files / 188 tests;
-focused browser + regressions 56 / 56;
-full Web E2E 125 / 125;
-build 22 / 22;
-fresh-process canonical/social proof;
-architecture 0 violations / 790 modules / 2563 dependencies;
-manual four-target screenshot review;
-exact accepted UXP-07B blobs;
-GitHub CI #265 green.
+UXP-08A — Finished Knowledge Browse
 ```
 
-This checkpoint closes only UXP-07.
+UXP-08A must begin by re-inspecting the exact activation SHA and proving whether
+the existing profile-rich public Knowledge discovery projection is sufficient for
+the finished `/knowledge` page.
 
-Current sequencing:
+Expected UXP-08A backend/schema scope:
 
 ```text
-UXP-07 — CLOSED — ACCEPTED
-UXP-08 — NOT STARTED
-WPR-M05 — ACTIVE
-P10-M04 — SEQUENCING-BLOCKED
-Master Roadmap — UNCHANGED
+none
 ```
 
-After this docs-only UXP-07 closure itself is independently reviewed, manually
-committed/pushed and exact remote CI is green, perform a separate repository
-inspection and freeze UXP-08.
+Do not begin UXP-08B/C/D/E.
 
-Do not activate or implement UXP-08 in this closure commit.
+Do not begin UXP-09.
 
-Do not pre-build Search/index/ranking/recommendation infrastructure, a new
-Knowledge or Engagement backend, Creator Studio redesign, Home redesign, or
-speculative platform work.
+Do not pre-build:
+
+```text
+new Search/index infrastructure;
+semantic/vector search;
+ranking/recommendation/trending;
+new Knowledge backend;
+new Engagement database;
+public/shared Collections;
+Creator Studio redesign;
+Home redesign;
+speculative workflow/policy infrastructure.
+```
+
+WPR-M05 remains ACTIVE.
+
+P10-M04 remains SEQUENCING-BLOCKED.
+
+The Master Roadmap remains unchanged.
