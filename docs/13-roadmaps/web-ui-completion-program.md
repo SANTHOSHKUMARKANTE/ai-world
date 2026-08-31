@@ -1277,7 +1277,7 @@ Status:
 
 ```text
 UXP-06 — CLOSED — ACCEPTED
-UXP-07 — ACTIVE — UXP-07B ACCEPTANCE-FIRST
+UXP-07 — CLOSED — ACCEPTED
 ```
 
 The closed UXP-06 implementation/acceptance contract is:
@@ -1286,7 +1286,7 @@ The closed UXP-06 implementation/acceptance contract is:
 docs/13-roadmaps/uxp-06-devotional-deity-page.md
 ```
 
-The active frozen UXP-07 implementation/acceptance contract is:
+The closed accepted UXP-07 implementation/acceptance contract is:
 
 ```text
 docs/13-roadmaps/uxp-07-devotional-universe-landing.md
@@ -1299,7 +1299,10 @@ UXP-07A — Devotional landing shell + Deity discovery + social identity
 CLOSED — ACCEPTED — efe50f0d2f921990a22dc3c0a1395745696fe1ed
 
 UXP-07B — Reuse + full Devotional landing acceptance
-ACTIVE — ACCEPTANCE-FIRST
+CLOSED — ACCEPTED — 9959c9ea4490ad71e91f04760d123fad65ea5b3d
+
+UXP-07 — Devotional Universe landing
+CLOSED — ACCEPTED
 ```
 
 Accepted UXP-07A implementation checkpoint:
@@ -1385,8 +1388,142 @@ apps/web/e2e/devotional-deity-full-acceptance.spec.ts
 839009566482477f205dc604600aafa298e1861d
 ```
 
-UXP-07B is acceptance-first. No new production feature is planned. Production
-changes are allowed only if the frozen UXP-07B matrix exposes a real defect.
+Accepted UXP-07B / final UXP-07 acceptance checkpoint:
+
+```text
+9959c9ea4490ad71e91f04760d123fad65ea5b3d
+test(web): prove full devotional landing acceptance
+GitHub CI #265
+run id 33356451179
+completed / success
+```
+
+UXP-07B is therefore:
+
+```text
+CLOSED — ACCEPTED — 9959c9ea4490ad71e91f04760d123fad65ea5b3d
+```
+
+Reviewed UXP-07B acceptance evidence includes:
+
+```text
+acceptance-only checkpoint;
+exactly 2 new test files;
+851 insertions / 0 deletions;
+0 production changes;
+0 docs changes in the acceptance checkpoint;
+0 schema/migration/dependency/CI changes;
+
+Devotional-specific discovery lifecycle API:
+PUBLISHED-only projection;
+deterministic recency order;
+landing limit 6;
+bounded limit 2;
+newer DRAFT hidden;
+newer ARCHIVED hidden;
+other Universe excluded;
+
+responsive / reuse:
+1440px desktop;
+834px tablet;
+390px mobile;
+200%-effective hierarchy at 720 CSS pixels;
+multiple Deities;
+IMAGE;
+SHORT_LOOP;
+no Media;
+no horizontal overflow;
+rendered heading containment;
+manual screenshot review at all four responsive targets;
+
+states / resilience:
+loading;
+unexpected error;
+retry recovery;
+empty;
+populated;
+failed thumbnail resilience;
+
+roles / shell:
+anonymous shared shell;
+authenticated shared shell;
+no landing-specific Creator/Admin controls;
+
+Media / accessibility:
+IMAGE previews;
+muted bounded SHORT_LOOP;
+poster-backed reduced-motion fallback;
+no audible autoplay;
+semantic headings;
+keyboard;
+visible focus;
+meaningful links;
+alt text;
+
+canonical / social:
+canonical /devotional;
+campaign-safe canonical identity;
+title / description;
+Open Graph title / description;
+stable /devotional/opengraph-image;
+social image independent of arbitrary Deity ordering;
+
+navigation / regressions:
+canonical /devotional/[slug] Deity links;
+/knowledge continuation;
+existing /search entry only;
+finished Deity regression;
+Anime landing / Character / Series regressions;
+Public Experience regression;
+shared shell regression;
+
+engineering:
+root lint 21 / 21 tasks;
+root typecheck 41 / 41 tasks;
+isolated Creator workspace unit 1 file / 4 tests;
+canonical root unit pipeline 37 / 37 tasks;
+Web unit suite 21 files / 71 tests;
+32 canonical migrations / schema up to date;
+focused UXP-07B API integration 3 files / 6 tests;
+new Devotional lifecycle proof 3 / 3;
+full integration pipeline 29 / 29 tasks;
+full API integration 27 files / 188 tests;
+focused browser + cross-surface regressions 56 / 56;
+full Web browser E2E 125 / 125;
+production build 22 / 22 tasks;
+fresh-process /devotional canonical/social proof;
+architecture validation 0 violations across 790 modules / 2563 dependencies;
+reviewed Resume 1 evidence ZIP;
+exact candidate/worktree/staged blob identity;
+0 unstaged tracked files / 0 untracked files;
+exact acceptance checkpoint committed and pushed;
+GitHub CI #265 / run 33356451179 green on the exact acceptance SHA.
+```
+
+Final accepted UXP-07B proof blobs:
+
+```text
+apps/api/test/uxp-07b-devotional-universe-discovery.integration.spec.ts
+3e350cae71fa0392cd30e2921554339a9d8d08ad
+
+apps/web/e2e/devotional-universe-full-acceptance.spec.ts
+3adee95a54abcbab1af0751d4a383ce27a8cab00
+```
+
+UXP-07B remained acceptance-first.
+
+No Devotional landing production correction was required.
+
+UXP-07 is therefore:
+
+```text
+CLOSED — ACCEPTED
+```
+
+
+The complete UXP-07 page is CLOSED — ACCEPTED.
+
+UXP-08 remains NOT STARTED in this closure checkpoint.
 
 UXP-06 was activated only after UXP-05 was fully accepted and the docs-only
 UXP-05 closure checkpoint was remotely green:
@@ -2009,65 +2146,82 @@ UXP-07 activation — 3f52c5bc4cf163a8d537d40a8012234ed3ec45a7
         ↓
 UXP-07A — CLOSED — ACCEPTED — efe50f0d2f921990a22dc3c0a1395745696fe1ed
         ↓
-UXP-07B — ACTIVE — ACCEPTANCE-FIRST
+UXP-07B — CLOSED — ACCEPTED — 9959c9ea4490ad71e91f04760d123fad65ea5b3d
+        ↓
+UXP-07 — CLOSED — ACCEPTED
 ```
 
-Active detailed contract:
+Closed accepted detailed contract:
 
 ```text
 docs/13-roadmaps/uxp-07-devotional-universe-landing.md
 ```
 
-Accepted UXP-07A checkpoint:
+Final UXP-07B / complete UXP-07 acceptance checkpoint:
 
 ```text
-efe50f0d2f921990a22dc3c0a1395745696fe1ed
-feat(web): add devotional universe landing
-GitHub CI #263 / run 33312976028
+9959c9ea4490ad71e91f04760d123fad65ea5b3d
+test(web): prove full devotional landing acceptance
+GitHub CI #265 / run 33356451179
 completed / success
 ```
 
-Acceptance evidence:
+Final UXP-07 acceptance evidence includes:
 
 ```text
-8 files / 1421 insertions / 5 deletions;
-lint 21 / 21;
-typecheck 41 / 41;
-focused Web unit 4 files / 9 tests;
-Web unit 21 files / 71 tests;
+UXP-07A implementation accepted at efe50f0d2f921990a22dc3c0a1395745696fe1ed;
+UXP-07B acceptance-only checkpoint with 2 test files / 851 additions;
+0 UXP-07B production changes;
+Devotional-specific PUBLISHED/DRAFT/ARCHIVED discovery proof;
+1440 / 834 / 390 / effective-200%-zoom responsive acceptance;
+IMAGE / SHORT_LOOP / no-Media;
+loading / error / retry / empty / populated;
+thumbnail-failure resilience;
+anonymous / authenticated shared shell;
+no fake landing Creator/Admin controls;
+keyboard / visible focus / alt / reduced motion / no audible autoplay;
+canonical /devotional;
+campaign-safe stable Universe Open Graph identity;
+canonical Deity / Knowledge / existing Search navigation;
+Deity / Anime / Public Experience / shared-shell regressions;
+root lint 21 / 21;
+root typecheck 41 / 41;
+isolated Creator workspace unit 1 file / 4 tests;
 root unit 37 / 37 tasks;
+Web unit 21 files / 71 tests;
 32 migrations / schema up to date;
-focused API 3 files / 11 tests;
-integration 29 / 29;
-full API 26 files / 185 tests;
-focused browser 27 / 27;
-full Web E2E 113 / 113;
+focused UXP-07B API 3 files / 6 tests;
+new lifecycle proof 3 / 3;
+integration 29 / 29 tasks;
+full API 27 files / 188 tests;
+focused browser + regressions 56 / 56;
+full Web E2E 125 / 125;
 build 22 / 22;
 fresh-process canonical/social proof;
-architecture 0 violations / 788 modules / 2555 dependencies;
-manual desktop + corrected 390px screenshot review;
-rendered H1 text-bound containment proof;
-exact accepted blobs;
-CI #263 green.
+architecture 0 violations / 790 modules / 2563 dependencies;
+manual four-target screenshot review;
+exact accepted UXP-07B blobs;
+GitHub CI #265 green.
 ```
 
-After this docs-only transition is remotely green, execute only:
+This checkpoint closes only UXP-07.
+
+Current sequencing:
 
 ```text
-UXP-07B — Reuse + full Devotional landing acceptance
+UXP-07 — CLOSED — ACCEPTED
+UXP-08 — NOT STARTED
+WPR-M05 — ACTIVE
+P10-M04 — SEQUENCING-BLOCKED
+Master Roadmap — UNCHANGED
 ```
 
-Expected UXP-07B production scope:
+After this docs-only UXP-07 closure itself is independently reviewed, manually
+committed/pushed and exact remote CI is green, perform a separate repository
+inspection and freeze UXP-08.
 
-```text
-none
-```
+Do not activate or implement UXP-08 in this closure commit.
 
-Do not begin UXP-08 or introduce Search/ranking/recommendation, a new Devotional
-backend/discovery API, landing CMS, AUDIO Knowledge placement, Creator Studio
-redesign, or speculative platform work.
-
-UXP-07 remains ACTIVE until UXP-07B is accepted and separately closed.
-WPR-M05 remains ACTIVE.
-P10-M04 remains SEQUENCING-BLOCKED.
-The Master Roadmap remains unchanged.
+Do not pre-build Search/index/ranking/recommendation infrastructure, a new
+Knowledge or Engagement backend, Creator Studio redesign, Home redesign, or
+speculative platform work.
