@@ -1,15 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-interface PublicKnowledgeFixture {
-  readonly id: string;
-  readonly universeKey: string;
-  readonly resourceType: string;
-  readonly createdAt: string;
-  readonly updatedAt: string;
-}
-
 test.describe('Web Knowledge experience', () => {
-  test('renders Devotional Temple and Anime Character/Series imagery through the same Knowledge and Media contracts', async ({
+  test('reuses public Knowledge discovery identity and canonical destinations across Universes', async ({
     page,
   }) => {
     const templeResourceId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
@@ -21,14 +13,7 @@ test.describe('Web Knowledge experience', () => {
     const animeSeriesAssetId = 'ffffffff-ffff-4fff-8fff-ffffffffffff';
 
     const requestedUniverses: string[] = [];
-    const requestedAssetReferenceResourceIds: string[] = [];
     const requestedThumbnailAssetIds: string[] = [];
-
-    const assetIdsByResourceId: Readonly<Record<string, readonly string[]>> = {
-      [templeResourceId]: [templeAssetId],
-      [animeCharacterResourceId]: [animeCharacterAssetId],
-      [animeSeriesResourceId]: [animeSeriesAssetId],
-    };
 
     await page.route('**/api/session', async (route) => {
       await route.fulfill({
@@ -39,24 +24,7 @@ test.describe('Web Knowledge experience', () => {
             code: 'identity.session.invalid',
             message: 'Authentication is required.',
             status: 401,
-            requestId: 'web-knowledge-anonymous-session-001',
           },
-        }),
-      });
-    });
-
-    await page.route('**/api/knowledge/resources/*/assets', async (route) => {
-      const url = new URL(route.request().url());
-      const match = url.pathname.match(/\/api\/knowledge\/resources\/([^/]+)\/assets$/);
-      const resourceId = match?.[1] ?? '';
-
-      requestedAssetReferenceResourceIds.push(resourceId);
-
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          assetIds: assetIdsByResourceId[resourceId] ?? [],
         }),
       });
     });
@@ -78,68 +46,86 @@ test.describe('Web Knowledge experience', () => {
       });
     });
 
-    await page.route('**/api/knowledge/resources?*', async (route) => {
+    await page.route('**/api/knowledge/discovery?*', async (route) => {
       const url = new URL(route.request().url());
       const universeKey = url.searchParams.get('universeKey');
 
+      expect(url.searchParams.get('limit')).toBe('8');
+      expect(url.searchParams.get('resourceType')).toBeNull();
+
       if (!universeKey) {
-        await route.fulfill({
-          status: 400,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            error: {
-              code: 'knowledge.public.invalid_query',
-              message: 'The public Knowledge query is invalid.',
-              status: 400,
-            },
-          }),
-        });
+        await route.fulfill({ status: 400, body: '{}' });
         return;
       }
 
       requestedUniverses.push(universeKey);
 
-      const fixtures: readonly PublicKnowledgeFixture[] =
+      const items =
         universeKey === 'universe.devotional'
           ? [
               {
-                id: templeResourceId,
-                universeKey: 'universe.devotional',
+                resourceId: templeResourceId,
+                universeKey,
                 resourceType: 'devotional.temple',
-                createdAt: '2026-08-16T05:00:00.000Z',
-                updatedAt: '2026-08-16T05:10:00.000Z',
+                slug: 'kashi-vishwanath',
+                displayName: 'Kashi Vishwanath Temple',
+                summary: 'A published sacred-place Knowledge fixture.',
+                updatedAt: '2026-08-30T08:00:00.000Z',
+                previewMedia: {
+                  assetId: templeAssetId,
+                  assetType: 'IMAGE',
+                  mimeType: 'image/png',
+                  playback: 'STILL',
+                  posterAssetId: null,
+                  altText: 'Kashi Vishwanath Temple',
+                },
               },
             ]
-          : universeKey === 'universe.anime'
-            ? [
-                {
-                  id: animeCharacterResourceId,
-                  universeKey: 'universe.anime',
-                  resourceType: 'anime.character',
-                  createdAt: '2026-08-17T05:00:00.000Z',
-                  updatedAt: '2026-08-17T05:10:00.000Z',
+          : [
+              {
+                resourceId: animeCharacterResourceId,
+                universeKey,
+                resourceType: 'anime.character',
+                slug: 'naruto-uzumaki',
+                displayName: 'Naruto Uzumaki',
+                summary: 'A published Anime Character Knowledge fixture.',
+                updatedAt: '2026-08-30T09:00:00.000Z',
+                previewMedia: {
+                  assetId: animeCharacterAssetId,
+                  assetType: 'IMAGE',
+                  mimeType: 'image/png',
+                  playback: 'STILL',
+                  posterAssetId: null,
+                  altText: 'Naruto Uzumaki',
                 },
-                {
-                  id: animeSeriesResourceId,
-                  universeKey: 'universe.anime',
-                  resourceType: 'anime.series',
-                  createdAt: '2026-08-17T04:00:00.000Z',
-                  updatedAt: '2026-08-17T04:10:00.000Z',
+              },
+              {
+                resourceId: animeSeriesResourceId,
+                universeKey,
+                resourceType: 'anime.series',
+                slug: 'naruto',
+                displayName: 'Naruto',
+                summary: 'A published Anime Series Knowledge fixture.',
+                updatedAt: '2026-08-30T07:00:00.000Z',
+                previewMedia: {
+                  assetId: animeSeriesAssetId,
+                  assetType: 'IMAGE',
+                  mimeType: 'image/png',
+                  playback: 'STILL',
+                  posterAssetId: null,
+                  altText: 'Naruto series',
                 },
-              ]
-            : [];
+              },
+            ];
 
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({
-          items: fixtures,
-        }),
+        body: JSON.stringify({ items }),
       });
     });
 
     const response = await page.goto('/knowledge');
-
     expect(response?.status()).toBe(200);
 
     await expect(
@@ -149,102 +135,37 @@ test.describe('Web Knowledge experience', () => {
       }),
     ).toBeVisible();
 
-    const devotional = page.getByRole('region', {
-      name: 'Devotional Resources',
-    });
-    const anime = page.getByRole('region', {
-      name: 'Anime Resources',
-    });
-
-    await expect(devotional).toHaveAttribute('data-priority', 'primary');
-    await expect(anime).toHaveAttribute('data-priority', 'secondary');
+    const devotional = page.getByRole('region', { name: 'Devotional Knowledge' });
+    const anime = page.getByRole('region', { name: 'Anime Knowledge' });
 
     await expect(
-      devotional.getByRole('heading', {
-        name: 'Temple',
-        exact: true,
-      }),
+      devotional.getByRole('heading', { name: 'Kashi Vishwanath Temple' }),
     ).toBeVisible();
+    await expect(anime.getByRole('heading', { name: 'Naruto Uzumaki' })).toBeVisible();
+    await expect(anime.getByRole('heading', { name: 'Naruto', exact: true })).toBeVisible();
 
     await expect(
-      anime.getByRole('heading', {
-        name: 'Character',
-        exact: true,
-      }),
-    ).toBeVisible();
-    await expect(
-      anime.getByRole('heading', {
-        name: 'Series',
-        exact: true,
-      }),
-    ).toBeVisible();
-
-    const templeImage = devotional.getByRole('img', {
-      name: 'Temple imagery for this published resource',
-    });
-    const templeFullImageLink = devotional.getByRole('link', {
-      name: 'Open full-size temple imagery',
-    });
-
-    await expect(templeImage).toBeVisible();
-
-    expect(new URL((await templeImage.getAttribute('src')) ?? '', page.url()).pathname).toBe(
-      `/api/media/assets/${templeAssetId}/thumbnail`,
-    );
-    await expect(templeFullImageLink).toHaveAttribute(
+      devotional.getByRole('link', { name: 'Open Kashi Vishwanath Temple' }),
+    ).toHaveAttribute('href', `/knowledge/resources/${templeResourceId}`);
+    await expect(anime.getByRole('link', { name: 'Open Naruto Uzumaki' })).toHaveAttribute(
       'href',
-      `/api/media/assets/${templeAssetId}/content`,
+      '/anime/characters/naruto-uzumaki',
+    );
+    await expect(anime.getByRole('link', { name: 'Open Naruto', exact: true })).toHaveAttribute(
+      'href',
+      '/anime/series/naruto',
     );
 
-    const characterImagery = anime.getByRole('region', {
-      name: 'Anime imagery for anime.character',
-    });
-    const seriesImagery = anime.getByRole('region', {
-      name: 'Anime imagery for anime.series',
-    });
+    await expect(page.getByText(templeResourceId, { exact: true })).toHaveCount(0);
+    await expect(page.getByText(animeCharacterResourceId, { exact: true })).toHaveCount(0);
+    await expect(page.getByText(animeSeriesResourceId, { exact: true })).toHaveCount(0);
 
-    const characterImage = characterImagery.getByRole('img', {
-      name: 'Anime imagery for this published resource',
-    });
-    const seriesImage = seriesImagery.getByRole('img', {
-      name: 'Anime imagery for this published resource',
-    });
-
-    await expect(characterImage).toBeVisible();
-    await expect(seriesImage).toBeVisible();
-
-    expect(new URL((await characterImage.getAttribute('src')) ?? '', page.url()).pathname).toBe(
-      `/api/media/assets/${animeCharacterAssetId}/thumbnail`,
-    );
-    expect(new URL((await seriesImage.getAttribute('src')) ?? '', page.url()).pathname).toBe(
-      `/api/media/assets/${animeSeriesAssetId}/thumbnail`,
-    );
-
-    await expect(
-      characterImagery.getByRole('link', {
-        name: 'Open full-size anime imagery',
-      }),
-    ).toHaveAttribute('href', `/api/media/assets/${animeCharacterAssetId}/content`);
-    await expect(
-      seriesImagery.getByRole('link', {
-        name: 'Open full-size anime imagery',
-      }),
-    ).toHaveAttribute('href', `/api/media/assets/${animeSeriesAssetId}/content`);
-
-    expect(requestedUniverses).toEqual(
-      expect.arrayContaining(['universe.devotional', 'universe.anime']),
-    );
-
-    const uniqueResourceIds = [...new Set(requestedAssetReferenceResourceIds)];
-    expect(uniqueResourceIds).toHaveLength(3);
-    expect(uniqueResourceIds).toEqual(
-      expect.arrayContaining([templeResourceId, animeCharacterResourceId, animeSeriesResourceId]),
-    );
-
-    const uniqueThumbnailAssetIds = [...new Set(requestedThumbnailAssetIds)];
-    expect(uniqueThumbnailAssetIds).toHaveLength(3);
-    expect(uniqueThumbnailAssetIds).toEqual(
-      expect.arrayContaining([templeAssetId, animeCharacterAssetId, animeSeriesAssetId]),
+    expect([...new Set(requestedUniverses)].sort()).toEqual([
+      'universe.anime',
+      'universe.devotional',
+    ]);
+    expect([...new Set(requestedThumbnailAssetIds)].sort()).toEqual(
+      [animeCharacterAssetId, animeSeriesAssetId, templeAssetId].sort(),
     );
   });
 });

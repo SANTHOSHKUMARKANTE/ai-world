@@ -3,56 +3,92 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { KnowledgeUniverseSection } from '../src/knowledge/knowledge-universe-section';
 
-interface KnowledgeFixture {
-  readonly id: string;
+interface DiscoveryFixture {
+  readonly resourceId: string;
   readonly universeKey: string;
   readonly resourceType: string;
-  readonly createdAt: string;
+  readonly slug: string;
+  readonly displayName: string;
+  readonly summary: string;
   readonly updatedAt: string;
+  readonly previewMedia: {
+    readonly assetId: string;
+    readonly assetType: 'IMAGE' | 'VIDEO';
+    readonly mimeType: string;
+    readonly playback: 'STILL' | 'SHORT_LOOP';
+    readonly posterAssetId: string | null;
+    readonly altText: string | null;
+  } | null;
 }
 
-function knowledgeListResponse(items: readonly KnowledgeFixture[]): Response {
-  return new Response(
-    JSON.stringify({
-      items,
-    }),
-    {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
+function discoveryResponse(items: readonly DiscoveryFixture[]): Response {
+  return new Response(JSON.stringify({ items }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+function stubMotionPreference(reduced = false): void {
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn((query: string) => ({
+      matches: reduced,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
   );
 }
 
-function knowledgeAssetsResponse(assetIds: readonly string[]): Response {
-  return new Response(
-    JSON.stringify({
-      assetIds,
-    }),
-    {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  );
+function devotionalFixture(overrides: Partial<DiscoveryFixture> = {}): DiscoveryFixture {
+  return {
+    resourceId: '11111111-1111-4111-8111-111111111111',
+    universeKey: 'universe.devotional',
+    resourceType: 'devotional.deity',
+    slug: 'shiva',
+    displayName: 'Lord Shiva',
+    summary: 'Published Devotional Knowledge identity.',
+    updatedAt: '2026-08-30T09:00:00.000Z',
+    previewMedia: null,
+    ...overrides,
+  };
+}
+
+function animeFixture(overrides: Partial<DiscoveryFixture> = {}): DiscoveryFixture {
+  return {
+    resourceId: '22222222-2222-4222-8222-222222222222',
+    universeKey: 'universe.anime',
+    resourceType: 'anime.character',
+    slug: 'naruto-uzumaki',
+    displayName: 'Naruto Uzumaki',
+    summary: 'Published Anime Knowledge identity.',
+    updatedAt: '2026-08-30T10:00:00.000Z',
+    previewMedia: null,
+    ...overrides,
+  };
 }
 
 function renderKnowledgeExperience() {
   return render(
     <>
       <KnowledgeUniverseSection
-        title="Devotional Resources"
-        description="Primary Devotional experience."
+        sectionId="unit-devotional"
+        title="Devotional Knowledge"
+        description="Primary Devotional discovery proof."
         universeKey="universe.devotional"
         priority="primary"
+        tone="devotional"
       />
-
       <KnowledgeUniverseSection
-        title="Anime Resources"
-        description="Bounded Anime reuse proof."
+        sectionId="unit-anime"
+        title="Anime Knowledge"
+        description="Anime discovery reuse proof."
         universeKey="universe.anime"
+        tone="anime"
       />
     </>,
   );
@@ -64,400 +100,205 @@ afterEach(() => {
 });
 
 describe('Web Knowledge experience', () => {
-  it('loads Devotional first and Anime through the same public Knowledge API contract', async () => {
+  it('loads both Universes through public discovery with real identity and canonical destinations', async () => {
+    stubMotionPreference();
+    const devotional = devotionalFixture();
+    const anime = animeFixture();
+
     const fetchMock = vi.fn(async (input: unknown) => {
       const url = String(input);
-
-      if (url === '/api/knowledge/resources?universeKey=universe.devotional') {
-        return knowledgeListResponse([
-          {
-            id: '11111111-1111-4111-8111-111111111111',
-            universeKey: 'universe.devotional',
-            resourceType: 'devotional.deity',
-            createdAt: '2026-08-16T05:00:00.000Z',
-            updatedAt: '2026-08-16T05:10:00.000Z',
-          },
-          {
-            id: '22222222-2222-4222-8222-222222222222',
-            universeKey: 'universe.devotional',
-            resourceType: 'devotional.scripture',
-            createdAt: '2026-08-16T04:00:00.000Z',
-            updatedAt: '2026-08-16T04:10:00.000Z',
-          },
-        ]);
+      if (url === '/api/knowledge/discovery?universeKey=universe.devotional&limit=8') {
+        return discoveryResponse([devotional]);
       }
-
-      if (url === '/api/knowledge/resources?universeKey=universe.anime') {
-        return knowledgeListResponse([
-          {
-            id: '33333333-3333-4333-8333-333333333333',
-            universeKey: 'universe.anime',
-            resourceType: 'anime.series',
-            createdAt: '2026-08-16T03:00:00.000Z',
-            updatedAt: '2026-08-16T03:10:00.000Z',
-          },
-        ]);
+      if (url === '/api/knowledge/discovery?universeKey=universe.anime&limit=8') {
+        return discoveryResponse([anime]);
       }
-
-      throw new Error(`Unexpected Web request: ${url}`);
+      throw new Error(`Unexpected Knowledge discovery request: ${url}`);
     });
 
     vi.stubGlobal('fetch', fetchMock);
-
     renderKnowledgeExperience();
 
-    const devotional = screen.getByRole('region', {
-      name: 'Devotional Resources',
-    });
-    const anime = screen.getByRole('region', {
-      name: 'Anime Resources',
-    });
+    const devotionalRegion = screen.getByRole('region', { name: 'Devotional Knowledge' });
+    const animeRegion = screen.getByRole('region', { name: 'Anime Knowledge' });
 
-    await within(devotional).findByText('Deity');
-    await within(anime).findByText('Series');
+    await within(devotionalRegion).findByRole('heading', { name: 'Lord Shiva' });
+    await within(animeRegion).findByRole('heading', { name: 'Naruto Uzumaki' });
 
-    expect(within(devotional).getByText('Scripture')).toBeTruthy();
-    expect(within(devotional).queryByText('Series')).toBeNull();
-    expect(within(anime).queryByText('Deity')).toBeNull();
+    expect(
+      within(devotionalRegion).getByRole('link', { name: 'Open Lord Shiva' }).getAttribute('href'),
+    ).toBe('/devotional/shiva');
+    expect(
+      within(animeRegion).getByRole('link', { name: 'Open Naruto Uzumaki' }).getAttribute('href'),
+    ).toBe('/anime/characters/naruto-uzumaki');
 
-    expect(devotional.getAttribute('data-priority')).toBe('primary');
-    expect(anime.getAttribute('data-priority')).toBe('secondary');
+    expect(within(devotionalRegion).getByText('Deity')).toBeTruthy();
+    expect(within(animeRegion).getByText('Character')).toBeTruthy();
+    expect(screen.queryByText(devotional.resourceId, { exact: true })).toBeNull();
+    expect(screen.queryByText(anime.resourceId, { exact: true })).toBeNull();
+    expect(devotionalRegion.getAttribute('data-priority')).toBe('primary');
+    expect(animeRegion.getAttribute('data-priority')).toBe('secondary');
 
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/knowledge/resources?universeKey=universe.devotional',
-      expect.objectContaining({
-        credentials: 'same-origin',
-      }),
+      '/api/knowledge/discovery?universeKey=universe.devotional&limit=8',
+      expect.objectContaining({ credentials: 'same-origin' }),
     );
-
     expect(fetchMock).toHaveBeenCalledWith(
-      '/api/knowledge/resources?universeKey=universe.anime',
-      expect.objectContaining({
-        credentials: 'same-origin',
-      }),
+      '/api/knowledge/discovery?universeKey=universe.anime&limit=8',
+      expect.objectContaining({ credentials: 'same-origin' }),
     );
   });
 
-  it('renders Anime Character and Series imagery through the existing shared Media presentation', async () => {
-    const characterResourceId = '99999999-9999-4999-8999-999999999999';
-    const seriesResourceId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaab';
-    const characterAssetId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbc';
-    const seriesAssetId = 'cccccccc-cccc-4ccc-8ccc-cccccccccccd';
+  it('renders IMAGE, SHORT_LOOP and no-Media directly from discovery', async () => {
+    stubMotionPreference(false);
+
+    const image = devotionalFixture({
+      previewMedia: {
+        assetId: '33333333-3333-4333-8333-333333333333',
+        assetType: 'IMAGE',
+        mimeType: 'image/png',
+        playback: 'STILL',
+        posterAssetId: null,
+        altText: 'Lord Shiva portrait',
+      },
+    });
+    const shortLoop = animeFixture({
+      previewMedia: {
+        assetId: '44444444-4444-4444-8444-444444444444',
+        assetType: 'VIDEO',
+        mimeType: 'video/mp4',
+        playback: 'SHORT_LOOP',
+        posterAssetId: '55555555-5555-4555-8555-555555555555',
+        altText: 'Naruto Uzumaki short motion',
+      },
+    });
+    const noMedia = animeFixture({
+      resourceId: '66666666-6666-4666-8666-666666666666',
+      resourceType: 'anime.series',
+      slug: 'naruto',
+      displayName: 'Naruto',
+      previewMedia: null,
+    });
 
     const fetchMock = vi.fn(async (input: unknown) => {
       const url = String(input);
-
-      if (url === '/api/knowledge/resources?universeKey=universe.anime') {
-        return knowledgeListResponse([
-          {
-            id: characterResourceId,
-            universeKey: 'universe.anime',
-            resourceType: 'anime.character',
-            createdAt: '2026-08-17T05:00:00.000Z',
-            updatedAt: '2026-08-17T05:10:00.000Z',
-          },
-          {
-            id: seriesResourceId,
-            universeKey: 'universe.anime',
-            resourceType: 'anime.series',
-            createdAt: '2026-08-17T04:00:00.000Z',
-            updatedAt: '2026-08-17T04:10:00.000Z',
-          },
-        ]);
-      }
-
-      if (url === `/api/knowledge/resources/${characterResourceId}/assets`) {
-        return knowledgeAssetsResponse([characterAssetId]);
-      }
-
-      if (url === `/api/knowledge/resources/${seriesResourceId}/assets`) {
-        return knowledgeAssetsResponse([seriesAssetId]);
-      }
-
-      throw new Error(`Unexpected Anime Media request: ${url}`);
+      if (url.includes('universe.devotional')) return discoveryResponse([image]);
+      if (url.includes('universe.anime')) return discoveryResponse([shortLoop, noMedia]);
+      throw new Error(`Unexpected Knowledge Media request: ${url}`);
     });
 
     vi.stubGlobal('fetch', fetchMock);
-
-    render(
-      <KnowledgeUniverseSection
-        title="Anime Resources"
-        description="Anime Character and Series Media reuse proof."
-        universeKey="universe.anime"
-        imageResourceTypes={['anime.character', 'anime.series']}
-        imageSectionLabel="Anime imagery"
-      />,
-    );
-
-    const anime = screen.getByRole('region', {
-      name: 'Anime Resources',
-    });
-
-    await within(anime).findByText('Character');
-    await within(anime).findByText('Series');
-
-    const characterImagery = await within(anime).findByRole('region', {
-      name: 'Anime imagery for anime.character',
-    });
-    const seriesImagery = await within(anime).findByRole('region', {
-      name: 'Anime imagery for anime.series',
-    });
-
-    const characterImage = within(characterImagery).getByRole('img', {
-      name: 'Anime imagery for this published resource',
-    });
-    const seriesImage = within(seriesImagery).getByRole('img', {
-      name: 'Anime imagery for this published resource',
-    });
-
-    expect(
-      new URL(characterImage.getAttribute('src') ?? '', 'http://localhost:3000').pathname,
-    ).toBe(`/api/media/assets/${characterAssetId}/thumbnail`);
-    expect(new URL(seriesImage.getAttribute('src') ?? '', 'http://localhost:3000').pathname).toBe(
-      `/api/media/assets/${seriesAssetId}/thumbnail`,
-    );
-
-    expect(
-      within(characterImagery)
-        .getByRole('link', {
-          name: 'Open full-size anime imagery',
-        })
-        .getAttribute('href'),
-    ).toBe(`/api/media/assets/${characterAssetId}/content`);
-    expect(
-      within(seriesImagery)
-        .getByRole('link', {
-          name: 'Open full-size anime imagery',
-        })
-        .getAttribute('href'),
-    ).toBe(`/api/media/assets/${seriesAssetId}/content`);
-
-    expect(fetchMock).toHaveBeenCalledWith(
-      `/api/knowledge/resources/${characterResourceId}/assets`,
-      expect.objectContaining({
-        credentials: 'same-origin',
-      }),
-    );
-    expect(fetchMock).toHaveBeenCalledWith(
-      `/api/knowledge/resources/${seriesResourceId}/assets`,
-      expect.objectContaining({
-        credentials: 'same-origin',
-      }),
-    );
-  });
-
-  it('renders Devotional temple imagery through Knowledge Asset IDs and shared Media routes', async () => {
-    const templeResourceId = '44444444-4444-4444-8444-444444444444';
-    const deityResourceId = '55555555-5555-4555-8555-555555555555';
-    const assetId = '66666666-6666-4666-8666-666666666666';
-
-    const fetchMock = vi.fn(async (input: unknown) => {
-      const url = String(input);
-
-      if (url === '/api/knowledge/resources?universeKey=universe.devotional') {
-        return knowledgeListResponse([
-          {
-            id: templeResourceId,
-            universeKey: 'universe.devotional',
-            resourceType: 'devotional.temple',
-            createdAt: '2026-08-16T05:00:00.000Z',
-            updatedAt: '2026-08-16T05:10:00.000Z',
-          },
-          {
-            id: deityResourceId,
-            universeKey: 'universe.devotional',
-            resourceType: 'devotional.deity',
-            createdAt: '2026-08-16T04:00:00.000Z',
-            updatedAt: '2026-08-16T04:10:00.000Z',
-          },
-        ]);
-      }
-
-      if (url === `/api/knowledge/resources/${templeResourceId}/assets`) {
-        return knowledgeAssetsResponse([assetId]);
-      }
-
-      throw new Error(`Unexpected Devotional Media request: ${url}`);
-    });
-
-    vi.stubGlobal('fetch', fetchMock);
-
-    render(
-      <KnowledgeUniverseSection
-        title="Devotional Resources"
-        description="Primary Devotional Media proof."
-        universeKey="universe.devotional"
-        priority="primary"
-        imageResourceTypes={['devotional.temple']}
-        imageSectionLabel="Temple imagery"
-      />,
-    );
-
-    const devotional = screen.getByRole('region', {
-      name: 'Devotional Resources',
-    });
-
-    await within(devotional).findByText('Temple');
-    await within(devotional).findByText('Deity');
-
-    const imagery = await within(devotional).findByRole('region', {
-      name: 'Temple imagery for devotional.temple',
-    });
-    const image = within(imagery).getByRole('img', {
-      name: 'Temple imagery for this published resource',
-    });
-    const fullImageLink = within(imagery).getByRole('link', {
-      name: 'Open full-size temple imagery',
-    });
-
-    expect(new URL(image.getAttribute('src') ?? '', 'http://localhost:3000').pathname).toBe(
-      `/api/media/assets/${assetId}/thumbnail`,
-    );
-    expect(fullImageLink.getAttribute('href')).toBe(`/api/media/assets/${assetId}/content`);
-
-    expect(fetchMock).toHaveBeenCalledWith(
-      `/api/knowledge/resources/${templeResourceId}/assets`,
-      expect.objectContaining({
-        credentials: 'same-origin',
-      }),
-    );
-
-    expect(fetchMock).not.toHaveBeenCalledWith(
-      `/api/knowledge/resources/${deityResourceId}/assets`,
-      expect.anything(),
-    );
-  });
-
-  it('isolates Devotional imagery reference failure from the published Knowledge card', async () => {
-    const templeResourceId = '77777777-7777-4777-8777-777777777777';
-
-    const fetchMock = vi.fn(async (input: unknown) => {
-      const url = String(input);
-
-      if (url === '/api/knowledge/resources?universeKey=universe.devotional') {
-        return knowledgeListResponse([
-          {
-            id: templeResourceId,
-            universeKey: 'universe.devotional',
-            resourceType: 'devotional.temple',
-            createdAt: '2026-08-16T05:00:00.000Z',
-            updatedAt: '2026-08-16T05:10:00.000Z',
-          },
-        ]);
-      }
-
-      if (url === `/api/knowledge/resources/${templeResourceId}/assets`) {
-        return new Response(
-          JSON.stringify({
-            error: {
-              code: 'web.fixture.media_unavailable',
-              message: 'Media unavailable.',
-              status: 503,
-            },
-          }),
-          {
-            status: 503,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        );
-      }
-
-      throw new Error(`Unexpected failure-isolation request: ${url}`);
-    });
-
-    vi.stubGlobal('fetch', fetchMock);
-
-    render(
-      <KnowledgeUniverseSection
-        title="Devotional Resources"
-        description="Primary Devotional Media proof."
-        universeKey="universe.devotional"
-        priority="primary"
-        imageResourceTypes={['devotional.temple']}
-        imageSectionLabel="Temple imagery"
-      />,
-    );
-
-    const devotional = screen.getByRole('region', {
-      name: 'Devotional Resources',
-    });
-
-    await within(devotional).findByText('Temple');
-
-    expect(within(devotional).getByText('devotional.temple')).toBeTruthy();
-    expect(
-      await within(devotional).findByText('Temple imagery is temporarily unavailable.'),
-    ).toBeTruthy();
-  });
-
-  it('shows a bounded empty state without inventing domain content', async () => {
-    const fetchMock = vi.fn(async () => {
-      return knowledgeListResponse([]);
-    });
-
-    vi.stubGlobal('fetch', fetchMock);
-
     renderKnowledgeExperience();
 
-    await waitFor(() => {
-      expect(screen.getAllByText('No published resources yet.')).toHaveLength(2);
-    });
+    expect(await screen.findByAltText('Lord Shiva portrait')).toBeTruthy();
+    expect(await screen.findByLabelText('Naruto Uzumaki short motion')).toBeTruthy();
 
-    expect(screen.queryByText('DRAFT')).toBeNull();
-    expect(screen.queryByText('ARCHIVED')).toBeNull();
+    const animeRegion = screen.getByRole('region', { name: 'Anime Knowledge' });
+    const noMediaCard = within(animeRegion).getByRole('link', { name: 'Open Naruto' });
+    expect(noMediaCard.querySelector('[data-preview-kind="none"]')).toBeTruthy();
+
+    const video = screen.getByLabelText('Naruto Uzumaki short motion') as HTMLVideoElement;
+    expect(video.muted).toBe(true);
+    expect(video.autoplay).toBe(true);
+    expect(video.loop).toBe(true);
+    expect(video.playsInline).toBe(true);
   });
 
-  it('keeps the Devotional and Anime views independently resilient to an invalid response', async () => {
+  it('keeps one Universe healthy when the other discovery response is invalid', async () => {
+    stubMotionPreference();
+
     const fetchMock = vi.fn(async (input: unknown) => {
       const url = String(input);
-
       if (url.includes('universe.devotional')) {
-        return new Response(
-          JSON.stringify({
-            items: [
-              {
-                id: 'bad-devotional-payload',
-              },
-            ],
-          }),
-          {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        );
+        return new Response(JSON.stringify({ items: [{ resourceId: 'invalid-only' }] }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
       }
-
-      return knowledgeListResponse([
-        {
-          id: '88888888-8888-4888-8888-888888888888',
-          universeKey: 'universe.anime',
-          resourceType: 'anime.character',
-          createdAt: '2026-08-16T02:00:00.000Z',
-          updatedAt: '2026-08-16T02:10:00.000Z',
-        },
-      ]);
+      return discoveryResponse([]);
     });
 
     vi.stubGlobal('fetch', fetchMock);
-
     renderKnowledgeExperience();
 
-    const devotional = screen.getByRole('region', {
-      name: 'Devotional Resources',
-    });
-    const anime = screen.getByRole('region', {
-      name: 'Anime Resources',
-    });
+    const devotionalRegion = screen.getByRole('region', { name: 'Devotional Knowledge' });
+    const animeRegion = screen.getByRole('region', { name: 'Anime Knowledge' });
 
-    await within(devotional).findByRole('alert');
-    await within(anime).findByText('Character');
+    await within(devotionalRegion).findByRole('alert');
+    await waitFor(() => {
+      expect(within(animeRegion).getByText('No published resources yet.')).toBeTruthy();
+    });
 
     expect(
-      within(devotional).getByText('Published Knowledge is temporarily unavailable.'),
+      within(devotionalRegion).getByText('Devotional Knowledge is temporarily unavailable.'),
     ).toBeTruthy();
+  });
+
+  it('retries only the failed Universe and recovers without replacing the healthy section', async () => {
+    stubMotionPreference();
+    let devotionalAttempts = 0;
+
+    const fetchMock = vi.fn(async (input: unknown) => {
+      const url = String(input);
+      if (url.includes('universe.devotional')) {
+        devotionalAttempts += 1;
+        if (devotionalAttempts === 1) {
+          return new Response(JSON.stringify({ error: { code: 'test.failure' } }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+        return discoveryResponse([devotionalFixture()]);
+      }
+      return discoveryResponse([animeFixture()]);
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+    renderKnowledgeExperience();
+
+    const devotionalRegion = screen.getByRole('region', { name: 'Devotional Knowledge' });
+    const animeRegion = screen.getByRole('region', { name: 'Anime Knowledge' });
+
+    await within(devotionalRegion).findByRole('alert');
+    await within(animeRegion).findByRole('heading', { name: 'Naruto Uzumaki' });
+    within(devotionalRegion).getByRole('button', { name: 'Try again' }).click();
+    await within(devotionalRegion).findByRole('heading', { name: 'Lord Shiva' });
+
+    expect(devotionalAttempts).toBe(2);
+    expect(within(animeRegion).getByRole('heading', { name: 'Naruto Uzumaki' })).toBeTruthy();
+  });
+
+  it('uses the poster instead of ambient motion when reduced motion is requested', async () => {
+    stubMotionPreference(true);
+
+    const shortLoop = animeFixture({
+      previewMedia: {
+        assetId: '77777777-7777-4777-8777-777777777777',
+        assetType: 'VIDEO',
+        mimeType: 'video/mp4',
+        playback: 'SHORT_LOOP',
+        posterAssetId: '88888888-8888-4888-8888-888888888888',
+        altText: 'Reduced motion Character preview',
+      },
+    });
+
+    const fetchMock = vi.fn(async (input: unknown) => {
+      const url = String(input);
+      return url.includes('universe.anime')
+        ? discoveryResponse([shortLoop])
+        : discoveryResponse([]);
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+    renderKnowledgeExperience();
+
+    const animeRegion = screen.getByRole('region', { name: 'Anime Knowledge' });
+    await within(animeRegion).findByRole('heading', { name: 'Naruto Uzumaki' });
+
+    expect(
+      animeRegion.querySelector('video[data-knowledge-discovery-short-loop="true"]'),
+    ).toBeNull();
+    expect(animeRegion.querySelector('[data-preview-kind="video-poster"]')).toBeTruthy();
+    expect(within(animeRegion).getByAltText('Reduced motion Character preview')).toBeTruthy();
   });
 });
