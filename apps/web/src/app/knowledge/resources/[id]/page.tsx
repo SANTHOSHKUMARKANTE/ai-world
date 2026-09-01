@@ -1,27 +1,37 @@
-import Link from 'next/link';
+import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
-import { ResourceEngagementControls } from '../../../../engagement/resource-engagement-controls';
+import {
+  canonicalDestinationForEntity,
+  genericKnowledgeResourcePath,
+  getGenericKnowledgeResourceMetadata,
+  getPublicKnowledgeEntityByResourceIdFromApi,
+} from '../../../../knowledge/generic-knowledge-resource-metadata';
 import { PublicKnowledgeResourceDetail } from '../../../../knowledge/public-knowledge-resource-detail';
-import { PageContainer } from '../../../../ui/primitives';
 
 interface Props {
   readonly params: Promise<{ readonly id: string }>;
 }
 
-export default async function KnowledgeResourcePage({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
+  return getGenericKnowledgeResourceMetadata(id);
+}
+
+export default async function Page({ params }: Props) {
+  const { id } = await params;
+  const entity = await getPublicKnowledgeEntityByResourceIdFromApi(id);
+
+  if (entity) {
+    const destination = canonicalDestinationForEntity(entity);
+    if (destination !== genericKnowledgeResourcePath(id)) {
+      redirect(destination);
+    }
+  }
 
   return (
-    <main className="aw-public-page">
-      <PageContainer className="aw-resource-page">
-        <nav aria-label="Knowledge resource" className="aw-context-nav">
-          <Link href="/knowledge">← Explore</Link>
-          <Link href="/search">Search</Link>
-        </nav>
-
-        <PublicKnowledgeResourceDetail resourceId={id} />
-        <ResourceEngagementControls resourceId={id} />
-      </PageContainer>
+    <main className="aw-container aw-generic-resource-page">
+      <PublicKnowledgeResourceDetail resourceId={id} />
     </main>
   );
 }

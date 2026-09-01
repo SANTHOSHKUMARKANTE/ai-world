@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SearchExperience } from '../src/discovery/search-experience';
 import { PublicKnowledgeResourceDetail } from '../src/knowledge/public-knowledge-resource-detail';
+import { SessionProvider } from '../src/session/session-provider';
 
 function jsonResponse(payload: unknown): Response {
   return new Response(JSON.stringify(payload), {
@@ -72,10 +73,26 @@ describe('Phase 6 Web Discovery integration', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
-  it('loads a Search result through the existing public Knowledge and Media-reference endpoints', async () => {
+  it('loads a Search result through the finished generic Knowledge fallback', async () => {
     const id = '33333333-3333-4333-8333-333333333333';
     const fetchMock = vi.fn(async (input: unknown) => {
       const url = String(input);
+
+      if (url === '/api/session') {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: 'identity.session.unauthorized',
+              message: 'Authentication is required.',
+              status: 401,
+            },
+          }),
+          {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' },
+          },
+        );
+      }
 
       if (url === `/api/knowledge/resources/${id}`) {
         return jsonResponse({
@@ -87,6 +104,22 @@ describe('Phase 6 Web Discovery integration', () => {
         });
       }
 
+      if (url === `/api/knowledge/entities/by-resource/${id}`) {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: 'knowledge.entity.public_not_found',
+              message: 'Knowledge Entity not found.',
+              status: 404,
+            },
+          }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json' },
+          },
+        );
+      }
+
       if (url === `/api/knowledge/resources/${id}/assets`) {
         return jsonResponse({ assetIds: [] });
       }
@@ -96,13 +129,18 @@ describe('Phase 6 Web Discovery integration', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<PublicKnowledgeResourceDetail resourceId={id} />);
+    render(
+      <SessionProvider>
+        <PublicKnowledgeResourceDetail resourceId={id} />
+      </SessionProvider>,
+    );
 
     await screen.findByRole('heading', { name: 'Temple' });
 
     expect(screen.getByText('Devotional · Published Knowledge')).toBeTruthy();
-    expect(screen.getByText('devotional.temple')).toBeTruthy();
-    expect(screen.getByText(id)).toBeTruthy();
+    expect(screen.getByText('Published Temple in Devotional.')).toBeTruthy();
+    expect(screen.queryByText('devotional.temple', { exact: true })).toBeNull();
+    expect(screen.queryByText(id, { exact: true })).toBeNull();
 
     await vi.waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(

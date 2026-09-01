@@ -90,6 +90,7 @@ test.describe('Phase 6 Web Discovery integration', () => {
     await expect(page).toHaveURL(new RegExp(`/knowledge/resources/${devotionalId}$`));
     await expect(page.getByRole('heading', { name: 'Temple' })).toBeVisible();
     await expect(page.getByText('Devotional · Published Knowledge')).toBeVisible();
-    await expect(page.getByText('devotional.temple')).toBeVisible();
+    await expect(page.getByText('Published Temple in Devotional.')).toBeVisible();
+    await expect(page.getByText('devotional.temple', { exact: true })).toHaveCount(0);
   });
 });

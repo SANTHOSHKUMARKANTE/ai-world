@@ -122,6 +122,7 @@ import {
   GetKnowledgeResourceMedia,
   GetKnowledgeResourceMediaAsActor,
   GetPublicKnowledgeEntity,
+  GetPublicKnowledgeEntityByResourceId,
   GetPublicKnowledgeResource,
   ListPublicKnowledgeDiscovery,
   ListPublicKnowledgeResourceAssets,
@@ -1233,6 +1234,16 @@ export class AppModule {
           inject: [PrismaKnowledgeEntityRepository],
           useFactory: (entities: PrismaKnowledgeEntityRepository): GetPublicKnowledgeEntity => {
             return new GetPublicKnowledgeEntity(entities);
+          },
+        },
+
+        {
+          provide: GetPublicKnowledgeEntityByResourceId,
+          inject: [PrismaKnowledgeEntityRepository],
+          useFactory: (
+            entities: PrismaKnowledgeEntityRepository,
+          ): GetPublicKnowledgeEntityByResourceId => {
+            return new GetPublicKnowledgeEntityByResourceId(entities);
           },
         },
 

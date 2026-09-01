@@ -29,6 +29,10 @@ import type {
   PublicKnowledgeDiscoveryReader,
 } from './public-knowledge-discovery-reader';
 import type {
+  FindPublishedKnowledgeEntityByResourceIdInput,
+  PublicKnowledgeEntityByResourceIdReader,
+} from './public-knowledge-entity-by-resource-id-reader';
+import type {
   FindKnowledgeEntityConfigurationByResourceIdInput,
   KnowledgeEntityConfigurationReader,
 } from './knowledge-entity-configuration-reader';
@@ -178,7 +182,8 @@ export class PrismaKnowledgeEntityRepository
   implements
     KnowledgeEntityStore,
     KnowledgeEntityConfigurationReader,
-    PublicKnowledgeDiscoveryReader
+    PublicKnowledgeDiscoveryReader,
+    PublicKnowledgeEntityByResourceIdReader
 {
   public constructor(
     private readonly database: DatabaseClient,
@@ -327,6 +332,27 @@ export class PrismaKnowledgeEntityRepository
     );
 
     return entities.filter((entity): entity is PublicKnowledgeEntity => entity !== null);
+  }
+
+  public async findPublishedByResourceId(
+    input: FindPublishedKnowledgeEntityByResourceIdInput,
+  ): Promise<PublicKnowledgeEntity | null> {
+    const profile = await this.database.knowledgeResourceProfile.findUnique({
+      where: {
+        knowledgeResourceId: input.knowledgeResourceId,
+      },
+      select: {
+        routeKey: true,
+      },
+    });
+
+    if (!profile) {
+      return null;
+    }
+
+    return this.findPublishedByRouteKey({
+      routeKey: profile.routeKey,
+    });
   }
 
   public async findPublishedByRouteKey(

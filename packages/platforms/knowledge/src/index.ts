@@ -165,6 +165,16 @@ export {
 } from './get-public-knowledge-entity';
 
 export {
+  GetPublicKnowledgeEntityByResourceId,
+  type GetPublicKnowledgeEntityByResourceIdInput,
+} from './get-public-knowledge-entity-by-resource-id';
+
+export type {
+  FindPublishedKnowledgeEntityByResourceIdInput,
+  PublicKnowledgeEntityByResourceIdReader,
+} from './public-knowledge-entity-by-resource-id-reader';
+
+export {
   ListPublicKnowledgeDiscovery,
   PUBLIC_KNOWLEDGE_DISCOVERY_DEFAULT_LIMIT,
   PUBLIC_KNOWLEDGE_DISCOVERY_MAX_LIMIT,

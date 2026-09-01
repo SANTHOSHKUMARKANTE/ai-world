@@ -195,3 +195,19 @@ export async function getPublicKnowledgeEntity(
 
   return entity;
 }
+
+export async function getPublicKnowledgeEntityByResourceId(
+  resourceId: string,
+): Promise<PublicKnowledgeEntity> {
+  const response = await apiRequest(
+    `/knowledge/entities/by-resource/${encodeURIComponent(resourceId)}`,
+  );
+  const payload: unknown = await response.json();
+  const entity = parsePublicKnowledgeEntity(payload);
+
+  if (!entity || entity.resource.id !== resourceId) {
+    throw new Error('Public Knowledge Entity response did not match the requested Resource ID.');
+  }
+
+  return entity;
+}

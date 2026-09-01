@@ -1,4 +1,8 @@
-import { GetPublicKnowledgeEntity, type PublicKnowledgeEntity } from '@ai-world/platform-knowledge';
+import {
+  GetPublicKnowledgeEntity,
+  GetPublicKnowledgeEntityByResourceId,
+  type PublicKnowledgeEntity,
+} from '@ai-world/platform-knowledge';
 import { Controller, Get, Param } from '@nestjs/common';
 
 export interface PublicKnowledgeEntityResponse {
@@ -99,7 +103,21 @@ function toResponse(entity: PublicKnowledgeEntity): PublicKnowledgeEntityRespons
 
 @Controller('knowledge/entities')
 export class PublicKnowledgeEntityController {
-  public constructor(private readonly getPublicKnowledgeEntity: GetPublicKnowledgeEntity) {}
+  public constructor(
+    private readonly getPublicKnowledgeEntity: GetPublicKnowledgeEntity,
+    private readonly getPublicKnowledgeEntityByResourceId: GetPublicKnowledgeEntityByResourceId,
+  ) {}
+
+  @Get('by-resource/:resourceId')
+  public async getEntityByResourceId(
+    @Param('resourceId') resourceId: string,
+  ): Promise<PublicKnowledgeEntityResponse> {
+    return toResponse(
+      await this.getPublicKnowledgeEntityByResourceId.execute({
+        resourceId,
+      }),
+    );
+  }
 
   @Get(':universeKey/:slug')
   public async getEntity(
