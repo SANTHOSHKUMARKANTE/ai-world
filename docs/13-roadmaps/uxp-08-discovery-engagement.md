@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-08 |
 | Area | Product / Web / Knowledge / Discovery / Engagement |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-08B ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-08C ACTIVE |
 | Created | 2026-08-31 |
 | Activation Baseline | `2c5a9a1bfd4f2813c961ff9a95e463d85f6ed665` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -787,7 +787,7 @@ Anime / Devotional landing + Entity regressions.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
 ```
 
 UXP-08B activation baseline:
@@ -874,7 +874,36 @@ no new persistence/storage;
 no schema migration expected.
 ```
 
-No UXP-08B product file changes in this transition.
+No UXP-08C product file changes in this B→C transition.
+
+UXP-08B accepted implementation:
+
+```text
+ed366a0aca49c0c110660bb4b2c47b791f4b4a62
+feat(web): finish generic knowledge detail
+exact remote CI user-confirmed green
+```
+
+Accepted evidence:
+
+```text
+18 implementation/test files;
+1900 insertions / 53 deletions;
+0 schema/migration/dependency changes;
+lint 21 / 21;
+typecheck 41 / 41;
+root unit 37 / 37 tasks;
+Web unit 24 files / 79;
+API unit 3 files / 24;
+Knowledge unit 10 files / 67;
+32 migrations / schema up to date;
+integration 29 / 29 tasks;
+full API 28 files / 190;
+focused browser 9 / 9;
+full Web E2E 144 / 144;
+build 22 / 22;
+architecture 0 violations / 804 modules / 2614 dependencies.
+```
 
 Canonical route:
 
@@ -927,7 +956,15 @@ as second full product pages.
 Status:
 
 ```text
-NOT STARTED — GATED ON UXP-08B ACCEPTANCE
+ACTIVE — NEXT IMPLEMENTATION SLICE
+```
+
+UXP-08C activation baseline:
+
+```text
+ed366a0aca49c0c110660bb4b2c47b791f4b4a62
+feat(web): finish generic knowledge detail
+exact remote CI user-confirmed green
 ```
 
 Canonical route:
@@ -1198,10 +1235,10 @@ UXP-08A — Finished Knowledge Browse
 CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
 
 UXP-08B — Finished Generic Knowledge Detail
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
 
 UXP-08C — Finished Cross-Universe Search
-NOT STARTED — GATED ON UXP-08B ACCEPTANCE
+ACTIVE — NEXT IMPLEMENTATION SLICE
 
 UXP-08D — Finished Saved / Favorites / Collections
 NOT STARTED — GATED ON UXP-08C ACCEPTANCE
@@ -1234,8 +1271,8 @@ Current execution state:
 UXP-07 — CLOSED — ACCEPTED
 UXP-08 — ACTIVE
 UXP-08A — CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
-UXP-08B — ACTIVE — NEXT IMPLEMENTATION SLICE
-UXP-08C — NOT STARTED
+UXP-08B — CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
+UXP-08C — ACTIVE — NEXT IMPLEMENTATION SLICE
 UXP-08D — NOT STARTED
 UXP-08E — NOT STARTED
 UXP-09 — NOT STARTED
@@ -1244,58 +1281,57 @@ P10-M04 — SEQUENCING-BLOCKED
 Master Roadmap — UNCHANGED
 ```
 
-UXP-08A is remotely accepted.
+UXP-08A and UXP-08B are remotely accepted.
 
-This A→B checkpoint is docs-only.
+This B→C checkpoint is docs-only.
 
-No UXP-08B product file belongs in this transition.
+No UXP-08C product file belongs in this transition.
 
-UXP-08C/D/E and UXP-09 remain not started.
+UXP-08D/E and UXP-09 remain not started.
 
 ---
 
 # 18. Next Action
 
-After this docs-only A→B transition is independently reviewed,
+After this docs-only B→C transition is independently reviewed,
 manually committed/pushed and exact remote CI is green, execute only:
 
 ```text
-UXP-08B — Finished Generic Knowledge Detail
+UXP-08C — Finished Cross-Universe Search
 ```
 
-Start UXP-08B from the exact remotely-green transition SHA.
+Start UXP-08C from the exact remotely-green transition SHA.
 
 Before production changes:
 
 ```text
 re-inspect the exact transition baseline;
-lock the generic detail route/component;
-lock the public Resource and public Entity/profile projections;
-lock existing Resource Engagement controls;
-lock the UXP-08A canonical destination resolver;
-inspect existing generic-detail unit/browser regressions;
+lock the existing Search route/component and URL-state behavior;
+lock the public Search result projection and query semantics;
+lock accepted public Knowledge identity composition;
+lock the canonical destination resolver and generic fallback;
+inspect existing Search unit/API/browser regressions;
 freeze an exact implementation allowlist.
 ```
 
 Primary direction remains:
 
 ```text
-finish the existing /knowledge/resources/[id] fallback;
-reuse accepted public Knowledge identity/profile data;
-reuse typed Universe presentation;
-reuse published Media;
-retain existing Resource Engagement controls;
-preserve specialized canonical destination precedence;
-keep generic detail as the truthful fallback;
-provide loading/error/not-found/unpublished behavior;
-finish metadata/social identity only where the generic route is canonical;
+finish the existing /search experience;
+retain existing Search query/filter/order semantics;
+make query and filter state URL-addressable;
+reuse accepted public Knowledge display identity;
+reuse typed Universe and friendly Resource Type presentation;
+preserve canonical typed destination precedence and generic fallback;
+provide idle/loading/error/empty/results behavior;
+keep /search metadata canonical independent of query/campaign parameters;
 responsive/accessibility acceptance;
 minimum architecture only.
 ```
 
-No new Knowledge backend, Search work, Saved/Collection expansion, ranking,
+No new Search endpoint family/index, Saved/Collection expansion, ranking,
 recommendation system, schema migration or generic page builder is pre-authorized.
 
-Do not begin UXP-08C/D/E.
+Do not begin UXP-08D/E.
 
 Do not begin UXP-09.

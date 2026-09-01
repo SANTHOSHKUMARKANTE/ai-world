@@ -444,11 +444,11 @@ Current accepted routes now include:
 | `/experiences/[id]` | Finished Public Experience destination — UXP-05 CLOSED — ACCEPTED |
 | `/forgot-password` | Identity recovery |
 | `/knowledge` | Finished Knowledge browse — UXP-08A CLOSED — ACCEPTED — `0805eda89a420b5f90f6e3ce0facb1b3d36f81fd` |
-| `/knowledge/resources/[id]` | Existing generic Knowledge detail — UXP-08B ACTIVE page-completion target |
+| `/knowledge/resources/[id]` | Finished generic Knowledge detail — UXP-08B CLOSED — ACCEPTED — `ed366a0aca49c0c110660bb4b2c47b791f4b4a62` |
 | `/register` | Registration |
 | `/reset-password` | Password reset |
 | `/saved` | Existing Favorites / Collections — UXP-08D gated page-completion target |
-| `/search` | Existing Cross-Universe Search — UXP-08C gated page-completion target |
+| `/search` | Existing Cross-Universe Search — UXP-08C ACTIVE page-completion target |
 | `/sign-in` | Sign in |
 | `/verify-email` | Email verification |
 
@@ -456,7 +456,9 @@ All four UXP-08 target routes physically exist.
 
 UXP-08A has finished `/knowledge`.
 
-UXP-08B now finishes the existing generic Knowledge detail fallback.
+UXP-08B has finished the existing generic Knowledge detail fallback.
+
+UXP-08C now finishes the existing Cross-Universe Search experience.
 
 No parallel Discovery application and no new top-level UXP-08 route is introduced.
 
@@ -1911,7 +1913,7 @@ real defect.
 Status:
 
 ```text
-ACTIVE — UXP-08B NEXT IMPLEMENTATION SLICE
+ACTIVE — UXP-08C NEXT IMPLEMENTATION SLICE
 ```
 
 The active detailed implementation/acceptance contract is:
@@ -1929,6 +1931,14 @@ GitHub CI #268 / run 33364121387
 completed / success
 ```
 
+UXP-08B is remotely accepted at:
+
+```text
+ed366a0aca49c0c110660bb4b2c47b791f4b4a62
+feat(web): finish generic knowledge detail
+exact remote CI user-confirmed green
+```
+
 Frozen slice sequence:
 
 ```text
@@ -1936,10 +1946,10 @@ UXP-08A — Finished Knowledge Browse
 CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
 
 UXP-08B — Finished Generic Knowledge Detail
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
 
 UXP-08C — Finished Cross-Universe Search
-NOT STARTED — GATED ON UXP-08B ACCEPTANCE
+ACTIVE — NEXT IMPLEMENTATION SLICE
 
 UXP-08D — Finished Saved / Favorites / Collections
 NOT STARTED — GATED ON UXP-08C ACCEPTANCE
@@ -1971,20 +1981,39 @@ architecture 0 violations / 794 modules / 2570 dependencies;
 CI #268 green.
 ```
 
-Current UXP-08B starting architecture remains bounded:
+Accepted UXP-08B evidence:
 
 ```text
-existing /knowledge/resources/[id] route;
-existing public Resource boundary;
-existing public Entity/profile capability;
-existing typed Universe presentation;
-existing published Media;
-existing ResourceEngagementControls;
-existing UXP-08A canonical destination resolver;
-Web/application composition first;
-no new backend/service family by default;
+18 implementation/test files;
+1900 insertions / 53 deletions;
+0 schema/migration/dependency changes;
+lint 21 / 21;
+typecheck 41 / 41;
+root unit 37 / 37 tasks;
+Web unit 24 files / 79;
+API unit 3 files / 24;
+Knowledge unit 10 files / 67;
+32 migrations / schema up to date;
+integration 29 / 29 tasks;
+full API 28 files / 190;
+focused browser 9 / 9;
+full Web E2E 144 / 144;
+build 22 / 22;
+architecture 0 violations / 804 modules / 2614 dependencies;
+exact remote CI user-confirmed green.
+```
+
+Current UXP-08C starting architecture remains bounded:
+
+```text
+existing /search route and Search engine;
+existing query, Universe and Resource Type filters;
+existing public Search API projection;
+accepted public Knowledge identity and canonical destination resolver;
+bounded composition first;
+minimum public-safe Search projection enrichment only if required;
+no new Search endpoint family/index/ranking architecture;
 no new persistence/storage;
-no Engagement -> Knowledge platform dependency;
 no schema/migration expected.
 ```
 
@@ -2011,7 +2040,7 @@ UXP-08E remains acceptance-first with no planned production feature.
 
 This transition is docs-only.
 
-No UXP-08B product implementation begins until this transition is independently
+No UXP-08C product implementation begins until this transition is independently
 reviewed, manually committed/pushed and exact remote CI is green.
 
 ---
@@ -2238,8 +2267,8 @@ The accepted execution position is:
 UXP-07 — CLOSED — ACCEPTED
 UXP-08 — ACTIVE
 UXP-08A — CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
-UXP-08B — ACTIVE — NEXT IMPLEMENTATION SLICE
-UXP-08C — NOT STARTED
+UXP-08B — CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
+UXP-08C — ACTIVE — NEXT IMPLEMENTATION SLICE
 UXP-08D — NOT STARTED
 UXP-08E — NOT STARTED
 UXP-09 — NOT STARTED
@@ -2251,16 +2280,16 @@ Active detailed contract:
 docs/13-roadmaps/uxp-08-discovery-engagement.md
 ```
 
-This A→B checkpoint is docs-only.
+This B→C checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
 is green, execute only:
 
 ```text
-UXP-08B — Finished Generic Knowledge Detail
+UXP-08C — Finished Cross-Universe Search
 ```
 
-Do not begin UXP-08C/D/E.
+Do not begin UXP-08D/E.
 
 Do not begin UXP-09.
 
