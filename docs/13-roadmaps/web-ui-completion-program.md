@@ -447,7 +447,7 @@ Current accepted routes now include:
 | `/knowledge/resources/[id]` | Finished generic Knowledge detail — UXP-08B CLOSED — ACCEPTED — `ed366a0aca49c0c110660bb4b2c47b791f4b4a62` |
 | `/register` | Registration |
 | `/reset-password` | Password reset |
-| `/saved` | Existing Favorites / Collections — UXP-08D ACTIVE page-completion target |
+| `/saved` | Finished Saved / Favorites / Collections — UXP-08D CLOSED — ACCEPTED — `b19304825052da6d5aee240e896ce575261ebe54` |
 | `/search` | Finished Cross-Universe Search — UXP-08C CLOSED — ACCEPTED — `0ca5b8699cd087314a2f86c0f10642d3d0e6eff9` |
 | `/sign-in` | Sign in |
 | `/verify-email` | Email verification |
@@ -460,7 +460,7 @@ UXP-08B has finished the existing generic Knowledge detail fallback.
 
 UXP-08C has finished the existing Cross-Universe Search experience.
 
-UXP-08D now finishes the authenticated Saved / Favorites / Collections library.
+UXP-08D has finished the authenticated Saved / Favorites / Collections library.
 
 No parallel Discovery application and no new top-level UXP-08 route is introduced.
 
@@ -1915,7 +1915,7 @@ real defect.
 Status:
 
 ```text
-ACTIVE — UXP-08D NEXT IMPLEMENTATION SLICE
+ACTIVE — UXP-08E FULL ACCEPTANCE SLICE
 ```
 
 The active detailed implementation/acceptance contract is:
@@ -1949,6 +1949,14 @@ feat(web): finish cross-universe search
 exact remote CI user-confirmed green
 ```
 
+UXP-08D is remotely accepted at:
+
+```text
+b19304825052da6d5aee240e896ce575261ebe54
+feat(web): finish saved knowledge library
+exact remote CI user-confirmed green
+```
+
 Frozen slice sequence:
 
 ```text
@@ -1962,10 +1970,10 @@ UXP-08C — Finished Cross-Universe Search
 CLOSED — ACCEPTED — 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
 
 UXP-08D — Finished Saved / Favorites / Collections
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
 
 UXP-08E — Reuse + Full Discovery / Engagement Acceptance
-NOT STARTED — GATED ON UXP-08A/B/C/D ACCEPTANCE
+ACTIVE — FULL ACCEPTANCE SLICE
 ```
 
 Accepted UXP-08A evidence:
@@ -2036,18 +2044,37 @@ architecture 0 violations / 807 modules / 2620 dependencies;
 exact remote CI user-confirmed green.
 ```
 
-Current UXP-08D starting architecture remains bounded:
+Accepted UXP-08D evidence:
 
 ```text
-existing authenticated /saved route;
-existing Favorites and Collections ownership/persistence;
-existing Favorite removal and Collection Resource removal;
-existing Collection creation/listing;
-Web/application composition with accepted public Knowledge identity;
-owned Collection delete is the only pre-eligible lifecycle addition;
-no Collection rename/sharing/collaboration framework;
-no Engagement -> Knowledge platform dependency;
-no schema/migration expected.
+16 implementation/test files;
+470 insertions / 39 deletions;
+0 schema/migration/dependency changes;
+lint 21 / 21;
+typecheck 41 / 41;
+root unit 37 / 37 tasks;
+Web unit 25 files / 84;
+Engagement unit 2 files / 11;
+focused Saved Web contract/metadata 3 / 3;
+Collection persistence integration 1 / 1;
+Collection API integration 5 / 5;
+32 migrations / schema up to date;
+integration 29 / 29 tasks;
+full API 28 files / 191;
+full Web E2E 149 / 149;
+build 22 / 22;
+architecture 0 violations / 809 modules / 2630 dependencies;
+exact remote CI user-confirmed green.
+```
+
+Current UXP-08E direction remains acceptance-only:
+
+```text
+no planned production feature;
+run the complete frozen Discovery / Engagement acceptance matrix;
+prove accepted Knowledge, Search and Saved reuse together;
+permit only the minimum correction for a proven acceptance defect;
+produce reviewed evidence before UXP-08 closure.
 ```
 
 Program-wide UXP-08 constraints remain frozen:
@@ -2073,7 +2100,7 @@ UXP-08E remains acceptance-first with no planned production feature.
 
 This transition is docs-only.
 
-No UXP-08D product implementation begins until this transition is independently
+No UXP-08E acceptance execution begins until this transition is independently
 reviewed, manually committed/pushed and exact remote CI is green.
 
 ---
@@ -2302,8 +2329,8 @@ UXP-08 — ACTIVE
 UXP-08A — CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
 UXP-08B — CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
 UXP-08C — CLOSED — ACCEPTED — 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
-UXP-08D — ACTIVE — NEXT IMPLEMENTATION SLICE
-UXP-08E — NOT STARTED
+UXP-08D — CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
+UXP-08E — ACTIVE — FULL ACCEPTANCE SLICE
 UXP-09 — NOT STARTED
 ```
 
@@ -2313,16 +2340,16 @@ Active detailed contract:
 docs/13-roadmaps/uxp-08-discovery-engagement.md
 ```
 
-This C→D checkpoint is docs-only.
+This D→E checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
 is green, execute only:
 
 ```text
-UXP-08D — Finished Saved / Favorites / Collections
+UXP-08E — Reuse + Full Discovery / Engagement Acceptance
 ```
 
-Do not begin UXP-08E.
+No planned UXP-08E production feature is authorized.
 
 Do not begin UXP-09.
 

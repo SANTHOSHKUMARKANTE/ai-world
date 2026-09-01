@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-08 |
 | Area | Product / Web / Knowledge / Discovery / Engagement |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-08D ACTIVE |
+| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-08E ACTIVE |
 | Created | 2026-08-31 |
 | Activation Baseline | `2c5a9a1bfd4f2813c961ff9a95e463d85f6ed665` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -1058,7 +1058,7 @@ Existing Search order/semantics remain authoritative.
 Status:
 
 ```text
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
 ```
 
 UXP-08D activation baseline:
@@ -1067,6 +1067,37 @@ UXP-08D activation baseline:
 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
 feat(web): finish cross-universe search
 exact remote CI user-confirmed green
+```
+
+UXP-08D accepted implementation:
+
+```text
+b19304825052da6d5aee240e896ce575261ebe54
+feat(web): finish saved knowledge library
+exact remote CI user-confirmed green
+```
+
+Accepted evidence:
+
+```text
+16 implementation/test files;
+470 insertions / 39 deletions;
+0 schema/migration/dependency changes;
+lint 21 / 21;
+typecheck 41 / 41;
+root unit 37 / 37 tasks;
+Web unit 25 files / 84;
+Engagement unit 2 files / 11;
+focused Saved Web contract/metadata 3 / 3;
+Collection persistence integration 1 / 1;
+Collection API integration 5 / 5;
+32 migrations / schema up to date;
+integration 29 / 29 tasks;
+full API 28 files / 191;
+full Web E2E 149 / 149;
+build 22 / 22;
+architecture 0 violations / 809 modules / 2630 dependencies;
+exact remote CI user-confirmed green.
 ```
 
 Canonical route:
@@ -1143,7 +1174,15 @@ new Engagement -> Knowledge platform dependency.
 Status:
 
 ```text
-NOT STARTED — GATED ON UXP-08A/B/C/D ACCEPTANCE
+ACTIVE — FULL ACCEPTANCE SLICE
+```
+
+UXP-08E activation baseline:
+
+```text
+b19304825052da6d5aee240e896ce575261ebe54
+feat(web): finish saved knowledge library
+exact remote CI user-confirmed green
 ```
 
 UXP-08E is acceptance-first.
@@ -1279,10 +1318,10 @@ UXP-08C — Finished Cross-Universe Search
 CLOSED — ACCEPTED — 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
 
 UXP-08D — Finished Saved / Favorites / Collections
-ACTIVE — NEXT IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
 
 UXP-08E — Reuse + Full Discovery / Engagement Acceptance
-NOT STARTED — GATED ON UXP-08A/B/C/D ACCEPTANCE
+ACTIVE — FULL ACCEPTANCE SLICE
 ```
 
 Each slice requires:
@@ -1311,66 +1350,59 @@ UXP-08 — ACTIVE
 UXP-08A — CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
 UXP-08B — CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
 UXP-08C — CLOSED — ACCEPTED — 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
-UXP-08D — ACTIVE — NEXT IMPLEMENTATION SLICE
-UXP-08E — NOT STARTED
+UXP-08D — CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
+UXP-08E — ACTIVE — FULL ACCEPTANCE SLICE
 UXP-09 — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
 Master Roadmap — UNCHANGED
 ```
 
-UXP-08A, UXP-08B and UXP-08C are remotely accepted.
+UXP-08A, UXP-08B, UXP-08C and UXP-08D are remotely accepted.
 
-This C→D checkpoint is docs-only.
+This D→E checkpoint is docs-only.
 
-No UXP-08D product file belongs in this transition.
+No UXP-08E product file belongs in this transition.
 
-UXP-08E and UXP-09 remain not started.
+UXP-09 remains not started.
 
 ---
 
 # 18. Next Action
 
-After this docs-only C→D transition is independently reviewed,
+After this docs-only D→E transition is independently reviewed,
 manually committed/pushed and exact remote CI is green, execute only:
 
 ```text
-UXP-08D — Finished Saved / Favorites / Collections
+UXP-08E — Reuse + Full Discovery / Engagement Acceptance
 ```
 
-Start UXP-08D from the exact remotely-green transition SHA.
+Start UXP-08E from the exact remotely-green transition SHA.
 
 Before production changes:
 
 ```text
 re-inspect the exact transition baseline;
-lock the existing /saved route/component and authenticated states;
-lock Favorite and Collection ownership/mutation contracts;
-lock accepted public Knowledge identity composition;
-lock the canonical destination resolver and generic fallback;
-inspect existing Engagement unit/API/browser regressions;
-freeze an exact implementation allowlist.
+lock accepted UXP-08A/B/C/D behavior and remotely-green SHAs;
+lock the complete frozen acceptance matrix;
+inspect the canonical migration state and full regression runners;
+freeze an evidence-only execution allowlist;
+permit production changes only for a proven acceptance defect.
 ```
 
 Primary direction remains:
 
 ```text
-finish the existing authenticated /saved library;
-retain existing Favorite and Collection ownership semantics;
-compose saved Resource IDs with accepted public Knowledge identity in Web/application layer;
-reuse typed Universe and friendly Resource Type presentation;
-preserve canonical typed destination precedence and generic fallback;
-provide anonymous/loading/error/empty/ready states;
-support Favorite removal and Collection Resource removal;
-add only owned Collection deletion as the eligible missing lifecycle;
-keep /saved private and account-appropriate;
-responsive/accessibility acceptance;
-minimum architecture only.
+run full Discovery / Engagement acceptance over accepted production behavior;
+prove Knowledge browse, generic detail, Search and Saved reuse together;
+prove typed Universe identity and canonical destination precedence/fallback;
+prove anonymous/authenticated, published-only and Engagement mutation boundaries;
+prove responsive, accessibility, metadata/privacy and regression matrices;
+produce reviewed evidence;
+make no planned production feature change.
 ```
 
-No public/shared Collections, collaboration, rename, folders, tags, recommendation
-system, schema migration or Engagement -> Knowledge dependency is pre-authorized.
-
-Do not begin UXP-08E.
+No new production feature, schema migration, dependency, public/shared Collections,
+recommendation system or Engagement -> Knowledge dependency is pre-authorized.
 
 Do not begin UXP-09.
