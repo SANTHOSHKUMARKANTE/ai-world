@@ -9,6 +9,9 @@ interface KnowledgeSearchRow {
   readonly id: string;
   readonly universeKey: string;
   readonly resourceType: string;
+  readonly slug: string | null;
+  readonly displayName: string | null;
+  readonly summary: string | null;
 }
 
 function assertSupportedKnowledgeSearchRequest(input: SearchRequest): void {
@@ -41,28 +44,33 @@ export class PrismaKnowledgeSearch implements SearchContract {
 
     const resources = await this.database.$queryRaw<KnowledgeSearchRow[]>`
       SELECT
-        id,
-        universe_key AS "universeKey",
-        resource_type AS "resourceType"
-      FROM knowledge_resources
+        resources.id,
+        resources.universe_key AS "universeKey",
+        resources.resource_type AS "resourceType",
+        profiles.slug,
+        profiles.display_name AS "displayName",
+        profiles.summary
+      FROM knowledge_resources AS resources
+      LEFT JOIN knowledge_resource_profiles AS profiles
+        ON profiles.knowledge_resource_id = resources.id
       WHERE
-        (${universeKey}::text IS NULL OR universe_key = ${universeKey})
-        AND lifecycle = ${KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE}
-        AND strpos(lower(resource_type), lower(${query})) > 0
+        (${universeKey}::text IS NULL OR resources.universe_key = ${universeKey})
+        AND resources.lifecycle = ${KNOWLEDGE_RESOURCE_PUBLISHED_LIFECYCLE}
+        AND strpos(lower(resources.resource_type), lower(${query})) > 0
         AND (
           ${input.filter.resourceTypes.length}::int = 0
-          OR resource_type = ANY(string_to_array(${resourceTypeFilter}, ','))
+          OR resources.resource_type = ANY(string_to_array(${resourceTypeFilter}, ','))
         )
       ORDER BY
         CASE
-          WHEN lower(resource_type) = lower(${query}) THEN 0
-          WHEN lower(split_part(resource_type, '.', -1)) = lower(${query}) THEN 1
-          WHEN starts_with(lower(split_part(resource_type, '.', -1)), lower(${query})) THEN 2
-          WHEN starts_with(lower(resource_type), lower(${query})) THEN 3
+          WHEN lower(resources.resource_type) = lower(${query}) THEN 0
+          WHEN lower(split_part(resources.resource_type, '.', -1)) = lower(${query}) THEN 1
+          WHEN starts_with(lower(split_part(resources.resource_type, '.', -1)), lower(${query})) THEN 2
+          WHEN starts_with(lower(resources.resource_type), lower(${query})) THEN 3
           ELSE 4
         END ASC,
-        created_at DESC,
-        id ASC
+        resources.created_at DESC,
+        resources.id ASC
       OFFSET ${input.pagination.offset}
       LIMIT ${input.pagination.limit}
     `;
@@ -72,6 +80,9 @@ export class PrismaKnowledgeSearch implements SearchContract {
         resourceId: parseResourceId(resource.id),
         resourceType: parseNamespacedKey(resource.resourceType),
         universeKey: parseNamespacedKey(resource.universeKey),
+        ...(resource.slug === null ? {} : { slug: resource.slug }),
+        ...(resource.displayName === null ? {} : { displayName: resource.displayName }),
+        ...(resource.summary === null ? {} : { summary: resource.summary }),
       })),
       pagination: input.pagination,
     };

@@ -4,6 +4,9 @@ export interface PublicDiscoverySearchResult {
   readonly resourceId: string;
   readonly resourceType: string;
   readonly universeKey?: string;
+  readonly slug?: string;
+  readonly displayName?: string;
+  readonly summary?: string;
 }
 
 export interface PublicDiscoverySearchResponse {
@@ -28,7 +31,10 @@ function isSearchResult(value: unknown): value is PublicDiscoverySearchResult {
     isRecord(value) &&
     typeof value.resourceId === 'string' &&
     typeof value.resourceType === 'string' &&
-    (value.universeKey === undefined || typeof value.universeKey === 'string')
+    (value.universeKey === undefined || typeof value.universeKey === 'string') &&
+    (value.slug === undefined || typeof value.slug === 'string') &&
+    (value.displayName === undefined || typeof value.displayName === 'string') &&
+    (value.summary === undefined || typeof value.summary === 'string')
   );
 }
 

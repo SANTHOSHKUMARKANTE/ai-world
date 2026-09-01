@@ -77,17 +77,20 @@ describe('PrismaKnowledgeSearch capability boundary', () => {
 
     const { sql, values } = readRawQueryCall(queryRaw);
 
-    expect(sql).toContain('FROM knowledge_resources');
-    expect(sql).toContain('strpos(lower(resource_type), lower( ? )) > 0');
-    expect(sql).toContain("resource_type = ANY(string_to_array( ? , ','))");
-    expect(sql).toContain('WHEN lower(resource_type) = lower( ? ) THEN 0');
-    expect(sql).toContain("WHEN lower(split_part(resource_type, '.', -1)) = lower( ? ) THEN 1");
+    expect(sql).toContain('FROM knowledge_resources AS resources');
+    expect(sql).toContain('LEFT JOIN knowledge_resource_profiles AS profiles');
+    expect(sql).toContain('strpos(lower(resources.resource_type), lower( ? )) > 0');
+    expect(sql).toContain("resources.resource_type = ANY(string_to_array( ? , ','))");
+    expect(sql).toContain('WHEN lower(resources.resource_type) = lower( ? ) THEN 0');
     expect(sql).toContain(
-      "WHEN starts_with(lower(split_part(resource_type, '.', -1)), lower( ? )) THEN 2",
+      "WHEN lower(split_part(resources.resource_type, '.', -1)) = lower( ? ) THEN 1",
     );
-    expect(sql).toContain('WHEN starts_with(lower(resource_type), lower( ? )) THEN 3');
-    expect(sql).toContain('created_at DESC');
-    expect(sql).toContain('id ASC');
+    expect(sql).toContain(
+      "WHEN starts_with(lower(split_part(resources.resource_type, '.', -1)), lower( ? )) THEN 2",
+    );
+    expect(sql).toContain('WHEN starts_with(lower(resources.resource_type), lower( ? )) THEN 3');
+    expect(sql).toContain('resources.created_at DESC');
+    expect(sql).toContain('resources.id ASC');
 
     expect(values).toEqual([
       null,
@@ -127,8 +130,8 @@ describe('PrismaKnowledgeSearch capability boundary', () => {
 
     const { sql, values } = readRawQueryCall(queryRaw);
 
-    expect(sql).toContain('universe_key = ?');
-    expect(sql).toContain("resource_type = ANY(string_to_array( ? , ','))");
+    expect(sql).toContain('resources.universe_key = ?');
+    expect(sql).toContain("resources.resource_type = ANY(string_to_array( ? , ','))");
     expect(values).toEqual([
       universeKey,
       universeKey,
@@ -143,6 +146,50 @@ describe('PrismaKnowledgeSearch capability boundary', () => {
       0,
       20,
     ]);
+  });
+
+  it('returns public profile identity when available and preserves a profileless fallback', async () => {
+    const { database, queryRaw } = createDatabaseStub();
+    const search = new PrismaKnowledgeSearch(database);
+    const request = createUniverseRequest();
+
+    queryRaw.mockResolvedValue([
+      {
+        id: '11111111-1111-4111-8111-111111111111',
+        universeKey: 'universe.devotional',
+        resourceType: 'devotional.deity',
+        slug: 'shiva',
+        displayName: 'Lord Shiva',
+        summary: 'The auspicious one.',
+      },
+      {
+        id: '22222222-2222-4222-8222-222222222222',
+        universeKey: 'universe.devotional',
+        resourceType: 'devotional.temple',
+        slug: null,
+        displayName: null,
+        summary: null,
+      },
+    ]);
+
+    await expect(search.search(request)).resolves.toEqual({
+      items: [
+        {
+          resourceId: '11111111-1111-4111-8111-111111111111',
+          universeKey: 'universe.devotional',
+          resourceType: 'devotional.deity',
+          slug: 'shiva',
+          displayName: 'Lord Shiva',
+          summary: 'The auspicious one.',
+        },
+        {
+          resourceId: '22222222-2222-4222-8222-222222222222',
+          universeKey: 'universe.devotional',
+          resourceType: 'devotional.temple',
+        },
+      ],
+      pagination: request.pagination,
+    });
   });
 
   it('returns no results for a blank query without turning it into a broad listing', async () => {

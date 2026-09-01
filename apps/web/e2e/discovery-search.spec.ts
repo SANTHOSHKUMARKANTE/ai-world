@@ -32,6 +32,9 @@ test.describe('Phase 6 Web Discovery integration', () => {
                     resourceId: animeId,
                     resourceType: 'anime.character',
                     universeKey: 'universe.anime',
+                    slug: 'naruto-uzumaki',
+                    displayName: 'Naruto Uzumaki',
+                    summary: 'A shinobi determined to become Hokage.',
                   },
                   {
                     resourceId: devotionalId,
@@ -73,20 +76,20 @@ test.describe('Phase 6 Web Discovery integration', () => {
     await page.getByLabel('Search query').fill('A');
     await page.getByRole('button', { name: 'Search' }).click();
     const results = page.getByRole('list', { name: 'Search results' });
-    await expect(results.getByText('anime.character')).toBeVisible();
-    await expect(results.getByText('devotional.temple')).toBeVisible();
+    await expect(results.getByRole('heading', { name: 'Naruto Uzumaki' })).toBeVisible();
+    await expect(results.getByRole('heading', { name: 'Temple' })).toBeVisible();
     expect(searchRequests[0]?.searchParams.get('universeKey')).toBeNull();
 
     await page.getByLabel('Search scope').selectOption('universe.devotional');
     await page.getByLabel('Devotional temple').check();
     await page.getByRole('button', { name: 'Search' }).click();
-    await expect(results.getByText('devotional.temple')).toBeVisible();
-    await expect(results.getByText('anime.character')).toHaveCount(0);
+    await expect(results.getByRole('heading', { name: 'Temple' })).toBeVisible();
+    await expect(results.getByRole('heading', { name: 'Naruto Uzumaki' })).toHaveCount(0);
     const scoped = searchRequests.at(-1);
     expect(scoped?.searchParams.get('universeKey')).toBe('universe.devotional');
     expect(scoped?.searchParams.getAll('resourceType')).toContain('devotional.temple');
 
-    await results.getByRole('link', { name: 'Open resource' }).click();
+    await results.getByRole('link', { name: 'Explore Temple' }).click();
     await expect(page).toHaveURL(new RegExp(`/knowledge/resources/${devotionalId}$`));
     await expect(page.getByRole('heading', { name: 'Temple' })).toBeVisible();
     await expect(page.getByText('Devotional · Published Knowledge')).toBeVisible();

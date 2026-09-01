@@ -19,6 +19,8 @@ const animePublishedId = randomUUID();
 const devotionalDraftId = randomUUID();
 const animeArchivedId = randomUUID();
 const fixtureIds = [devotionalPublishedId, animePublishedId, devotionalDraftId, animeArchivedId];
+const devotionalResourceType = 'uxp08c.temple';
+const animeResourceType = 'uxp08c.character';
 
 describe('Public Discovery Search API', () => {
   let app: INestApplication;
@@ -36,30 +38,50 @@ describe('Public Discovery Search API', () => {
         {
           id: devotionalPublishedId,
           universeKey: 'universe.devotional',
-          resourceType: 'devotional.temple',
+          resourceType: devotionalResourceType,
           lifecycle: 'PUBLISHED',
           createdAt: new Date('2026-08-18T09:02:00.000Z'),
         },
         {
           id: animePublishedId,
           universeKey: 'universe.anime',
-          resourceType: 'anime.character',
+          resourceType: animeResourceType,
           lifecycle: 'PUBLISHED',
           createdAt: new Date('2026-08-18T09:01:00.000Z'),
         },
         {
           id: devotionalDraftId,
           universeKey: 'universe.devotional',
-          resourceType: 'devotional.temple',
+          resourceType: devotionalResourceType,
           lifecycle: 'DRAFT',
           createdAt: new Date('2026-08-18T09:04:00.000Z'),
         },
         {
           id: animeArchivedId,
           universeKey: 'universe.anime',
-          resourceType: 'anime.character',
+          resourceType: animeResourceType,
           lifecycle: 'ARCHIVED',
           createdAt: new Date('2026-08-18T09:03:00.000Z'),
+        },
+      ],
+    });
+    await database.knowledgeResourceProfile.createMany({
+      data: [
+        {
+          knowledgeResourceId: devotionalPublishedId,
+          routeKey: 'universe.devotional:temple:search-proof',
+          slug: 'search-proof-temple',
+          displayName: 'Search Proof Temple',
+          summary: 'A published devotional destination used to prove enriched Search identity.',
+          facts: [],
+        },
+        {
+          knowledgeResourceId: animePublishedId,
+          routeKey: 'universe.anime:character:search-proof',
+          slug: 'search-proof-character',
+          displayName: 'Search Proof Character',
+          summary: 'A published Anime character used to prove canonical Search routing.',
+          facts: [],
         },
       ],
     });
@@ -82,20 +104,26 @@ describe('Public Discovery Search API', () => {
   it('serves anonymous ranked global Search while preserving published-only visibility', async () => {
     const response = await request(app.getHttpServer())
       .get('/discovery/search')
-      .query({ query: 'A', offset: '0', limit: '20' })
+      .query({ query: 'uxp08c', offset: '0', limit: '20' })
       .expect(200);
 
     expect(response.body).toEqual({
       items: [
         {
-          resourceId: animePublishedId,
-          resourceType: 'anime.character',
-          universeKey: 'universe.anime',
+          resourceId: devotionalPublishedId,
+          resourceType: devotionalResourceType,
+          universeKey: 'universe.devotional',
+          slug: 'search-proof-temple',
+          displayName: 'Search Proof Temple',
+          summary: 'A published devotional destination used to prove enriched Search identity.',
         },
         {
-          resourceId: devotionalPublishedId,
-          resourceType: 'devotional.temple',
-          universeKey: 'universe.devotional',
+          resourceId: animePublishedId,
+          resourceType: animeResourceType,
+          universeKey: 'universe.anime',
+          slug: 'search-proof-character',
+          displayName: 'Search Proof Character',
+          summary: 'A published Anime character used to prove canonical Search routing.',
         },
       ],
       pagination: { offset: 0, limit: 20 },
@@ -107,15 +135,18 @@ describe('Public Discovery Search API', () => {
   it('applies Universe scope through the same public endpoint', async () => {
     const response = await request(app.getHttpServer())
       .get('/discovery/search')
-      .query({ query: '.', universeKey: 'universe.devotional' })
+      .query({ query: 'uxp08c', universeKey: 'universe.devotional' })
       .expect(200);
 
     expect(response.body).toEqual({
       items: [
         {
           resourceId: devotionalPublishedId,
-          resourceType: 'devotional.temple',
+          resourceType: devotionalResourceType,
           universeKey: 'universe.devotional',
+          slug: 'search-proof-temple',
+          displayName: 'Search Proof Temple',
+          summary: 'A published devotional destination used to prove enriched Search identity.',
         },
       ],
       pagination: { offset: 0, limit: 20 },
@@ -127,8 +158,8 @@ describe('Public Discovery Search API', () => {
     const response = await request(app.getHttpServer())
       .get('/discovery/search')
       .query({
-        query: '.',
-        resourceType: ['devotional.temple', 'anime.character'],
+        query: 'uxp08c',
+        resourceType: [devotionalResourceType, animeResourceType],
         offset: '1',
         limit: '1',
       })
@@ -138,8 +169,11 @@ describe('Public Discovery Search API', () => {
       items: [
         {
           resourceId: animePublishedId,
-          resourceType: 'anime.character',
+          resourceType: animeResourceType,
           universeKey: 'universe.anime',
+          slug: 'search-proof-character',
+          displayName: 'Search Proof Character',
+          summary: 'A published Anime character used to prove canonical Search routing.',
         },
       ],
       pagination: { offset: 1, limit: 1 },

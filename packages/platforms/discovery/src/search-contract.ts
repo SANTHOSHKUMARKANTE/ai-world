@@ -32,6 +32,9 @@ export interface SearchResult {
   readonly resourceId: ResourceId;
   readonly resourceType: NamespacedKey;
   readonly universeKey?: NamespacedKey;
+  readonly slug?: string;
+  readonly displayName?: string;
+  readonly summary?: string;
 }
 
 export interface SearchResultPage {
