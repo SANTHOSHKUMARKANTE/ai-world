@@ -1,5 +1,14 @@
+import type { Metadata } from 'next';
+
 import { SavedExperience } from '../../engagement/saved-experience';
 import { PageContainer } from '../../ui/primitives';
+
+export const metadata: Metadata = {
+  title: 'Saved Knowledge',
+  description: 'Your private AI World Favorites and Collections.',
+  alternates: { canonical: '/saved' },
+  robots: { index: false, follow: false },
+};
 
 export default function SavedPage() {
   return (

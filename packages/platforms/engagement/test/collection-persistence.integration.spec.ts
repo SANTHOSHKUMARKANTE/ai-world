@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   AddCollectionResource,
   CreateCollection,
+  DeleteCollection,
   ListCollectionResources,
   ListCollections,
   RemoveCollectionResource,
@@ -53,6 +54,7 @@ describe('P9-M02 Collection PostgreSQL persistence', () => {
     const add = new AddCollectionResource(repository);
     const listResources = new ListCollectionResources(repository);
     const remove = new RemoveCollectionResource(repository);
+    const deleteCollection = new DeleteCollection(repository);
 
     const collection = await create.execute({
       userId,
@@ -111,5 +113,15 @@ describe('P9-M02 Collection PostgreSQL persistence', () => {
         where: { collectionId: collection.id },
       }),
     ).toBe(1);
+
+    await expect(
+      deleteCollection.execute({ userId: randomUUID(), collectionId: collection.id }),
+    ).resolves.toEqual({ deleted: false });
+    await expect(
+      deleteCollection.execute({ userId, collectionId: collection.id }),
+    ).resolves.toEqual({ deleted: true });
+    expect(
+      await database.collectionResource.count({ where: { collectionId: collection.id } }),
+    ).toBe(0);
   });
 });

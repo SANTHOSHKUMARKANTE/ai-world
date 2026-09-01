@@ -336,4 +336,42 @@ describe('P9-M02 Collection API', () => {
       .set('Cookie', owner.cookiePair)
       .expect(204);
   });
+
+  it('deletes only the acting User owned Collection and cascades memberships', async () => {
+    const owner = await signInFixture('delete-owner');
+    const other = await signInFixture('delete-other');
+    const collection = await request(app.getHttpServer())
+      .post('/engagement/collections')
+      .set('Cookie', owner.cookiePair)
+      .send({ name: 'Delete me' })
+      .expect(201);
+    const resourceId = randomUUID();
+
+    await request(app.getHttpServer())
+      .post(`/engagement/collections/${collection.body.id}/resources`)
+      .set('Cookie', owner.cookiePair)
+      .send({ resourceId })
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .delete(`/engagement/collections/${collection.body.id}`)
+      .set('Cookie', other.cookiePair)
+      .expect(204);
+    expect(await database.collection.count({ where: { id: collection.body.id as string } })).toBe(
+      1,
+    );
+
+    await request(app.getHttpServer())
+      .delete(`/engagement/collections/${collection.body.id}`)
+      .set('Cookie', owner.cookiePair)
+      .expect(204);
+    expect(await database.collection.count({ where: { id: collection.body.id as string } })).toBe(
+      0,
+    );
+    expect(
+      await database.collectionResource.count({
+        where: { collectionId: collection.body.id as string },
+      }),
+    ).toBe(0);
+  });
 });

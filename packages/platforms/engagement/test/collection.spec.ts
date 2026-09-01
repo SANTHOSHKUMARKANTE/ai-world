@@ -13,12 +13,15 @@ import {
   ListCollectionResources,
   ListCollections,
   ListCollectionsAsActor,
+  DeleteCollection,
+  DeleteCollectionAsActor,
   RemoveCollectionResource,
   type Collection,
   type CollectionResourceMembership,
   type CollectionResourceRecordInput,
   type CollectionStore,
   type CreateCollectionRecordInput,
+  type DeleteCollectionRecordInput,
   type ListCollectionRecordsInput,
   type ListCollectionResourceRecordsInput,
 } from '../src';
@@ -44,6 +47,26 @@ class MemoryCollectionStore implements CollectionStore {
     return this.collections
       .filter((collection) => collection.userId === input.userId)
       .slice(0, input.limit);
+  }
+
+  async delete(input: DeleteCollectionRecordInput): Promise<boolean> {
+    const index = this.collections.findIndex(
+      (collection) => collection.id === input.collectionId && collection.userId === input.userId,
+    );
+
+    if (index === -1) return false;
+
+    this.collections.splice(index, 1);
+    for (
+      let membershipIndex = this.memberships.length - 1;
+      membershipIndex >= 0;
+      membershipIndex -= 1
+    ) {
+      if (this.memberships[membershipIndex]?.collectionId === input.collectionId) {
+        this.memberships.splice(membershipIndex, 1);
+      }
+    }
+    return true;
   }
 
   async addResource(
@@ -286,5 +309,36 @@ describe('P9-M02 Collection', () => {
         resourceId: randomUUID(),
       }),
     ).rejects.toBeInstanceOf(TypeError);
+  });
+
+  it('deletes only an owned Collection and its memberships', async () => {
+    const store = new MemoryCollectionStore();
+    const owner = createUser();
+    const other = createUser();
+    const collection = await new CreateCollection(store).execute({
+      userId: owner.id,
+      name: 'Temporary',
+    });
+    await new AddCollectionResource(store).execute({
+      userId: owner.id,
+      collectionId: collection.id,
+      resourceId: randomUUID(),
+    });
+
+    await expect(
+      new DeleteCollectionAsActor(
+        new GetUserProfile(userProfileReader(other)),
+        new DeleteCollection(store),
+      ).execute({ actingActorId: other.actorId, collectionId: collection.id }),
+    ).resolves.toEqual({ deleted: false });
+
+    await expect(
+      new DeleteCollectionAsActor(
+        new GetUserProfile(userProfileReader(owner)),
+        new DeleteCollection(store),
+      ).execute({ actingActorId: owner.actorId, collectionId: collection.id }),
+    ).resolves.toEqual({ deleted: true });
+    expect(store.collections).toHaveLength(0);
+    expect(store.memberships).toHaveLength(0);
   });
 });

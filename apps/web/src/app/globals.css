@@ -1038,6 +1038,28 @@ textarea {
   font-size: 0.78rem;
 }
 
+.aw-saved-resource-identity {
+  display: grid;
+  min-width: 0;
+  gap: 0.25rem;
+}
+
+.aw-saved-resource-identity > span {
+  color: var(--aw-text-muted);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.aw-saved-resource-identity > .aw-text-link {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.aw-collection-card > header > div > span {
+  color: var(--aw-text-muted);
+  font-size: 0.82rem;
+}
+
 .aw-collection-card + .aw-collection-card {
   margin-top: 0;
 }

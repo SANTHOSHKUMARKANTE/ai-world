@@ -9,6 +9,7 @@ import {
   type RemoveCollectionResourceResult,
 } from './collection-resources';
 import { CreateCollection } from './create-collection';
+import { DeleteCollection, type DeleteCollectionResult } from './delete-collection';
 import { ListCollections } from './list-collections';
 
 export interface CreateCollectionAsActorInput {
@@ -37,6 +38,11 @@ export interface RemoveCollectionResourceAsActorInput {
   readonly actingActorId: string;
   readonly collectionId: string;
   readonly resourceId: string;
+}
+
+export interface DeleteCollectionAsActorInput {
+  readonly actingActorId: string;
+  readonly collectionId: string;
 }
 
 export class CreateCollectionAsActor {
@@ -71,6 +77,24 @@ export class ListCollectionsAsActor {
     return this.listCollections.execute({
       userId: user.id,
       ...(input.limit === undefined ? {} : { limit: input.limit }),
+    });
+  }
+}
+
+export class DeleteCollectionAsActor {
+  public constructor(
+    private readonly getUserProfile: GetUserProfile,
+    private readonly deleteCollection: DeleteCollection,
+  ) {}
+
+  public async execute(input: DeleteCollectionAsActorInput): Promise<DeleteCollectionResult> {
+    const user = await this.getUserProfile.execute({
+      actorId: parseResourceId(input.actingActorId),
+    });
+
+    return this.deleteCollection.execute({
+      userId: user.id,
+      collectionId: input.collectionId,
     });
   }
 }

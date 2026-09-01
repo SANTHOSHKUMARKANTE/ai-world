@@ -73,6 +73,31 @@ test.describe('WPR-M03 public Knowledge, Discovery and Engagement', () => {
       });
     });
 
+    await page.route(`**/api/knowledge/entities/by-resource/${resourceId}`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          resource: {
+            id: resourceId,
+            universeKey: 'universe.devotional',
+            resourceType: 'devotional.temple',
+          },
+          profile: {
+            slug: 'acceptance-temple',
+            displayName: 'Acceptance Temple',
+            nativeName: null,
+            alternateNames: [],
+            summary: 'A published devotional place.',
+            overview: null,
+            facts: [],
+          },
+          media: [],
+          relations: [],
+        }),
+      });
+    });
+
     await page.route(`**/api/knowledge/resources/${resourceId}`, async (route) => {
       await route.fulfill({
         status: 200,
@@ -110,19 +135,25 @@ test.describe('WPR-M03 public Knowledge, Discovery and Engagement', () => {
     const favorites = page.getByRole('region', { name: 'Favorites' });
     const savedCollections = page.getByRole('region', { name: 'Collections' });
 
-    await expect(favorites.getByRole('link', { name: resourceId })).toBeVisible();
+    await expect(favorites.getByRole('link', { name: 'Acceptance Temple' })).toBeVisible();
+    await expect(favorites.getByText('Devotional · Temple')).toBeVisible();
 
     const collection = savedCollections.getByRole('article').filter({
       has: page.getByRole('heading', { name: collectionName }),
     });
-    await expect(collection.getByRole('link', { name: resourceId })).toBeVisible();
+    await expect(collection.getByRole('link', { name: 'Acceptance Temple' })).toBeVisible();
 
     await collection.getByRole('button', { name: 'Remove from collection' }).click();
     await expect(page.getByRole('status')).toHaveText('Resource removed from Collection.');
-    await expect(collection.getByRole('link', { name: resourceId })).toHaveCount(0);
+    await expect(collection.getByRole('link', { name: 'Acceptance Temple' })).toHaveCount(0);
 
     await favorites.getByRole('button', { name: 'Remove favorite' }).click();
     await expect(page.getByRole('status')).toHaveText('Favorite removed.');
-    await expect(favorites.getByRole('link', { name: resourceId })).toHaveCount(0);
+    await expect(favorites.getByRole('link', { name: 'Acceptance Temple' })).toHaveCount(0);
+
+    page.once('dialog', (dialog) => void dialog.accept());
+    await collection.getByRole('button', { name: 'Delete collection' }).click();
+    await expect(page.getByRole('status')).toHaveText(`Collection “${collectionName}” deleted.`);
+    await expect(collection).toHaveCount(0);
   });
 });

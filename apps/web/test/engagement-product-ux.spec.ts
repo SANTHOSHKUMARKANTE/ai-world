@@ -1,9 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { metadata as savedMetadata } from '../src/app/saved/page';
 import {
   addCollectionResource,
   addFavorite,
   createCollection,
+  deleteCollection,
   listCollectionResources,
   listCollections,
   listFavorites,
@@ -24,6 +26,11 @@ afterEach(() => {
 });
 
 describe('WPR-M03 Engagement Web API', () => {
+  it('keeps the authenticated Saved library private and canonical', () => {
+    expect(savedMetadata.alternates).toEqual({ canonical: '/saved' });
+    expect(savedMetadata.robots).toEqual({ index: false, follow: false });
+  });
+
   it('uses the authenticated same-origin Favorites contract for add/list/remove', async () => {
     const resourceId = '11111111-1111-4111-8111-111111111111';
     const favorite = {
@@ -81,6 +88,7 @@ describe('WPR-M03 Engagement Web API', () => {
       .mockResolvedValueOnce(json({ collections: [collection] }))
       .mockResolvedValueOnce(json(membership))
       .mockResolvedValueOnce(json({ resources: [membership] }))
+      .mockResolvedValueOnce(new Response(null, { status: 204 }))
       .mockResolvedValueOnce(new Response(null, { status: 204 }));
 
     vi.stubGlobal('fetch', fetchMock);
@@ -90,6 +98,7 @@ describe('WPR-M03 Engagement Web API', () => {
     expect(await addCollectionResource(collectionId, resourceId)).toEqual(membership);
     expect(await listCollectionResources(collectionId)).toEqual([membership]);
     await removeCollectionResource(collectionId, resourceId);
+    await deleteCollection(collectionId);
 
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
@@ -98,6 +107,14 @@ describe('WPR-M03 Engagement Web API', () => {
         method: 'POST',
         credentials: 'same-origin',
         body: JSON.stringify({ name: 'Reading list' }),
+      }),
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      6,
+      `/api/engagement/collections/${collectionId}`,
+      expect.objectContaining({
+        method: 'DELETE',
+        credentials: 'same-origin',
       }),
     );
     expect(fetchMock).toHaveBeenNthCalledWith(

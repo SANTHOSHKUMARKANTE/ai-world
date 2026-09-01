@@ -13,6 +13,11 @@ export interface ListCollectionRecordsInput {
   readonly limit: number;
 }
 
+export interface DeleteCollectionRecordInput {
+  readonly userId: ResourceId;
+  readonly collectionId: ResourceId;
+}
+
 export interface CollectionResourceRecordInput {
   readonly userId: ResourceId;
   readonly collectionId: ResourceId;
@@ -34,6 +39,8 @@ export interface CollectionStore {
   create(input: CreateCollectionRecordInput): Promise<Collection>;
 
   listByUser(input: ListCollectionRecordsInput): Promise<readonly Collection[]>;
+
+  delete(input: DeleteCollectionRecordInput): Promise<boolean>;
 
   addResource(
     input: CollectionResourceRecordInput,

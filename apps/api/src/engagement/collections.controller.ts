@@ -2,6 +2,7 @@ import { ApplicationError } from '@ai-world/foundation-errors';
 import {
   AddCollectionResourceAsActor,
   CreateCollectionAsActor,
+  DeleteCollectionAsActor,
   ListCollectionResourcesAsActor,
   ListCollectionsAsActor,
   RemoveCollectionResourceAsActor,
@@ -93,6 +94,7 @@ export class CollectionsController {
   public constructor(
     private readonly validateSession: ValidateSession,
     private readonly createCollection: CreateCollectionAsActor,
+    private readonly deleteCollection: DeleteCollectionAsActor,
     private readonly listCollections: ListCollectionsAsActor,
     private readonly addCollectionResource: AddCollectionResourceAsActor,
     private readonly listCollectionResources: ListCollectionResourcesAsActor,
@@ -137,6 +139,22 @@ export class CollectionsController {
     return {
       collections: collections.map(toCollectionResponse),
     };
+  }
+
+  @Delete(':collectionId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async delete(
+    @Headers('cookie') cookieHeader: string | undefined,
+    @Param('collectionId') collectionId: string,
+  ): Promise<void> {
+    const actingActorId = await this.requireActorId(cookieHeader);
+
+    await executeCanonical(() =>
+      this.deleteCollection.execute({
+        actingActorId,
+        collectionId,
+      }),
+    );
   }
 
   @Post(':collectionId/resources')

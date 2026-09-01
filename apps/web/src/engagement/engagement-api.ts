@@ -117,6 +117,12 @@ export async function createCollection(name: string): Promise<Collection> {
   return payload;
 }
 
+export async function deleteCollection(collectionId: string): Promise<void> {
+  await apiRequest(`/engagement/collections/${encodeURIComponent(collectionId)}`, {
+    method: 'DELETE',
+  });
+}
+
 export async function listCollectionResources(
   collectionId: string,
 ): Promise<readonly CollectionResource[]> {

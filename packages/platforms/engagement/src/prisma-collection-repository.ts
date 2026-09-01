@@ -6,6 +6,7 @@ import type {
   CollectionResourceRecordInput,
   CollectionStore,
   CreateCollectionRecordInput,
+  DeleteCollectionRecordInput,
   ListCollectionRecordsInput,
   ListCollectionResourceRecordsInput,
 } from './collection-store';
@@ -79,6 +80,17 @@ export class PrismaCollectionRepository implements CollectionStore {
     });
 
     return collections.map(mapCollection);
+  }
+
+  public async delete(input: DeleteCollectionRecordInput): Promise<boolean> {
+    const result = await this.database.collection.deleteMany({
+      where: {
+        id: input.collectionId,
+        userId: input.userId,
+      },
+    });
+
+    return result.count === 1;
   }
 
   public async addResource(

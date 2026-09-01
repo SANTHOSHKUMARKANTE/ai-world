@@ -21,6 +21,8 @@ import {
   AddFavoriteAsActor,
   CreateCollection,
   CreateCollectionAsActor,
+  DeleteCollection,
+  DeleteCollectionAsActor,
   ListCollectionResources,
   ListCollectionResourcesAsActor,
   ListCollections,
@@ -713,6 +715,14 @@ export class AppModule {
         },
 
         {
+          provide: DeleteCollection,
+          inject: [PrismaCollectionRepository],
+          useFactory: (repository: PrismaCollectionRepository): DeleteCollection => {
+            return new DeleteCollection(repository);
+          },
+        },
+
+        {
           provide: AddCollectionResource,
           inject: [PrismaCollectionRepository],
           useFactory: (repository: PrismaCollectionRepository): AddCollectionResource => {
@@ -755,6 +765,17 @@ export class AppModule {
             listCollections: ListCollections,
           ): ListCollectionsAsActor => {
             return new ListCollectionsAsActor(getUserProfile, listCollections);
+          },
+        },
+
+        {
+          provide: DeleteCollectionAsActor,
+          inject: [GetUserProfile, DeleteCollection],
+          useFactory: (
+            getUserProfile: GetUserProfile,
+            deleteCollection: DeleteCollection,
+          ): DeleteCollectionAsActor => {
+            return new DeleteCollectionAsActor(getUserProfile, deleteCollection);
           },
         },
 

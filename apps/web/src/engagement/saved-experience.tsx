@@ -1,13 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { type FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, type ReactNode, useEffect, useState } from 'react';
 
 import { getApiErrorMessage } from '../api/api-error-message';
 import { useSession } from '../session/session-provider';
 import { Button } from '../ui/primitives';
 import {
+  getPublicKnowledgeEntityByResourceId,
+  type PublicKnowledgeEntity,
+} from '../knowledge/public-knowledge-entity-api';
+import {
+  formatPublicKnowledgeResourceType,
+  resolvePublicKnowledgeDestination,
+} from '../knowledge/public-knowledge-destination';
+import { resolveWebUniversePresentation } from '../universes/presentation';
+import {
   createCollection,
+  deleteCollection,
   listCollectionResources,
   listCollections,
   listFavorites,
@@ -20,7 +30,12 @@ import {
 
 interface CollectionView {
   readonly collection: Collection;
-  readonly resources: readonly CollectionResource[];
+  readonly resources: readonly SavedResource<CollectionResource>[];
+}
+
+interface SavedResource<T extends Favorite | CollectionResource> {
+  readonly saved: T;
+  readonly entity: PublicKnowledgeEntity | null;
 }
 
 type SavedState =
@@ -28,7 +43,7 @@ type SavedState =
   | {
       readonly status: 'ready';
       readonly actorId: string;
-      readonly favorites: readonly Favorite[];
+      readonly favorites: readonly SavedResource<Favorite>[];
       readonly collections: readonly CollectionView[];
     }
   | { readonly status: 'error'; readonly actorId: string; readonly message: string };
@@ -39,6 +54,7 @@ export function SavedExperience() {
   const [collectionName, setCollectionName] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [requestVersion, setRequestVersion] = useState(0);
   const sessionActorId = session.status === 'authenticated' ? session.session.actorId : null;
 
   useEffect(() => {
@@ -59,12 +75,42 @@ export function SavedExperience() {
           })),
         );
 
+        const resourceIds = [
+          ...new Set([
+            ...favorites.map((favorite) => favorite.resourceId),
+            ...resources.flatMap((item) => item.resources.map((resource) => resource.resourceId)),
+          ]),
+        ];
+        const identities = new Map(
+          await Promise.all(
+            resourceIds.map(async (resourceId) => {
+              try {
+                return [
+                  resourceId,
+                  await getPublicKnowledgeEntityByResourceId(resourceId),
+                ] as const;
+              } catch {
+                return [resourceId, null] as const;
+              }
+            }),
+          ),
+        );
+
         if (active) {
           setState({
             status: 'ready',
             actorId: sessionActorId,
-            favorites,
-            collections: resources,
+            favorites: favorites.map((favorite) => ({
+              saved: favorite,
+              entity: identities.get(favorite.resourceId) ?? null,
+            })),
+            collections: resources.map((item) => ({
+              ...item,
+              resources: item.resources.map((resource) => ({
+                saved: resource,
+                entity: identities.get(resource.resourceId) ?? null,
+              })),
+            })),
           });
         }
       })
@@ -81,7 +127,7 @@ export function SavedExperience() {
     return () => {
       active = false;
     };
-  }, [sessionActorId]);
+  }, [requestVersion, sessionActorId]);
 
   if (session.status === 'loading') {
     return <p role="status">Checking your account…</p>;
@@ -108,7 +154,20 @@ export function SavedExperience() {
   }
 
   if (state.status === 'error') {
-    return <p role="alert">{state.message}</p>;
+    return (
+      <div className="aw-inline-alert" role="alert">
+        <p>{state.message}</p>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setState({ status: 'loading' });
+            setRequestVersion((version) => version + 1);
+          }}
+        >
+          Try again
+        </Button>
+      </div>
+    );
   }
 
   async function createNewCollection(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -141,7 +200,7 @@ export function SavedExperience() {
       await removeFavorite(resourceId);
       setState({
         ...state,
-        favorites: state.favorites.filter((item) => item.resourceId !== resourceId),
+        favorites: state.favorites.filter((item) => item.saved.resourceId !== resourceId),
       });
       setMessage('Favorite removed.');
     } catch (error) {
@@ -164,7 +223,9 @@ export function SavedExperience() {
           item.collection.id === collectionId
             ? {
                 ...item,
-                resources: item.resources.filter((resource) => resource.resourceId !== resourceId),
+                resources: item.resources.filter(
+                  (resource) => resource.saved.resourceId !== resourceId,
+                ),
               }
             : item,
         ),
@@ -175,6 +236,69 @@ export function SavedExperience() {
     } finally {
       setBusy(false);
     }
+  }
+
+  async function deleteOwnedCollection(collection: Collection): Promise<void> {
+    if (state.status !== 'ready') return;
+    if (!window.confirm(`Delete Collection “${collection.name}”?`)) return;
+
+    setBusy(true);
+    setMessage(null);
+    try {
+      await deleteCollection(collection.id);
+      setState({
+        ...state,
+        collections: state.collections.filter((item) => item.collection.id !== collection.id),
+      });
+      setMessage(`Collection “${collection.name}” deleted.`);
+    } catch (error) {
+      setMessage(getApiErrorMessage(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function renderSavedResource(
+    item: SavedResource<Favorite | CollectionResource>,
+    action: ReactNode,
+  ) {
+    const resourceId = item.saved.resourceId;
+    const entity = item.entity;
+
+    if (!entity) {
+      return (
+        <li key={resourceId}>
+          <div className="aw-saved-resource-identity">
+            <strong>Published Resource unavailable</strong>
+            <span>{resourceId}</span>
+          </div>
+          {action}
+        </li>
+      );
+    }
+
+    const universe = resolveWebUniversePresentation(entity.resource.universeKey);
+    const resourceType = formatPublicKnowledgeResourceType(entity.resource.resourceType);
+    const destination = resolvePublicKnowledgeDestination({
+      resourceId,
+      universeKey: entity.resource.universeKey,
+      resourceType: entity.resource.resourceType,
+      slug: entity.profile.slug,
+    });
+
+    return (
+      <li key={resourceId}>
+        <div className="aw-saved-resource-identity">
+          <span>
+            {universe?.label ?? 'AI World'} · {resourceType}
+          </span>
+          <Link className="aw-text-link" href={destination}>
+            {entity.profile.displayName}
+          </Link>
+        </div>
+        {action}
+      </li>
+    );
   }
 
   return (
@@ -203,24 +327,19 @@ export function SavedExperience() {
           </div>
         ) : (
           <ul className="aw-saved-resource-list">
-            {state.favorites.map((favorite) => (
-              <li key={favorite.id}>
-                <Link
-                  className="aw-text-link"
-                  href={`/knowledge/resources/${encodeURIComponent(favorite.resourceId)}`}
-                >
-                  {favorite.resourceId}
-                </Link>
+            {state.favorites.map((favorite) =>
+              renderSavedResource(
+                favorite,
                 <Button
                   variant="secondary"
                   compact
                   disabled={busy}
-                  onClick={() => void deleteFavorite(favorite.resourceId)}
+                  onClick={() => void deleteFavorite(favorite.saved.resourceId)}
                 >
                   Remove favorite
-                </Button>
-              </li>
-            ))}
+                </Button>,
+              ),
+            )}
           </ul>
         )}
       </section>
@@ -256,8 +375,18 @@ export function SavedExperience() {
             {state.collections.map(({ collection, resources }) => (
               <article className="aw-collection-card" key={collection.id}>
                 <header>
-                  <h3>{collection.name}</h3>
-                  <span>{resources.length} resources</span>
+                  <div>
+                    <h3>{collection.name}</h3>
+                    <span>{resources.length} resources</span>
+                  </div>
+                  <Button
+                    variant="secondary"
+                    compact
+                    disabled={busy}
+                    onClick={() => void deleteOwnedCollection(collection)}
+                  >
+                    Delete collection
+                  </Button>
                 </header>
 
                 {resources.length === 0 ? (
@@ -269,24 +398,21 @@ export function SavedExperience() {
                   </div>
                 ) : (
                   <ul className="aw-saved-resource-list">
-                    {resources.map((resource) => (
-                      <li key={resource.resourceId}>
-                        <Link
-                          className="aw-text-link"
-                          href={`/knowledge/resources/${encodeURIComponent(resource.resourceId)}`}
-                        >
-                          {resource.resourceId}
-                        </Link>
+                    {resources.map((resource) =>
+                      renderSavedResource(
+                        resource,
                         <Button
                           variant="secondary"
                           compact
                           disabled={busy}
-                          onClick={() => void removeResource(collection.id, resource.resourceId)}
+                          onClick={() =>
+                            void removeResource(collection.id, resource.saved.resourceId)
+                          }
                         >
                           Remove from collection
-                        </Button>
-                      </li>
-                    ))}
+                        </Button>,
+                      ),
+                    )}
                   </ul>
                 )}
               </article>

@@ -34,11 +34,13 @@ export {
 export {
   AddCollectionResourceAsActor,
   CreateCollectionAsActor,
+  DeleteCollectionAsActor,
   ListCollectionResourcesAsActor,
   ListCollectionsAsActor,
   RemoveCollectionResourceAsActor,
   type AddCollectionResourceAsActorInput,
   type CreateCollectionAsActorInput,
+  type DeleteCollectionAsActorInput,
   type ListCollectionResourcesAsActorInput,
   type ListCollectionsAsActorInput,
   type RemoveCollectionResourceAsActorInput,
@@ -50,6 +52,7 @@ export type {
   CollectionResourceRecordInput,
   CollectionStore,
   CreateCollectionRecordInput,
+  DeleteCollectionRecordInput,
   ListCollectionRecordsInput,
   ListCollectionResourceRecordsInput,
 } from './collection-store';
@@ -71,6 +74,12 @@ export {
   CreateCollection,
   type CreateCollectionInput,
 } from './create-collection';
+
+export {
+  DeleteCollection,
+  type DeleteCollectionInput,
+  type DeleteCollectionResult,
+} from './delete-collection';
 
 export {
   COLLECTION_LIST_DEFAULT_LIMIT,
