@@ -1915,10 +1915,10 @@ real defect.
 Status:
 
 ```text
-ACTIVE — UXP-08E FULL ACCEPTANCE SLICE
+CLOSED — ACCEPTED
 ```
 
-The active detailed implementation/acceptance contract is:
+The closed accepted implementation/acceptance contract is:
 
 ```text
 docs/13-roadmaps/uxp-08-discovery-engagement.md
@@ -1973,8 +1973,46 @@ UXP-08D — Finished Saved / Favorites / Collections
 CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
 
 UXP-08E — Reuse + Full Discovery / Engagement Acceptance
-ACTIVE — FULL ACCEPTANCE SLICE
+CLOSED — ACCEPTED — a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
 ```
+
+Accepted UXP-08E / final UXP-08 acceptance checkpoint:
+
+```text
+a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
+test(ai-creator): isolate assistance integration namespace
+exact remote CI user-confirmed green
+```
+
+Reviewed UXP-08E evidence:
+
+```text
+acceptance-first checkpoint;
+1 test file changed / 3 insertions / 1 deletion;
+minimum unique-namespace correction for interrupted-run isolation;
+0 production feature files;
+0 schema/migration/dependency/CI changes;
+format 21 / 21;
+lint 21 / 21;
+typecheck 41 / 41;
+root unit 37 / 37;
+32 migrations / schema up to date;
+focused AI Creator assistance integration 2 / 2;
+integration 29 / 29 tasks;
+full API 28 files / 191;
+Mailpit integration 2 / 2;
+focused UXP-08 browser 27 / 27;
+full Web E2E 150 / 150 reached ok;
+build 22 / 22;
+fresh-process production proof;
+architecture 0 violations / 809 modules / 2632 dependencies;
+reviewed UXP-08E closure evidence ZIP / SHA-256 D8FFCC486B1B1EC3916F9A741B551A99DA542193565B4C70636E70D2B8CAFD7C;
+exact remote CI user-confirmed green.
+```
+
+UXP-08 is therefore CLOSED — ACCEPTED.
+
+UXP-09 remains NOT STARTED in this closure checkpoint.
 
 Accepted UXP-08A evidence:
 
@@ -2067,17 +2105,17 @@ architecture 0 violations / 809 modules / 2630 dependencies;
 exact remote CI user-confirmed green.
 ```
 
-Current UXP-08E direction remains acceptance-only:
+Accepted UXP-08E remained acceptance-only:
 
 ```text
-no planned production feature;
-run the complete frozen Discovery / Engagement acceptance matrix;
-prove accepted Knowledge, Search and Saved reuse together;
-permit only the minimum correction for a proven acceptance defect;
-produce reviewed evidence before UXP-08 closure.
+no planned production feature was added;
+the complete frozen Discovery / Engagement acceptance matrix was executed;
+accepted Knowledge, Search and Saved reuse was proven together;
+only the minimum correction for a proven test-isolation defect was accepted;
+UXP-08 closure evidence was reviewed against the exact remote-green checkpoint.
 ```
 
-Program-wide UXP-08 constraints remain frozen:
+Program-wide UXP-08 constraints remain protected:
 
 ```text
 finish existing pages, not platforms;
@@ -2095,13 +2133,12 @@ no new Knowledge backend;
 no new Engagement database;
 no schema migration expected for UXP-08A/B/C;
 Collection delete remains the only pre-eligible missing Engagement lifecycle in UXP-08D;
-UXP-08E remains acceptance-first with no planned production feature.
+UXP-08E remained acceptance-first with no production feature.
 ```
 
-This transition is docs-only.
+This closure transition is docs-only.
 
-No UXP-08E acceptance execution begins until this transition is independently
-reviewed, manually committed/pushed and exact remote CI is green.
+It does not activate or implement UXP-09.
 
 ---
 
@@ -2325,33 +2362,32 @@ The accepted execution position is:
 
 ```text
 UXP-07 — CLOSED — ACCEPTED
-UXP-08 — ACTIVE
+UXP-08 — CLOSED — ACCEPTED
 UXP-08A — CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
 UXP-08B — CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
 UXP-08C — CLOSED — ACCEPTED — 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
 UXP-08D — CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
-UXP-08E — ACTIVE — FULL ACCEPTANCE SLICE
+UXP-08E — CLOSED — ACCEPTED — a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
 UXP-09 — NOT STARTED
 ```
 
-Active detailed contract:
+Closed accepted detailed contract:
 
 ```text
 docs/13-roadmaps/uxp-08-discovery-engagement.md
 ```
 
-This D→E checkpoint is docs-only.
+This UXP-08 closure checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
-is green, execute only:
+is green, perform a separate repository inspection and docs-only activation
+decision for:
 
 ```text
-UXP-08E — Reuse + Full Discovery / Engagement Acceptance
+UXP-09 — Identity + Account
 ```
 
-No planned UXP-08E production feature is authorized.
-
-Do not begin UXP-09.
+Do not activate or implement UXP-09 inside this closure checkpoint.
 
 WPR-M05 remains ACTIVE.
 

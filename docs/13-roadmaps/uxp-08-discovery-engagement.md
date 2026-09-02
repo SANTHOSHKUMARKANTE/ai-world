@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-08 |
 | Area | Product / Web / Knowledge / Discovery / Engagement |
-| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-08E ACTIVE |
+| Status | CLOSED — ACCEPTED |
 | Created | 2026-08-31 |
 | Activation Baseline | `2c5a9a1bfd4f2813c961ff9a95e463d85f6ed665` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -1174,7 +1174,7 @@ new Engagement -> Knowledge platform dependency.
 Status:
 
 ```text
-ACTIVE — FULL ACCEPTANCE SLICE
+CLOSED — ACCEPTED — a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
 ```
 
 UXP-08E activation baseline:
@@ -1185,13 +1185,57 @@ feat(web): finish saved knowledge library
 exact remote CI user-confirmed green
 ```
 
-UXP-08E is acceptance-first.
+Accepted UXP-08E / final UXP-08 acceptance checkpoint:
 
-No new production feature is planned.
+```text
+a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
+test(ai-creator): isolate assistance integration namespace
+exact remote CI user-confirmed green
+```
 
-Production changes are permitted only when the frozen full acceptance matrix
-exposes a real defect, and then only the minimum bounded correction may be made
-before rerunning the complete matrix.
+UXP-08E remained acceptance-first. The acceptance run exposed one integration
+isolation defect: a fixed AI Creator assistance namespace could collide with
+canonical state left by an interrupted run. The accepted checkpoint contains
+only the minimum correction, generating a unique namespaced key per run. It
+contains no production feature, schema, migration, dependency or CI change.
+
+Reviewed UXP-08E acceptance evidence includes:
+
+```text
+1 test file changed;
+3 insertions / 1 deletion;
+0 production feature files;
+0 schema/migration/dependency/CI changes;
+format 21 / 21 tasks;
+lint 21 / 21 tasks;
+typecheck 41 / 41 tasks;
+root unit 37 / 37 tasks;
+32 migrations / schema up to date;
+focused AI Creator assistance integration 1 file / 2 tests;
+full integration 29 / 29 tasks;
+full API integration 28 files / 191 tests;
+Mailpit integration 2 files / 2 tests;
+focused UXP-08 browser acceptance 27 / 27 tests;
+full Web browser E2E 150 / 150 tests reached ok;
+production build 22 / 22 tasks;
+fresh-process production proof for Knowledge, Search, Saved, Devotional and Anime;
+architecture 0 violations / 809 modules / 2632 dependencies;
+reviewed UXP-08E closure evidence ZIP / SHA-256 D8FFCC486B1B1EC3916F9A741B551A99DA542193565B4C70636E70D2B8CAFD7C;
+git diff --check clean;
+exact acceptance checkpoint committed and pushed;
+exact remote CI user-confirmed green.
+```
+
+The Windows Playwright runner retained its local development-server process after
+all focused and full browser scenarios completed. The completed processes were
+stopped explicitly; no browser scenario failed and no generated result file was
+retained.
+
+UXP-08E and the complete UXP-08 program are therefore:
+
+```text
+CLOSED — ACCEPTED
+```
 
 Full acceptance must cover:
 
@@ -1321,7 +1365,7 @@ UXP-08D — Finished Saved / Favorites / Collections
 CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
 
 UXP-08E — Reuse + Full Discovery / Engagement Acceptance
-ACTIVE — FULL ACCEPTANCE SLICE
+CLOSED — ACCEPTED — a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
 ```
 
 Each slice requires:
@@ -1346,23 +1390,21 @@ Current execution state:
 
 ```text
 UXP-07 — CLOSED — ACCEPTED
-UXP-08 — ACTIVE
+UXP-08 — CLOSED — ACCEPTED
 UXP-08A — CLOSED — ACCEPTED — 0805eda89a420b5f90f6e3ce0facb1b3d36f81fd
 UXP-08B — CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
 UXP-08C — CLOSED — ACCEPTED — 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
 UXP-08D — CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
-UXP-08E — ACTIVE — FULL ACCEPTANCE SLICE
+UXP-08E — CLOSED — ACCEPTED — a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
 UXP-09 — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
 Master Roadmap — UNCHANGED
 ```
 
-UXP-08A, UXP-08B, UXP-08C and UXP-08D are remotely accepted.
+UXP-08A, UXP-08B, UXP-08C, UXP-08D and UXP-08E are remotely accepted.
 
-This D→E checkpoint is docs-only.
-
-No UXP-08E product file belongs in this transition.
+This UXP-08 closure checkpoint is docs-only.
 
 UXP-09 remains not started.
 
@@ -1370,39 +1412,27 @@ UXP-09 remains not started.
 
 # 18. Next Action
 
-After this docs-only D→E transition is independently reviewed,
-manually committed/pushed and exact remote CI is green, execute only:
+After this docs-only UXP-08 closure checkpoint is independently reviewed,
+manually committed/pushed and exact remote CI is green, perform a separate
+repository inspection and freeze only the next page program:
 
 ```text
-UXP-08E — Reuse + Full Discovery / Engagement Acceptance
+UXP-09 — Identity + Account
 ```
 
-Start UXP-08E from the exact remotely-green transition SHA.
-
-Before production changes:
+That future UXP-09 activation checkpoint must:
 
 ```text
-re-inspect the exact transition baseline;
-lock accepted UXP-08A/B/C/D behavior and remotely-green SHAs;
-lock the complete frozen acceptance matrix;
-inspect the canonical migration state and full regression runners;
-freeze an evidence-only execution allowlist;
-permit production changes only for a proven acceptance defect.
+inspect the exact remote-green UXP-08 closure baseline;
+freeze the minimum Identity + Account slice sequence;
+reuse the accepted Identity, User, Email and session-security capabilities;
+preserve the finished shared shell and public-page regressions;
+avoid new authentication providers or speculative security infrastructure;
+keep WPR-M05 ACTIVE;
+keep P10-M04 SEQUENCING-BLOCKED;
+keep the Master Roadmap unchanged unless WPR-M05 itself is ready to close;
+be docs-only;
+receive independent review before any UXP-09 product implementation.
 ```
 
-Primary direction remains:
-
-```text
-run full Discovery / Engagement acceptance over accepted production behavior;
-prove Knowledge browse, generic detail, Search and Saved reuse together;
-prove typed Universe identity and canonical destination precedence/fallback;
-prove anonymous/authenticated, published-only and Engagement mutation boundaries;
-prove responsive, accessibility, metadata/privacy and regression matrices;
-produce reviewed evidence;
-make no planned production feature change.
-```
-
-No new production feature, schema migration, dependency, public/shared Collections,
-recommendation system or Engagement -> Knowledge dependency is pre-authorized.
-
-Do not begin UXP-09.
+Do not activate or implement UXP-09 inside this UXP-08 closure.
