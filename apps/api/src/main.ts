@@ -12,6 +12,7 @@ async function bootstrap() {
       databaseUrl: environment.databaseUrl,
       environment: environment.environmentName,
       logLevel: environment.logLevel,
+      webOrigin: environment.webOrigin,
       storageRootDirectory: environment.mediaStorageRootDirectory,
       email: environment.email,
       ...(environment.openAiApiKey === undefined ? {} : { openAiApiKey: environment.openAiApiKey }),

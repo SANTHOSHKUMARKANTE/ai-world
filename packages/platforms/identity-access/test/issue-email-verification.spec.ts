@@ -10,6 +10,7 @@ import {
   type EmailVerificationReader,
   type EmailVerificationTokenDigester,
   type EmailVerificationTokenGenerator,
+  type IdentityLifecycleLinkBuilder,
   type UpsertEmailVerificationChallengeInput,
 } from '../src';
 
@@ -77,8 +78,17 @@ class RecordingEmailDelivery implements EmailDelivery {
   }
 }
 
+const lifecycleLinks: IdentityLifecycleLinkBuilder = {
+  buildEmailVerificationLink(token: string): string {
+    return `https://example.test/verify-email#token=${encodeURIComponent(token)}`;
+  },
+  buildPasswordRecoveryLink(token: string): string {
+    return `https://example.test/reset-password#token=${encodeURIComponent(token)}`;
+  },
+};
+
 describe('IssueEmailVerification', () => {
-  it('issues a verification challenge and delivers only the raw token by email', async () => {
+  it('issues a verification challenge and delivers a deep link carrying only the raw token', async () => {
     const now = new Date('2026-08-11T06:30:00.000Z');
 
     const reader = new StubEmailVerificationReader({
@@ -99,6 +109,7 @@ describe('IssueEmailVerification', () => {
       tokenDigester,
       new FixedEmailVerificationClock(now),
       emailDelivery,
+      lifecycleLinks,
     );
 
     const result = await useCase.execute({
@@ -129,7 +140,9 @@ describe('IssueEmailVerification', () => {
     expect(emailDelivery.messages).toHaveLength(1);
     expect(emailDelivery.messages[0]?.to).toBe('person@example.com');
     expect(emailDelivery.messages[0]?.subject).toBe('Verify your AI World email');
-    expect(emailDelivery.messages[0]?.text).toContain('raw-verification-token');
+    expect(emailDelivery.messages[0]?.text).toContain(
+      'https://example.test/verify-email#token=raw-verification-token',
+    );
     expect(emailDelivery.messages[0]?.text).not.toContain('digest:raw-verification-token');
   });
 
@@ -154,6 +167,7 @@ describe('IssueEmailVerification', () => {
       tokenDigester,
       new FixedEmailVerificationClock(now),
       emailDelivery,
+      lifecycleLinks,
     );
 
     await useCase.execute({
@@ -196,6 +210,7 @@ describe('IssueEmailVerification', () => {
       tokenDigester,
       new FixedEmailVerificationClock(new Date('2026-08-11T06:30:00.000Z')),
       emailDelivery,
+      lifecycleLinks,
     );
 
     await expect(
@@ -225,6 +240,7 @@ describe('IssueEmailVerification', () => {
       tokenDigester,
       new FixedEmailVerificationClock(new Date('2026-08-11T06:30:00.000Z')),
       emailDelivery,
+      lifecycleLinks,
     );
 
     await expect(

@@ -79,34 +79,29 @@ function getSessionCookiePair(response: {
   return cookiePair;
 }
 
+function extractVerificationLink(text: string): URL {
+  const linkMatch = text.match(/https?:\/\/[^\s]+/u);
+  if (!linkMatch?.[0]) {
+    throw new Error('Expected a verification deep link in the Mailpit message.');
+  }
+
+  const link = new URL(linkMatch[0]);
+  if (link.pathname !== '/verify-email') {
+    throw new Error(`Expected /verify-email deep link, received ${link.pathname}.`);
+  }
+
+  return link;
+}
+
 function extractVerificationToken(text: string): string {
-  /*
-   * SMTP/MIME processing may preserve CRLF line endings while our
-   * application constructs the message using LF line endings.
-   *
-   * Normalize all newline representations before parsing and locate
-   * the token relative to the stable verification-message marker
-   * rather than depending on an exact blank-line layout.
-   */
-  const normalizedText = text.replace(/\r\n?/gu, '\n');
+  const link = extractVerificationLink(text);
+  const token = new URLSearchParams(link.hash.slice(1)).get('token');
 
-  const verificationMarker = 'Verify your AI World email address with this token:';
-
-  const markerIndex = normalizedText.indexOf(verificationMarker);
-
-  if (markerIndex < 0) {
-    throw new Error('Expected the verification-token marker in the Mailpit message.');
+  if (!token || !/^[A-Za-z0-9_-]{43}$/u.test(token)) {
+    throw new Error('Expected a 32-byte base64url verification token in the deep-link fragment.');
   }
 
-  const contentAfterMarker = normalizedText.slice(markerIndex + verificationMarker.length);
-
-  const tokenMatch = contentAfterMarker.match(/(?:^|\s)([A-Za-z0-9_-]{43})(?=\s|$)/u);
-
-  if (!tokenMatch?.[1]) {
-    throw new Error('Expected a 32-byte base64url verification token in the Mailpit message.');
-  }
-
-  return tokenMatch[1];
+  return token;
 }
 
 function digestVerificationToken(token: string): string {
@@ -371,9 +366,13 @@ describe('Email Verification Mailpit SMTP integration', () => {
 
     expect(message.From.Address).toBe('noreply@ai-world.local');
 
-    expect(message.Text).toContain('Verify your AI World email address with this token:');
+    expect(message.Text).toContain('Verify your AI World email address:');
+    expect(message.Text).toContain('This verification link expires in 24 hours.');
 
-    expect(message.Text).toContain('This verification token expires in 24 hours.');
+    const verificationLink = extractVerificationLink(message.Text);
+    expect(verificationLink.origin).toBe('http://127.0.0.1:3000');
+    expect(verificationLink.pathname).toBe('/verify-email');
+    expect(verificationLink.search).toBe('');
 
     /*
      * Extract the actual opaque token delivered through SMTP.

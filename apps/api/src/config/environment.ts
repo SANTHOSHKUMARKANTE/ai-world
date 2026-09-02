@@ -6,6 +6,25 @@ const aiWorldEnvironments = ['development', 'test', 'staging', 'production'] as 
 
 const nodeEnvironments = ['development', 'test', 'production'] as const;
 
+const webOriginSchema = z.url().superRefine((value, context) => {
+  const url = new URL(value);
+
+  if (
+    (url.protocol !== 'http:' && url.protocol !== 'https:') ||
+    url.username.length > 0 ||
+    url.password.length > 0 ||
+    url.pathname !== '/' ||
+    url.search.length > 0 ||
+    url.hash.length > 0
+  ) {
+    context.addIssue({
+      code: 'custom',
+      message:
+        'AI_WORLD_WEB_ORIGIN must be an http(s) origin without credentials, path, query, or fragment.',
+    });
+  }
+});
+
 function expectedNodeEnvironment(
   environment: (typeof aiWorldEnvironments)[number],
 ): (typeof nodeEnvironments)[number] {
@@ -27,6 +46,8 @@ const apiEnvironmentSchema = z
     NODE_ENV: z.enum(nodeEnvironments).default('development'),
 
     PORT: z.coerce.number().int().min(1).max(65535).default(3000),
+
+    AI_WORLD_WEB_ORIGIN: webOriginSchema.default('http://127.0.0.1:3000'),
 
     DATABASE_URL: z.url(),
 
@@ -75,6 +96,7 @@ const apiEnvironmentSchema = z
       AI_WORLD_ENV,
       NODE_ENV,
       PORT,
+      AI_WORLD_WEB_ORIGIN,
       DATABASE_URL,
       LOG_LEVEL,
       MEDIA_STORAGE_ROOT,
@@ -89,6 +111,7 @@ const apiEnvironmentSchema = z
       environmentName: AI_WORLD_ENV,
       nodeEnv: NODE_ENV,
       port: PORT,
+      webOrigin: AI_WORLD_WEB_ORIGIN,
       databaseUrl: DATABASE_URL,
       logLevel: LOG_LEVEL,
       mediaStorageRootDirectory: MEDIA_STORAGE_ROOT,

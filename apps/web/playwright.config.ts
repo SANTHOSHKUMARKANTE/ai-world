@@ -79,6 +79,7 @@ export default defineConfig({
         PORT: '3001',
         DATABASE_URL: databaseUrl,
         LOG_LEVEL: 'warn',
+        AI_WORLD_WEB_ORIGIN: webOrigin,
       },
     },
     {

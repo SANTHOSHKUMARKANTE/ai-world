@@ -1,5 +1,6 @@
 import type { EmailDelivery } from '@ai-world/foundation-email';
 
+import type { IdentityLifecycleLinkBuilder } from '../identity-lifecycle-link-builder';
 import type { EmailVerificationChallengeWriter } from './email-verification-challenge-writer';
 import type { EmailVerificationClock } from './email-verification-clock';
 import type { EmailVerificationReader } from './email-verification-reader';
@@ -32,6 +33,7 @@ export class IssueEmailVerification {
     private readonly tokenDigester: EmailVerificationTokenDigester,
     private readonly clock: EmailVerificationClock,
     private readonly emailDelivery: EmailDelivery,
+    private readonly lifecycleLinks: IdentityLifecycleLinkBuilder,
   ) {}
 
   public async execute(input: IssueEmailVerificationInput): Promise<IssueEmailVerificationResult> {
@@ -61,15 +63,17 @@ export class IssueEmailVerification {
       expiresAt,
     });
 
+    const verificationLink = this.lifecycleLinks.buildEmailVerificationLink(token);
+
     await this.emailDelivery.send({
       to: actorEmail.email,
       subject: 'Verify your AI World email',
       text: [
-        'Verify your AI World email address with this token:',
+        'Verify your AI World email address:',
         '',
-        token,
+        verificationLink,
         '',
-        'This verification token expires in 24 hours.',
+        'This verification link expires in 24 hours.',
       ].join('\n'),
     });
 

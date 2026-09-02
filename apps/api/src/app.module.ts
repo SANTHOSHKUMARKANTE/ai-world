@@ -71,6 +71,7 @@ import {
   EvaluatePermission,
   IssueEmailVerification,
   IssuePasswordRecovery,
+  type IdentityLifecycleLinkBuilder,
   LogoutSession,
   RegisterUser,
   ResetPasswordWithRecovery,
@@ -190,6 +191,7 @@ export interface AppModuleOptions {
   readonly databaseUrl: string;
   readonly environment: string;
   readonly logLevel: LogLevel;
+  readonly webOrigin?: string;
 
   /**
    * Development/runtime filesystem root for Storage Foundation.
@@ -230,6 +232,8 @@ export interface AppModuleOptions {
   readonly aiProviderKey?: string;
 }
 
+const DEFAULT_LOCAL_WEB_ORIGIN = 'http://127.0.0.1:3000';
+
 const DEFAULT_LOCAL_EMAIL_OPTIONS: AppEmailOptions = {
   smtp: {
     host: '127.0.0.1',
@@ -247,6 +251,24 @@ function createStorageObjectStore(options: AppModuleOptions): StorageObjectStore
   return new FilesystemStorageAdapter({
     rootDirectory: options.storageRootDirectory ?? './uploads',
   });
+}
+
+function createIdentityLifecycleLinks(webOrigin: string): IdentityLifecycleLinkBuilder {
+  function build(path: '/verify-email' | '/reset-password', token: string): string {
+    const url = new URL(path, webOrigin);
+    url.search = '';
+    url.hash = new URLSearchParams({ token }).toString();
+    return url.toString();
+  }
+
+  return {
+    buildEmailVerificationLink(token: string): string {
+      return build('/verify-email', token);
+    },
+    buildPasswordRecoveryLink(token: string): string {
+      return build('/reset-password', token);
+    },
+  };
 }
 
 function createEmailDelivery(options: AppModuleOptions): EmailDelivery {
@@ -297,6 +319,9 @@ export class AppModule {
   static register(options: AppModuleOptions): DynamicModule {
     const aiProvider = createAiProvider(options);
     const emailDelivery = createEmailDelivery(options);
+    const identityLifecycleLinks = createIdentityLifecycleLinks(
+      options.webOrigin ?? DEFAULT_LOCAL_WEB_ORIGIN,
+    );
     const storageObjectStore = createStorageObjectStore(options);
 
     return {
@@ -841,6 +866,7 @@ export class AppModule {
               new Sha256EmailVerificationTokenDigester(),
               new SystemEmailVerificationClock(),
               emailDelivery,
+              identityLifecycleLinks,
             );
           },
         },
@@ -870,6 +896,7 @@ export class AppModule {
               new Sha256PasswordRecoveryTokenDigester(),
               new SystemPasswordRecoveryClock(),
               emailDelivery,
+              identityLifecycleLinks,
             );
           },
         },

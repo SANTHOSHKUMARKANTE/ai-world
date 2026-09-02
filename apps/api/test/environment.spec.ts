@@ -47,6 +47,31 @@ describe('API environment architecture', () => {
 
     expect(result.environmentName).toBe('development');
     expect(result.nodeEnv).toBe('development');
+    expect(result.webOrigin).toBe('http://127.0.0.1:3000');
+  });
+
+  it('accepts only a credential-free http(s) Web origin', () => {
+    expect(
+      loadApiEnvironment({
+        DATABASE_URL,
+        AI_WORLD_WEB_ORIGIN: 'https://www.ai-world.test',
+      }).webOrigin,
+    ).toBe('https://www.ai-world.test');
+
+    for (const webOrigin of [
+      'ftp://ai-world.test',
+      'https://user:secret@ai-world.test',
+      'https://ai-world.test/path',
+      'https://ai-world.test?campaign=1',
+      'https://ai-world.test#fragment',
+    ]) {
+      expect(() =>
+        loadApiEnvironment({
+          DATABASE_URL,
+          AI_WORLD_WEB_ORIGIN: webOrigin,
+        }),
+      ).toThrow(/AI_WORLD_WEB_ORIGIN/u);
+    }
   });
 
   it('forces an explicit AI_WORLD_ENV for a production-mode runtime', () => {

@@ -54,26 +54,29 @@ function createRecoveryEmail(): string {
   return `${runMarker}-${randomUUID()}@example.com`;
 }
 
+function extractRecoveryLink(text: string): URL {
+  const linkMatch = text.match(/https?:\/\/[^\s]+/u);
+  if (!linkMatch?.[0]) {
+    throw new Error('Expected a password-recovery deep link in the Mailpit message.');
+  }
+
+  const link = new URL(linkMatch[0]);
+  if (link.pathname !== '/reset-password') {
+    throw new Error(`Expected /reset-password deep link, received ${link.pathname}.`);
+  }
+
+  return link;
+}
+
 function extractRecoveryToken(text: string): string {
-  const normalizedText = text.replace(/\r\n?/gu, '\n');
+  const link = extractRecoveryLink(text);
+  const token = new URLSearchParams(link.hash.slice(1)).get('token');
 
-  const recoveryMarker = 'Reset your AI World password with this token:';
-
-  const markerIndex = normalizedText.indexOf(recoveryMarker);
-
-  if (markerIndex < 0) {
-    throw new Error('Expected the password-recovery token marker in the Mailpit message.');
+  if (!token || !/^[A-Za-z0-9_-]{43}$/u.test(token)) {
+    throw new Error('Expected a 32-byte base64url recovery token in the deep-link fragment.');
   }
 
-  const contentAfterMarker = normalizedText.slice(markerIndex + recoveryMarker.length);
-
-  const tokenMatch = contentAfterMarker.match(/(?:^|\s)([A-Za-z0-9_-]{43})(?=\s|$)/u);
-
-  if (!tokenMatch?.[1]) {
-    throw new Error('Expected a 32-byte base64url recovery token in the Mailpit message.');
-  }
-
-  return tokenMatch[1];
+  return token;
 }
 
 function digestRecoveryToken(token: string): string {
@@ -358,8 +361,13 @@ describe('Password Recovery Mailpit SMTP integration', () => {
 
     expect(message.From.Address).toBe('noreply@ai-world.local');
 
-    expect(message.Text).toContain('Reset your AI World password with this token:');
-    expect(message.Text).toContain('This recovery token expires in 1 hour.');
+    expect(message.Text).toContain('Reset your AI World password:');
+    expect(message.Text).toContain('This recovery link expires in 1 hour.');
+
+    const recoveryLink = extractRecoveryLink(message.Text);
+    expect(recoveryLink.origin).toBe('http://127.0.0.1:3000');
+    expect(recoveryLink.pathname).toBe('/reset-password');
+    expect(recoveryLink.search).toBe('');
 
     /*
      * Extract the exact opaque token physically delivered over SMTP.

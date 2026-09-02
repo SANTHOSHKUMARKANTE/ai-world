@@ -59,13 +59,24 @@ function getSessionCookiePair(response: {
 }
 
 function extractVerificationToken(message: EmailMessage): string {
-  const match = message.text.match(/\n\n([A-Za-z0-9_-]{43})\n\n/u);
-
-  if (!match?.[1]) {
-    throw new Error('Expected a verification token in the email body.');
+  const linkMatch = message.text.match(/https?:\/\/[^\s]+/u);
+  if (!linkMatch?.[0]) {
+    throw new Error('Expected a verification deep link in the email body.');
   }
 
-  return match[1];
+  const link = new URL(linkMatch[0]);
+  if (link.pathname !== '/verify-email' || link.search !== '') {
+    throw new Error('Expected a query-free /verify-email deep link.');
+  }
+
+  const tokens = new URLSearchParams(link.hash.slice(1)).getAll('token');
+  const token = tokens.length === 1 ? tokens[0] : undefined;
+
+  if (!token || !/^[A-Za-z0-9_-]{43}$/u.test(token)) {
+    throw new Error('Expected one opaque verification token in the deep-link fragment.');
+  }
+
+  return token;
 }
 
 describe('Email Verification API', () => {

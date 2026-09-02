@@ -1,23 +1,47 @@
 'use client';
 
 import Link from 'next/link';
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useState, useSyncExternalStore } from 'react';
 
 import { getApiErrorMessage } from '../../api/api-error-message';
 import {
   confirmEmailVerification,
   requestEmailVerification,
 } from '../../identity/identity-lifecycle-api';
+import {
+  clearIdentityLifecycleTokenFragment,
+  readIdentityLifecycleTokenFragment,
+} from '../../identity/identity-lifecycle-token-fragment';
 import { useSession } from '../../session/session-provider';
+
+function subscribeToIdentityLifecycleLocation(onStoreChange: () => void): () => void {
+  window.addEventListener('hashchange', onStoreChange);
+  window.addEventListener('popstate', onStoreChange);
+
+  return () => {
+    window.removeEventListener('hashchange', onStoreChange);
+    window.removeEventListener('popstate', onStoreChange);
+  };
+}
+
+function getServerIdentityLifecycleTokenFragment(): string | null {
+  return null;
+}
 
 export function EmailVerificationPanel() {
   const { state } = useSession();
-
   const [requestSubmitting, setRequestSubmitting] = useState(false);
   const [requestMessage, setRequestMessage] = useState<string | null>(null);
   const [requestError, setRequestError] = useState<string | null>(null);
 
-  const [token, setToken] = useState('');
+  const linkedToken = useSyncExternalStore(
+    subscribeToIdentityLifecycleLocation,
+    readIdentityLifecycleTokenFragment,
+    getServerIdentityLifecycleTokenFragment,
+  );
+  const [manualToken, setManualToken] = useState('');
+  const token = linkedToken ?? manualToken;
+  const tokenFromLink = linkedToken !== null;
   const [confirmSubmitting, setConfirmSubmitting] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState<string | null>(null);
   const [confirmError, setConfirmError] = useState<string | null>(null);
@@ -48,7 +72,8 @@ export function EmailVerificationPanel() {
     try {
       await confirmEmailVerification(token);
 
-      setToken('');
+      setManualToken('');
+      clearIdentityLifecycleTokenFragment();
       setConfirmMessage('Your email has been verified.');
     } catch (error) {
       setConfirmError(getApiErrorMessage(error));
@@ -81,7 +106,6 @@ export function EmailVerificationPanel() {
             {requestMessage ? <p role="status">{requestMessage}</p> : null}
 
             {requestError ? <p role="alert">{requestError}</p> : null}
-
             <button
               type="button"
               disabled={requestSubmitting}
@@ -98,31 +122,37 @@ export function EmailVerificationPanel() {
       <section aria-labelledby="verification-confirm-title">
         <h2 id="verification-confirm-title">Confirm verification</h2>
 
-        <p>Enter the verification token from your email.</p>
+        {tokenFromLink ? (
+          <p role="status" className="aw-identity-hint">
+            Verification link recognized. Confirm to verify your email.
+          </p>
+        ) : (
+          <p>Enter the verification token from your email.</p>
+        )}
 
         <form onSubmit={handleConfirmation}>
-          <div>
-            <label htmlFor="email-verification-token">Verification token</label>
-
-            <input
-              id="email-verification-token"
-              name="token"
-              type="text"
-              autoComplete="off"
-              required
-              value={token}
-              disabled={confirmSubmitting}
-              onChange={(event) => {
-                setToken(event.target.value);
-              }}
-            />
-          </div>
+          {tokenFromLink ? null : (
+            <div>
+              <label htmlFor="email-verification-token">Verification token</label>
+              <input
+                id="email-verification-token"
+                name="token"
+                type="text"
+                autoComplete="off"
+                required
+                value={token}
+                disabled={confirmSubmitting}
+                onChange={(event) => {
+                  setManualToken(event.target.value);
+                }}
+              />
+            </div>
+          )}
 
           {confirmMessage ? <p role="status">{confirmMessage}</p> : null}
-
           {confirmError ? <p role="alert">{confirmError}</p> : null}
 
-          <button type="submit" disabled={confirmSubmitting}>
+          <button type="submit" disabled={confirmSubmitting || token.length === 0}>
             {confirmSubmitting ? 'Verifying…' : 'Verify email'}
           </button>
         </form>

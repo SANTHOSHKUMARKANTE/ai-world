@@ -1,5 +1,7 @@
 export type { Actor } from './actor';
 
+export type { IdentityLifecycleLinkBuilder } from './identity-lifecycle-link-builder';
+
 export {
   ADMINISTRATOR_ROLE_KEY,
   IDENTITY_AUTHORIZATION_MANAGE_PERMISSION_KEY,

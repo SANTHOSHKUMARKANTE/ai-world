@@ -1,4 +1,5 @@
 import type { EmailDelivery } from '@ai-world/foundation-email';
+import type { IdentityLifecycleLinkBuilder } from '../identity-lifecycle-link-builder';
 
 import type { PasswordRecoveryChallengeWriter } from './password-recovery-challenge-writer';
 import type { PasswordRecoveryClock } from './password-recovery-clock';
@@ -21,6 +22,7 @@ export class IssuePasswordRecovery {
     private readonly tokenDigester: PasswordRecoveryTokenDigester,
     private readonly clock: PasswordRecoveryClock,
     private readonly emailDelivery: EmailDelivery,
+    private readonly lifecycleLinks: IdentityLifecycleLinkBuilder,
   ) {}
 
   public async execute(input: IssuePasswordRecoveryInput): Promise<void> {
@@ -49,15 +51,17 @@ export class IssuePasswordRecovery {
       expiresAt,
     });
 
+    const recoveryLink = this.lifecycleLinks.buildPasswordRecoveryLink(token);
+
     await this.emailDelivery.send({
       to: actorEmail.email,
       subject: 'Reset your AI World password',
       text: [
-        'Reset your AI World password with this token:',
+        'Reset your AI World password:',
         '',
-        token,
+        recoveryLink,
         '',
-        'This recovery token expires in 1 hour.',
+        'This recovery link expires in 1 hour.',
         '',
         'If you did not request a password reset, you can ignore this email.',
       ].join('\n'),

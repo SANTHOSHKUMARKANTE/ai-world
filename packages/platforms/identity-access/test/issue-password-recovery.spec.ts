@@ -9,6 +9,7 @@ import {
   type PasswordRecoveryClock,
   type PasswordRecoveryReader,
   type PasswordRecoveryTokenDigester,
+  type IdentityLifecycleLinkBuilder,
   type PasswordRecoveryTokenGenerator,
   type UpsertPasswordRecoveryChallengeInput,
 } from '../src';
@@ -87,8 +88,17 @@ class FailingEmailDelivery implements EmailDelivery {
   }
 }
 
+const lifecycleLinks: IdentityLifecycleLinkBuilder = {
+  buildEmailVerificationLink(token: string): string {
+    return `https://example.test/verify-email#token=${encodeURIComponent(token)}`;
+  },
+  buildPasswordRecoveryLink(token: string): string {
+    return `https://example.test/reset-password#token=${encodeURIComponent(token)}`;
+  },
+};
+
 describe('IssuePasswordRecovery', () => {
-  it('issues a one-hour recovery challenge and emails only the raw token', async () => {
+  it('issues a one-hour recovery challenge and emails a deep link carrying only the raw token', async () => {
     const now = new Date('2026-08-11T08:30:00.000Z');
 
     const reader = new RecordingPasswordRecoveryReader({
@@ -108,6 +118,7 @@ describe('IssuePasswordRecovery', () => {
       tokenDigester,
       new FixedPasswordRecoveryClock(now),
       emailDelivery,
+      lifecycleLinks,
     );
 
     await expect(
@@ -134,7 +145,9 @@ describe('IssuePasswordRecovery', () => {
     expect(emailDelivery.messages).toHaveLength(1);
     expect(emailDelivery.messages[0]?.to).toBe('Person@Example.com');
     expect(emailDelivery.messages[0]?.subject).toBe('Reset your AI World password');
-    expect(emailDelivery.messages[0]?.text).toContain('raw-recovery-token');
+    expect(emailDelivery.messages[0]?.text).toContain(
+      'https://example.test/reset-password#token=raw-recovery-token',
+    );
     expect(emailDelivery.messages[0]?.text).not.toContain('digest:raw-recovery-token');
     expect(emailDelivery.messages[0]?.text).toContain('expires in 1 hour');
   });
@@ -157,6 +170,7 @@ describe('IssuePasswordRecovery', () => {
       tokenDigester,
       new FixedPasswordRecoveryClock(new Date('2026-08-11T08:30:00.000Z')),
       emailDelivery,
+      lifecycleLinks,
     );
 
     await useCase.execute({
@@ -193,6 +207,7 @@ describe('IssuePasswordRecovery', () => {
       tokenDigester,
       new FixedPasswordRecoveryClock(new Date('2026-08-11T08:30:00.000Z')),
       emailDelivery,
+      lifecycleLinks,
     );
 
     await expect(
@@ -222,6 +237,7 @@ describe('IssuePasswordRecovery', () => {
       tokenDigester,
       new FixedPasswordRecoveryClock(new Date('2026-08-11T08:30:00.000Z')),
       emailDelivery,
+      lifecycleLinks,
     );
 
     await expect(
@@ -254,6 +270,7 @@ describe('IssuePasswordRecovery', () => {
       new StubPasswordRecoveryTokenDigester(),
       new FixedPasswordRecoveryClock(now),
       new FailingEmailDelivery(),
+      lifecycleLinks,
     );
 
     await expect(
