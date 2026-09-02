@@ -43,6 +43,12 @@ jobs:
           --health-timeout 5s
           --health-retries 10
 
+      mailpit:
+        image: axllent/mailpit:v1.30.0
+        ports:
+          - 1025:1025
+          - 8025:8025
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
