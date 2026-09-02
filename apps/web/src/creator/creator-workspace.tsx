@@ -7,6 +7,7 @@ import { getApiErrorMessage } from '../api/api-error-message';
 import { useSession } from '../session/session-provider';
 import {
   acceptCreatorKnowledgeCandidate,
+  assignCreatorRole,
   archiveCreatorPage,
   createCreatorKnowledgeResource,
   createCreatorPage,
@@ -19,6 +20,7 @@ import {
   replaceCreatorPageComposition,
   suggestCreatorKnowledgeCandidate,
   uploadCreatorMediaAsset,
+  type CreatorAdministrationRole,
   type CreatorAiKnowledgeCandidate,
   type CreatorCompositionItemKind,
   type CreatorKnowledgeResource,
@@ -35,12 +37,21 @@ interface ReferenceDraft {
   readonly label: string;
 }
 
+interface RoleAssignmentReview {
+  readonly targetActorId: string;
+  readonly roleKey: CreatorAdministrationRole;
+}
+
 const inputClassName =
   'mt-2 w-full rounded-xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 disabled:opacity-60';
 const primaryButtonClassName =
   'rounded-xl bg-cyan-400 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50';
 const secondaryButtonClassName =
   'rounded-xl border border-slate-700 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50';
+
+function administrationRoleLabel(role: CreatorAdministrationRole): string {
+  return role === 'administrator' ? 'Administrator' : 'Knowledge editor';
+}
 
 function referenceName(kind: CreatorCompositionItemKind): string {
   switch (kind) {
@@ -110,6 +121,12 @@ function AuthenticatedCreatorWorkspace() {
   const [library, setLibrary] = useState<readonly ReferenceDraft[]>([]);
   const [items, setItems] = useState<readonly ReferenceDraft[]>([]);
   const [compositionDirty, setCompositionDirty] = useState(false);
+  const [administrationTargetActorId, setAdministrationTargetActorId] = useState('');
+  const [administrationRole, setAdministrationRole] =
+    useState<CreatorAdministrationRole>('knowledge-editor');
+  const [roleAssignmentReview, setRoleAssignmentReview] = useState<RoleAssignmentReview | null>(
+    null,
+  );
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -161,6 +178,47 @@ function AuthenticatedCreatorWorkspace() {
     if (resource.resourceType === 'anime.series') {
       setAnimeEntityEditor('series');
     }
+  }
+
+  function handleReviewRoleAssignment(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+    const targetActorId = administrationTargetActorId.trim();
+
+    if (!targetActorId) {
+      setRoleAssignmentReview(null);
+      setStatusMessage(null);
+      setErrorMessage('Enter the target Actor ID before reviewing the Role assignment.');
+      return;
+    }
+
+    setErrorMessage(null);
+    setStatusMessage(null);
+    setRoleAssignmentReview({
+      targetActorId,
+      roleKey: administrationRole,
+    });
+  }
+
+  async function confirmRoleAssignment(): Promise<void> {
+    if (!roleAssignmentReview) {
+      return;
+    }
+
+    const review = roleAssignmentReview;
+    await perform(
+      'assign-role',
+      () =>
+        assignCreatorRole({
+          targetActorId: review.targetActorId,
+          roleKey: review.roleKey,
+        }),
+      () => {
+        setRoleAssignmentReview(null);
+        setStatusMessage(
+          `Role “${administrationRoleLabel(review.roleKey)}” is assigned to Actor ${review.targetActorId}.`,
+        );
+      },
+    );
   }
 
   async function handleCreatePage(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -489,6 +547,7 @@ function AuthenticatedCreatorWorkspace() {
           <a href="#creator-entity-task">Entities</a>
           <a href="#creator-media-task">Media</a>
           <a href="#creator-ai-task">AI review</a>
+          <a href="#creator-administration-task">Administration</a>
           <a href="#creator-composition-task">Composition</a>
         </div>
       </nav>
@@ -870,6 +929,106 @@ function AuthenticatedCreatorWorkspace() {
             </button>
           </form>
         </EditorCard>
+
+        <EditorCard
+          id="creator-administration-task"
+          eyebrow="06 · Administration"
+          title="Assign an accepted Role"
+          description="Identity & Access owns Role assignment. Server authorization remains authoritative."
+        >
+          <form onSubmit={handleReviewRoleAssignment} className="space-y-4">
+            <label className="block text-sm font-medium" htmlFor="creator-administration-actor-id">
+              Target Actor ID
+              <input
+                id="creator-administration-actor-id"
+                className={inputClassName}
+                placeholder="UUID"
+                value={administrationTargetActorId}
+                disabled={busy}
+                onChange={(event) => {
+                  setAdministrationTargetActorId(event.target.value);
+                  setRoleAssignmentReview(null);
+                }}
+              />
+            </label>
+            <label className="block text-sm font-medium" htmlFor="creator-administration-role">
+              Role to assign
+              <select
+                id="creator-administration-role"
+                className={inputClassName}
+                value={administrationRole}
+                disabled={busy}
+                onChange={(event) => {
+                  const role =
+                    event.target.value === 'administrator' ? 'administrator' : 'knowledge-editor';
+                  setAdministrationRole(role);
+                  setRoleAssignmentReview(null);
+                }}
+              >
+                <option value="knowledge-editor">Knowledge editor</option>
+                <option value="administrator">Administrator</option>
+              </select>
+            </label>
+            <button
+              className={secondaryButtonClassName}
+              type="submit"
+              disabled={busy || !administrationTargetActorId.trim()}
+            >
+              Review Role assignment
+            </button>
+          </form>
+
+          <p className="mt-4 text-sm leading-6 text-slate-400">
+            This Studio control does not decide who is an Administrator. The authenticated Session
+            is evaluated by Identity & Access before any target Actor or Role mutation.
+          </p>
+
+          {roleAssignmentReview ? (
+            <section
+              aria-labelledby="creator-role-assignment-review-title"
+              className="mt-5 rounded-xl border border-amber-400/30 bg-amber-400/10 p-4"
+            >
+              <h3
+                id="creator-role-assignment-review-title"
+                className="text-sm font-semibold text-amber-100"
+              >
+                Confirm Role assignment
+              </h3>
+              <dl className="mt-3 space-y-2 text-sm">
+                <div>
+                  <dt className="text-slate-400">Target Actor</dt>
+                  <dd className="break-all font-medium text-slate-100">
+                    {roleAssignmentReview.targetActorId}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400">Role</dt>
+                  <dd className="font-medium text-slate-100">
+                    {administrationRoleLabel(roleAssignmentReview.roleKey)}
+                  </dd>
+                </div>
+              </dl>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button
+                  className={primaryButtonClassName}
+                  type="button"
+                  disabled={busy}
+                  onClick={() => void confirmRoleAssignment()}
+                >
+                  {busyAction === 'assign-role' ? 'Assigning…' : 'Confirm Role assignment'}
+                </button>
+                <button
+                  className={secondaryButtonClassName}
+                  type="button"
+                  disabled={busy}
+                  onClick={() => setRoleAssignmentReview(null)}
+                >
+                  Change selection
+                </button>
+              </div>
+            </section>
+          ) : null}
+        </EditorCard>
       </div>
 
       <section
@@ -1006,7 +1165,7 @@ function AuthenticatedCreatorWorkspace() {
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
-              06 · Layout
+              07 · Layout
             </p>
             <h2 className="mt-2 text-2xl font-semibold">Compose the Page</h2>
             <p className="mt-2 text-sm text-slate-400">

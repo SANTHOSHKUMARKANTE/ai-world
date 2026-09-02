@@ -417,4 +417,120 @@ describe('Creator workspace', { timeout: 10_000 }, () => {
       expect.objectContaining({ method: 'POST' }),
     );
   });
+
+  it('requires explicit confirmation before assigning an accepted Role', async () => {
+    const targetActorId = '77777777-7777-4777-8777-777777777777';
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ actorId: 'administrator-actor', expiresAt: '2026-09-03T12:00:00.000Z' }),
+      )
+      .mockResolvedValueOnce(new Response(null, { status: 204 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <SessionProvider>
+        <CreatorWorkspace />
+      </SessionProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('link', { name: 'Administration' })).toBeTruthy();
+    });
+    expect(screen.getByRole('link', { name: 'Administration' }).getAttribute('href')).toBe(
+      '#creator-administration-task',
+    );
+
+    fireEvent.change(screen.getByLabelText('Target Actor ID'), {
+      target: { value: targetActorId },
+    });
+    fireEvent.change(screen.getByLabelText('Role to assign'), {
+      target: { value: 'knowledge-editor' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Review Role assignment' }));
+
+    expect(screen.getByRole('heading', { name: 'Confirm Role assignment' })).toBeTruthy();
+    expect(screen.getByText(targetActorId)).toBeTruthy();
+    expect(screen.getByText('Knowledge editor', { selector: 'dd' })).toBeTruthy();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm Role assignment' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('status').textContent).toContain(
+        `Role “Knowledge editor” is assigned to Actor ${targetActorId}.`,
+      );
+    });
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      '/api/authorization/role-assignments',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          targetActorId,
+          roleKey: 'knowledge-editor',
+        }),
+        credentials: 'same-origin',
+      }),
+    );
+  });
+
+  it('presents a safe server authorization failure for Role assignment', async () => {
+    const targetActorId = '88888888-8888-4888-8888-888888888888';
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ actorId: 'ordinary-actor', expiresAt: '2026-09-03T12:00:00.000Z' }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            error: {
+              code: 'identity.authorization.forbidden',
+              message: 'You do not have permission to perform this action.',
+              status: 403,
+            },
+          },
+          403,
+        ),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <SessionProvider>
+        <CreatorWorkspace />
+      </SessionProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Review Role assignment' })).toBeTruthy();
+    });
+
+    fireEvent.change(screen.getByLabelText('Target Actor ID'), {
+      target: { value: targetActorId },
+    });
+    fireEvent.change(screen.getByLabelText('Role to assign'), {
+      target: { value: 'administrator' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Review Role assignment' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm Role assignment' }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert').textContent).toContain(
+        'You do not have permission to perform this action.',
+      );
+    });
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      '/api/authorization/role-assignments',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          targetActorId,
+          roleKey: 'administrator',
+        }),
+      }),
+    );
+  });
 });

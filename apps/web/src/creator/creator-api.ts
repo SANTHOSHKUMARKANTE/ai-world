@@ -2,6 +2,7 @@ import { apiRequest } from '../api/api-client';
 
 export type CreatorCompositionItemKind = 'BLOCK' | 'KNOWLEDGE_RESOURCE' | 'MEDIA_ASSET';
 export type CreatorPagePreviewMediaAssetType = 'IMAGE' | 'VIDEO' | 'AUDIO' | 'DOCUMENT';
+export type CreatorAdministrationRole = 'administrator' | 'knowledge-editor';
 
 export interface CreatorKnowledgeResource {
   readonly id: string;
@@ -672,4 +673,15 @@ export async function replaceCreatorPageComposition(
     body: JSON.stringify({ items }),
   });
   return readPageComposition(await readJson(response));
+}
+
+export async function assignCreatorRole(input: {
+  readonly targetActorId: string;
+  readonly roleKey: CreatorAdministrationRole;
+}): Promise<void> {
+  await apiRequest('/authorization/role-assignments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
 }

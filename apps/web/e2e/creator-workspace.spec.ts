@@ -394,4 +394,95 @@ test.describe('Creator workspace', () => {
     ).toBeVisible();
     await expect(page.getByRole('status')).toContainText('accepted as a canonical Knowledge draft');
   });
+
+  test('confirms and submits an accepted administration Role assignment', async ({ page }) => {
+    const targetActorId = '77777777-7777-4777-8777-777777777777';
+    let assignmentBody: unknown = null;
+
+    await page.route('**/api/session', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          actorId: 'administrator-e2e-actor',
+          expiresAt: '2026-09-03T12:00:00.000Z',
+        }),
+      });
+    });
+    await page.route('**/api/authorization/role-assignments', async (route) => {
+      assignmentBody = route.request().postDataJSON();
+      await route.fulfill({ status: 204 });
+    });
+
+    await page.goto('/creator');
+    const taskNavigation = page.getByRole('navigation', { name: 'Creator Studio tasks' });
+    await expect(taskNavigation.getByRole('link', { name: 'Administration' })).toHaveAttribute(
+      'href',
+      '#creator-administration-task',
+    );
+
+    await page.getByLabel('Target Actor ID').fill(targetActorId);
+    await page.getByLabel('Role to assign').selectOption('knowledge-editor');
+    await page.getByRole('button', { name: 'Review Role assignment' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Confirm Role assignment' })).toBeVisible();
+    await expect(page.getByText(targetActorId)).toBeVisible();
+    await expect(
+      page.getByLabel('Confirm Role assignment').getByText('Knowledge editor', { exact: true }),
+    ).toBeVisible();
+    expect(assignmentBody).toBeNull();
+
+    await page.getByRole('button', { name: 'Confirm Role assignment' }).click();
+
+    await expect(page.getByRole('status')).toContainText(
+      `Role “Knowledge editor” is assigned to Actor ${targetActorId}.`,
+    );
+    expect(assignmentBody).toEqual({
+      targetActorId,
+      roleKey: 'knowledge-editor',
+    });
+  });
+
+  test('shows a safe denial from server-authoritative administration', async ({ page }) => {
+    const targetActorId = '88888888-8888-4888-8888-888888888888';
+
+    await page.route('**/api/session', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          actorId: 'ordinary-e2e-actor',
+          expiresAt: '2026-09-03T12:00:00.000Z',
+        }),
+      });
+    });
+    await page.route('**/api/authorization/role-assignments', async (route) => {
+      await route.fulfill({
+        status: 403,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          error: {
+            code: 'identity.authorization.forbidden',
+            message: 'You do not have permission to perform this action.',
+            status: 403,
+          },
+        }),
+      });
+    });
+
+    await page.goto('/creator');
+    await page.getByLabel('Target Actor ID').fill(targetActorId);
+    await page.getByLabel('Role to assign').selectOption('administrator');
+    await page.getByRole('button', { name: 'Review Role assignment' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Confirm Role assignment' })).toBeVisible();
+    await expect(
+      page.getByLabel('Confirm Role assignment').getByText('Administrator', { exact: true }),
+    ).toBeVisible();
+
+    await page.getByRole('button', { name: 'Confirm Role assignment' }).click();
+    await expect(
+      page.getByText('You do not have permission to perform this action.', { exact: true }),
+    ).toBeVisible();
+  });
 });
