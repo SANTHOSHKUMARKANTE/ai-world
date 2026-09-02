@@ -13,6 +13,7 @@ import {
   GetPage,
   GetPageComposition,
   GetPagePreview,
+  ListPages,
   PublishPage,
   SetPageComposition,
   type Block,
@@ -22,13 +23,14 @@ import {
   type PagePreviewMediaItem,
 } from '@ai-world/platform-composition';
 import { ValidateSession } from '@ai-world/platform-identity-access';
-import { Body, Controller, Get, Headers, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Put, Query } from '@nestjs/common';
 
 import { requireSessionToken } from '../session/require-session-token';
 import { SessionCookie } from '../session/session-cookie';
 import {
   parseCreateCreatorPageRequest,
   parseCreateCreatorTextBlockRequest,
+  parseListCreatorPagesRequest,
   parseSetCreatorPageCompositionRequest,
 } from './creator-composition-request';
 
@@ -207,6 +209,7 @@ export class CreatorCompositionController {
     private readonly authorizeCompositionPublishing: AuthorizeCompositionPublishing,
     private readonly authorizeCompositionArchival: AuthorizeCompositionArchival,
     private readonly createPage: CreatePage,
+    private readonly listPages: ListPages,
     private readonly getPage: GetPage,
     private readonly publishPage: PublishPage,
     private readonly archivePage: ArchivePage,
@@ -257,6 +260,17 @@ export class CreatorCompositionController {
       }),
     );
     return toPageResponse(page);
+  }
+
+  @Get('pages')
+  async listCreatorPages(
+    @Headers('cookie') cookieHeader: string | undefined,
+    @Query() query: unknown,
+  ): Promise<{ readonly items: readonly CreatorPageResponse[] }> {
+    await this.requireEditingAccess(cookieHeader);
+    const request = parseListCreatorPagesRequest(query);
+    const pages = await this.listPages.execute(request);
+    return { items: pages.map(toPageResponse) };
   }
 
   @Get('pages/:id')

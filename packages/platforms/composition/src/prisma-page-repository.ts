@@ -3,6 +3,7 @@ import { parseResourceId } from '@ai-world/kernel-identifiers';
 import { parseNamespacedKey } from '@ai-world/kernel-namespace';
 
 import { isPageLifecycle, parsePagePresentationTitle, parsePageRoutePath, type Page } from './page';
+import type { CreatorPageReader, ListCreatorPagesInput } from './creator-page-reader';
 import type { FindPageByIdInput, FindPageByRouteInput, PageReader } from './page-reader';
 import type {
   PageLifecycleWriter,
@@ -42,7 +43,9 @@ function mapPersistedPage(page: PersistedPage): Page {
   };
 }
 
-export class PrismaPageRepository implements PageReader, PageWriter, PageLifecycleWriter {
+export class PrismaPageRepository
+  implements PageReader, CreatorPageReader, PageWriter, PageLifecycleWriter
+{
   constructor(private readonly database: PageDatabaseClient) {}
 
   async findById(input: FindPageByIdInput): Promise<Page | null> {
@@ -69,6 +72,16 @@ export class PrismaPageRepository implements PageReader, PageWriter, PageLifecyc
     });
 
     return page ? mapPersistedPage(page) : null;
+  }
+
+  async listForCreator(input: ListCreatorPagesInput): Promise<readonly Page[]> {
+    const pages = await this.database.compositionPage.findMany({
+      where: { universeKey: input.universeKey },
+      orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
+      take: input.limit,
+    });
+
+    return pages.map(mapPersistedPage);
   }
 
   async create(input: CreatePageRecordInput): Promise<Page> {

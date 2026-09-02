@@ -158,6 +158,41 @@ describe('Creator Composition API', () => {
     await expect(database.compositionPage.count()).resolves.toBe(pageCountBefore);
   });
 
+  it('lists resumable Pages only inside the requested Universe for an Administrator', async () => {
+    const administrator = await signInAdministrator('page-list-administrator');
+    const title = `Resumable Page ${randomUUID()}`;
+    const created = await request(app.getHttpServer())
+      .post('/composition/pages')
+      .set('Cookie', administrator.cookiePair)
+      .send({
+        universeKey: 'universe.devotional',
+        routePath: `/resumable-${randomUUID()}`,
+        title,
+      })
+      .expect(201);
+    pageIds.add(created.body.id as string);
+
+    const response = await request(app.getHttpServer())
+      .get('/composition/pages')
+      .query({ universeKey: 'universe.devotional' })
+      .set('Cookie', administrator.cookiePair)
+      .expect(200);
+
+    expect(response.body.items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: created.body.id,
+          universeKey: 'universe.devotional',
+          title,
+          lifecycle: 'DRAFT',
+        }),
+      ]),
+    );
+    expect(response.body.items).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ universeKey: 'universe.anime' })]),
+    );
+  });
+
   it('controls draft preview before identifier validation', async () => {
     await request(app.getHttpServer())
       .get('/composition/pages/not-a-resource-id/preview')

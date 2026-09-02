@@ -15,6 +15,13 @@ const createPageRequestSchema = z
   })
   .strict();
 
+const listCreatorPagesRequestSchema = z
+  .object({
+    universeKey: z.string(),
+    limit: z.coerce.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+
 const createTextBlockRequestSchema = z
   .object({
     universeKey: z.string(),
@@ -43,6 +50,11 @@ export interface CreateCreatorPageRequest {
   readonly universeKey: string;
   readonly routePath: string;
   readonly title: string;
+}
+
+export interface ListCreatorPagesRequest {
+  readonly universeKey: string;
+  readonly limit?: number;
 }
 
 export interface CreateCreatorTextBlockRequest {
@@ -74,6 +86,17 @@ export function parseCreateCreatorPageRequest(input: unknown): CreateCreatorPage
     throw invalidRequest('Page creation');
   }
   return result.data;
+}
+
+export function parseListCreatorPagesRequest(input: unknown): ListCreatorPagesRequest {
+  const result = listCreatorPagesRequestSchema.safeParse(input);
+  if (!result.success) {
+    throw invalidRequest('Page listing');
+  }
+  return {
+    universeKey: result.data.universeKey,
+    ...(result.data.limit === undefined ? {} : { limit: result.data.limit }),
+  };
 }
 
 export function parseCreateCreatorTextBlockRequest(input: unknown): CreateCreatorTextBlockRequest {

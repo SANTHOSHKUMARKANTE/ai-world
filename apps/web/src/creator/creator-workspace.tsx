@@ -14,6 +14,7 @@ import {
   getCreatorPage,
   getCreatorPageComposition,
   listCreatorKnowledgeResources,
+  listCreatorPages,
   publishCreatorPage,
   replaceCreatorPageComposition,
   suggestCreatorKnowledgeCandidate,
@@ -88,6 +89,7 @@ function AuthenticatedCreatorWorkspace() {
   const [pageTitle, setPageTitle] = useState('Creator draft');
   const [pageId, setPageId] = useState('');
   const [activePage, setActivePage] = useState<CreatorPage | null>(null);
+  const [availablePages, setAvailablePages] = useState<readonly CreatorPage[]>([]);
   const [resourceType, setResourceType] = useState('devotional.deity');
   const [typedEntityEditor, setTypedEntityEditor] = useState<'anime' | 'deity'>('deity');
   const [animeEntityEditor, setAnimeEntityEditor] = useState<'character' | 'series'>('character');
@@ -169,6 +171,10 @@ function AuthenticatedCreatorWorkspace() {
       (page) => {
         setActivePage(page);
         setPageId(page.id);
+        setAvailablePages((current) => [
+          page,
+          ...current.filter((candidate) => candidate.id !== page.id),
+        ]);
         setItems([]);
         setCompositionDirty(false);
         setStatusMessage(`Page “${page.title}” created as a DRAFT.`);
@@ -176,14 +182,13 @@ function AuthenticatedCreatorWorkspace() {
     );
   }
 
-  async function handleLoadPage(event: FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault();
+  async function loadPage(id: string): Promise<void> {
     await perform(
       'load-page',
       async () => {
         const [page, composition] = await Promise.all([
-          getCreatorPage(pageId),
-          getCreatorPageComposition(pageId),
+          getCreatorPage(id),
+          getCreatorPageComposition(id),
         ]);
         return { page, composition };
       },
@@ -201,6 +206,26 @@ function AuthenticatedCreatorWorkspace() {
         );
         setCompositionDirty(false);
         setStatusMessage(`Loaded ${composition.items.length} composition items.`);
+      },
+    );
+  }
+
+  async function handleLoadPage(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    await loadPage(pageId.trim());
+  }
+
+  async function refreshPages(): Promise<void> {
+    await perform(
+      'list-pages',
+      () => listCreatorPages(universeKey),
+      (pages) => {
+        setAvailablePages(pages);
+        setStatusMessage(
+          pages.length === 0
+            ? 'No Composition Pages exist in this Universe yet.'
+            : `Found ${pages.length} Composition Pages in this Universe.`,
+        );
       },
     );
   }
@@ -561,6 +586,38 @@ function AuthenticatedCreatorWorkspace() {
               {busyAction === 'create-page' ? 'Creating…' : 'Create draft Page'}
             </button>
           </form>
+
+          <div className="mt-6 border-t border-slate-800 pt-5">
+            <label className="block text-sm font-medium" htmlFor="creator-existing-page">
+              Existing Composition Pages
+              <select
+                id="creator-existing-page"
+                className={inputClassName}
+                value={availablePages.some((page) => page.id === pageId) ? pageId : ''}
+                disabled={busy}
+                onChange={(event) => {
+                  const id = event.target.value;
+                  setPageId(id);
+                  if (id) void loadPage(id);
+                }}
+              >
+                <option value="">Select a saved Page</option>
+                {availablePages.map((page) => (
+                  <option key={page.id} value={page.id}>
+                    {page.title} — {page.lifecycle} — {page.routePath}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
+              className={`${secondaryButtonClassName} mt-3`}
+              type="button"
+              disabled={busy}
+              onClick={() => void refreshPages()}
+            >
+              {busyAction === 'list-pages' ? 'Refreshing…' : 'Refresh Composition Pages'}
+            </button>
+          </div>
 
           <form onSubmit={handleLoadPage} className="mt-6 border-t border-slate-800 pt-5">
             <label className="block text-sm font-medium" htmlFor="creator-page-id">

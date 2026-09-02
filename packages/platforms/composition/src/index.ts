@@ -84,6 +84,15 @@ export type { Page, PageLifecycle, PagePresentationMetadata, PageRouteMetadata }
 
 export type { FindPageByIdInput, FindPageByRouteInput, PageReader } from './page-reader';
 
+export type { CreatorPageReader, ListCreatorPagesInput } from './creator-page-reader';
+
+export {
+  CREATOR_PAGE_DEFAULT_LIMIT,
+  CREATOR_PAGE_MAX_LIMIT,
+  ListPages,
+  type ListPagesInput,
+} from './list-pages';
+
 export type {
   PageLifecycleWriter,
   TransitionPageLifecycleRecordInput,

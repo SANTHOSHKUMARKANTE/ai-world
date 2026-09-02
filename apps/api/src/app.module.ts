@@ -51,6 +51,7 @@ import {
   GetPage,
   GetPageComposition,
   GetPagePreview,
+  ListPages,
   PublishPage,
   SetPageComposition,
 } from '@ai-world/platform-composition';
@@ -626,6 +627,14 @@ export class AppModule {
           inject: [PrismaPageRepository],
           useFactory: (repository: PrismaPageRepository): GetPage => {
             return new GetPage(repository);
+          },
+        },
+
+        {
+          provide: ListPages,
+          inject: [PrismaPageRepository],
+          useFactory: (repository: PrismaPageRepository): ListPages => {
+            return new ListPages(repository);
           },
         },
 

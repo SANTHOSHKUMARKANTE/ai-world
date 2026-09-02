@@ -336,6 +336,13 @@ function readPage(value: unknown): CreatorPage {
   };
 }
 
+function readPageList(value: unknown): readonly CreatorPage[] {
+  if (!isRecord(value) || !Array.isArray(value.items)) {
+    throw new Error('Creator Page list API response did not match the expected contract.');
+  }
+  return value.items.map(readPage);
+}
+
 function readTextBlock(value: unknown): CreatorTextBlock {
   if (
     !isRecord(value) ||
@@ -601,6 +608,12 @@ export async function createCreatorPage(input: {
     body: JSON.stringify(input),
   });
   return readPage(await readJson(response));
+}
+
+export async function listCreatorPages(universeKey: string): Promise<readonly CreatorPage[]> {
+  const query = new URLSearchParams({ universeKey });
+  const response = await apiRequest(`/composition/pages?${query.toString()}`);
+  return readPageList(await readJson(response));
 }
 
 export async function getCreatorPage(id: string): Promise<CreatorPage> {

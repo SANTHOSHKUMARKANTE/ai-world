@@ -212,6 +212,54 @@ describe('Creator workspace', { timeout: 10_000 }, () => {
     );
   });
 
+  it('lists and resumes a saved Page without requiring a memorized Page ID', async () => {
+    const pageId = '11111111-1111-4111-8111-111111111111';
+    const page = {
+      id: pageId,
+      universeKey: 'universe.devotional',
+      routePath: '/saved-page',
+      title: 'Saved Page',
+      lifecycle: 'DRAFT',
+      createdAt: '2026-09-02T12:00:00.000Z',
+      updatedAt: '2026-09-02T12:00:00.000Z',
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url === '/api/session') {
+        return jsonResponse({ actorId: 'creator-actor', expiresAt: '2026-09-03T12:00:00.000Z' });
+      }
+      if (url.includes('/api/composition/pages?')) return jsonResponse({ items: [page] });
+      if (url.endsWith(`/composition/pages/${pageId}`)) return jsonResponse(page);
+      if (url.endsWith(`/composition/pages/${pageId}/composition`)) {
+        return jsonResponse({ pageId, items: [] });
+      }
+      throw new Error(`Unexpected request: ${url}`);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <SessionProvider>
+        <CreatorWorkspace />
+      </SessionProvider>,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Refresh Composition Pages' })).toBeTruthy(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh Composition Pages' }));
+    await waitFor(() =>
+      expect(screen.getByText('Found 1 Composition Pages in this Universe.')).toBeTruthy(),
+    );
+
+    fireEvent.change(screen.getByLabelText('Existing Composition Pages'), {
+      target: { value: pageId },
+    });
+    await waitFor(() => expect(screen.getByText('Loaded 0 composition items.')).toBeTruthy());
+
+    expect((screen.getByLabelText('Active Page ID') as HTMLInputElement).value).toBe(pageId);
+    expect(screen.getByText('Page status: DRAFT')).toBeTruthy();
+  });
+
   it('publishes, locks, and archives a saved Page through the lifecycle controls', async () => {
     const pageId = '11111111-1111-4111-8111-111111111111';
     const basePage = {
