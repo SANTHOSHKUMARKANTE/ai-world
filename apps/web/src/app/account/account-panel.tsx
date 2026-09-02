@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { type FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useCallback, useEffect, useState } from 'react';
 
 import { ApiClientError } from '../../api/api-client';
 import { getApiErrorMessage } from '../../api/api-error-message';
@@ -25,6 +25,8 @@ type ProfileState =
       readonly message: string;
     };
 
+const DISPLAY_NAME_MAX_LENGTH = 80;
+
 function isUnauthenticated(error: unknown): boolean {
   return error instanceof ApiClientError && error.status === 401;
 }
@@ -42,33 +44,29 @@ function AuthenticatedAccount({ actorId, refreshSession, signOut }: Authenticate
 
   const [displayName, setDisplayName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    let active = true;
+  const loadProfile = useCallback(
+    async (isActive: () => boolean = () => true): Promise<void> => {
+      setProfileState({ status: 'loading' });
 
-    void getUserProfile()
-      .then((profile) => {
-        if (!active) {
+      try {
+        const profile = await getUserProfile();
+        if (!isActive()) {
           return;
         }
 
-        setProfileState({
-          status: 'ready',
-          profile,
-        });
-
+        setProfileState({ status: 'ready', profile });
         setDisplayName(profile.displayName ?? '');
-      })
-      .catch((error: unknown) => {
-        if (!active) {
+      } catch (error) {
+        if (!isActive()) {
           return;
         }
 
         if (isUnauthenticated(error)) {
-          void refreshSession();
-
+          await refreshSession();
           return;
         }
 
@@ -76,12 +74,19 @@ function AuthenticatedAccount({ actorId, refreshSession, signOut }: Authenticate
           status: 'error',
           message: getApiErrorMessage(error),
         });
-      });
+      }
+    },
+    [refreshSession],
+  );
+
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(() => loadProfile(() => active));
 
     return () => {
       active = false;
     };
-  }, [actorId, refreshSession]);
+  }, [actorId, loadProfile]);
 
   async function persistDisplayName(nextDisplayName: string | null): Promise<void> {
     setSubmitting(true);
@@ -119,8 +124,13 @@ function AuthenticatedAccount({ actorId, refreshSession, signOut }: Authenticate
     await persistDisplayName(displayName);
   }
 
+  async function handleSignOut(): Promise<void> {
+    setSigningOut(true);
+    await signOut();
+  }
+
   if (profileState.status === 'loading') {
-    return <p>Loading your profile…</p>;
+    return <p role="status">Loading your profile…</p>;
   }
 
   if (profileState.status === 'error') {
@@ -131,10 +141,10 @@ function AuthenticatedAccount({ actorId, refreshSession, signOut }: Authenticate
         <button
           type="button"
           onClick={() => {
-            void refreshSession();
+            void loadProfile();
           }}
         >
-          Check session
+          Retry profile
         </button>
       </section>
     );
@@ -153,12 +163,17 @@ function AuthenticatedAccount({ actorId, refreshSession, signOut }: Authenticate
             name="displayName"
             type="text"
             autoComplete="name"
+            maxLength={DISPLAY_NAME_MAX_LENGTH}
+            aria-describedby="profile-display-name-requirements"
             value={displayName}
             disabled={submitting}
             onChange={(event) => {
               setDisplayName(event.target.value);
             }}
           />
+          <p id="profile-display-name-requirements" className="aw-identity-hint">
+            Use up to {DISPLAY_NAME_MAX_LENGTH} characters, or clear the name to keep it private.
+          </p>
         </div>
 
         {successMessage ? <p role="status">{successMessage}</p> : null}
@@ -187,11 +202,12 @@ function AuthenticatedAccount({ actorId, refreshSession, signOut }: Authenticate
 
         <button
           type="button"
+          disabled={signingOut}
           onClick={() => {
-            void signOut();
+            void handleSignOut();
           }}
         >
-          Sign out
+          {signingOut ? 'Signing out…' : 'Sign out'}
         </button>
       </section>
     </section>
@@ -203,7 +219,7 @@ export function AccountPanel() {
 
   switch (state.status) {
     case 'loading':
-      return <p>Checking your session…</p>;
+      return <p role="status">Checking your session…</p>;
 
     case 'anonymous':
       return (

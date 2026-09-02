@@ -254,4 +254,39 @@ describe('Account profile UX', () => {
 
     expect(screen.queryByLabelText('Display name')).toBeNull();
   });
+
+  it('retries profile loading without exposing internal identity', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(authenticatedSessionResponse())
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            error: {
+              code: 'user.profile.unavailable',
+              message: 'Profile is temporarily unavailable.',
+              status: 503,
+              requestId: 'web-profile-unavailable-001',
+            },
+          }),
+          { status: 503, headers: { 'Content-Type': 'application/json' } },
+        ),
+      )
+      .mockResolvedValueOnce(profileResponse('Retry Success'));
+
+    vi.stubGlobal('fetch', fetchMock);
+    renderAccount();
+
+    await screen.findByRole('button', { name: 'Retry profile' });
+    fireEvent.click(screen.getByRole('button', { name: 'Retry profile' }));
+
+    await screen.findByDisplayValue('Retry Success');
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      3,
+      '/api/user-profile',
+      expect.objectContaining({ credentials: 'same-origin' }),
+    );
+    expect(screen.queryByText('authenticated-actor')).toBeNull();
+    expect(screen.queryByText('profile-user-id')).toBeNull();
+  });
 });
