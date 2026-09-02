@@ -1130,6 +1130,112 @@ textarea {
   border-radius: var(--aw-radius-lg);
 }
 
+.aw-creator-task-nav {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 20;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgb(51 65 85 / 0.9);
+  border-radius: 1rem;
+  background: rgb(15 23 42 / 0.96);
+  padding: 0.85rem 1rem;
+  box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.aw-creator-task-nav > p {
+  color: rgb(148 163 184);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.aw-creator-task-nav > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+.aw-creator-task-nav a {
+  border: 1px solid rgb(51 65 85);
+  border-radius: 999px;
+  color: rgb(226 232 240);
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.aw-creator-task-nav a:hover,
+.aw-creator-task-nav a:focus-visible {
+  border-color: rgb(34 211 238);
+  background: rgb(34 211 238 / 0.12);
+  color: rgb(207 250 254);
+}
+
+.aw-creator-work-context {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgb(51 65 85);
+  border-radius: 1rem;
+  background: rgb(15 23 42 / 0.72);
+  padding: 1.25rem;
+}
+
+.aw-creator-work-context h2 {
+  margin-top: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.aw-creator-work-context dl {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.aw-creator-work-context dl > div {
+  min-width: 0;
+  border-left: 2px solid rgb(34 211 238 / 0.45);
+  padding-left: 0.75rem;
+}
+
+.aw-creator-work-context dt {
+  color: rgb(148 163 184);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.aw-creator-work-context dd {
+  overflow-wrap: anywhere;
+}
+
+.aw-creator-work-context dd:first-of-type {
+  margin-top: 0.2rem;
+  color: rgb(241 245 249);
+  font-weight: 600;
+}
+
+.aw-creator-work-context dd:last-of-type {
+  color: rgb(148 163 184);
+  font-size: 0.8rem;
+}
+
+@media (min-width: 48rem) {
+  .aw-creator-work-context {
+    grid-template-columns: minmax(10rem, 0.65fr) minmax(0, 1.35fr);
+    align-items: center;
+  }
+
+  .aw-creator-work-context dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .aw-experience {
   border: 1px solid var(--aw-border);
   border-radius: var(--aw-radius-lg);

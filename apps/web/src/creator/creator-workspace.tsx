@@ -56,18 +56,23 @@ function isReferenceKind(value: string): value is CreatorCompositionItemKind {
 }
 
 function EditorCard({
+  id,
   eyebrow,
   title,
   description,
   children,
 }: {
+  readonly id?: string;
   readonly eyebrow: string;
   readonly title: string;
   readonly description: string;
   readonly children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/10">
+    <section
+      id={id}
+      className="scroll-mt-24 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/10"
+    >
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">{eyebrow}</p>
       <h2 className="mt-2 text-xl font-semibold">{title}</h2>
       <p className="mt-2 text-sm leading-6 text-slate-400">{description}</p>
@@ -415,6 +420,37 @@ function AuthenticatedCreatorWorkspace() {
 
   return (
     <div className="aw-creator-workspace">
+      <nav aria-label="Creator Studio tasks" className="aw-creator-task-nav">
+        <p>Studio tasks</p>
+        <div>
+          <a href="#creator-page-task">Pages</a>
+          <a href="#creator-knowledge-task">Knowledge</a>
+          <a href="#creator-entity-task">Entities</a>
+          <a href="#creator-media-task">Media</a>
+          <a href="#creator-ai-task">AI review</a>
+          <a href="#creator-composition-task">Composition</a>
+        </div>
+      </nav>
+
+      <section aria-labelledby="creator-work-context-title" className="aw-creator-work-context">
+        <div>
+          <p className="aw-eyebrow">Current work</p>
+          <h2 id="creator-work-context-title">Studio context</h2>
+        </div>
+        <dl>
+          <div>
+            <dt>Page</dt>
+            <dd>{activePage?.title ?? 'No Page selected'}</dd>
+            <dd>{activePage?.lifecycle ?? 'Choose or create a Page'}</dd>
+          </div>
+          <div>
+            <dt>Knowledge</dt>
+            <dd>{activeKnowledgeResource?.resourceType ?? 'No Resource selected'}</dd>
+            <dd>{activeKnowledgeResource?.lifecycle ?? 'Choose or create Knowledge'}</dd>
+          </div>
+        </dl>
+      </section>
+
       <section className="mb-6 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-5">
         <label className="text-sm font-semibold text-cyan-100" htmlFor="creator-universe-key">
           Active Universe
@@ -453,6 +489,7 @@ function AuthenticatedCreatorWorkspace() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <EditorCard
+          id="creator-page-task"
           eyebrow="01 · Page"
           title="Create or load a Page"
           description="Pages move through the Composition-owned DRAFT, PUBLISHED, and ARCHIVED lifecycle."
@@ -560,6 +597,7 @@ function AuthenticatedCreatorWorkspace() {
         </EditorCard>
 
         <EditorCard
+          id="creator-knowledge-task"
           eyebrow="02 · Knowledge"
           title="Create a Knowledge draft"
           description="The Knowledge Platform validates and owns the canonical Resource. Composition stores only its reference."
@@ -582,6 +620,7 @@ function AuthenticatedCreatorWorkspace() {
         </EditorCard>
 
         <EditorCard
+          id="creator-ai-task"
           eyebrow="03 · AI assistance"
           title="Suggest a Knowledge draft type"
           description="AI / Creator uses authorized published context. Its Generation stays non-canonical until you explicitly accept the candidate."
@@ -644,6 +683,7 @@ function AuthenticatedCreatorWorkspace() {
         </EditorCard>
 
         <EditorCard
+          id="creator-media-task"
           eyebrow="04 · Media"
           title="Upload a Media Asset"
           description="Binary storage and Asset lifecycle remain Media-owned. The workspace receives only the canonical Asset ID."
@@ -699,8 +739,9 @@ function AuthenticatedCreatorWorkspace() {
       </div>
 
       <section
+        id="creator-entity-task"
         aria-labelledby="creator-devotional-deity-editor-title"
-        className="mt-6 rounded-2xl border border-amber-400/20 bg-slate-900/80 p-5 shadow-xl shadow-black/10"
+        className="mt-6 scroll-mt-24 rounded-2xl border border-amber-400/20 bg-slate-900/80 p-5 shadow-xl shadow-black/10"
       >
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">
           Devotional · Entity editor
@@ -824,7 +865,10 @@ function AuthenticatedCreatorWorkspace() {
         }}
       />
 
-      <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/10">
+      <section
+        id="creator-composition-task"
+        className="mt-6 scroll-mt-24 rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl shadow-black/10"
+      >
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">

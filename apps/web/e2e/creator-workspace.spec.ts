@@ -124,6 +124,16 @@ test.describe('Creator workspace', () => {
 
     await page.goto('/creator');
     await expect(page.getByRole('heading', { name: 'Creator workspace', level: 1 })).toBeVisible();
+    const taskNavigation = page.getByRole('navigation', { name: 'Creator Studio tasks' });
+    await expect(taskNavigation.getByRole('link', { name: 'Pages' })).toHaveAttribute(
+      'href',
+      '#creator-page-task',
+    );
+    await expect(taskNavigation.getByRole('link', { name: 'Composition' })).toHaveAttribute(
+      'href',
+      '#creator-composition-task',
+    );
+    await expect(page.getByText('No Page selected')).toBeVisible();
 
     await page.getByLabel('Route path').fill('/creator-e2e');
     await page.getByLabel('Presentation title').fill('Creator E2E');

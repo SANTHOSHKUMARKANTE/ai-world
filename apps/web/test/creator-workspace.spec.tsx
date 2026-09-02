@@ -101,6 +101,12 @@ describe('Creator workspace', { timeout: 10_000 }, () => {
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'Create or load a Page' })).toBeTruthy();
     });
+    expect(screen.getByRole('navigation', { name: 'Creator Studio tasks' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Composition' }).getAttribute('href')).toBe(
+      '#creator-composition-task',
+    );
+    expect(screen.getByText('No Page selected')).toBeTruthy();
+    expect(screen.getByText('No Resource selected')).toBeTruthy();
 
     fireEvent.change(screen.getByLabelText('Route path'), {
       target: { value: '/creator-proof' },
@@ -113,6 +119,7 @@ describe('Creator workspace', { timeout: 10_000 }, () => {
     await waitFor(() => {
       expect(screen.getByRole('status').textContent).toContain('created as a DRAFT');
     });
+    expect(screen.getByText('Creator proof')).toBeTruthy();
     expect((screen.getByLabelText('Active Page ID') as HTMLInputElement).value).toBe(pageId);
     expect(screen.getByRole('link', { name: 'Open saved preview' }).getAttribute('href')).toBe(
       `/creator/preview/${pageId}`,
