@@ -198,7 +198,7 @@ describe('Creator workspace', { timeout: 10_000 }, () => {
       expect(screen.getByText('Found 1 Knowledge Resources in this Universe.')).toBeTruthy();
     });
 
-    fireEvent.change(screen.getByLabelText('Existing Knowledge in active Universe'), {
+    fireEvent.change(screen.getByLabelText('Existing Knowledge Resources'), {
       target: { value: resourceId },
     });
 

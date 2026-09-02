@@ -665,7 +665,7 @@ function AuthenticatedCreatorWorkspace() {
                 className="min-w-0 flex-1 text-sm font-medium"
                 htmlFor="creator-knowledge-picker"
               >
-                Existing Knowledge in active Universe
+                Existing Knowledge Resources
                 <select
                   id="creator-knowledge-picker"
                   className={inputClassName}

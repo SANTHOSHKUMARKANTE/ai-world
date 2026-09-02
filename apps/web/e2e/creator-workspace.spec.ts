@@ -35,7 +35,7 @@ test.describe('Creator workspace', () => {
     await page.goto('/creator');
     await page.getByRole('button', { name: 'Refresh list' }).click();
     await expect(page.getByRole('status')).toContainText('Found 1 Knowledge Resources');
-    await page.getByLabel('Existing Knowledge in active Universe').selectOption(resourceId);
+    await page.getByLabel('Existing Knowledge Resources').selectOption(resourceId);
 
     await expect(page.getByLabel('Deity Knowledge Resource ID')).toHaveValue(resourceId);
     await expect(page.getByText('Knowledge status: DRAFT')).toBeVisible();
