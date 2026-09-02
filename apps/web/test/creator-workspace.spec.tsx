@@ -163,6 +163,55 @@ describe('Creator workspace', { timeout: 10_000 }, () => {
     );
   });
 
+  it('lists and selects existing Knowledge without requiring a memorized Resource ID', async () => {
+    const resourceId = '22222222-2222-4222-8222-222222222222';
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ actorId: 'creator-actor', expiresAt: '2026-09-03T12:00:00.000Z' }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          items: [
+            {
+              id: resourceId,
+              universeKey: 'universe.devotional',
+              resourceType: 'devotional.deity',
+              lifecycle: 'DRAFT',
+            },
+          ],
+        }),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <SessionProvider>
+        <CreatorWorkspace />
+      </SessionProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Refresh list' })).toBeTruthy();
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh list' }));
+    await waitFor(() => {
+      expect(screen.getByText('Found 1 Knowledge Resources in this Universe.')).toBeTruthy();
+    });
+
+    fireEvent.change(screen.getByLabelText('Existing Knowledge in active Universe'), {
+      target: { value: resourceId },
+    });
+
+    expect((screen.getByLabelText('Deity Knowledge Resource ID') as HTMLInputElement).value).toBe(
+      resourceId,
+    );
+    expect(screen.getByText('Knowledge status: DRAFT')).toBeTruthy();
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      '/api/knowledge/creator/resources?universeKey=universe.devotional',
+      expect.objectContaining({ credentials: 'same-origin' }),
+    );
+  });
+
   it('publishes, locks, and archives a saved Page through the lifecycle controls', async () => {
     const pageId = '11111111-1111-4111-8111-111111111111';
     const basePage = {

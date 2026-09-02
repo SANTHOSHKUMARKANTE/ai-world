@@ -13,6 +13,7 @@ import {
   createCreatorTextBlock,
   getCreatorPage,
   getCreatorPageComposition,
+  listCreatorKnowledgeResources,
   publishCreatorPage,
   replaceCreatorPageComposition,
   suggestCreatorKnowledgeCandidate,
@@ -93,6 +94,9 @@ function AuthenticatedCreatorWorkspace() {
   const [knowledgeResourceId, setKnowledgeResourceId] = useState('');
   const [activeKnowledgeResource, setActiveKnowledgeResource] =
     useState<CreatorKnowledgeResource | null>(null);
+  const [availableKnowledgeResources, setAvailableKnowledgeResources] = useState<
+    readonly CreatorKnowledgeResource[]
+  >([]);
   const [knowledgeMediaManagerRevision, setKnowledgeMediaManagerRevision] = useState(0);
   const [aiRequest, setAiRequest] = useState('Suggest one useful Knowledge Resource type.');
   const [aiContextQuery, setAiContextQuery] = useState('deity');
@@ -214,11 +218,43 @@ function AuthenticatedCreatorWorkspace() {
         });
         setKnowledgeResourceId(resource.id);
         setActiveKnowledgeResource(resource);
+        setAvailableKnowledgeResources((current) => [
+          resource,
+          ...current.filter((candidate) => candidate.id !== resource.id),
+        ]);
         selectTypedEditorForResource(resource);
         setKnowledgeMediaManagerRevision((revision) => revision + 1);
         setStatusMessage(`Knowledge draft “${resource.resourceType}” created.`);
       },
     );
+  }
+
+  async function refreshKnowledgeResources(): Promise<void> {
+    await perform(
+      'list-knowledge',
+      () => listCreatorKnowledgeResources(universeKey),
+      (resources) => {
+        setAvailableKnowledgeResources(resources);
+        setStatusMessage(
+          resources.length === 0
+            ? 'No Knowledge Resources exist in this Universe yet.'
+            : `Found ${resources.length} Knowledge Resources in this Universe.`,
+        );
+      },
+    );
+  }
+
+  function selectKnowledgeResource(id: string): void {
+    const resource = availableKnowledgeResources.find((candidate) => candidate.id === id) ?? null;
+    setKnowledgeResourceId(id);
+    setActiveKnowledgeResource(resource);
+    if (resource) {
+      setUniverseKey(resource.universeKey);
+      setResourceType(resource.resourceType);
+      selectTypedEditorForResource(resource);
+      setKnowledgeMediaManagerRevision((revision) => revision + 1);
+      setStatusMessage(`Selected ${resource.resourceType} for Entity and Media management.`);
+    }
   }
 
   async function handleSuggestKnowledge(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -623,6 +659,41 @@ function AuthenticatedCreatorWorkspace() {
               {busyAction === 'create-knowledge' ? 'Creating…' : 'Create Knowledge draft'}
             </button>
           </form>
+          <div className="mt-6 border-t border-slate-800 pt-5">
+            <div className="flex flex-wrap items-end gap-3">
+              <label
+                className="min-w-0 flex-1 text-sm font-medium"
+                htmlFor="creator-knowledge-picker"
+              >
+                Existing Knowledge in active Universe
+                <select
+                  id="creator-knowledge-picker"
+                  className={inputClassName}
+                  value={knowledgeResourceId}
+                  disabled={busy || availableKnowledgeResources.length === 0}
+                  onChange={(event) => selectKnowledgeResource(event.target.value)}
+                >
+                  <option value="">Select a Knowledge Resource</option>
+                  {availableKnowledgeResources.map((resource) => (
+                    <option key={resource.id} value={resource.id}>
+                      {resource.resourceType} — {resource.lifecycle}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                className={secondaryButtonClassName}
+                type="button"
+                disabled={busy || !universeKey.trim()}
+                onClick={() => void refreshKnowledgeResources()}
+              >
+                {busyAction === 'list-knowledge' ? 'Refreshing…' : 'Refresh list'}
+              </button>
+            </div>
+            <p className="mt-3 text-sm text-slate-400">
+              Selecting a Resource carries it into the typed Entity and Media managers below.
+            </p>
+          </div>
         </EditorCard>
 
         <EditorCard

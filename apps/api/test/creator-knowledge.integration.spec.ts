@@ -237,6 +237,37 @@ describe('Creator Knowledge API', () => {
     });
   });
 
+  it('lists bounded Knowledge Resources for an authorized editor without exposing them publicly', async () => {
+    const editor = await signInKnowledgeEditor('list-resources');
+    const firstId = await createDirectDraft('devotional.deity');
+    const secondId = await createDirectDraft('devotional.mantra');
+
+    const response = await request(app.getHttpServer())
+      .get('/knowledge/creator/resources')
+      .query({ universeKey: 'universe.devotional', limit: 10 })
+      .set('Cookie', editor.cookiePair)
+      .expect(200);
+
+    expect(response.body.items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: firstId, lifecycle: 'DRAFT' }),
+        expect.objectContaining({ id: secondId, lifecycle: 'DRAFT' }),
+      ]),
+    );
+  });
+
+  it('denies Knowledge listing to an ordinary authenticated Actor', async () => {
+    const ordinaryActor = await signInFixture('ordinary-list');
+
+    const response = await request(app.getHttpServer())
+      .get('/knowledge/creator/resources')
+      .query({ universeKey: 'universe.devotional' })
+      .set('Cookie', ordinaryActor.cookiePair)
+      .expect(403);
+
+    expect(response.body.error.code).toBe('knowledge.authorization.forbidden');
+  });
+
   it('denies an ordinary authenticated Actor before canonical Knowledge input validation', async () => {
     const ordinaryActor = await signInFixture('ordinary-create');
 

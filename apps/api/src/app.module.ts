@@ -128,6 +128,7 @@ import {
   GetPublicKnowledgeEntityByResourceId,
   GetPublicKnowledgeResource,
   ListPublicKnowledgeDiscovery,
+  ListKnowledgeResourcesAsActor,
   ListPublicKnowledgeResourceAssets,
   ListPublicKnowledgeResources,
   PublishKnowledgeResource,
@@ -170,6 +171,7 @@ import { ApiErrorModule } from './errors/api-error.module';
 import { HealthController } from './health/health.controller';
 import { CreatorKnowledgeEntityController } from './knowledge/creator-knowledge-entity.controller';
 import { CreatorKnowledgeController } from './knowledge/creator-knowledge.controller';
+import { CreatorKnowledgeListController } from './knowledge/creator-knowledge-list.controller';
 import { MediaAssetsController } from './media/media-assets.controller';
 import { MediaUploadPreauthorizationGuard } from './media/media-upload-preauthorization.guard';
 import { PublicKnowledgeDiscoveryController } from './knowledge/public-knowledge-discovery.controller';
@@ -357,6 +359,7 @@ export class AppModule {
         PublicKnowledgeDiscoveryController,
         PublicDiscoverySearchController,
         CreatorKnowledgeController,
+        CreatorKnowledgeListController,
         CreatorKnowledgeEntityController,
         MediaAssetsController,
         CreatorCompositionController,
@@ -1070,6 +1073,17 @@ export class AppModule {
           inject: [DatabaseService],
           useFactory: (database: DatabaseService): PrismaKnowledgeResourceRepository => {
             return new PrismaKnowledgeResourceRepository(database.getClient());
+          },
+        },
+
+        {
+          provide: ListKnowledgeResourcesAsActor,
+          inject: [EvaluatePermission, PrismaKnowledgeResourceRepository],
+          useFactory: (
+            evaluatePermission: EvaluatePermission,
+            repository: PrismaKnowledgeResourceRepository,
+          ): ListKnowledgeResourcesAsActor => {
+            return new ListKnowledgeResourcesAsActor(evaluatePermission, repository);
           },
         },
 

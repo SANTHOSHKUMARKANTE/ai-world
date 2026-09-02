@@ -25,6 +25,18 @@ export type {
 } from './knowledge-resource-reader';
 
 export type {
+  CreatorKnowledgeResourceReader,
+  ListCreatorKnowledgeResourcesInput,
+} from './creator-knowledge-resource-reader';
+
+export {
+  CREATOR_KNOWLEDGE_RESOURCE_DEFAULT_LIMIT,
+  CREATOR_KNOWLEDGE_RESOURCE_MAX_LIMIT,
+  ListKnowledgeResourcesAsActor,
+  type ListKnowledgeResourcesAsActorInput,
+} from './list-knowledge-resources-as-actor';
+
+export type {
   KnowledgeResourceLifecycleWriter,
   TransitionKnowledgeResourceLifecycleRecordInput,
 } from './knowledge-resource-lifecycle-writer';

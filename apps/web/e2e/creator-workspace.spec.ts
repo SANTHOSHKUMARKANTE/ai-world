@@ -1,6 +1,46 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('Creator workspace', () => {
+  test('selects existing Knowledge from the active Universe for typed management', async ({
+    page,
+  }) => {
+    const resourceId = '22222222-2222-4222-8222-222222222222';
+    await page.route('**/api/session', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          actorId: 'creator-list-e2e-actor',
+          expiresAt: '2026-09-03T12:00:00.000Z',
+        }),
+      });
+    });
+    await page.route('**/api/knowledge/creator/resources?*', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          items: [
+            {
+              id: resourceId,
+              universeKey: 'universe.devotional',
+              resourceType: 'devotional.deity',
+              lifecycle: 'DRAFT',
+            },
+          ],
+        }),
+      });
+    });
+
+    await page.goto('/creator');
+    await page.getByRole('button', { name: 'Refresh list' }).click();
+    await expect(page.getByRole('status')).toContainText('Found 1 Knowledge Resources');
+    await page.getByLabel('Existing Knowledge in active Universe').selectOption(resourceId);
+
+    await expect(page.getByLabel('Deity Knowledge Resource ID')).toHaveValue(resourceId);
+    await expect(page.getByText('Knowledge status: DRAFT')).toBeVisible();
+  });
+
   test('creates owner-backed content and saves ordered Page composition', async ({ page }) => {
     const pageId = '11111111-1111-4111-8111-111111111111';
     const knowledgeId = '22222222-2222-4222-8222-222222222222';

@@ -8,6 +8,10 @@ import {
   type KnowledgeResource,
 } from './knowledge-resource';
 import type {
+  CreatorKnowledgeResourceReader,
+  ListCreatorKnowledgeResourcesInput,
+} from './creator-knowledge-resource-reader';
+import type {
   KnowledgeResourceAssetReferenceStore,
   ListKnowledgeResourceAssetIdsInput,
   ReplaceKnowledgeResourceMediaPlacementsInput,
@@ -69,6 +73,7 @@ function mapPersistedKnowledgeResource(resource: PersistedKnowledgeResource): Kn
 export class PrismaKnowledgeResourceRepository
   implements
     KnowledgeResourceReader,
+    CreatorKnowledgeResourceReader,
     PublicKnowledgeResourceReader,
     KnowledgeResourceWriter,
     KnowledgeResourceLifecycleWriter,
@@ -85,6 +90,18 @@ export class PrismaKnowledgeResourceRepository
     });
 
     return resource ? mapPersistedKnowledgeResource(resource) : null;
+  }
+
+  async listForCreator(
+    input: ListCreatorKnowledgeResourcesInput,
+  ): Promise<readonly KnowledgeResource[]> {
+    const resources = await this.database.knowledgeResource.findMany({
+      where: { universeKey: input.universeKey },
+      orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
+      take: input.limit,
+    });
+
+    return resources.map(mapPersistedKnowledgeResource);
   }
 
   async findPublishedById(

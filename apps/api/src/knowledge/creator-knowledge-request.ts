@@ -14,6 +14,13 @@ const updateCreatorKnowledgeRequestSchema = z
   })
   .strict();
 
+const listCreatorKnowledgeRequestSchema = z
+  .object({
+    universeKey: z.string(),
+    limit: z.coerce.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+
 const creatorKnowledgeMediaPlacementSchema = z
   .object({
     assetId: z.string(),
@@ -38,6 +45,11 @@ export interface CreateCreatorKnowledgeRequest {
 
 export interface UpdateCreatorKnowledgeRequest {
   readonly resourceType: string;
+}
+
+export interface ListCreatorKnowledgeRequest {
+  readonly universeKey: string;
+  readonly limit?: number;
 }
 
 export interface SetCreatorKnowledgeMediaPlacementRequest {
@@ -80,6 +92,19 @@ export function parseUpdateCreatorKnowledgeRequest(input: unknown): UpdateCreato
   }
 
   return result.data;
+}
+
+export function parseListCreatorKnowledgeRequest(input: unknown): ListCreatorKnowledgeRequest {
+  const result = listCreatorKnowledgeRequestSchema.safeParse(input);
+
+  if (!result.success) {
+    throw invalidCreatorKnowledgeRequest('listing');
+  }
+
+  return {
+    universeKey: result.data.universeKey,
+    ...(result.data.limit === undefined ? {} : { limit: result.data.limit }),
+  };
 }
 
 export function parseSetCreatorKnowledgeMediaRequest(

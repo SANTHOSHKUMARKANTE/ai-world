@@ -187,6 +187,14 @@ function readKnowledgeResource(value: unknown): CreatorKnowledgeResource {
   };
 }
 
+function readKnowledgeResourceList(value: unknown): readonly CreatorKnowledgeResource[] {
+  if (!isRecord(value) || !Array.isArray(value.items)) {
+    throw new Error('Creator Knowledge list API response did not match the expected contract.');
+  }
+
+  return value.items.map(readKnowledgeResource);
+}
+
 function readKnowledgeEntityConfiguration(value: unknown): CreatorKnowledgeEntityConfiguration {
   if (
     !isRecord(value) ||
@@ -487,6 +495,14 @@ export async function createCreatorKnowledgeResource(input: {
     body: JSON.stringify(input),
   });
   return readKnowledgeResource(await readJson(response));
+}
+
+export async function listCreatorKnowledgeResources(
+  universeKey: string,
+): Promise<readonly CreatorKnowledgeResource[]> {
+  const query = new URLSearchParams({ universeKey });
+  const response = await apiRequest(`/knowledge/creator/resources?${query.toString()}`);
+  return readKnowledgeResourceList(await readJson(response));
 }
 
 export async function suggestCreatorKnowledgeCandidate(input: {
