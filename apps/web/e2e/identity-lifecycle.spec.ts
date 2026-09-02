@@ -141,8 +141,6 @@ test.describe('UXP-09B finished verification and recovery/reset', () => {
       await page.getByRole('button', { name: 'Sign in' }).click();
       await expect(page.getByRole('heading', { name: 'Signed in' })).toBeVisible();
       await page.getByRole('link', { name: 'Continue' }).click();
-      await expect(page.getByRole('heading', { name: 'Signed in' })).toBeVisible();
-      await page.getByRole('link', { name: 'Continue' }).click();
       await expect(page).toHaveURL(`${webOrigin}/verify-email`);
 
       await page.getByRole('button', { name: 'Send verification email' }).click();
@@ -192,8 +190,6 @@ test.describe('UXP-09B finished verification and recovery/reset', () => {
       await page.getByLabel('Email').fill(email);
       await page.getByLabel('Password').fill(originalPassword);
       await page.getByRole('button', { name: 'Sign in' }).click();
-      await expect(page.getByRole('heading', { name: 'Signed in' })).toBeVisible();
-      await page.getByRole('link', { name: 'Go to your account' }).click();
       await expect(page.getByRole('heading', { name: 'Signed in' })).toBeVisible();
       await page.getByRole('link', { name: 'Go to your account' }).click();
       await expect(page).toHaveURL(`${webOrigin}/account`);
