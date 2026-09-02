@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import { createDatabaseClient, type DatabaseClient } from '@ai-world/foundation-database';
 import { generateResourceId, parseResourceId } from '@ai-world/kernel-identifiers';
 import { parseNamespacedKey } from '@ai-world/kernel-namespace';
@@ -190,7 +192,7 @@ describe('P7-M09 AI Creator Assistance vertical slice', () => {
 
   it('suggests typed candidate data from authorized context and keeps it non-canonical until explicit acceptance', async () => {
     const actorId = await createAdministratorCreator('Creator');
-    const universeKey = parseNamespacedKey('assistance.test');
+    const universeKey = parseNamespacedKey(`assistance.test-${randomUUID()}`);
     const contextResourceType = parseNamespacedKey('assistance.context');
 
     const contextResourceId = await createPublishedContextResource(
