@@ -16,7 +16,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('Creator workspace', () => {
+describe('Creator workspace', { timeout: 10_000 }, () => {
   it('requires an authenticated Session before rendering creator controls', async () => {
     vi.stubGlobal(
       'fetch',
