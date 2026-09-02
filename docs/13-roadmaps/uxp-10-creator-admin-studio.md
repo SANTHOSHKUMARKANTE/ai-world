@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-10 |
 | Area | Product / Web / Creator / Administration |
-| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-10C ACTIVE |
+| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-10D ACTIVE |
 | Created | 2026-09-02 |
 | Activation Baseline | `f5fb93f7cc708bb7b7af4877cc96a59acadec020` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -142,10 +142,10 @@ UXP-10B — Finished Knowledge + Entity + Media Management
 CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
 
 UXP-10C — Finished Composition + AI + Publishing Journey
-ACTIVE
+CLOSED — ACCEPTED — fa28c5200a7c9a4ce8e9cae369459e4f617474d8
 
 UXP-10D — Accepted Permissioned Administration
-NOT STARTED
+ACTIVE
 
 UXP-10E — Full Creator / Admin Studio Acceptance
 NOT STARTED
@@ -283,7 +283,7 @@ exact remote CI user-confirmed green.
 Status:
 
 ```text
-ACTIVE
+CLOSED — ACCEPTED
 ```
 
 UXP-10C finishes one coherent path across:
@@ -307,6 +307,27 @@ until the canonical owner validates and accepts it.
 Lifecycle constraints must be visible before an invalid action, while the server
 remains the authority for every mutation.
 
+Accepted implementation evidence:
+
+```text
+fa28c5200a7c9a4ce8e9cae369459e4f617474d8
+feat(web): finish composition publishing journey
+
+Composition-owned, Universe-scoped and bounded creator Page listing added;
+authorized GET /composition/pages delivery contract added;
+Studio Page picker resumes saved Page metadata and ordered composition;
+manual canonical Page ID entry remains available as a fallback;
+newly created Pages are immediately available for continued composition;
+Composition unit tests passed 35/35;
+Creator Composition API integration passed 10/10;
+focused Creator Workspace Web tests passed 6/6;
+Composition, API and Web lint/typecheck passed;
+full build passed 22/22 tasks;
+architecture validation passed with 0 violations across 822 modules / 2684 dependencies;
+production Web build and git diff validation passed;
+exact remote CI user-confirmed green.
+```
+
 ---
 
 # 9. UXP-10D — Accepted Permissioned Administration
@@ -314,7 +335,7 @@ remains the authority for every mutation.
 Status:
 
 ```text
-NOT STARTED
+ACTIVE
 ```
 
 UXP-10D exposes only administration already supported by accepted Identity &
@@ -446,8 +467,8 @@ UXP-09 — CLOSED — ACCEPTED
 UXP-10 — ACTIVE
 UXP-10A — CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
 UXP-10B — CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
-UXP-10C — ACTIVE
-UXP-10D — NOT STARTED
+UXP-10C — CLOSED — ACCEPTED — fa28c5200a7c9a4ce8e9cae369459e4f617474d8
+UXP-10D — ACTIVE
 UXP-10E — NOT STARTED
 UXP-11 — NOT STARTED
 WPR-M05 — ACTIVE
@@ -463,11 +484,11 @@ After this docs-only transition is independently reviewed, manually
 committed/pushed and exact remote CI is green:
 
 ```text
-inspect the accepted Composition, AI, preview and publishing flows at the UXP-10B closure baseline;
-implement only UXP-10C — Finished Composition + AI + Publishing Journey;
-preserve all accepted creator and public-page behavior;
-keep AI candidates non-canonical until explicit owner acceptance;
-do not begin UXP-10D, UXP-10E or UXP-11;
+inspect the accepted Identity & Access Role-assignment contracts at the UXP-10C closure baseline;
+implement only UXP-10D — Accepted Permissioned Administration;
+preserve server-authoritative administrator-only permission enforcement;
+add only a narrow authorized lookup if repository inspection proves it necessary;
+do not begin UXP-10E or UXP-11;
 keep WPR-M05 ACTIVE;
 keep P10-M04 SEQUENCING-BLOCKED;
 keep the Master Roadmap unchanged.
