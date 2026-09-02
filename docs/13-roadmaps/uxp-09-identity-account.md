@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-09 |
 | Area | Product / Web / Identity & Access / User / Email |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-09C ACTIVE |
+| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-09D ACTIVE |
 | Created | 2026-09-02 |
 | Activation Baseline | `82e40675a3e41251345a5c3f9e6ef84abbfc3885` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -143,10 +143,10 @@ UXP-09B — Finished Verification + Recovery / Reset
 CLOSED — ACCEPTED — e800c7aa6cde1a13fb6e0bd786b2f9353604475a
 
 UXP-09C — Finished Account + Session
-ACTIVE — IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — 312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
 
 UXP-09D — Full Identity + Account Acceptance
-BLOCKED BY UXP-09C REMOTE ACCEPTANCE
+ACTIVE — ACCEPTANCE SLICE
 ```
 
 Each slice requires:
@@ -276,7 +276,7 @@ exact remote CI user-confirmed green
 Status:
 
 ```text
-ACTIVE — IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 UXP-09C finishes `/account` and shared Session behavior:
@@ -295,9 +295,23 @@ no internal identifier presentation.
 
 Profile semantics remain User-owned. Session semantics remain Identity-owned.
 
+Acceptance evidence:
+
+```text
+312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
+feat(web): finish account and session journey
+exact remote CI user-confirmed green
+```
+
 ---
 
 # 9. UXP-09D — Full Identity + Account Acceptance
+
+Status:
+
+```text
+ACTIVE — ACCEPTANCE SLICE
+```
 
 UXP-09D is acceptance-first.
 
@@ -422,8 +436,8 @@ UXP-08 — CLOSED — ACCEPTED
 UXP-09 — ACTIVE
 UXP-09A — CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
 UXP-09B — CLOSED — ACCEPTED — e800c7aa6cde1a13fb6e0bd786b2f9353604475a
-UXP-09C — ACTIVE — IMPLEMENTATION SLICE
-UXP-09D — BLOCKED BY UXP-09C REMOTE ACCEPTANCE
+UXP-09C — CLOSED — ACCEPTED — 312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
+UXP-09D — ACTIVE — ACCEPTANCE SLICE
 UXP-10 — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
@@ -438,9 +452,9 @@ After this docs-only transition checkpoint is independently reviewed, manually
 committed/pushed and exact remote CI is green, execute only:
 
 ```text
-UXP-09C — Finished Account + Session
+UXP-09D — Full Identity + Account Acceptance
 ```
 
 Begin from the exact remote-green transition SHA.
 
-Do not begin UXP-09D, UXP-10 or later work.
+Do not begin UXP-10 or later work.
