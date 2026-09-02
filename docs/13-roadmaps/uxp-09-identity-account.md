@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-09 |
 | Area | Product / Web / Identity & Access / User / Email |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-09B ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-09C ACTIVE |
 | Created | 2026-09-02 |
 | Activation Baseline | `82e40675a3e41251345a5c3f9e6ef84abbfc3885` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -140,10 +140,10 @@ UXP-09A — Finished Registration + Sign-In
 CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
 
 UXP-09B — Finished Verification + Recovery / Reset
-ACTIVE — IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — e800c7aa6cde1a13fb6e0bd786b2f9353604475a
 
 UXP-09C — Finished Account + Session
-BLOCKED BY UXP-09B REMOTE ACCEPTANCE
+ACTIVE — IMPLEMENTATION SLICE
 
 UXP-09D — Full Identity + Account Acceptance
 BLOCKED BY UXP-09C REMOTE ACCEPTANCE
@@ -227,7 +227,7 @@ exact remote CI user-confirmed green
 Status:
 
 ```text
-ACTIVE — IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 UXP-09B owns the linked lifecycle routes:
@@ -254,9 +254,30 @@ keyboard/focus/responsive acceptance;
 no secret or token logging/exposure.
 ```
 
+Acceptance evidence:
+
+```text
+7623842d6a30945acf4d9f1d923a4f6bb93ac317
+feat(identity): finish verification and recovery
+
+5a8f04826857400c211b3fcf8405f87e63494ace
+ci: provision Mailpit for browser tests
+
+e800c7aa6cde1a13fb6e0bd786b2f9353604475a
+test(web): stabilize identity lifecycle navigation
+
+exact remote CI user-confirmed green
+```
+
 ---
 
 # 8. UXP-09C — Finished Account + Session
+
+Status:
+
+```text
+ACTIVE — IMPLEMENTATION SLICE
+```
 
 UXP-09C finishes `/account` and shared Session behavior:
 
@@ -400,8 +421,8 @@ API/database/browser proof rather than mock-only evidence.
 UXP-08 — CLOSED — ACCEPTED
 UXP-09 — ACTIVE
 UXP-09A — CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
-UXP-09B — ACTIVE — IMPLEMENTATION SLICE
-UXP-09C — BLOCKED BY UXP-09B REMOTE ACCEPTANCE
+UXP-09B — CLOSED — ACCEPTED — e800c7aa6cde1a13fb6e0bd786b2f9353604475a
+UXP-09C — ACTIVE — IMPLEMENTATION SLICE
 UXP-09D — BLOCKED BY UXP-09C REMOTE ACCEPTANCE
 UXP-10 — NOT STARTED
 WPR-M05 — ACTIVE
@@ -417,9 +438,9 @@ After this docs-only transition checkpoint is independently reviewed, manually
 committed/pushed and exact remote CI is green, execute only:
 
 ```text
-UXP-09B — Finished Verification + Recovery / Reset
+UXP-09C — Finished Account + Session
 ```
 
 Begin from the exact remote-green transition SHA.
 
-Do not begin UXP-09C, UXP-10 or later work.
+Do not begin UXP-09D, UXP-10 or later work.
