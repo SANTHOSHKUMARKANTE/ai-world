@@ -2147,10 +2147,10 @@ It does not activate or implement UXP-09.
 Status:
 
 ```text
-ACTIVE — UXP-09D ACCEPTANCE SLICE
+CLOSED — ACCEPTED
 ```
 
-The active detailed implementation/acceptance contract is:
+The closed detailed implementation/acceptance contract is:
 
 ```text
 docs/13-roadmaps/uxp-09-identity-account.md
@@ -2177,7 +2177,7 @@ UXP-09C — Finished Account + Session
 CLOSED — ACCEPTED — 312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
 
 UXP-09D — Full Identity + Account Acceptance
-ACTIVE — ACCEPTANCE SLICE
+CLOSED — ACCEPTED — bd9b82b5b02ff4a14e9eb2994ae30ae63ecf2b2d
 ```
 
 UXP-09 reuses the accepted Identity, User, Email and Session capabilities. It
@@ -2395,31 +2395,33 @@ UXP-08B — CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
 UXP-08C — CLOSED — ACCEPTED — 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
 UXP-08D — CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
 UXP-08E — CLOSED — ACCEPTED — a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
-UXP-09 — ACTIVE
+UXP-09 — CLOSED — ACCEPTED
 UXP-09A — CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
 UXP-09B — CLOSED — ACCEPTED — e800c7aa6cde1a13fb6e0bd786b2f9353604475a
 UXP-09C — CLOSED — ACCEPTED — 312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
-UXP-09D — ACTIVE — ACCEPTANCE SLICE
+UXP-09D — CLOSED — ACCEPTED — bd9b82b5b02ff4a14e9eb2994ae30ae63ecf2b2d
+UXP-10 — NOT STARTED
 ```
 
-Active detailed contract:
+Closed detailed contract:
 
 ```text
 docs/13-roadmaps/uxp-09-identity-account.md
 ```
 
-This UXP-09C closure and UXP-09D activation checkpoint is docs-only.
+This UXP-09 closure checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
-is green, execute only:
+is green, perform a separate repository inspection and freeze only:
 
 ```text
-UXP-09D — Full Identity + Account Acceptance
+UXP-10 — Creator / Admin Studio
 ```
 
-Begin from the exact remote-green transition SHA.
+That future activation checkpoint must be docs-only and independently reviewed
+before any UXP-10 implementation begins.
 
-Do not begin UXP-10.
+Do not activate or implement UXP-10 inside this UXP-09 closure.
 
 WPR-M05 remains ACTIVE.
 

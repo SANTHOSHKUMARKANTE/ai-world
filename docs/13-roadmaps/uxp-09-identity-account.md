@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-09 |
 | Area | Product / Web / Identity & Access / User / Email |
-| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-09D ACTIVE |
+| Status | CLOSED — ACCEPTED |
 | Created | 2026-09-02 |
 | Activation Baseline | `82e40675a3e41251345a5c3f9e6ef84abbfc3885` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -146,7 +146,7 @@ UXP-09C — Finished Account + Session
 CLOSED — ACCEPTED — 312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
 
 UXP-09D — Full Identity + Account Acceptance
-ACTIVE — ACCEPTANCE SLICE
+CLOSED — ACCEPTED — bd9b82b5b02ff4a14e9eb2994ae30ae63ecf2b2d
 ```
 
 Each slice requires:
@@ -310,7 +310,7 @@ exact remote CI user-confirmed green
 Status:
 
 ```text
-ACTIVE — ACCEPTANCE SLICE
+CLOSED — ACCEPTED
 ```
 
 UXP-09D is acceptance-first.
@@ -348,6 +348,24 @@ exact remote CI success.
 
 Production changes are permitted only for a proven acceptance defect and must be
 the minimum bounded correction.
+
+Acceptance evidence:
+
+```text
+bd9b82b5b02ff4a14e9eb2994ae30ae63ecf2b2d
+test(web): stabilize creator workspace acceptance
+
+format, lint and typecheck passed;
+37/37 unit tasks passed;
+32/32 migrations applied to a fresh acceptance database;
+29/29 integration tasks passed, including 191/191 API tests;
+2/2 Mailpit integration tests passed;
+163/163 browser E2E assertions passed;
+22/22 production-build tasks passed;
+all six Identity/Account routes passed fresh-process production smoke;
+architecture validation passed with 0 violations across 813 modules / 2642 dependencies;
+exact remote CI user-confirmed green.
+```
 
 ---
 
@@ -433,11 +451,11 @@ API/database/browser proof rather than mock-only evidence.
 
 ```text
 UXP-08 — CLOSED — ACCEPTED
-UXP-09 — ACTIVE
+UXP-09 — CLOSED — ACCEPTED
 UXP-09A — CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
 UXP-09B — CLOSED — ACCEPTED — e800c7aa6cde1a13fb6e0bd786b2f9353604475a
 UXP-09C — CLOSED — ACCEPTED — 312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
-UXP-09D — ACTIVE — ACCEPTANCE SLICE
+UXP-09D — CLOSED — ACCEPTED — bd9b82b5b02ff4a14e9eb2994ae30ae63ecf2b2d
 UXP-10 — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
@@ -448,13 +466,16 @@ Master Roadmap — UNCHANGED
 
 # 14. Next Action
 
-After this docs-only transition checkpoint is independently reviewed, manually
-committed/pushed and exact remote CI is green, execute only:
+After this docs-only UXP-09 closure checkpoint is independently reviewed,
+manually committed/pushed and exact remote CI is green, perform a separate
+repository inspection and freeze only the next page program:
 
 ```text
-UXP-09D — Full Identity + Account Acceptance
+UXP-10 — Creator / Admin Studio
 ```
 
-Begin from the exact remote-green transition SHA.
+That future UXP-10 activation checkpoint must be docs-only, freeze a bounded
+slice sequence from repository truth, preserve accepted ownership and security
+boundaries, and receive independent review before implementation begins.
 
-Do not begin UXP-10 or later work.
+Do not activate or implement UXP-10 inside this UXP-09 closure.
