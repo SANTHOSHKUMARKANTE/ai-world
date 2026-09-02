@@ -10,13 +10,13 @@ async function registerAndSignIn(page: import('@playwright/test').Page) {
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Create account' }).click();
-  await page.getByRole('link', { name: 'Sign in to continue' }).click();
+  await page.getByRole('link', { name: 'Sign in to your account' }).click();
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page.getByRole('heading', { name: 'Signed in' })).toBeVisible();
-  await page.getByRole('link', { name: 'Continue to AI World' }).click();
-  await expect(page.getByText('You are signed in.')).toBeVisible();
+  await page.getByRole('link', { name: 'Continue', exact: true }).click();
+  await expect(page.getByText('Your secure Session is active.')).toBeVisible();
 }
 
 test.describe('WPR-M03 public Knowledge, Discovery and Engagement', () => {
