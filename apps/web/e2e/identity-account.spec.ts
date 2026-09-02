@@ -91,4 +91,67 @@ test.describe('WPR-M02 Identity and Account experience', () => {
       expect(hasHorizontalOverflow).toBe(false);
     }
   });
+
+  test('UXP-09A registration communicates policy and the verification handoff', async ({
+    page,
+  }) => {
+    await page.goto('/register');
+
+    const password = page.getByLabel('Password');
+
+    await expect(password).toHaveAttribute('minlength', '15');
+    await expect(password).toHaveAttribute('maxlength', '128');
+    await expect(page.getByText('Use 15–128 characters.')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Recover your password' })).toHaveAttribute(
+      'href',
+      '/forgot-password',
+    );
+  });
+
+  test('UXP-09A keeps only safe first-party continuation for an authenticated visitor', async ({
+    page,
+  }) => {
+    await page.route('**/api/session', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          actorId: 'authenticated-actor',
+          expiresAt: '2026-09-02T12:00:00.000Z',
+        }),
+      });
+    });
+
+    await page.goto('/sign-in?continueTo=https%3A%2F%2Fmalicious.example');
+
+    await expect(page.getByRole('heading', { name: 'You are already signed in' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Sign in' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Continue' })).toHaveAttribute('href', '/account');
+
+    await page.goto('/register');
+
+    await expect(page.getByRole('heading', { name: 'You are already signed in' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Create account' })).toHaveCount(0);
+  });
+
+  for (const viewport of [
+    { name: 'tablet', width: 834, height: 1112 },
+    { name: 'desktop', width: 1440, height: 1000 },
+  ] as const) {
+    test(`UXP-09A remains readable at ${viewport.name} width`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+
+      for (const path of ['/register', '/sign-in']) {
+        await page.goto(path);
+
+        await expect(page.getByRole('main')).toBeVisible();
+
+        const hasHorizontalOverflow = await page.evaluate(
+          () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+        );
+
+        expect(hasHorizontalOverflow).toBe(false);
+      }
+    });
+  }
 });

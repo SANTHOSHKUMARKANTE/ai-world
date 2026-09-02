@@ -562,6 +562,19 @@ textarea {
   line-height: 1.65;
 }
 
+.aw-identity-card .aw-identity-hint {
+  color: var(--aw-text-subtle);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.aw-identity-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem 1.25rem;
+}
+
 .aw-identity-card form > div {
   display: grid;
   gap: 0.45rem;

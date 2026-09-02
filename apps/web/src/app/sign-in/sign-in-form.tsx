@@ -7,8 +7,12 @@ import { signInWithPassword } from '../account/account-api';
 import { getApiErrorMessage } from '../../api/api-error-message';
 import { useSession } from '../../session/session-provider';
 
-export function SignInForm() {
-  const { refreshSession } = useSession();
+interface SignInFormProps {
+  readonly continueTo?: string;
+}
+
+export function SignInForm({ continueTo = '/account' }: SignInFormProps) {
+  const { state, refreshSession } = useSession();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,6 +44,40 @@ export function SignInForm() {
     }
   }
 
+  if (state.status === 'loading') {
+    return <p role="status">Checking your account…</p>;
+  }
+
+  if (state.status === 'error') {
+    return (
+      <section aria-labelledby="sign-in-session-error-title">
+        <h2 id="sign-in-session-error-title">Account status unavailable</h2>
+        <p role="alert">We could not check whether you are already signed in.</p>
+        <button
+          type="button"
+          onClick={() => {
+            void refreshSession();
+          }}
+        >
+          Try again
+        </button>
+      </section>
+    );
+  }
+
+  if (state.status === 'authenticated' && !completed) {
+    return (
+      <section aria-labelledby="sign-in-authenticated-title">
+        <h2 id="sign-in-authenticated-title">You are already signed in</h2>
+        <p>Your secure AI World Session is active.</p>
+        <div className="aw-identity-actions">
+          <Link href={continueTo}>Continue</Link>
+          <Link href="/account">Go to your account</Link>
+        </div>
+      </section>
+    );
+  }
+
   if (completed) {
     return (
       <section aria-labelledby="sign-in-complete-title">
@@ -47,7 +85,10 @@ export function SignInForm() {
 
         <p>Your secure AI World session is active.</p>
 
-        <Link href="/">Continue to AI World</Link>
+        <div className="aw-identity-actions">
+          <Link href={continueTo}>Continue</Link>
+          <Link href="/account">Go to your account</Link>
+        </div>
       </section>
     );
   }
@@ -96,6 +137,10 @@ export function SignInForm() {
 
       <p>
         Need an account? <Link href="/register">Create one</Link>
+      </p>
+
+      <p>
+        <Link href="/forgot-password">Forgot your password?</Link>
       </p>
     </form>
   );

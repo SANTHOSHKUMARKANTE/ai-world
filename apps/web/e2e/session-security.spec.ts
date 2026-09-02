@@ -43,7 +43,7 @@ test.describe('Real browser Session security', () => {
 
     await page
       .getByRole('link', {
-        name: 'Sign in to continue',
+        name: 'Sign in to your account',
       })
       .click();
 
@@ -110,15 +110,15 @@ test.describe('Real browser Session security', () => {
 
     await page
       .getByRole('link', {
-        name: 'Continue to AI World',
+        name: 'Continue',
       })
       .click();
 
-    await expect(page.getByText('You are signed in.')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Your account' })).toBeVisible();
 
     await page.reload();
 
-    await expect(page.getByText('You are signed in.')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Your account' })).toBeVisible();
 
     const sessionResult = await page.evaluate(
       async (): Promise<{
@@ -147,18 +147,6 @@ test.describe('Real browser Session security', () => {
     expect(sessionResult.body).not.toBeNull();
     expect(sessionResult.body?.actorId).toEqual(expect.any(String));
     expect(sessionResult.body?.expiresAt).toEqual(expect.any(String));
-
-    await page
-      .getByRole('link', {
-        name: 'Account',
-      })
-      .click();
-
-    await expect(
-      page.getByRole('heading', {
-        name: 'Your account',
-      }),
-    ).toBeVisible();
 
     const displayNameInput = page.getByLabel('Display name');
 

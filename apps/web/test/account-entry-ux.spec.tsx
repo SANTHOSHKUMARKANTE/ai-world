@@ -3,7 +3,41 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { RegisterForm } from '../src/app/register/register-form';
 import { SignInForm } from '../src/app/sign-in/sign-in-form';
+import { resolveIdentityContinuePath } from '../src/identity/identity-continue-path';
 import { SessionProvider, useSession } from '../src/session/session-provider';
+
+function anonymousSessionResponse() {
+  return new Response(
+    JSON.stringify({
+      error: {
+        code: 'identity.session.invalid',
+        message: 'Authentication is required.',
+        status: 401,
+      },
+    }),
+    {
+      status: 401,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+}
+
+function authenticatedSessionResponse() {
+  return new Response(
+    JSON.stringify({
+      actorId: 'authenticated-actor',
+      expiresAt: '2026-09-02T12:00:00.000Z',
+    }),
+    {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+}
 
 function SessionStateProbe() {
   const { state } = useSession();
@@ -22,24 +56,33 @@ afterEach(() => {
 
 describe('Account entry UX', () => {
   it('registers through the Web API boundary and never displays returned identifiers', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          actorId: 'registration-actor-id',
-          userId: 'registration-user-id',
-        }),
-        {
-          status: 201,
-          headers: {
-            'Content-Type': 'application/json',
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(anonymousSessionResponse())
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            actorId: 'registration-actor-id',
+            userId: 'registration-user-id',
+          }),
+          {
+            status: 201,
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        },
-      ),
-    );
+        ),
+      );
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<RegisterForm />);
+    render(
+      <SessionProvider>
+        <RegisterForm />
+      </SessionProvider>,
+    );
+
+    await screen.findByRole('button', { name: 'Create account' });
 
     fireEvent.change(screen.getByLabelText('Email'), {
       target: {
@@ -67,7 +110,8 @@ describe('Account entry UX', () => {
       ).toBeTruthy();
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
       '/api/registration',
       expect.objectContaining({
         method: 'POST',
@@ -82,31 +126,43 @@ describe('Account entry UX', () => {
     expect(screen.queryByText('registration-actor-id')).toBeNull();
 
     expect(screen.queryByText('registration-user-id')).toBeNull();
+    expect(
+      screen.getByRole('link', { name: 'Sign in and verify your email' }).getAttribute('href'),
+    ).toBe('/sign-in?continueTo=%2Fverify-email');
   });
 
   it('shows the safe registration API error message', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          error: {
-            code: 'identity.registration.email_conflict',
-            message: 'Registration could not be completed with this email.',
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(anonymousSessionResponse())
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            error: {
+              code: 'identity.registration.email_conflict',
+              message: 'Registration could not be completed with this email.',
+              status: 409,
+              requestId: 'web-registration-conflict-001',
+            },
+          }),
+          {
             status: 409,
-            requestId: 'web-registration-conflict-001',
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        }),
-        {
-          status: 409,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      ),
-    );
+        ),
+      );
 
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<RegisterForm />);
+    render(
+      <SessionProvider>
+        <RegisterForm />
+      </SessionProvider>,
+    );
+
+    await screen.findByRole('button', { name: 'Create account' });
 
     fireEvent.change(screen.getByLabelText('Email'), {
       target: {
@@ -319,5 +375,65 @@ describe('Account entry UX', () => {
 
     expect(screen.queryByText(/unknown email/i)).toBeNull();
     expect(screen.queryByText(/wrong password/i)).toBeNull();
+  });
+
+  it('communicates the canonical registration password length before submission', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(anonymousSessionResponse()));
+
+    render(
+      <SessionProvider>
+        <RegisterForm />
+      </SessionProvider>,
+    );
+
+    const password = await screen.findByLabelText('Password');
+
+    expect(password.getAttribute('minlength')).toBe('15');
+    expect(password.getAttribute('maxlength')).toBe('128');
+    expect(password.getAttribute('aria-describedby')).toBe('registration-password-requirements');
+    expect(screen.getByText('Use 15–128 characters.')).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Recover your password' }).getAttribute('href')).toBe(
+      '/forgot-password',
+    );
+  });
+
+  it('does not show duplicate registration or sign-in forms to an authenticated visitor', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(authenticatedSessionResponse));
+
+    const { unmount } = render(
+      <SessionProvider>
+        <RegisterForm />
+      </SessionProvider>,
+    );
+
+    await screen.findByRole('heading', { name: 'You are already signed in' });
+
+    expect(screen.queryByRole('button', { name: 'Create account' })).toBeNull();
+    expect(screen.getByRole('link', { name: 'Go to your account' }).getAttribute('href')).toBe(
+      '/account',
+    );
+
+    unmount();
+
+    render(
+      <SessionProvider>
+        <SignInForm continueTo="/saved" />
+      </SessionProvider>,
+    );
+
+    await screen.findByRole('heading', { name: 'You are already signed in' });
+
+    expect(screen.queryByRole('button', { name: 'Sign in' })).toBeNull();
+    expect(screen.getByRole('link', { name: 'Continue' }).getAttribute('href')).toBe('/saved');
+  });
+
+  it('accepts only local first-party continuation paths', () => {
+    expect(resolveIdentityContinuePath('/saved?view=collections')).toBe('/saved?view=collections');
+    expect(resolveIdentityContinuePath('https://malicious.example')).toBe('/account');
+    expect(resolveIdentityContinuePath('//malicious.example')).toBe('/account');
+    expect(resolveIdentityContinuePath('/\\malicious.example')).toBe('/account');
+    expect(resolveIdentityContinuePath('/sign-in?continueTo=/saved')).toBe('/account');
+    expect(resolveIdentityContinuePath('/register')).toBe('/account');
+    expect(resolveIdentityContinuePath(['/saved'])).toBe('/account');
   });
 });
