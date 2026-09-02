@@ -2144,18 +2144,45 @@ It does not activate or implement UXP-09.
 
 ## UXP-09 — Identity + Account
 
-Finish as one coherent journey:
+Status:
 
 ```text
-register;
-sign in;
-verify email;
-forgot password;
-reset password;
-account;
-sign out;
-denied/session recovery states.
+ACTIVE — UXP-09A IMPLEMENTATION SLICE
 ```
+
+The active detailed implementation/acceptance contract is:
+
+```text
+docs/13-roadmaps/uxp-09-identity-account.md
+```
+
+Activation baseline:
+
+```text
+82e40675a3e41251345a5c3f9e6ef84abbfc3885
+docs(roadmap): close UXP-08
+exact remote CI user-confirmed green
+```
+
+Frozen slice sequence:
+
+```text
+UXP-09A — Finished Registration + Sign-In
+ACTIVE — IMPLEMENTATION SLICE
+
+UXP-09B — Finished Verification + Recovery / Reset
+BLOCKED BY UXP-09A REMOTE ACCEPTANCE
+
+UXP-09C — Finished Account + Session
+BLOCKED BY UXP-09B REMOTE ACCEPTANCE
+
+UXP-09D — Full Identity + Account Acceptance
+BLOCKED BY UXP-09C REMOTE ACCEPTANCE
+```
+
+UXP-09 reuses the accepted Identity, User, Email and Session capabilities. It
+does not authorize a new Identity provider, Session model or authentication
+architecture.
 
 ## UXP-10 — Creator / Admin Studio
 
@@ -2368,26 +2395,29 @@ UXP-08B — CLOSED — ACCEPTED — ed366a0aca49c0c110660bb4b2c47b791f4b4a62
 UXP-08C — CLOSED — ACCEPTED — 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
 UXP-08D — CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
 UXP-08E — CLOSED — ACCEPTED — a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
-UXP-09 — NOT STARTED
+UXP-09 — ACTIVE
+UXP-09A — ACTIVE — IMPLEMENTATION SLICE
+UXP-09B — BLOCKED BY UXP-09A REMOTE ACCEPTANCE
+UXP-09C — BLOCKED BY UXP-09B REMOTE ACCEPTANCE
+UXP-09D — BLOCKED BY UXP-09C REMOTE ACCEPTANCE
 ```
 
-Closed accepted detailed contract:
+Active detailed contract:
 
 ```text
-docs/13-roadmaps/uxp-08-discovery-engagement.md
+docs/13-roadmaps/uxp-09-identity-account.md
 ```
 
-This UXP-08 closure checkpoint is docs-only.
+This UXP-09 activation checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
-is green, perform a separate repository inspection and docs-only activation
-decision for:
+is green, execute only:
 
 ```text
-UXP-09 — Identity + Account
+UXP-09A — Finished Registration + Sign-In
 ```
 
-Do not activate or implement UXP-09 inside this closure checkpoint.
+Do not begin UXP-09B or UXP-10.
 
 WPR-M05 remains ACTIVE.
 
