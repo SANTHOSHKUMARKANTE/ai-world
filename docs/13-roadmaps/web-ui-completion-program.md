@@ -2400,28 +2400,30 @@ UXP-09A — CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
 UXP-09B — CLOSED — ACCEPTED — e800c7aa6cde1a13fb6e0bd786b2f9353604475a
 UXP-09C — CLOSED — ACCEPTED — 312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
 UXP-09D — CLOSED — ACCEPTED — bd9b82b5b02ff4a14e9eb2994ae30ae63ecf2b2d
-UXP-10 — NOT STARTED
+UXP-10 — ACTIVE
+UXP-10A — ACTIVE
+UXP-10B — NOT STARTED
+UXP-10C — NOT STARTED
+UXP-10D — NOT STARTED
+UXP-10E — NOT STARTED
 ```
 
-Closed detailed contract:
+Active detailed implementation/acceptance contract:
 
 ```text
-docs/13-roadmaps/uxp-09-identity-account.md
+docs/13-roadmaps/uxp-10-creator-admin-studio.md
 ```
 
-This UXP-09 closure checkpoint is docs-only.
+This UXP-10 activation checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
-is green, perform a separate repository inspection and freeze only:
+is green, implement only:
 
 ```text
-UXP-10 — Creator / Admin Studio
+UXP-10A — Finished Creator Studio Foundation
 ```
 
-That future activation checkpoint must be docs-only and independently reviewed
-before any UXP-10 implementation begins.
-
-Do not activate or implement UXP-10 inside this UXP-09 closure.
+Do not begin UXP-10B, UXP-10C, UXP-10D, UXP-10E or UXP-11 inside UXP-10A.
 
 WPR-M05 remains ACTIVE.
 
