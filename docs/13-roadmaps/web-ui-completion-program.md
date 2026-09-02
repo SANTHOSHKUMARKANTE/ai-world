@@ -2401,8 +2401,8 @@ UXP-09B — CLOSED — ACCEPTED — e800c7aa6cde1a13fb6e0bd786b2f9353604475a
 UXP-09C — CLOSED — ACCEPTED — 312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
 UXP-09D — CLOSED — ACCEPTED — bd9b82b5b02ff4a14e9eb2994ae30ae63ecf2b2d
 UXP-10 — ACTIVE
-UXP-10A — ACTIVE
-UXP-10B — NOT STARTED
+UXP-10A — CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
+UXP-10B — ACTIVE
 UXP-10C — NOT STARTED
 UXP-10D — NOT STARTED
 UXP-10E — NOT STARTED
@@ -2414,16 +2414,16 @@ Active detailed implementation/acceptance contract:
 docs/13-roadmaps/uxp-10-creator-admin-studio.md
 ```
 
-This UXP-10 activation checkpoint is docs-only.
+This UXP-10A closure and UXP-10B activation checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
 is green, implement only:
 
 ```text
-UXP-10A — Finished Creator Studio Foundation
+UXP-10B — Finished Knowledge + Entity + Media Management
 ```
 
-Do not begin UXP-10B, UXP-10C, UXP-10D, UXP-10E or UXP-11 inside UXP-10A.
+Do not begin UXP-10C, UXP-10D, UXP-10E or UXP-11 inside UXP-10B.
 
 WPR-M05 remains ACTIVE.
 

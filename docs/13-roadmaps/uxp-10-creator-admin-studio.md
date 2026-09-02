@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-10 |
 | Area | Product / Web / Creator / Administration |
-| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-10A ACTIVE |
+| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-10B ACTIVE |
 | Created | 2026-09-02 |
 | Activation Baseline | `f5fb93f7cc708bb7b7af4877cc96a59acadec020` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -136,10 +136,10 @@ role checks.
 
 ```text
 UXP-10A — Finished Creator Studio Foundation
-ACTIVE
+CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
 
 UXP-10B — Finished Knowledge + Entity + Media Management
-NOT STARTED
+ACTIVE
 
 UXP-10C — Finished Composition + AI + Publishing Journey
 NOT STARTED
@@ -174,7 +174,7 @@ No later slice begins before the preceding slice has exact remote CI acceptance.
 Status:
 
 ```text
-ACTIVE
+CLOSED — ACCEPTED
 ```
 
 UXP-10A establishes a clear, responsive Studio shell around the existing
@@ -200,6 +200,28 @@ builder framework.
 Acceptance must prove anonymous, authenticated, unauthorized and authorized
 states without weakening server-side authorization.
 
+Accepted implementation and stabilization evidence:
+
+```text
+117d38a
+feat(web): finish creator studio foundation
+
+ceeea29ee5746d4a5cf39c3283c071ece7734da0
+test(web): disambiguate creator lifecycle status
+
+task-oriented Studio anchor navigation added;
+Page and Knowledge work context made persistently visible;
+empty and lifecycle states made explicit;
+all existing editors remain mounted so in-progress context is preserved;
+25/25 Web unit files and 89/89 tests passed;
+focused Creator Workspace browser assertions passed 3/3;
+the exact CI-failing Character manager browser file passed 2/2 after stabilization;
+Web lint and typecheck passed;
+production build passed;
+git diff validation passed;
+exact remote CI user-confirmed green.
+```
+
 ---
 
 # 7. UXP-10B — Finished Knowledge + Entity + Media Management
@@ -207,7 +229,7 @@ states without weakening server-side authorization.
 Status:
 
 ```text
-NOT STARTED
+ACTIVE
 ```
 
 UXP-10B finishes the creator journey for:
@@ -397,8 +419,8 @@ UXP-10E expands this to the complete acceptance matrix in Section 10.
 ```text
 UXP-09 — CLOSED — ACCEPTED
 UXP-10 — ACTIVE
-UXP-10A — ACTIVE
-UXP-10B — NOT STARTED
+UXP-10A — CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
+UXP-10B — ACTIVE
 UXP-10C — NOT STARTED
 UXP-10D — NOT STARTED
 UXP-10E — NOT STARTED
@@ -412,14 +434,15 @@ Master Roadmap — UNCHANGED
 
 # 15. Next Action
 
-After this docs-only activation is independently reviewed, manually
+After this docs-only transition is independently reviewed, manually
 committed/pushed and exact remote CI is green:
 
 ```text
-inspect the /creator implementation at the accepted activation baseline;
-implement only UXP-10A — Finished Creator Studio Foundation;
+inspect the accepted Knowledge, Entity and Media creator flows at the UXP-10A closure baseline;
+implement only UXP-10B — Finished Knowledge + Entity + Media Management;
 preserve all accepted creator and public-page behavior;
-do not begin UXP-10B, UXP-10C, UXP-10D, UXP-10E or UXP-11;
+add only the smallest owner-controlled listing or lookup contract if repository evidence requires it;
+do not begin UXP-10C, UXP-10D, UXP-10E or UXP-11;
 keep WPR-M05 ACTIVE;
 keep P10-M04 SEQUENCING-BLOCKED;
 keep the Master Roadmap unchanged.
