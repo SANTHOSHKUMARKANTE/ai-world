@@ -120,6 +120,7 @@ describe('Creator workspace', { timeout: 10_000 }, () => {
       expect(screen.getByRole('status').textContent).toContain('created as a DRAFT');
     });
     expect(screen.getByText('Creator proof')).toBeTruthy();
+    expect(screen.getByText('Page status: DRAFT')).toBeTruthy();
     expect((screen.getByLabelText('Active Page ID') as HTMLInputElement).value).toBe(pageId);
     expect(screen.getByRole('link', { name: 'Open saved preview' }).getAttribute('href')).toBe(
       `/creator/preview/${pageId}`,

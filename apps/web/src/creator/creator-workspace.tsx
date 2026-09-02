@@ -441,12 +441,18 @@ function AuthenticatedCreatorWorkspace() {
           <div>
             <dt>Page</dt>
             <dd>{activePage?.title ?? 'No Page selected'}</dd>
-            <dd>{activePage?.lifecycle ?? 'Choose or create a Page'}</dd>
+            <dd>
+              {activePage ? `Page status: ${activePage.lifecycle}` : 'Choose or create a Page'}
+            </dd>
           </div>
           <div>
             <dt>Knowledge</dt>
             <dd>{activeKnowledgeResource?.resourceType ?? 'No Resource selected'}</dd>
-            <dd>{activeKnowledgeResource?.lifecycle ?? 'Choose or create Knowledge'}</dd>
+            <dd>
+              {activeKnowledgeResource
+                ? `Knowledge status: ${activeKnowledgeResource.lifecycle}`
+                : 'Choose or create Knowledge'}
+            </dd>
           </div>
         </dl>
       </section>
