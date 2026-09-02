@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-10 |
 | Area | Product / Web / Creator / Administration |
-| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-10B ACTIVE |
+| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-10C ACTIVE |
 | Created | 2026-09-02 |
 | Activation Baseline | `f5fb93f7cc708bb7b7af4877cc96a59acadec020` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -139,10 +139,10 @@ UXP-10A — Finished Creator Studio Foundation
 CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
 
 UXP-10B — Finished Knowledge + Entity + Media Management
-ACTIVE
+CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
 
 UXP-10C — Finished Composition + AI + Publishing Journey
-NOT STARTED
+ACTIVE
 
 UXP-10D — Accepted Permissioned Administration
 NOT STARTED
@@ -229,7 +229,7 @@ exact remote CI user-confirmed green.
 Status:
 
 ```text
-ACTIVE
+CLOSED — ACCEPTED
 ```
 
 UXP-10B finishes the creator journey for:
@@ -251,6 +251,31 @@ smallest owner-controlled, authorized contract required by this Studio journey.
 Do not add generic schemas, arbitrary Resource types, a Media library platform,
 bulk import, taxonomy expansion or speculative editorial workflow.
 
+Accepted implementation and stabilization evidence:
+
+```text
+dec8274
+feat(knowledge): finish creator resource management
+
+28282f76eab4f2e4145e700afd8d77e6ebb9ef44
+test(web): disambiguate creator universe selector
+
+owner-controlled creator Knowledge listing contract added;
+listing remains Universe-scoped, permission-checked and bounded;
+dedicated /knowledge/creator/resources delivery route added without changing public listing;
+Studio Resource picker carries selection into typed Entity and Media managers;
+manual canonical ID entry remains available as a fallback;
+Knowledge unit tests passed 69/69;
+Web unit tests passed 90/90;
+Creator Knowledge API integration passed 12/12;
+all six CI-affected browser files passed 17/17 after selector stabilization;
+Knowledge, API and Web lint/typecheck passed;
+full build passed 22/22 tasks;
+architecture validation passed with 0 violations across 818 modules / 2669 dependencies;
+git diff validation passed;
+exact remote CI user-confirmed green.
+```
+
 ---
 
 # 8. UXP-10C — Finished Composition + AI + Publishing Journey
@@ -258,7 +283,7 @@ bulk import, taxonomy expansion or speculative editorial workflow.
 Status:
 
 ```text
-NOT STARTED
+ACTIVE
 ```
 
 UXP-10C finishes one coherent path across:
@@ -420,8 +445,8 @@ UXP-10E expands this to the complete acceptance matrix in Section 10.
 UXP-09 — CLOSED — ACCEPTED
 UXP-10 — ACTIVE
 UXP-10A — CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
-UXP-10B — ACTIVE
-UXP-10C — NOT STARTED
+UXP-10B — CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
+UXP-10C — ACTIVE
 UXP-10D — NOT STARTED
 UXP-10E — NOT STARTED
 UXP-11 — NOT STARTED
@@ -438,11 +463,11 @@ After this docs-only transition is independently reviewed, manually
 committed/pushed and exact remote CI is green:
 
 ```text
-inspect the accepted Knowledge, Entity and Media creator flows at the UXP-10A closure baseline;
-implement only UXP-10B — Finished Knowledge + Entity + Media Management;
+inspect the accepted Composition, AI, preview and publishing flows at the UXP-10B closure baseline;
+implement only UXP-10C — Finished Composition + AI + Publishing Journey;
 preserve all accepted creator and public-page behavior;
-add only the smallest owner-controlled listing or lookup contract if repository evidence requires it;
-do not begin UXP-10C, UXP-10D, UXP-10E or UXP-11;
+keep AI candidates non-canonical until explicit owner acceptance;
+do not begin UXP-10D, UXP-10E or UXP-11;
 keep WPR-M05 ACTIVE;
 keep P10-M04 SEQUENCING-BLOCKED;
 keep the Master Roadmap unchanged.
