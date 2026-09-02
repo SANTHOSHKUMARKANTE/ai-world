@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-09 |
 | Area | Product / Web / Identity & Access / User / Email |
-| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-09A ACTIVE |
+| Status | ACTIVE IMPLEMENTATION CONTRACT — UXP-09B ACTIVE |
 | Created | 2026-09-02 |
 | Activation Baseline | `82e40675a3e41251345a5c3f9e6ef84abbfc3885` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -137,10 +137,10 @@ The Email Foundation must not acquire Identity semantics.
 
 ```text
 UXP-09A — Finished Registration + Sign-In
-ACTIVE — IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
 
 UXP-09B — Finished Verification + Recovery / Reset
-BLOCKED BY UXP-09A REMOTE ACCEPTANCE
+ACTIVE — IMPLEMENTATION SLICE
 
 UXP-09C — Finished Account + Session
 BLOCKED BY UXP-09B REMOTE ACCEPTANCE
@@ -170,7 +170,7 @@ separate docs transition before the next slice.
 Status:
 
 ```text
-ACTIVE — IMPLEMENTATION SLICE
+CLOSED — ACCEPTED
 ```
 
 UXP-09A finishes the two entry routes as one coherent authentication handoff:
@@ -208,9 +208,27 @@ No API, Platform, schema or migration change is planned.
 
 Such a change is permitted only when a real acceptance defect proves it necessary.
 
+Acceptance evidence:
+
+```text
+b0a2e172f391a9fb654a5882676b79451ed00f80
+feat(web): finish registration and sign-in
+
+1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
+test(web): align engagement sign-in flow
+
+exact remote CI user-confirmed green
+```
+
 ---
 
 # 7. UXP-09B — Finished Verification + Recovery / Reset
+
+Status:
+
+```text
+ACTIVE — IMPLEMENTATION SLICE
+```
 
 UXP-09B owns the linked lifecycle routes:
 
@@ -381,8 +399,8 @@ API/database/browser proof rather than mock-only evidence.
 ```text
 UXP-08 — CLOSED — ACCEPTED
 UXP-09 — ACTIVE
-UXP-09A — ACTIVE — IMPLEMENTATION SLICE
-UXP-09B — BLOCKED BY UXP-09A REMOTE ACCEPTANCE
+UXP-09A — CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
+UXP-09B — ACTIVE — IMPLEMENTATION SLICE
 UXP-09C — BLOCKED BY UXP-09B REMOTE ACCEPTANCE
 UXP-09D — BLOCKED BY UXP-09C REMOTE ACCEPTANCE
 UXP-10 — NOT STARTED
@@ -395,13 +413,13 @@ Master Roadmap — UNCHANGED
 
 # 14. Next Action
 
-After this docs-only activation checkpoint is independently reviewed, manually
+After this docs-only transition checkpoint is independently reviewed, manually
 committed/pushed and exact remote CI is green, execute only:
 
 ```text
-UXP-09A — Finished Registration + Sign-In
+UXP-09B — Finished Verification + Recovery / Reset
 ```
 
-Begin from the exact remote-green activation SHA.
+Begin from the exact remote-green transition SHA.
 
-Do not begin UXP-09B, UXP-10 or later work.
+Do not begin UXP-09C, UXP-10 or later work.

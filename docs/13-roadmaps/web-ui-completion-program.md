@@ -2147,7 +2147,7 @@ It does not activate or implement UXP-09.
 Status:
 
 ```text
-ACTIVE — UXP-09A IMPLEMENTATION SLICE
+ACTIVE — UXP-09B IMPLEMENTATION SLICE
 ```
 
 The active detailed implementation/acceptance contract is:
@@ -2168,10 +2168,10 @@ Frozen slice sequence:
 
 ```text
 UXP-09A — Finished Registration + Sign-In
-ACTIVE — IMPLEMENTATION SLICE
+CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
 
 UXP-09B — Finished Verification + Recovery / Reset
-BLOCKED BY UXP-09A REMOTE ACCEPTANCE
+ACTIVE — IMPLEMENTATION SLICE
 
 UXP-09C — Finished Account + Session
 BLOCKED BY UXP-09B REMOTE ACCEPTANCE
@@ -2396,8 +2396,8 @@ UXP-08C — CLOSED — ACCEPTED — 0ca5b8699cd087314a2f86c0f10642d3d0e6eff9
 UXP-08D — CLOSED — ACCEPTED — b19304825052da6d5aee240e896ce575261ebe54
 UXP-08E — CLOSED — ACCEPTED — a9b09cd0559bec367beba5e2cb7eb0e8123e33a9
 UXP-09 — ACTIVE
-UXP-09A — ACTIVE — IMPLEMENTATION SLICE
-UXP-09B — BLOCKED BY UXP-09A REMOTE ACCEPTANCE
+UXP-09A — CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
+UXP-09B — ACTIVE — IMPLEMENTATION SLICE
 UXP-09C — BLOCKED BY UXP-09B REMOTE ACCEPTANCE
 UXP-09D — BLOCKED BY UXP-09C REMOTE ACCEPTANCE
 ```
@@ -2408,16 +2408,18 @@ Active detailed contract:
 docs/13-roadmaps/uxp-09-identity-account.md
 ```
 
-This UXP-09 activation checkpoint is docs-only.
+This UXP-09A closure and UXP-09B activation checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
 is green, execute only:
 
 ```text
-UXP-09A — Finished Registration + Sign-In
+UXP-09B — Finished Verification + Recovery / Reset
 ```
 
-Do not begin UXP-09B or UXP-10.
+Begin from the exact remote-green transition SHA.
+
+Do not begin UXP-09C or UXP-10.
 
 WPR-M05 remains ACTIVE.
 
