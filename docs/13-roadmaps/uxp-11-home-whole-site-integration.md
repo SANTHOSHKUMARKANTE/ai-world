@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-11 |
 | Area | Product / Web / Home / Whole-Site Integration |
-| Status | ACTIVE — UXP-11B ACTIVE |
+| Status | ACTIVE — UXP-11C ACTIVE |
 | Created | 2026-09-03 |
 | Activation Baseline | `aab61148d5a3aa21b26e7731f5b13982ae1f3bc0` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -138,10 +138,10 @@ UXP-11A — Finished Home Content Foundation
 CLOSED — ACCEPTED — 5d7d44dac3c4a479e433a46eccb25ec41792c00c
 
 UXP-11B — Finished Global Navigation + Footer
-ACTIVE
+CLOSED — ACCEPTED — 1cc52e1e1a2286ca6fb69f4b402e5396d35e7840
 
 UXP-11C — Finished Cross-Site Pathways
-NOT STARTED
+ACTIVE
 
 UXP-11D — Full Home + Whole-Site Integration Acceptance
 NOT STARTED
@@ -238,7 +238,7 @@ git diff --check passed and generated artifacts were removed.
 Status:
 
 ```text
-ACTIVE
+CLOSED — ACCEPTED
 ```
 
 UXP-11B completes the shared shell after the finished Home information hierarchy
@@ -258,6 +258,33 @@ preserve skip-link, landmarks, focus order and current-route clarity.
 This slice must not introduce speculative settings, legal, social, download,
 community or support destinations that do not exist.
 
+Accepted implementation and validation evidence:
+
+```text
+1cc52e1e1a2286ca6fb69f4b402e5396d35e7840
+feat(web): finish global navigation and footer
+
+65936599bf29d04eb29c5edc8784ee3e95b1dbc7
+fix(web): stabilize responsive global navigation
+
+e503ee2df683d5a5c1f103d3a89e834a8eab7f88
+fix(web): prevent responsive navigation overflow
+
+exact remote CI user-confirmed green;
+
+the shared shell exposes both accepted Universe destinations and global Knowledge,
+Search and Creator paths;
+session-aware Saved, Account and Create pathways remain available without moving
+authorization into navigation;
+the footer exposes only real internal product destinations;
+responsive navigation wraps without page-level or navigation-container overflow;
+skip-link, landmark, focus and current-route behavior remain covered;
+Prettier, Web lint and strict typecheck passed;
+27/27 Web unit files and 98/98 tests passed;
+the CI-aligned single-worker browser regression passed 92/92 cases;
+git diff --check passed and generated browser artifacts were removed.
+```
+
 ---
 
 # 8. UXP-11C — Finished Cross-Site Pathways
@@ -265,7 +292,7 @@ community or support destinations that do not exist.
 Status:
 
 ```text
-NOT STARTED
+ACTIVE
 ```
 
 UXP-11C verifies and finishes the journeys connecting Home, Universe discovery,
@@ -379,18 +406,18 @@ UXP-11D expands this to the full accepted Home and whole-site regression matrix.
 UXP-10 — CLOSED — ACCEPTED
 UXP-11 — ACTIVE
 UXP-11A — CLOSED — ACCEPTED — 5d7d44dac3c4a479e433a46eccb25ec41792c00c
-UXP-11B — ACTIVE
-UXP-11C — NOT STARTED
+UXP-11B — CLOSED — ACCEPTED — 1cc52e1e1a2286ca6fb69f4b402e5396d35e7840
+UXP-11C — ACTIVE
 UXP-11D — NOT STARTED
 UXP-12 — NOT STARTED
 ```
 
-This UXP-11A closure and UXP-11B activation checkpoint changes documentation only.
+This UXP-11B closure and UXP-11C activation checkpoint changes documentation only.
 
 After independent review, manual commit/push and exact remote CI success,
-implement only UXP-11B.
+implement only UXP-11C.
 
-Do not implement UXP-11C, UXP-11D or activate UXP-12 inside UXP-11B.
+Do not implement UXP-11D or activate UXP-12 inside UXP-11C.
 
 WPR-M05 remains ACTIVE.
 
