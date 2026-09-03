@@ -486,15 +486,18 @@ textarea {
   font-size: 0.9rem;
 }
 
-@media (max-width: 52rem) {
+@media (max-width: 64rem) {
   .aw-header-inner {
     align-items: flex-start;
     flex-wrap: wrap;
   }
 
   .aw-primary-nav {
+    flex: 1 1 100%;
+    min-width: 0;
+    max-width: 100%;
     order: 3;
-    width: 100%;
+    width: auto;
     margin-inline: 0;
     overflow-x: auto;
     padding-bottom: 0.1rem;
