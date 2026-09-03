@@ -221,7 +221,8 @@ test.describe('UXP-03C Anime Series + social identity integration', () => {
     await expect(searchAnime).toHaveAttribute('href', '/search?universeKey=universe.anime');
     await searchAnime.click();
 
-    await expect(page).toHaveURL(/\/search$/);
+    await expect(page).toHaveURL(/\/search\?universeKey=universe\.anime$/);
+    await expect(page.getByLabel('Search scope')).toHaveValue('universe.anime');
     await expect(page.getByRole('option', { name: 'Anime Universe' })).toHaveCount(1);
     await expect(page.getByRole('checkbox', { name: 'Anime series' })).toBeVisible();
     await expect(page.getByRole('checkbox', { name: 'Anime character' })).toBeVisible();
