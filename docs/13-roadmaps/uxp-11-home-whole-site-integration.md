@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-11 |
 | Area | Product / Web / Home / Whole-Site Integration |
-| Status | ACTIVE — UXP-11A ACTIVE |
+| Status | ACTIVE — UXP-11B ACTIVE |
 | Created | 2026-09-03 |
 | Activation Baseline | `aab61148d5a3aa21b26e7731f5b13982ae1f3bc0` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -135,10 +135,10 @@ Platforms, Kernel or Foundations.
 
 ```text
 UXP-11A — Finished Home Content Foundation
-ACTIVE
+CLOSED — ACCEPTED — 5d7d44dac3c4a479e433a46eccb25ec41792c00c
 
 UXP-11B — Finished Global Navigation + Footer
-NOT STARTED
+ACTIVE
 
 UXP-11C — Finished Cross-Site Pathways
 NOT STARTED
@@ -170,7 +170,7 @@ No later slice begins before the preceding slice has exact remote CI acceptance.
 Status:
 
 ```text
-ACTIVE
+CLOSED — ACCEPTED
 ```
 
 UXP-11A replaces the static-only Home body with an understandable entrance to
@@ -210,6 +210,27 @@ loading and error copy does not claim nonexistent personalization or ranking;
 keyboard order and landmarks remain coherent.
 ```
 
+Accepted implementation and validation evidence:
+
+```text
+5d7d44dac3c4a479e433a46eccb25ec41792c00c
+feat(web): finish home content foundation
+exact remote CI user-confirmed green;
+
+Home now consumes a bounded limit of three public discovery items per Universe;
+Devotional and Anime cards now use typed direct Universe destinations;
+published items retain canonical typed and generic destination resolution;
+each Universe retains independent loading, empty, error and retry behavior;
+static Knowledge and Search continuation paths remain available during failures;
+no backend, schema, dependency, ranking or personalization semantics were added;
+Prettier, Web lint and strict typecheck passed;
+26/26 Web unit files and 96/96 tests passed;
+Web production build passed;
+focused Home browser coverage passed 3/3;
+full browser execution reported all 167 cases passing before service teardown;
+git diff --check passed and generated artifacts were removed.
+```
+
 ---
 
 # 7. UXP-11B — Finished Global Navigation + Footer
@@ -217,7 +238,7 @@ keyboard order and landmarks remain coherent.
 Status:
 
 ```text
-NOT STARTED
+ACTIVE
 ```
 
 UXP-11B completes the shared shell after the finished Home information hierarchy
@@ -357,19 +378,19 @@ UXP-11D expands this to the full accepted Home and whole-site regression matrix.
 ```text
 UXP-10 — CLOSED — ACCEPTED
 UXP-11 — ACTIVE
-UXP-11A — ACTIVE
-UXP-11B — NOT STARTED
+UXP-11A — CLOSED — ACCEPTED — 5d7d44dac3c4a479e433a46eccb25ec41792c00c
+UXP-11B — ACTIVE
 UXP-11C — NOT STARTED
 UXP-11D — NOT STARTED
 UXP-12 — NOT STARTED
 ```
 
-This activation checkpoint changes documentation only.
+This UXP-11A closure and UXP-11B activation checkpoint changes documentation only.
 
 After independent review, manual commit/push and exact remote CI success,
-implement only UXP-11A.
+implement only UXP-11B.
 
-Do not implement UXP-11B, UXP-11C, UXP-11D or activate UXP-12 inside UXP-11A.
+Do not implement UXP-11C, UXP-11D or activate UXP-12 inside UXP-11B.
 
 WPR-M05 remains ACTIVE.
 
