@@ -2186,6 +2186,18 @@ architecture.
 
 ## UXP-10 — Creator / Admin Studio
 
+Status:
+
+```text
+CLOSED — ACCEPTED
+```
+
+The closed detailed implementation/acceptance contract is:
+
+```text
+docs/13-roadmaps/uxp-10-creator-admin-studio.md
+```
+
 Finish the management experience only after public page requirements are concrete.
 
 The Studio should manage:
@@ -2400,30 +2412,34 @@ UXP-09A — CLOSED — ACCEPTED — 1ce88f2b2c5a33aeea5bb52899fb3195fea7e833
 UXP-09B — CLOSED — ACCEPTED — e800c7aa6cde1a13fb6e0bd786b2f9353604475a
 UXP-09C — CLOSED — ACCEPTED — 312d697d02e2b0dcec6a9e3796c514ad3c2a1d23
 UXP-09D — CLOSED — ACCEPTED — bd9b82b5b02ff4a14e9eb2994ae30ae63ecf2b2d
-UXP-10 — ACTIVE
+UXP-10 — CLOSED — ACCEPTED
 UXP-10A — CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
 UXP-10B — CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
 UXP-10C — CLOSED — ACCEPTED — fa28c5200a7c9a4ce8e9cae369459e4f617474d8
 UXP-10D — CLOSED — ACCEPTED — f23a91cf867bc870eb1d07a56e33a2b80f99e0e5
-UXP-10E — ACTIVE
+UXP-10E — CLOSED — ACCEPTED — ae85ac851c839044a1b120426325d9281a9543ca
+UXP-11 — NOT STARTED
 ```
 
-Active detailed implementation/acceptance contract:
+Closed detailed implementation/acceptance contract:
 
 ```text
 docs/13-roadmaps/uxp-10-creator-admin-studio.md
 ```
 
-This UXP-10D closure and UXP-10E activation checkpoint is docs-only.
+This UXP-10 closure checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
-is green, implement only:
+is green, perform a separate repository inspection and freeze only:
 
 ```text
-UXP-10E — Full Creator / Admin Studio Acceptance
+UXP-11 — Home + Whole-Site Integration
 ```
 
-Do not begin UXP-11 inside UXP-10E.
+That future activation checkpoint must be docs-only and independently reviewed
+before any UXP-11 implementation begins.
+
+Do not activate or implement UXP-11 inside this UXP-10 closure.
 
 WPR-M05 remains ACTIVE.
 

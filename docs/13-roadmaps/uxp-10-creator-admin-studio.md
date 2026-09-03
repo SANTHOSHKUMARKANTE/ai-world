@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-10 |
 | Area | Product / Web / Creator / Administration |
-| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-10E ACTIVE |
+| Status | CLOSED — ACCEPTED |
 | Created | 2026-09-02 |
 | Activation Baseline | `f5fb93f7cc708bb7b7af4877cc96a59acadec020` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -148,7 +148,7 @@ UXP-10D — Accepted Permissioned Administration
 CLOSED — ACCEPTED — f23a91cf867bc870eb1d07a56e33a2b80f99e0e5
 
 UXP-10E — Full Creator / Admin Studio Acceptance
-ACTIVE
+CLOSED — ACCEPTED — ae85ac851c839044a1b120426325d9281a9543ca
 ```
 
 Each slice requires:
@@ -385,7 +385,7 @@ exact remote CI user-confirmed green through the workflow continuation.
 Status:
 
 ```text
-ACTIVE
+CLOSED — ACCEPTED
 ```
 
 UXP-10E is an evidence and defect-remediation slice, not a feature-expansion
@@ -413,6 +413,29 @@ exact GitHub CI success.
 
 UXP-10 closes only after all applicable Web Page Definition of Done categories
 are satisfied.
+
+Acceptance evidence:
+
+```text
+ae85ac851c839044a1b120426325d9281a9543ca
+docs(roadmap): close UXP-10D and activate UXP-10E
+
+repository lint passed 21/21 tasks;
+typecheck/build dependency validation passed 41/41 tasks;
+unit regression passed 37/37 tasks, including 25/25 Web files and 93/93 Web tests;
+all 32 migrations applied to an isolated fresh PostgreSQL acceptance database;
+integration regression passed 29/29 tasks, including 28/28 API files and 194/194 API tests;
+PostgreSQL restart preserved the migrated database and up-to-date migration status;
+Creator, Entity, Media and Composition browser acceptance passed 19/19 tests;
+product-quality and public Experience browser acceptance passed 11/11 tests;
+desktop, tablet, mobile, keyboard, reduced-motion and semantic checks passed;
+anonymous, authorized, denied, preview, publish, public-delivery and archive states passed;
+production/fresh-process route starts passed and test ports were released;
+production build passed 22/22 tasks;
+architecture validation passed with 0 violations across 822 modules / 2684 dependencies;
+no production defect or code change was required;
+exact remote CI user-confirmed green for the activation baseline.
+```
 
 ---
 
@@ -483,12 +506,12 @@ UXP-10E expands this to the complete acceptance matrix in Section 10.
 
 ```text
 UXP-09 — CLOSED — ACCEPTED
-UXP-10 — ACTIVE
+UXP-10 — CLOSED — ACCEPTED
 UXP-10A — CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
 UXP-10B — CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
 UXP-10C — CLOSED — ACCEPTED — fa28c5200a7c9a4ce8e9cae369459e4f617474d8
 UXP-10D — CLOSED — ACCEPTED — f23a91cf867bc870eb1d07a56e33a2b80f99e0e5
-UXP-10E — ACTIVE
+UXP-10E — CLOSED — ACCEPTED — ae85ac851c839044a1b120426325d9281a9543ca
 UXP-11 — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
@@ -499,15 +522,22 @@ Master Roadmap — UNCHANGED
 
 # 15. Next Action
 
-After this docs-only transition is independently reviewed, manually
-committed/pushed and exact remote CI is green:
+After this docs-only UXP-10 closure checkpoint is independently reviewed,
+manually committed/pushed and exact remote CI is green, perform a separate
+repository inspection and freeze only the next page program:
 
 ```text
-execute only UXP-10E — Full Creator / Admin Studio Acceptance;
-run the complete accepted Creator/Admin evidence matrix;
-remediate only defects proven by that acceptance work;
-do not expand product scope or begin UXP-11;
-keep WPR-M05 ACTIVE;
-keep P10-M04 SEQUENCING-BLOCKED;
-keep the Master Roadmap unchanged.
+UXP-11 — Home + Whole-Site Integration
 ```
+
+That future UXP-11 activation checkpoint must be docs-only, freeze a bounded
+slice sequence from repository truth, preserve accepted ownership and page
+quality boundaries, and receive independent review before implementation.
+
+Do not activate or implement UXP-11 inside this UXP-10 closure.
+
+WPR-M05 remains ACTIVE.
+
+P10-M04 remains SEQUENCING-BLOCKED.
+
+The Master Roadmap remains unchanged.
