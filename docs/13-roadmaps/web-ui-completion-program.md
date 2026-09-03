@@ -2221,7 +2221,7 @@ Home is finalized after the real Universe pages exist so it can lead into actual
 Status:
 
 ```text
-ACTIVE — UXP-11C ACTIVE
+ACTIVE — UXP-11D ACTIVE
 ```
 
 Active detailed implementation/acceptance contract:
@@ -2433,8 +2433,8 @@ UXP-10E — CLOSED — ACCEPTED — ae85ac851c839044a1b120426325d9281a9543ca
 UXP-11 — ACTIVE
 UXP-11A — CLOSED — ACCEPTED — 5d7d44dac3c4a479e433a46eccb25ec41792c00c
 UXP-11B — CLOSED — ACCEPTED — 1cc52e1e1a2286ca6fb69f4b402e5396d35e7840
-UXP-11C — ACTIVE
-UXP-11D — NOT STARTED
+UXP-11C — CLOSED — ACCEPTED — b0a2a5ba02d7ba42557b9486e31559f696978338
+UXP-11D — ACTIVE
 ```
 
 Active detailed implementation/acceptance contract:
@@ -2443,16 +2443,17 @@ Active detailed implementation/acceptance contract:
 docs/13-roadmaps/uxp-11-home-whole-site-integration.md
 ```
 
-This UXP-11B closure and UXP-11C activation checkpoint is docs-only.
+This UXP-11C closure and UXP-11D activation checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
 is green, implement only:
 
 ```text
-UXP-11C — Finished Cross-Site Pathways
+UXP-11D — Full Home + Whole-Site Integration Acceptance
 ```
 
-Do not implement UXP-11D or activate UXP-12 inside UXP-11C.
+Execute evidence and bounded defect correction only. Do not activate UXP-12 or
+close WPR-M05 inside this activation checkpoint.
 
 WPR-M05 remains ACTIVE.
 

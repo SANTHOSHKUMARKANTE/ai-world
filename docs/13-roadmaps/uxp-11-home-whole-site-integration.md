@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-11 |
 | Area | Product / Web / Home / Whole-Site Integration |
-| Status | ACTIVE — UXP-11C ACTIVE |
+| Status | ACTIVE — UXP-11D ACTIVE |
 | Created | 2026-09-03 |
 | Activation Baseline | `aab61148d5a3aa21b26e7731f5b13982ae1f3bc0` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -141,10 +141,10 @@ UXP-11B — Finished Global Navigation + Footer
 CLOSED — ACCEPTED — 1cc52e1e1a2286ca6fb69f4b402e5396d35e7840
 
 UXP-11C — Finished Cross-Site Pathways
-ACTIVE
+CLOSED — ACCEPTED — b0a2a5ba02d7ba42557b9486e31559f696978338
 
 UXP-11D — Full Home + Whole-Site Integration Acceptance
-NOT STARTED
+ACTIVE
 ```
 
 Each slice requires:
@@ -292,7 +292,7 @@ git diff --check passed and generated browser artifacts were removed.
 Status:
 
 ```text
-ACTIVE
+CLOSED — ACCEPTED
 ```
 
 UXP-11C verifies and finishes the journeys connecting Home, Universe discovery,
@@ -313,6 +313,31 @@ cover representative Devotional, Anime and generic Knowledge journeys.
 This slice is integration work. It must not reopen accepted product surfaces or
 create a new application router, global state framework or cross-owner mutation.
 
+Accepted implementation and validation evidence:
+
+```text
+b0a2a5ba02d7ba42557b9486e31559f696978338
+feat(web): finish cross-site pathways
+
+e7797b5d2367da685d0d91029ad03c88f7e6c531
+test(web): expect scoped anime search pathway
+
+exact remote CI user-confirmed green;
+
+Devotional and Anime entry points now retain their native Universe Search scope;
+anonymous save and Saved-library entry now retain safe post-sign-in destinations;
+the existing validated identity continuation contract remains the sole redirect guard;
+canonical typed and generic Knowledge destinations remain unchanged;
+browser history and direct Search URLs retain accepted URL-owned state;
+no router, global state, backend, schema, dependency or ownership change was introduced;
+Prettier, Web lint and strict typecheck passed;
+28/28 Web unit files and 100/100 tests passed;
+focused affected browser coverage passed 38/38 before the CI assertion correction;
+the corrected Anime Search browser file passed 4/4;
+Web production build and all 22 repository builds passed;
+git diff --check passed and exact remote CI succeeded.
+```
+
 ---
 
 # 9. UXP-11D — Full Home + Whole-Site Integration Acceptance
@@ -320,7 +345,7 @@ create a new application router, global state framework or cross-owner mutation.
 Status:
 
 ```text
-NOT STARTED
+ACTIVE
 ```
 
 UXP-11D is evidence and bounded defect correction only.
@@ -407,17 +432,17 @@ UXP-10 — CLOSED — ACCEPTED
 UXP-11 — ACTIVE
 UXP-11A — CLOSED — ACCEPTED — 5d7d44dac3c4a479e433a46eccb25ec41792c00c
 UXP-11B — CLOSED — ACCEPTED — 1cc52e1e1a2286ca6fb69f4b402e5396d35e7840
-UXP-11C — ACTIVE
-UXP-11D — NOT STARTED
+UXP-11C — CLOSED — ACCEPTED — b0a2a5ba02d7ba42557b9486e31559f696978338
+UXP-11D — ACTIVE
 UXP-12 — NOT STARTED
 ```
 
-This UXP-11B closure and UXP-11C activation checkpoint changes documentation only.
+This UXP-11C closure and UXP-11D activation checkpoint changes documentation only.
 
 After independent review, manual commit/push and exact remote CI success,
-implement only UXP-11C.
+execute only UXP-11D acceptance and bounded defect correction.
 
-Do not implement UXP-11D or activate UXP-12 inside UXP-11C.
+Do not activate UXP-12 or close WPR-M05 inside this activation checkpoint.
 
 WPR-M05 remains ACTIVE.
 
