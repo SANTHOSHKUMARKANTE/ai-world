@@ -23,6 +23,7 @@ export type WebEntitySectionKey = (typeof ENTITY_SECTION_KEYS)[number];
 
 export type WebUniversePresentation = {
   readonly universeKey: WebUniverseKey;
+  readonly href: '/devotional' | '/anime';
   readonly label: string;
   readonly tone: WebUniverseTone;
   readonly motion: WebUniverseMotion;
@@ -33,6 +34,7 @@ export type WebUniversePresentation = {
 export const WEB_UNIVERSE_PRESENTATIONS: readonly WebUniversePresentation[] = [
   {
     universeKey: 'universe.devotional',
+    href: '/devotional',
     label: 'Devotional',
     tone: 'devotional',
     motion: 'calm',
@@ -50,6 +52,7 @@ export const WEB_UNIVERSE_PRESENTATIONS: readonly WebUniversePresentation[] = [
   },
   {
     universeKey: 'universe.anime',
+    href: '/anime',
     label: 'Anime',
     tone: 'anime',
     motion: 'energetic',

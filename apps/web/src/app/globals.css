@@ -364,6 +364,30 @@ textarea {
   line-height: 1.65;
 }
 
+.aw-home-knowledge__universes {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  margin-top: 1.6rem;
+}
+
+.aw-home-knowledge__universes .aw-universe-section {
+  scroll-margin-top: 7rem;
+}
+
+.aw-home-knowledge__continue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 1.5rem 0 0;
+  color: var(--aw-text-muted);
+}
+
+.aw-home-knowledge__continue a {
+  color: var(--aw-brand);
+  font-weight: 750;
+  text-underline-offset: 0.22em;
+}
+
 .aw-feature-card a,
 .aw-universe-card a {
   display: inline-block;

@@ -15,7 +15,7 @@ import {
 } from './public-knowledge-destination';
 import { Button } from '../ui/primitives';
 
-const KNOWLEDGE_BROWSE_LIMIT = 8;
+const DEFAULT_KNOWLEDGE_BROWSE_LIMIT = 8;
 
 type KnowledgeSectionState =
   | { readonly status: 'loading' }
@@ -32,6 +32,7 @@ export interface KnowledgeUniverseSectionProps {
   readonly universeKey: string;
   readonly priority?: 'primary' | 'secondary';
   readonly tone?: 'devotional' | 'anime';
+  readonly limit?: number;
 }
 
 function formatUpdatedAt(updatedAt: string): string {
@@ -196,6 +197,7 @@ export function KnowledgeUniverseSection({
   universeKey,
   priority = 'secondary',
   tone,
+  limit = DEFAULT_KNOWLEDGE_BROWSE_LIMIT,
 }: KnowledgeUniverseSectionProps) {
   const [state, setState] = useState<KnowledgeSectionState>({ status: 'loading' });
   const [requestVersion, setRequestVersion] = useState(0);
@@ -208,7 +210,7 @@ export function KnowledgeUniverseSection({
 
     void listPublicKnowledgeDiscovery({
       universeKey,
-      limit: KNOWLEDGE_BROWSE_LIMIT,
+      limit,
     })
       .then((items) => {
         if (active) {
@@ -227,7 +229,7 @@ export function KnowledgeUniverseSection({
     return () => {
       active = false;
     };
-  }, [requestVersion, universeKey]);
+  }, [limit, requestVersion, universeKey]);
 
   const retry = () => {
     setState({ status: 'loading' });

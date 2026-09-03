@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { HomeKnowledgeFoundation } from '../home/home-knowledge-foundation';
 import { LinkButton, PageContainer, Surface } from '../ui/primitives';
 import { WEB_UNIVERSE_PRESENTATIONS } from '../universes/presentation';
 import { SessionSummary } from './session-summary';
@@ -89,13 +90,15 @@ export default function Home() {
               >
                 <h3>{universe.label}</h3>
                 <p>{universe.description}</p>
-                <Link href="/search">Explore through shared Search</Link>
+                <Link href={universe.href}>Enter {universe.label}</Link>
               </Surface>
             ))}
           </div>
 
           <SessionSummary />
         </section>
+
+        <HomeKnowledgeFoundation />
       </PageContainer>
     </main>
   );

@@ -47,3 +47,56 @@ test.describe('WPR-M01 Web product shell', () => {
     expect(hasHorizontalOverflow).toBe(false);
   });
 });
+
+test.describe('UXP-11A finished Home content foundation', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route('**/api/knowledge/discovery?**', async (route) => {
+      const url = new URL(route.request().url());
+      const universeKey = url.searchParams.get('universeKey');
+      const devotional = universeKey === 'universe.devotional';
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          items: [
+            {
+              resourceId: devotional
+                ? '11111111-1111-4111-8111-111111111111'
+                : '22222222-2222-4222-8222-222222222222',
+              universeKey,
+              resourceType: devotional ? 'devotional.deity' : 'anime.character',
+              slug: devotional ? 'shiva' : 'naruto-uzumaki',
+              displayName: devotional ? 'Lord Shiva' : 'Naruto Uzumaki',
+              summary: devotional
+                ? 'Published Devotional Knowledge.'
+                : 'Published Anime Knowledge.',
+              updatedAt: '2026-09-03T08:00:00.000Z',
+              previewMedia: null,
+            },
+          ],
+        }),
+      });
+    });
+  });
+
+  test('connects each Universe and renders bounded published Knowledge', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.getByRole('link', { name: 'Enter Devotional' })).toHaveAttribute(
+      'href',
+      '/devotional',
+    );
+    await expect(page.getByRole('link', { name: 'Enter Anime' })).toHaveAttribute('href', '/anime');
+    await expect(page.getByRole('heading', { name: 'Lord Shiva' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Naruto Uzumaki' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Open Lord Shiva' })).toHaveAttribute(
+      'href',
+      '/devotional/shiva',
+    );
+    await expect(page.getByRole('link', { name: 'Open Naruto Uzumaki' })).toHaveAttribute(
+      'href',
+      '/anime/characters/naruto-uzumaki',
+    );
+  });
+});
