@@ -2404,8 +2404,8 @@ UXP-10 — ACTIVE
 UXP-10A — CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
 UXP-10B — CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
 UXP-10C — CLOSED — ACCEPTED — fa28c5200a7c9a4ce8e9cae369459e4f617474d8
-UXP-10D — ACTIVE
-UXP-10E — NOT STARTED
+UXP-10D — CLOSED — ACCEPTED — f23a91cf867bc870eb1d07a56e33a2b80f99e0e5
+UXP-10E — ACTIVE
 ```
 
 Active detailed implementation/acceptance contract:
@@ -2414,16 +2414,16 @@ Active detailed implementation/acceptance contract:
 docs/13-roadmaps/uxp-10-creator-admin-studio.md
 ```
 
-This UXP-10C closure and UXP-10D activation checkpoint is docs-only.
+This UXP-10D closure and UXP-10E activation checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
 is green, implement only:
 
 ```text
-UXP-10D — Accepted Permissioned Administration
+UXP-10E — Full Creator / Admin Studio Acceptance
 ```
 
-Do not begin UXP-10E or UXP-11 inside UXP-10D.
+Do not begin UXP-11 inside UXP-10E.
 
 WPR-M05 remains ACTIVE.
 

@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-10 |
 | Area | Product / Web / Creator / Administration |
-| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-10D ACTIVE |
+| Status | ACTIVE ACCEPTANCE CONTRACT — UXP-10E ACTIVE |
 | Created | 2026-09-02 |
 | Activation Baseline | `f5fb93f7cc708bb7b7af4877cc96a59acadec020` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -145,10 +145,10 @@ UXP-10C — Finished Composition + AI + Publishing Journey
 CLOSED — ACCEPTED — fa28c5200a7c9a4ce8e9cae369459e4f617474d8
 
 UXP-10D — Accepted Permissioned Administration
-ACTIVE
+CLOSED — ACCEPTED — f23a91cf867bc870eb1d07a56e33a2b80f99e0e5
 
 UXP-10E — Full Creator / Admin Studio Acceptance
-NOT STARTED
+ACTIVE
 ```
 
 Each slice requires:
@@ -335,7 +335,7 @@ exact remote CI user-confirmed green.
 Status:
 
 ```text
-ACTIVE
+CLOSED — ACCEPTED
 ```
 
 UXP-10D exposes only administration already supported by accepted Identity &
@@ -359,6 +359,25 @@ This slice does not authorize arbitrary Permission editing, Role definition,
 impersonation, Session inspection, audit-console construction, moderation tools
 or a new Operations capability.
 
+Accepted implementation evidence:
+
+```text
+f23a91cf867bc870eb1d07a56e33a2b80f99e0e5
+feat(web): add permissioned role administration
+
+Studio administration reuses the accepted Identity & Access Role-assignment API;
+only accepted administrator and knowledge-editor Roles are presented;
+target Actor and Role require explicit review and confirmation before mutation;
+server-authoritative authorization remains responsible for every assignment;
+safe authorization failures are presented without exposing sensitive state;
+no general User directory or new administration capability was introduced;
+Web regression passed 25/25 files and 93/93 tests;
+focused Creator Workspace browser coverage passed 6/6;
+Web formatting, lint, typecheck and production build passed;
+git diff validation passed;
+exact remote CI user-confirmed green through the workflow continuation.
+```
+
 ---
 
 # 10. UXP-10E — Full Creator / Admin Studio Acceptance
@@ -366,7 +385,7 @@ or a new Operations capability.
 Status:
 
 ```text
-NOT STARTED
+ACTIVE
 ```
 
 UXP-10E is an evidence and defect-remediation slice, not a feature-expansion
@@ -468,8 +487,8 @@ UXP-10 — ACTIVE
 UXP-10A — CLOSED — ACCEPTED — ceeea29ee5746d4a5cf39c3283c071ece7734da0
 UXP-10B — CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
 UXP-10C — CLOSED — ACCEPTED — fa28c5200a7c9a4ce8e9cae369459e4f617474d8
-UXP-10D — ACTIVE
-UXP-10E — NOT STARTED
+UXP-10D — CLOSED — ACCEPTED — f23a91cf867bc870eb1d07a56e33a2b80f99e0e5
+UXP-10E — ACTIVE
 UXP-11 — NOT STARTED
 WPR-M05 — ACTIVE
 P10-M04 — SEQUENCING-BLOCKED
@@ -484,11 +503,10 @@ After this docs-only transition is independently reviewed, manually
 committed/pushed and exact remote CI is green:
 
 ```text
-inspect the accepted Identity & Access Role-assignment contracts at the UXP-10C closure baseline;
-implement only UXP-10D — Accepted Permissioned Administration;
-preserve server-authoritative administrator-only permission enforcement;
-add only a narrow authorized lookup if repository inspection proves it necessary;
-do not begin UXP-10E or UXP-11;
+execute only UXP-10E — Full Creator / Admin Studio Acceptance;
+run the complete accepted Creator/Admin evidence matrix;
+remediate only defects proven by that acceptance work;
+do not expand product scope or begin UXP-11;
 keep WPR-M05 ACTIVE;
 keep P10-M04 SEQUENCING-BLOCKED;
 keep the Master Roadmap unchanged.
