@@ -33,9 +33,6 @@ export function AccountNavigation() {
     case 'authenticated':
       return (
         <nav className="aw-account-nav" aria-label="Account">
-          <Link className="aw-nav-link" href="/creator">
-            Create
-          </Link>
           <Link className="aw-nav-link" href="/saved">
             Saved
           </Link>

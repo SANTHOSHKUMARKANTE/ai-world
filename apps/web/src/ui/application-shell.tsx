@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 
 import { AccountNavigation } from '../app/account-navigation';
 import { PageContainer } from './primitives';
+import { FooterNavigation, PrimaryNavigation } from './site-navigation';
 
 export function ApplicationShell({ children }: { readonly children: ReactNode }) {
   return (
@@ -23,17 +24,7 @@ export function ApplicationShell({ children }: { readonly children: ReactNode })
             </span>
           </Link>
 
-          <nav className="aw-primary-nav" aria-label="Primary">
-            <Link className="aw-nav-link" href="/knowledge">
-              Explore
-            </Link>
-            <Link className="aw-nav-link" href="/search">
-              Search
-            </Link>
-            <Link className="aw-nav-link" href="/creator">
-              Create
-            </Link>
-          </nav>
+          <PrimaryNavigation />
 
           <AccountNavigation />
         </PageContainer>
@@ -45,13 +36,16 @@ export function ApplicationShell({ children }: { readonly children: ReactNode })
 
       <footer className="aw-site-footer">
         <PageContainer className="aw-footer-inner">
-          <p className="aw-footer-copy">
-            AI World keeps Knowledge, creation, discovery, and AI assistance in one shared platform.
-          </p>
-          <nav className="aw-footer-nav" aria-label="Footer">
-            <Link href="/knowledge">Knowledge</Link>
-            <Link href="/search">Search</Link>
-          </nav>
+          <div className="aw-footer-identity">
+            <Link className="aw-footer-brand" href="/">
+              AI World
+            </Link>
+            <p className="aw-footer-copy">
+              Knowledge, discovery, creation, and responsible AI assistance across distinct
+              Universes.
+            </p>
+          </div>
+          <FooterNavigation />
         </PageContainer>
       </footer>
     </div>

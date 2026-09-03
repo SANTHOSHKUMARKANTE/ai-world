@@ -23,10 +23,12 @@ describe('WPR-M01 product shell', () => {
     expect(WEB_UNIVERSE_PRESENTATIONS).toEqual([
       expect.objectContaining({
         universeKey: 'universe.devotional',
+        href: '/devotional',
         tone: 'devotional',
       }),
       expect.objectContaining({
         universeKey: 'universe.anime',
+        href: '/anime',
         tone: 'anime',
       }),
     ]);

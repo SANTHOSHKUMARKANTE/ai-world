@@ -15,7 +15,13 @@ test.describe('WPR-M01 Web product shell', () => {
 
     await expect(primaryNavigation).toBeVisible();
     await expect(
-      primaryNavigation.getByRole('link', { name: 'Explore', exact: true }),
+      primaryNavigation.getByRole('link', { name: 'Devotional', exact: true }),
+    ).toHaveAttribute('href', '/devotional');
+    await expect(
+      primaryNavigation.getByRole('link', { name: 'Anime', exact: true }),
+    ).toHaveAttribute('href', '/anime');
+    await expect(
+      primaryNavigation.getByRole('link', { name: 'Knowledge', exact: true }),
     ).toHaveAttribute('href', '/knowledge');
     await expect(
       primaryNavigation.getByRole('link', { name: 'Search', exact: true }),
@@ -24,6 +30,9 @@ test.describe('WPR-M01 Web product shell', () => {
       primaryNavigation.getByRole('link', { name: 'Create', exact: true }),
     ).toHaveAttribute('href', '/creator');
     await expect(page.getByRole('contentinfo')).toBeVisible();
+
+    const footerNavigation = page.getByRole('navigation', { name: 'Footer' });
+    await expect(footerNavigation.getByRole('link')).toHaveCount(5);
   });
 
   test('keeps the primary shell usable at a narrow mobile viewport', async ({ page }) => {
@@ -40,11 +49,39 @@ test.describe('WPR-M01 Web product shell', () => {
     ).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible();
 
+    const primaryNavigation = page.getByRole('navigation', { name: 'Primary' });
+    for (const label of ['Devotional', 'Anime', 'Knowledge', 'Search', 'Create']) {
+      await expect(primaryNavigation.getByRole('link', { name: label, exact: true })).toBeVisible();
+    }
+
     const hasHorizontalOverflow = await page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
     );
 
     expect(hasHorizontalOverflow).toBe(false);
+  });
+});
+
+test.describe('UXP-11B finished global navigation and footer', () => {
+  test('keeps real destinations coherent and identifies the current section', async ({ page }) => {
+    await page.goto('/');
+
+    const primaryNavigation = page.getByRole('navigation', { name: 'Primary' });
+    await primaryNavigation.getByRole('link', { name: 'Search', exact: true }).click();
+
+    await expect(page).toHaveURL('/search');
+    await expect(
+      page.getByRole('navigation', { name: 'Primary' }).getByRole('link', {
+        name: 'Search',
+        exact: true,
+      }),
+    ).toHaveAttribute('aria-current', 'page');
+    await expect(
+      page.getByRole('navigation', { name: 'Footer' }).getByRole('link', {
+        name: 'Search',
+        exact: true,
+      }),
+    ).toHaveAttribute('aria-current', 'page');
   });
 });
 
