@@ -2221,10 +2221,10 @@ Home is finalized after the real Universe pages exist so it can lead into actual
 Status:
 
 ```text
-ACTIVE — UXP-11D ACTIVE
+CLOSED — ACCEPTED
 ```
 
-Active detailed implementation/acceptance contract:
+Closed detailed implementation/acceptance contract:
 
 ```text
 docs/13-roadmaps/uxp-11-home-whole-site-integration.md
@@ -2430,30 +2430,35 @@ UXP-10B — CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
 UXP-10C — CLOSED — ACCEPTED — fa28c5200a7c9a4ce8e9cae369459e4f617474d8
 UXP-10D — CLOSED — ACCEPTED — f23a91cf867bc870eb1d07a56e33a2b80f99e0e5
 UXP-10E — CLOSED — ACCEPTED — ae85ac851c839044a1b120426325d9281a9543ca
-UXP-11 — ACTIVE
+UXP-11 — CLOSED — ACCEPTED
 UXP-11A — CLOSED — ACCEPTED — 5d7d44dac3c4a479e433a46eccb25ec41792c00c
 UXP-11B — CLOSED — ACCEPTED — 1cc52e1e1a2286ca6fb69f4b402e5396d35e7840
 UXP-11C — CLOSED — ACCEPTED — b0a2a5ba02d7ba42557b9486e31559f696978338
-UXP-11D — ACTIVE
+UXP-11D — CLOSED — ACCEPTED — 9aacea5dfe0a927bdd991038683b647247456de0
+UXP-12 — NOT STARTED
 ```
 
-Active detailed implementation/acceptance contract:
+Closed detailed implementation/acceptance contract:
 
 ```text
 docs/13-roadmaps/uxp-11-home-whole-site-integration.md
 ```
 
-This UXP-11C closure and UXP-11D activation checkpoint is docs-only.
+This UXP-11 closure checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
-is green, implement only:
+is green, perform a separate repository inspection and freeze only:
 
 ```text
-UXP-11D — Full Home + Whole-Site Integration Acceptance
+UXP-12 — Whole-Site Acceptance
 ```
 
-Execute evidence and bounded defect correction only. Do not activate UXP-12 or
-close WPR-M05 inside this activation checkpoint.
+That future activation checkpoint must be docs-only, freeze the final cross-page
+evidence contract from repository truth, and receive independent review before
+UXP-12 acceptance begins.
+
+Do not activate or implement UXP-12 or close WPR-M05 inside this UXP-11 closure
+checkpoint.
 
 WPR-M05 remains ACTIVE.
 

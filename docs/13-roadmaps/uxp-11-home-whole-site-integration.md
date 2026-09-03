@@ -7,7 +7,7 @@
 | Project | AI World |
 | Working ID | UXP-11 |
 | Area | Product / Web / Home / Whole-Site Integration |
-| Status | ACTIVE — UXP-11D ACTIVE |
+| Status | CLOSED — ACCEPTED |
 | Created | 2026-09-03 |
 | Activation Baseline | `aab61148d5a3aa21b26e7731f5b13982ae1f3bc0` |
 | Parent Program | `docs/13-roadmaps/web-ui-completion-program.md` |
@@ -144,7 +144,7 @@ UXP-11C — Finished Cross-Site Pathways
 CLOSED — ACCEPTED — b0a2a5ba02d7ba42557b9486e31559f696978338
 
 UXP-11D — Full Home + Whole-Site Integration Acceptance
-ACTIVE
+CLOSED — ACCEPTED — 9aacea5dfe0a927bdd991038683b647247456de0
 ```
 
 Each slice requires:
@@ -345,7 +345,7 @@ git diff --check passed and exact remote CI succeeded.
 Status:
 
 ```text
-ACTIVE
+CLOSED — ACCEPTED
 ```
 
 UXP-11D is evidence and bounded defect correction only.
@@ -367,6 +367,25 @@ relevant architecture, lint, typecheck, unit, integration and browser regression
 
 Any defect found here must be fixed in the smallest owning boundary. Scope growth
 requires a separately reviewed contract change.
+
+Acceptance evidence:
+
+```text
+9aacea5dfe0a927bdd991038683b647247456de0
+fix(web): preserve search state across detail navigation
+
+Home-to-Search-to-generic-detail continuity passed with browser-history restoration;
+Search query, Universe scope and results restore from URL-owned state after Back navigation;
+anonymous sign-in continuation remains scoped to the canonical detail destination;
+focused Cross-Universe Search and whole-site acceptance passed 7/7 browser tests;
+full fresh-process browser regression passed 169/169 tests;
+Web lint, strict typecheck, unit regression and production build passed;
+28/28 Web unit files and 100/100 Web unit tests passed;
+all 22 repository builds passed;
+git diff --check and exact final status/diff inspection passed;
+generated Playwright artifacts were excluded from the commit;
+exact remote CI was user-confirmed green.
+```
 
 ---
 
@@ -429,20 +448,28 @@ UXP-11D expands this to the full accepted Home and whole-site regression matrix.
 
 ```text
 UXP-10 — CLOSED — ACCEPTED
-UXP-11 — ACTIVE
+UXP-11 — CLOSED — ACCEPTED
 UXP-11A — CLOSED — ACCEPTED — 5d7d44dac3c4a479e433a46eccb25ec41792c00c
 UXP-11B — CLOSED — ACCEPTED — 1cc52e1e1a2286ca6fb69f4b402e5396d35e7840
 UXP-11C — CLOSED — ACCEPTED — b0a2a5ba02d7ba42557b9486e31559f696978338
-UXP-11D — ACTIVE
+UXP-11D — CLOSED — ACCEPTED — 9aacea5dfe0a927bdd991038683b647247456de0
 UXP-12 — NOT STARTED
 ```
 
-This UXP-11C closure and UXP-11D activation checkpoint changes documentation only.
+This UXP-11 closure checkpoint changes documentation only.
 
-After independent review, manual commit/push and exact remote CI success,
-execute only UXP-11D acceptance and bounded defect correction.
+After independent review, manual commit/push and exact remote CI success, perform
+a separate repository inspection and freeze only the next program gate:
 
-Do not activate UXP-12 or close WPR-M05 inside this activation checkpoint.
+```text
+UXP-12 — Whole-Site Acceptance
+```
+
+That future UXP-12 activation checkpoint must be docs-only, freeze the final
+cross-page evidence contract from repository truth, and receive independent
+review before acceptance work begins.
+
+Do not activate or implement UXP-12 inside this UXP-11 closure checkpoint.
 
 WPR-M05 remains ACTIVE.
 
