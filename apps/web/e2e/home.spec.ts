@@ -54,6 +54,11 @@ test.describe('WPR-M01 Web product shell', () => {
       await expect(primaryNavigation.getByRole('link', { name: label, exact: true })).toBeVisible();
     }
 
+    const primaryNavigationOverflows = await primaryNavigation.evaluate(
+      (navigation) => navigation.scrollWidth > navigation.clientWidth,
+    );
+    expect(primaryNavigationOverflows).toBe(false);
+
     const hasHorizontalOverflow = await page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
     );

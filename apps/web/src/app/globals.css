@@ -496,12 +496,11 @@ textarea {
     flex: 1 1 100%;
     min-width: 0;
     max-width: 100%;
+    flex-wrap: wrap;
     order: 3;
     width: auto;
     margin-inline: 0;
-    overflow-x: auto;
-    padding-bottom: 0.1rem;
-    scrollbar-width: thin;
+    overflow: visible;
   }
 
   .aw-primary-nav .aw-nav-link {
