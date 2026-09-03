@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { type FormEvent, useEffect, useRef, useState } from 'react';
 
 import {
@@ -98,7 +97,11 @@ function replaceSearchState(input: {
   }
 
   const search = params.toString();
-  window.history.replaceState(null, '', `${window.location.pathname}${search ? `?${search}` : ''}`);
+  window.history.replaceState(
+    window.history.state,
+    '',
+    `${window.location.pathname}${search ? `?${search}` : ''}`,
+  );
 }
 
 export function SearchExperience({
@@ -308,9 +311,9 @@ export function SearchExperience({
                       {item.summary?.trim() ||
                         `Published ${typeLabel} in ${universeLabel(item.universeKey)}.`}
                     </p>
-                    <Link href={destinationFor(item)} className="aw-text-link">
+                    <a href={destinationFor(item)} className="aw-text-link">
                       Explore {displayName}
-                    </Link>
+                    </a>
                   </li>
                 );
               })}
