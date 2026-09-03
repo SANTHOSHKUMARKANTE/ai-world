@@ -2218,6 +2218,18 @@ accepted permissioned administration.
 
 Home is finalized after the real Universe pages exist so it can lead into actual content rather than decorative placeholders.
 
+Status:
+
+```text
+ACTIVE — UXP-11A ACTIVE
+```
+
+Active detailed implementation/acceptance contract:
+
+```text
+docs/13-roadmaps/uxp-11-home-whole-site-integration.md
+```
+
 ## UXP-12 — Whole-site acceptance
 
 This is the final UI gate before WPR-M05 closure.
@@ -2418,28 +2430,29 @@ UXP-10B — CLOSED — ACCEPTED — 28282f76eab4f2e4145e700afd8d77e6ebb9ef44
 UXP-10C — CLOSED — ACCEPTED — fa28c5200a7c9a4ce8e9cae369459e4f617474d8
 UXP-10D — CLOSED — ACCEPTED — f23a91cf867bc870eb1d07a56e33a2b80f99e0e5
 UXP-10E — CLOSED — ACCEPTED — ae85ac851c839044a1b120426325d9281a9543ca
-UXP-11 — NOT STARTED
+UXP-11 — ACTIVE
+UXP-11A — ACTIVE
+UXP-11B — NOT STARTED
+UXP-11C — NOT STARTED
+UXP-11D — NOT STARTED
 ```
 
-Closed detailed implementation/acceptance contract:
+Active detailed implementation/acceptance contract:
 
 ```text
-docs/13-roadmaps/uxp-10-creator-admin-studio.md
+docs/13-roadmaps/uxp-11-home-whole-site-integration.md
 ```
 
-This UXP-10 closure checkpoint is docs-only.
+This UXP-11 activation checkpoint is docs-only.
 
 After it is independently reviewed, manually committed/pushed and exact remote CI
-is green, perform a separate repository inspection and freeze only:
+is green, implement only:
 
 ```text
-UXP-11 — Home + Whole-Site Integration
+UXP-11A — Finished Home Content Foundation
 ```
 
-That future activation checkpoint must be docs-only and independently reviewed
-before any UXP-11 implementation begins.
-
-Do not activate or implement UXP-11 inside this UXP-10 closure.
+Do not implement UXP-11B, UXP-11C, UXP-11D or activate UXP-12 inside UXP-11A.
 
 WPR-M05 remains ACTIVE.
 
