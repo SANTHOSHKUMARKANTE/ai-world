@@ -218,7 +218,7 @@ test.describe('UXP-03C Anime Series + social identity integration', () => {
     await page.goto('/anime');
 
     const searchAnime = page.getByRole('link', { name: 'Search Anime' }).first();
-    await expect(searchAnime).toHaveAttribute('href', '/search');
+    await expect(searchAnime).toHaveAttribute('href', '/search?universeKey=universe.anime');
     await searchAnime.click();
 
     await expect(page).toHaveURL(/\/search$/);

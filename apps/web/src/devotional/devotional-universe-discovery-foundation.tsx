@@ -254,8 +254,8 @@ export function DevotionalUniverseDiscoveryFoundation() {
               <strong>No published Deities yet.</strong>
               <p>Explore AI World while the first published Deity pages arrive.</p>
             </div>
-            <LinkButton href="/search" variant="secondary">
-              Search AI World
+            <LinkButton href="/search?universeKey=universe.devotional" variant="secondary">
+              Search Devotional
             </LinkButton>
           </div>
         ) : null}
@@ -284,8 +284,8 @@ export function DevotionalUniverseDiscoveryFoundation() {
           <LinkButton href="/knowledge" variant="secondary">
             Explore Knowledge
           </LinkButton>
-          <LinkButton href="/search" variant="secondary">
-            Search AI World
+          <LinkButton href="/search?universeKey=universe.devotional" variant="secondary">
+            Search Devotional
           </LinkButton>
         </div>
       </section>

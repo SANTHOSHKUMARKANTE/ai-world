@@ -369,7 +369,7 @@ test.describe('UXP-07B full Devotional Universe landing acceptance', () => {
     await assertNoHorizontalOverflow(page);
     await assertHeadingContained(page);
     await expect(page.getByRole('link', { name: 'Explore Deities' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Search AI World' }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Search Devotional' }).first()).toBeVisible();
     await expect(
       page.getByRole('heading', { level: 2, name: 'Recently Updated Deities' }),
     ).toBeVisible();
@@ -464,9 +464,9 @@ test.describe('UXP-07B full Devotional Universe landing acceptance', () => {
 
     await expect(page.getByText('No published Deities yet.', { exact: true })).toBeVisible();
     await expect(page.locator('[data-deity-slug]')).toHaveCount(0);
-    await expect(page.getByRole('link', { name: 'Search AI World' }).last()).toHaveAttribute(
+    await expect(page.getByRole('link', { name: 'Search Devotional' }).last()).toHaveAttribute(
       'href',
-      '/search',
+      '/search?universeKey=universe.devotional',
     );
   });
 
@@ -591,9 +591,15 @@ test.describe('UXP-07B full Devotional Universe landing acceptance', () => {
       '/knowledge',
     );
 
-    const searchLinks = page.getByRole('link', { name: 'Search AI World' });
+    const searchLinks = page.getByRole('link', { name: 'Search Devotional' });
     await expect(searchLinks).toHaveCount(2);
-    await expect(searchLinks.first()).toHaveAttribute('href', '/search');
-    await expect(searchLinks.last()).toHaveAttribute('href', '/search');
+    await expect(searchLinks.first()).toHaveAttribute(
+      'href',
+      '/search?universeKey=universe.devotional',
+    );
+    await expect(searchLinks.last()).toHaveAttribute(
+      'href',
+      '/search?universeKey=universe.devotional',
+    );
   });
 });

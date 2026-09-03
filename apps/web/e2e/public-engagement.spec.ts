@@ -43,6 +43,10 @@ test.describe('WPR-M03 public Knowledge, Discovery and Engagement', () => {
     await expect(
       page.getByRole('heading', { name: 'Sign in to see your saved Knowledge' }),
     ).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Sign in' }).last()).toHaveAttribute(
+      'href',
+      '/sign-in?continueTo=%2Fsaved',
+    );
   });
 
   test('authenticated user saves a published Resource to Favorites and a Collection', async ({

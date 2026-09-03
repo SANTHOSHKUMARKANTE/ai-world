@@ -37,8 +37,8 @@ export default function DevotionalPage() {
 
             <div className="aw-devotional-universe-hero__actions">
               <LinkButton href="#recently-updated-deities">Explore Deities</LinkButton>
-              <LinkButton href="/search" variant="secondary">
-                Search AI World
+              <LinkButton href="/search?universeKey=universe.devotional" variant="secondary">
+                Search Devotional
               </LinkButton>
             </div>
           </div>

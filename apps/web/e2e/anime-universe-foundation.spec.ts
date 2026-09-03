@@ -148,7 +148,7 @@ test.describe('UXP-03B Anime Universe landing + Character discovery', () => {
     );
     await expect(page.getByRole('link', { name: 'Search Anime' }).first()).toHaveAttribute(
       'href',
-      '/search',
+      '/search?universeKey=universe.anime',
     );
 
     await expect(
@@ -281,7 +281,7 @@ test.describe('UXP-03B Anime Universe landing + Character discovery', () => {
     ).toBeVisible();
     await expect(page.getByRole('link', { name: 'Search Anime' }).last()).toHaveAttribute(
       'href',
-      '/search',
+      '/search?universeKey=universe.anime',
     );
     await expect(page.locator('.aw-anime-discovery-card')).toHaveCount(0);
 

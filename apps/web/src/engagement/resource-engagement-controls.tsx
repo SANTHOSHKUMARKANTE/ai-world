@@ -74,10 +74,15 @@ export function ResourceEngagementControls({ resourceId }: { readonly resourceId
   }
 
   if (session.status === 'anonymous') {
+    const continueTo = `/knowledge/resources/${encodeURIComponent(resourceId)}`;
+
     return (
       <aside className="aw-engagement-callout">
         <p>
-          <Link className="aw-text-link" href="/sign-in">
+          <Link
+            className="aw-text-link"
+            href={`/sign-in?continueTo=${encodeURIComponent(continueTo)}`}
+          >
             Sign in
           </Link>{' '}
           to favorite this Resource or add it to a Collection.

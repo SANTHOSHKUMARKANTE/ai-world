@@ -339,7 +339,7 @@ export function AnimeUniverseDiscoveryFoundation() {
               <strong>No published Anime Characters yet.</strong>
               <p>Search AI World while the first published Character pages arrive.</p>
             </div>
-            <LinkButton href="/search" variant="secondary">
+            <LinkButton href="/search?universeKey=universe.anime" variant="secondary">
               Search Anime
             </LinkButton>
           </div>

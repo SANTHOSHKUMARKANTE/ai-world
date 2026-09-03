@@ -35,7 +35,7 @@ export default function AnimePage() {
 
             <div className="aw-anime-universe-hero__actions">
               <LinkButton href="#recently-updated-characters">Explore Characters</LinkButton>
-              <LinkButton href="/search" variant="secondary">
+              <LinkButton href="/search?universeKey=universe.anime" variant="secondary">
                 Search Anime
               </LinkButton>
             </div>

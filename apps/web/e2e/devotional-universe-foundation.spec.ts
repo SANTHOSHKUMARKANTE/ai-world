@@ -174,9 +174,9 @@ test.describe('UXP-07A Devotional Universe landing + Deity discovery + social id
       'href',
       '#recently-updated-deities',
     );
-    await expect(page.getByRole('link', { name: 'Search AI World' }).first()).toHaveAttribute(
+    await expect(page.getByRole('link', { name: 'Search Devotional' }).first()).toHaveAttribute(
       'href',
-      '/search',
+      '/search?universeKey=universe.devotional',
     );
 
     await expect(
@@ -307,9 +307,9 @@ test.describe('UXP-07A Devotional Universe landing + Deity discovery + social id
 
     await expect(page.getByText('No published Deities yet.', { exact: true })).toBeVisible();
     await expect(page.locator('[data-deity-slug]')).toHaveCount(0);
-    await expect(page.getByRole('link', { name: 'Search AI World' }).last()).toHaveAttribute(
+    await expect(page.getByRole('link', { name: 'Search Devotional' }).last()).toHaveAttribute(
       'href',
-      '/search',
+      '/search?universeKey=universe.devotional',
     );
   });
 
@@ -437,7 +437,7 @@ test.describe('UXP-07A Devotional Universe landing + Deity discovery + social id
     await expect(page).toHaveURL(/\/devotional#recently-updated-deities$/);
 
     await page.keyboard.press('Tab');
-    await expect(page.getByRole('link', { name: 'Search AI World' }).first()).toBeFocused();
+    await expect(page.getByRole('link', { name: 'Search Devotional' }).first()).toBeFocused();
 
     await page.keyboard.press('Tab');
     await expect(page.getByRole('link', { name: /Lord Shiva/ })).toBeFocused();

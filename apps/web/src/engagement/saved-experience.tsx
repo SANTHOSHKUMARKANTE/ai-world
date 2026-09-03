@@ -138,7 +138,7 @@ export function SavedExperience() {
       <div className="aw-empty-state">
         <h2>Sign in to see your saved Knowledge</h2>
         <p>Favorites and Collections belong to your authenticated AI World account.</p>
-        <Link className="aw-text-link" href="/sign-in">
+        <Link className="aw-text-link" href="/sign-in?continueTo=%2Fsaved">
           Sign in
         </Link>
       </div>
